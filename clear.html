@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BROSS Mocha</title>
+  <script src="/assets/vendor/js/jquery-3.7.1.js"></script>
+</head>
+<body>
+  <script>
+    $(document).ready(function () {
+      // hapus localStorage
+      localStorage.clear();
+
+      // hapus sessionStorage
+      sessionStorage.clear();
+
+      // hapus semua cookies
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      // redirect ke halaman utama setelah 1 detik
+      setTimeout(function() {
+        window.location.href = "/";
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

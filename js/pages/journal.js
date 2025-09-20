@@ -1,0 +1,855 @@
+let table;
+let offset = 0;
+let limit = 50;
+let isLoading = false;
+let lastSearch = "";
+let orderColumn = "nomor";
+let orderDir = "desc";
+let userPermissions = [];
+$(document).ready(function() {
+	$('#cabang').select2({
+    dropdownParent: '#modalTambah',
+    ajax: {
+      url: url_api + '/cabang/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Branch',
+    allowClear: true
+	});
+
+  $('#cabangEdit').select2({
+    dropdownParent: '#modalEdit',
+    ajax: {
+      url: url_api + '/cabang/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Branch',
+    allowClear: true
+  });
+
+  Loading.standard({
+      backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
+      svgSize: '0px'
+  });
+  let customSpinnerHTML = `
+        <div class="sk-wave mx-auto">
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+        </div>
+  `;
+  let notiflixBlock = document.querySelector('.notiflix-loading');
+  notiflixBlock.innerHTML = customSpinnerHTML;
+
+  $.ajax({
+    url: url_api + '/role/role-permissions',
+    method: 'GET',
+    data: {
+        sub_kategori: 'Manual Journal'
+    },
+    traditional: true,
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    success: function (permissions) {
+        userPermissions = permissions;
+        if (!permissions.includes('add_journal')) {
+            $('#btnModalTambah').attr('disabled', true);
+        }
+
+        if(permissions.includes('journal')) {
+            initTable();
+            initEvents();
+            loadMoreData();
+            if (!permissions.includes('edit_journal')) {
+                $('#editBtn').attr('disabled', true);
+            }
+            if(!permissions.includes('delete_journal')) {
+                $('#deleteBtn').attr('disabled', true);
+            }
+        } else {
+            notif.fire({
+                icon: 'error',
+                text: 'Insufficient Permission to load data'
+            });
+            $('#tabelJurnal tbody').append(`<tr><td class="text-center" colspan="7">Data Not Available</td></tr>`);
+            if (document.querySelector(`.notiflix-loading`)) {
+                Loading.remove();
+            }
+        }
+    },
+    error: function (xhr) {
+        notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON.message
+        });
+        console.error('Gagal mengambil permissions:', xhr.responseText);
+    }
+  });
+});
+// akhir document ready
+function initTable() {
+    table = new DataTable("#tabelJurnal", {
+        processing: true,
+        serverSide: false,
+        scrollY: "60vh",
+        scrollCollapse: true,
+        deferRender: true,
+        ordering: true,
+        paging: false,
+        lengthChange: false,
+        info: false,
+        autoWidth: false,
+        columns: [
+            { data: null, title: "No", orderable: false },
+            {
+                data: "tanggal",
+                orderable: true,
+                className: "nowrap",
+                render: function (data, type, row) {
+                  if (!data) return "";
+                  const tanggal = new Date(data);
+                  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                  return tanggal.toLocaleDateString('en-ID', options);
+                }
+            },
+            { data: "nomor", orderable: true, className: "nowrap" },
+            { data: "user", orderable: true, className: "nowrap" },
+            { data: "nama_cabang", orderable: true, className: "nowrap" },
+            { data: "deskripsi", orderable: false, className: "nowrap" },
+            { 
+                data: null,
+                className: "text-end",
+                render: function(data) {
+                  if(userPermissions.includes('edit_journal') || userPermissions.includes('delete_journal')) {
+                      let menuHtml = `
+                          <div class="dropdown">
+                            <a href="javascript:;" class="btn dropdown-toggle hide-arrow btn-icon btn-text-secondary rounded-pill waves-effect p-0" data-bs-toggle="dropdown">
+                              <i class="icon-base ti tabler-dots-vertical icon-22px"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                      `;
+
+                      if (userPermissions.includes('edit_journal')) {
+                          menuHtml += `
+                              <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="${data.noindex}">Edit</a>
+                          `;
+                      }
+
+                      if (userPermissions.includes('delete_journal')) {
+                          menuHtml += `
+                              <a class="dropdown-item btnModalHapus" data-bs-toggle="modal" data-bs-target="#modalHapus" data-id="${data.noindex}" data-ref="${data.nomor}">Delete</a>
+                          `;
+                      }
+
+                      menuHtml += `
+                            </div>
+                          </div>
+                      `;
+                      return menuHtml;
+                  } else { return ''; }
+                }
+            },
+            { data: "noindex", visible: false }
+        ],
+        createdRow: function (row, data, dataIndex) {
+          $(row).addClass('cursor-pointer').attr('title', 'Double Click to show details');
+        },
+        columnDefs: [{ orderable: false, targets: -1 }],
+        dom: 'tp',
+        rowCallback: function (row, data, index) {
+            row.cells[0].innerHTML = index + 1;
+        }
+    });
+
+    // Order event
+    table.on("order.dt", function () {
+        let order = table.order();
+        let columnIndex = order[0][0]; 
+        let direction = order[0][1];
+
+        let columnMapping = ["", "tanggal", "nomor", "user", "nama_cabang", "", ""];
+        orderColumn = columnMapping[columnIndex] || "nomor";
+        orderDir = direction || "desc";
+
+        loadMoreData(true);
+    });
+}
+
+function loadMoreData(reset = false) {
+    if (isLoading) return;
+    isLoading = true;
+
+    const searchInput = document.querySelector(".filtertabel input");
+    const searchValue = searchInput ? searchInput.value : "";
+    const orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
+
+    fetch(`${url_api}/jurnal/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        }
+    })
+    .then(response => response.json())
+    .then(response => {
+        const data = Array.isArray(response.data) ? response.data : [];
+        const total = response.recordsTotal || 0;
+
+        if (reset) {
+          offset = limit;
+          table.clear().draw();
+          if (data.length > 0) {
+            table.rows.add(data).draw();
+          }
+        } else {
+          if (data.length > 0) {
+            table.rows.add(data).draw(false);
+            offset += limit;
+          }
+        }
+        isLoading = false;
+        document.querySelector("#totalJurnal").textContent = response.recordsTotal;
+    })
+    .catch(() => {
+        isLoading = false;
+    });
+  if (document.querySelector(`.notiflix-loading`)) {
+      Loading.remove();
+  }
+}
+
+function initEvents() {
+    document.querySelector(".filtertabel input").addEventListener("keyup", function () {
+        const searchValue = this.value;
+        if (searchValue !== lastSearch) {
+            lastSearch = searchValue;
+            offset = 0;
+            loadMoreData(true);
+        }
+    });
+
+    document.querySelector("#tabelJurnal_wrapper .dt-scroll-body").addEventListener("scroll", function () {
+        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) {
+            loadMoreData();
+        }
+    });
+
+    $('#tabelJurnal tbody').on('dblclick', 'tr', function () {
+        var rowData = table.row(this).data();
+        if (!rowData) return; 
+
+        var id = rowData.noindex;
+
+        $.ajax({
+            url: url_api + `/jurnal/id/${id}`,
+            method: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${window.token}`,
+                "X-Client-Domain": myDomain
+            },
+            success: function (data) {
+              const tanggal = new Date(data.tanggal);
+              const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+              $('.dataDetail').text('');
+              $('#nomorDetail').text('#' + data.nomor);
+              $('#cabangDetail').text(data.nama_cabang);
+              $('#tanggalDetail').text(tanggal.toLocaleDateString('en-ID', options));
+              $('#userDetail').text(data.user);
+              $('#deskripsiDetail').text(data.deskripsi);
+              const details = data.details || [];
+
+              const tbody = $('#tabelItemDetail tbody');
+              tbody.empty();
+
+              if (details.length === 0) {
+                  tbody.append('<tr><td colspan="3" class="text-center">Journal Data Not Found</td></tr>');
+              } else {
+                  let totalDebit = 0;
+                  let totalKredit = 0;
+
+                  details.forEach(function (item) {
+                    const safeDebit = isNaN(item.debit) ? 0 : Number(item.debit);
+                    const safeKredit = isNaN(item.kredit) ? 0 : Number(item.kredit);
+                    totalDebit += safeDebit;
+                    totalKredit += safeKredit;
+
+                    const row = `
+                      <tr>
+                        <td>
+                          <div class="d-flex flex-column">
+                            <a class="text-heading text-truncate">
+                              <span class="fw-medium">${item.kode}</span>
+                            </a>
+                            <small>${item.nama}</small>
+                          </div>
+                        </td>
+                        <td>${item.alias}</td>
+                        <td class="text-end">${safeDebit.toLocaleString('id-ID', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}</td>
+                        <td class="text-end">${safeKredit.toLocaleString('id-ID', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}</td>
+                      </tr>
+                    `;
+
+                    tbody.append(row);
+                  });
+
+                  tbody.append(`
+                    <tr>
+                      <td colspan="2" class="text-end fw-bold">Total : </td>
+                      <td class="text-end fw-bold">Rp. ${totalDebit.toLocaleString('id-ID', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}</td>
+                      <td class="text-end fw-bold">Rp. ${totalKredit.toLocaleString('id-ID', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      })}</td>
+                    </tr>
+                  `);
+              }
+              $('#editBtn').attr('data-id', id);
+              $('#deleteBtn').attr('data-id', id).attr('data-ref', data.nomor);
+              $('#modalDetail').modal('show');
+            },
+            error: function (err) {
+                console.error('Gagal mengambil data detail:', err);
+                alert('Terjadi kesalahan saat mengambil detail data.');
+            }
+        });
+    });
+}
+
+// akhir datatable
+
+$('#tambahBaris').on('click', function () {
+    let baris = $(`
+      <tr>
+        <td class="px-1 pt-2">
+          <select class="form-select akun"></select>
+        </td>
+        <td class="px-1 pt-2">
+          <input type="number" class="form-control debit text-end" min="0">
+        </td>
+        <td class="px-1 pt-2">
+          <input type="number" class="form-control kredit text-end" min="0">
+        </td>
+        <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
+      </tr>
+    `);
+    $('#detailBaru tbody').append(baris);
+
+    let $selectAkun = baris.find('.akun').first();
+
+    $selectAkun.select2({
+      dropdownParent: '#modalTambah',
+      ajax: {
+        url: url_api + '/akun/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain,
+          "Authorization": `Bearer ${window.token}`
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'Choose Account'
+    });
+
+    // $selectForex.on('change', function () {
+    //     const idForex = $(this).val();
+    //     if (!idForex) return;
+
+    //     updateRates(idForex, $inputRate);
+    // });
+});
+
+$('#tambahBarisEdit').on('click', function () {
+    let baris = $(`
+      <tr>
+        <td class="px-1 pt-2">
+          <select class="form-select akun"></select>
+        </td>
+        <td class="px-1 pt-2">
+          <input type="number" class="form-control debit text-end" min="0">
+        </td>
+        <td class="px-1 pt-2">
+          <input type="number" class="form-control kredit text-end" min="0">
+        </td>
+        <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
+      </tr>
+    `);
+    $('#detailEdit tbody').append(baris);
+
+    let $selectAkun = baris.find('.akun').first();
+
+    $selectAkun.select2({
+      dropdownParent: '#modalEdit',
+      ajax: {
+        url: url_api + '/akun/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain,
+          "Authorization": `Bearer ${window.token}`
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'Choose Account'
+    });
+});
+
+$('#detailBaru').on('click', '.btnHapusBaris', function () {
+    $(this).closest('tr').remove();
+    updateTotalDebitKredit();
+});
+
+$('#detailEdit').on('click', '.btnHapusBaris', function () {
+    $(this).closest('tr').remove();
+    updateTotalDebitKreditEdit();
+});
+
+$(document).on('input', '.debit, .kredit', function () {
+    updateTotalDebitKredit();
+});
+
+$(document).on('input', '#detailEdit .debit, #detailEdit .kredit', function () {
+    updateTotalDebitKreditEdit();
+});
+
+function updateTotalDebitKredit() {
+    let totalDebit = 0;
+    let totalKredit = 0;
+
+    $('.debit').each(function () {
+        totalDebit += parseFloat($(this).val()) || 0;
+    });
+
+    $('.kredit').each(function () {
+        totalKredit += parseFloat($(this).val()) || 0;
+    });
+
+    if(totalDebit != totalKredit) {
+        $('#noteBaru').html(`Debit & Credit Do Not Balance`);
+    } else {
+        $('#noteBaru').html('');
+    }
+    $('#totalDebit').val(totalDebit.toFixed(2));
+    $('#totalKredit').val(totalKredit.toFixed(2));
+}
+
+function updateTotalDebitKreditEdit() {
+    let totalDebit = 0;
+    let totalKredit = 0;
+
+    $('#detailEdit .debit').each(function () {
+        totalDebit += parseFloat($(this).val()) || 0;
+    });
+
+    $('#detailEdit .kredit').each(function () {
+        totalKredit += parseFloat($(this).val()) || 0;
+    });
+
+    if(totalDebit != totalKredit) {
+        $('#noteEdit').html(`Debit & Credit Do Not Balance`);
+    } else {
+        $('#noteEdit').html('');
+    }
+    $('#totalDebitEdit').val(totalDebit.toFixed(2));
+    $('#totalKreditEdit').val(totalKredit.toFixed(2));
+}
+
+const modalEdit = document.getElementById('modalEdit')
+modalEdit.addEventListener('shown.bs.modal', event => {
+    const button = event.relatedTarget
+    const id = button.getAttribute('data-id')
+    $('#modalEdit').find('input, textarea').val('').prop('checked', false);
+    $('#cabangEdit').val(null).trigger('change');
+
+    $.ajax({
+        url: url_api + `/jurnal/id/` + id,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        },
+        success: function(response) {
+            const dateObj = new Date(response.tanggal);
+
+            const yyyy = dateObj.getFullYear();
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const dd = String(dateObj.getDate()).padStart(2, '0');
+
+            const formattedDate = `${yyyy}-${mm}-${dd}`;
+
+            $('#idEdit').val(id);
+            $('#nomorEdit').text("#" + response.nomor);
+            $('#tanggalEdit').val(formattedDate);
+            $('#deskripsiEdit').val(response.deskripsi);
+            
+            const details = response.details || [];
+
+            const tbody = $('#detailEdit tbody');
+            tbody.empty();
+
+            if (details.length === 0) {
+              tbody.append('<tr><td colspan="4" class="text-center">Detail Data Not Found</td></tr>');
+            } else {
+              let totalDebit = 0;
+              let totalKredit = 0;
+
+              details.forEach(function (item) {
+                const safeDebit = isNaN(item.debit) ? 0 : Number(item.debit);
+                const safeKredit = isNaN(item.kredit) ? 0 : Number(item.kredit);
+                totalDebit += safeDebit;
+                totalKredit += safeKredit;
+
+                const row = $(`
+                    <tr>
+                      <td class="px-1 pt-2">
+                        <select class="form-select akun" data-init-value="${item.kode}" data-init-text="${item.kode} - ${item.nama}">
+                          <option value="${item.kode}">${item.kode} - ${item.nama}</option>
+                        </select>
+                      </td>
+                      <td class="px-1 pt-2"><input type="number" class="form-control debit text-end" value="${safeDebit}" /></td>
+                      <td class="px-1 pt-2"><input type="number" class="form-control kredit text-end" value="${safeKredit}" /></td>
+                      <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
+                    </tr>
+                `);
+                tbody.append(row);
+              });
+
+              $('#totalDebitEdit').val(totalDebit);
+              $('#totalKreditEdit').val(totalKredit);
+
+              if(totalDebit != totalKredit) {
+                $('#noteEdit').text(`Debit & Credit Do Not Balance`);
+              } else {
+                $('#noteEdit').text('');
+              }
+
+            if (response.cabang && response.cabang != 0) {
+              const option = new Option(response.kode_cabang + " - " + response.nama_cabang, response.cabang, true, true);
+              $('#cabangEdit').append(option).trigger('change');
+            }
+
+            $('#modalEdit').modal('show');
+          }
+        },
+        error: function(xhr, status, error) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+            });
+        }
+    });
+});
+
+const modalHapus = document.getElementById('modalHapus')
+modalHapus.addEventListener('shown.bs.modal', event => {
+    const button = event.relatedTarget
+    const id = button.getAttribute('data-id')
+    const ref = button.getAttribute('data-ref')
+
+    $('#idHapus').val(id);
+    $('#refHapus').text(ref);
+});
+
+// proses
+$('#sbmTambah').click(function (e) {
+  e.preventDefault();
+
+  const $btn = $(this);
+  if ($btn.prop('disabled')) return;
+
+  $btn.prop('disabled', true);
+  let totalDebit = 0;
+  let totalKredit = 0;
+
+  const details = [];
+  $('#detailBaru tbody tr').each(function () {
+    const akun = $(this).find('select.akun').val();
+    const debit = parseFloat($(this).find('.debit').val()) || 0;
+    const kredit = parseFloat($(this).find('.kredit').val()) || 0;
+
+    if (akun && (debit !== 0 || kredit !== 0)) {
+      details.push({
+        akun: akun,
+        debit: isNaN(debit) ? 0 : debit,
+        kredit: isNaN(kredit) ? 0 : kredit
+      });
+      totalDebit += debit;
+      totalKredit += kredit;
+    }
+  });
+
+  const data = {
+    cabang: $('#cabang').val(),
+    tanggal: $('#tanggal').val(),
+    deskripsi: $('#deskripsi').val(),
+    details: details
+  };
+
+  if (totalDebit !== totalKredit) {
+    notif.fire({
+      icon: 'error',
+      text: "Journal Do Not Balance"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+  
+  if (!data.cabang || data.cabang == "" || !data.tanggal || data.tanggal == "") {
+    notif.fire({
+      icon: 'error',
+      text: "Branch and Date are required"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+
+  if (details.length === 0) {
+    notif.fire({
+      icon: 'error',
+      text: "Detail data cannot be blank"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/jurnal',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+      "Content-Type": "application/json",
+      "X-Client-Domain": myDomain,
+      "Authorization": `Bearer ${window.token}`
+    },
+    data: JSON.stringify(data),
+    success: function (response) {
+      $('#modalTambah .modal-body').find('input, textarea').val('').prop('checked', false);
+      $('#modalTambah .modal-body').find('select').val(null).trigger('change');
+      const today = new Date().toISOString().split('T')[0];
+      $('#modalTambah .modal-body #tanggal').val(today);
+      $('#modalTambah #detailBaru tbody').empty();
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then((result) => {
+          offset = 0;
+          table.clear().draw();
+          orderDir = "desc";
+          loadMoreData(true);
+          $btn.removeAttr('disabled');
+      });
+    },
+    error: function (xhr, status, error) {
+      notif.fire({
+        icon: 'error',
+        text: xhr.responseJSON.message
+      });
+      $btn.removeAttr('disabled');
+    }
+  });
+});
+
+$('#sbmEdit').click(function (e) {
+  e.preventDefault();
+
+  const $btn = $(this);
+  if ($btn.prop('disabled')) return;
+
+  $btn.prop('disabled', true);
+
+  const id = $('#idEdit').val();
+  let totalDebit = 0;
+  let totalKredit = 0;
+  const details = [];
+  $('#detailEdit tbody tr').each(function () {
+    const akun = $(this).find('select.akun').val();
+    const debit = parseFloat($(this).find('.debit').val()) || 0;
+    const kredit = parseFloat($(this).find('.kredit').val()) || 0;
+
+    if (akun && (debit !== 0 || kredit !== 0)) {
+      details.push({
+        akun: akun,
+        debit: isNaN(debit) ? 0 : debit,
+        kredit: isNaN(kredit) ? 0 : kredit
+      });
+      totalDebit += debit;
+      totalKredit += kredit;
+    }
+  });
+
+   const data = {
+    cabang: $('#cabangEdit').val(),
+    tanggal: $('#tanggalEdit').val(),
+    deskripsi: $('#deskripsiEdit').val(),
+    details: details
+  };
+
+  if (totalDebit !== totalKredit) {
+    notif.fire({
+      icon: 'error',
+      text: "Journal Do Not Balance"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+
+  if (!data.cabang || data.cabang == "" || !data.tanggal || data.tanggal == "") {
+    notif.fire({
+      icon: 'error',
+      text: "Branch and Date are required"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+
+  if (details.length === 0) {
+    notif.fire({
+      icon: 'error',
+      text: "Detail data cannot be blank"
+    });
+    $btn.removeAttr('disabled');
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/jurnal/' + id,
+    type: 'PUT',
+    contentType: 'application/json',
+    headers: {
+      "Content-Type": "application/json",
+      "X-Client-Domain": myDomain,
+      "Authorization": `Bearer ${window.token}`
+    },
+    data: JSON.stringify(data),
+    success: function (response) {
+      $('#modalEdit .modal-body').find('input, textarea').val('').prop('checked', false);
+      $('#modalEdit .modal-body').find('select').val(null).trigger('change');
+      $('#modalEdit #detailEdit tbody').empty();
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then((result) => {
+          offset = 0;
+          table.clear().draw();
+          orderDir = "desc";
+          loadMoreData(true);
+          $btn.removeAttr('disabled');
+      });
+      $('#modalEdit').modal('hide');
+    },
+    error: function (xhr, status, error) {
+      notif.fire({
+        icon: 'error',
+        text: xhr.responseJSON.message
+      });
+      $btn.removeAttr('disabled');
+    }
+  });
+});
+
+$('#sbmHapus').click(function (e) {
+  e.preventDefault();
+
+  const id = $('#idHapus').val();
+
+  $.ajax({
+    url: url_api + '/jurnal/' + id,
+    type: 'DELETE',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then((result) => {
+            offset = 0;
+            table.clear().draw();
+            loadMoreData();
+        });
+        $('#modalHapus').modal('hide'); 
+    },
+    error: function (xhr) {
+        if (xhr.status === 404) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+            });
+        } else {
+            notif.fire({
+              icon: 'error',
+              text: 'Terjadi Kesalahan pada server'
+            });
+        }
+    },
+  });
+});

@@ -1,0 +1,162 @@
+[
+    {
+        "id": " Doctor",
+        "text": " Doctor / Dokter"
+    },
+    {
+        "id": " Nurse",
+        "text": " Nurse / Perawat"
+    },
+    {
+        "id": " Teacher",
+        "text": " Teacher / Guru"
+    },
+    {
+        "id": " Lecturer",
+        "text": " Lecturer / Dosen"
+    },
+    {
+        "id": " Engineer",
+        "text": " Engineer / Insinyur"
+    },
+    {
+        "id": " Lawyer",
+        "text": " Lawyer / Pengacara"
+    },
+    {
+        "id": " Accountant",
+        "text": " Accountant / Akuntan"
+    },
+    {
+        "id": " Architect",
+        "text": " Architect / Arsitek"
+    },
+    {
+        "id": " Pilot",
+        "text": " Pilot / Pilot"
+    },
+    {
+        "id": " Flight Attendant",
+        "text": " Flight Attendant / Pramugari"
+    },
+    {
+        "id": " Police Officer",
+        "text": " Police Officer / Polisi"
+    },
+    {
+        "id": " Soldier",
+        "text": " Soldier / Tentara"
+    },
+    {
+        "id": " Firefighter",
+        "text": " Firefighter / Pemadam Kebakaran"
+    },
+    {
+        "id": " Journalist",
+        "text": " Journalist / Wartawan"
+    },
+    {
+        "id": " Photographer",
+        "text": " Photographer / Fotografer"
+    },
+    {
+        "id": " Artist",
+        "text": " Artist / Seniman"
+    },
+    {
+        "id": " Writer",
+        "text": " Writer / Penulis"
+    },
+    {
+        "id": " Translator",
+        "text": " Translator / Penerjemah"
+    },
+    {
+        "id": " Carpenter",
+        "text": " Carpenter / Tukang Kayu"
+    },
+    {
+        "id": " Mechanic",
+        "text": " Mechanic / Montir"
+    },
+    {
+        "id": " Farmer",
+        "text": " Farmer / Petani"
+    },
+    {
+        "id": " Fisherman",
+        "text": " Fisherman / Nelayan"
+    },
+    {
+        "id": " Chef",
+        "text": " Chef / Koki"
+    },
+    {
+        "id": " Cashier",
+        "text": " Cashier / Kasir"
+    },
+    {
+        "id": " Hairdresser",
+        "text": " Hairdresser / Penata Rambut"
+    },
+    {
+        "id": " Graphic Designer",
+        "text": " Graphic Designer / Desainer Grafis"
+    },
+    {
+        "id": " Programmer",
+        "text": " Programmer / Programmer"
+    },
+    {
+        "id": " Data Analyst",
+        "text": " Data Analyst / Analis Data"
+    },
+    {
+        "id": " Manager",
+        "text": " Manager / Manajer"
+    },
+    {
+        "id": " Entrepreneur",
+        "text": " Entrepreneur / Pengusaha"
+    },
+    {
+        "id": " Administrative Staff",
+        "text": " Administrative Staff / Staf Administrasi"
+    },
+    {
+        "id": " Receptionist",
+        "text": " Receptionist / Resepsionis"
+    },
+    {
+        "id": " Security Guard",
+        "text": " Security Guard / Penjaga Keamanan"
+    },
+    {
+        "id": " Psychologist",
+        "text": " Psychologist / Psikolog"
+    },
+    {
+        "id": " Pharmacist",
+        "text": " Pharmacist / Apoteker"
+    },
+    {
+        "id": " Salesperson",
+        "text": " Salesperson / Penjual"
+    },
+    {
+        "id": " Therapist",
+        "text": " Therapist / Terapis"
+    },
+    {
+        "id": " Courier",
+        "text": " Courier / Kurir"
+    },
+    {
+        "id": " Driver",
+        "text": " Driver / Pengemudi"
+    },
+    {
+        "id": " Others",
+        "text": " Others / Lainnya"
+    }
+]

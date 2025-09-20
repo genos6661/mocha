@@ -1,0 +1,22 @@
+#RewriteEngine On
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^ index.php [QSA,L]
+
+RewriteEngine On
+
+# Kecualikan order-form agar langsung menuju order-form.php
+RewriteRule ^order-form/?$ order-form.php [L]
+RewriteRule ^customer-display/?$ pages/customer-display.php [L]
+RewriteRule ^order-preview/?$ order-preview.php [L]
+RewriteRule ^login/?$ login.php [L]
+RewriteRule ^clear/?$ clear.html [L]
+
+# Blokir akses langsung ke semua file fisik (PHP, JS, CSS, dsb)
+#RewriteCond %{REQUEST_URI} \.[a-zA-Z0-9]{2,4}$
+#RewriteRule ^.*$ - [F]
+
+# Jika bukan file atau folder yang ada, arahkan ke index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
