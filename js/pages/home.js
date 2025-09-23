@@ -1,3 +1,4 @@
+let branchTransactionData = {};
 $(document).ready(function () {
 	$('#cabang, #cabangTR').select2({
 	    ajax: {
@@ -314,7 +315,20 @@ function renderBranchTransaction() {
       toolbar: { show: true }
     },
     tooltip: {
-      enabled: true
+      enabled: true,
+      y: {
+        formatter: function (val, opts) {
+          const seriesIndex = opts.seriesIndex; // 0=Buy, 1=Sell
+          const dataPointIndex = opts.dataPointIndex; // index cabang
+          const labels = opts.w.globals.labels;
+          const cabang = labels[dataPointIndex];
+          const tipe = seriesIndex === 0 ? "Buy" : "Sell";
+
+          const rupiah = branchTransactionData[cabang]?.[tipe]?.rupiah ?? 0;
+
+          return `${formatNumberID(Math.abs(val))} Transaksi (${formatNumberID(rupiah)} Rupiah)`;
+        }
+      }
     },
     plotOptions: {
       bar: {
@@ -370,7 +384,7 @@ function renderBranchTransaction() {
       forceNiceScale: true,
       labels: {
         offsetX: -16,
-        formatter: val => formatNumberID(Math.round(val)), // pakai helper formatNumberID
+        formatter: val => formatNumberID(Math.round(val)), 
         style: {
           fontSize: '13px',
           colors: labelColor,
@@ -469,15 +483,15 @@ function updateBranchTransaction() {
       end_date:   $('#endDate').val()   || ''
     },
     success: function (response) {
-      const labels = Object.keys(response || {});
-      const buyData  = labels.map(b => Number(response[b]?.Buy  ?? 0));
-      const sellData = labels.map(b => Number(response[b]?.Sell ?? 0) * -1);
+      branchTransactionData = response || {}; 
 
-      // Warna: 1 utk Buy, 1 utk Sell (tidak sama)
+      const labels = Object.keys(branchTransactionData);
+      const buyData  = labels.map(b => Number(branchTransactionData[b]?.Buy.count  ?? 0));
+      const sellData = labels.map(b => Number(branchTransactionData[b]?.Sell.count ?? 0) * -1);
+
       const buyColor  = getRandomCoolPastel();
       const sellColor = getRandomWarmPastel();
 
-      // Update axis (sekali saja, animasi tetap jalan kalau animate=true)
       totalRevenueChart.updateOptions({
         xaxis: { categories: labels },
         yaxis: {
@@ -494,12 +508,9 @@ function updateBranchTransaction() {
           }
         },
         colors: [buyColor, sellColor],
-        chart: {
-          animations: { enabled: true } // pastikan animasi aktif
-        }
+        chart: { animations: { enabled: true } }
       });
 
-      // Update data → animasi tetap jalan
       totalRevenueChart.updateSeries([
         { name: 'Buy',  data: buyData },
         { name: 'Sell', data: sellData }

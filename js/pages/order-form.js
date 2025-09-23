@@ -23,7 +23,6 @@ $(document).ready(function () {
   });
 
   $('#nationality').select2({
-    // dropdownParent: $('#modalBranch'),
     ajax: {
       url: url_api + '/profile/negara/select2',
       dataType: 'json',
@@ -191,7 +190,7 @@ $(document).ready(function () {
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
       expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax; Secure`;
   }
 
   function setSessionCookie(name, value) {
@@ -752,6 +751,17 @@ $(document).ready(function () {
     notiflixBlock.innerHTML = customSpinnerHTML;
 
     const cari = $('#inputCari').val();
+
+    if (cari === '') {
+      notif.fire({
+        icon: 'error',
+        text: 'Please Input your identification'
+      });
+      if (document.querySelector(`.notiflix-loading`)) {
+          Loading.remove();
+      }
+      return;
+    }
 
     $.ajax({
       url: url_api + '/profile/find/' + cari,
