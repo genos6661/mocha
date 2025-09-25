@@ -11,7 +11,7 @@
     </div>
     <div class="col-md d-flex justify-content-end gap-1">
       <button class="btn btn-primary" type="button" id="btnReload">
-        <i class="icon-base  ti tabler-reload icon-16px"></i>
+        <i class="icon-base  ti tabler-refresh icon-16px"></i>
       </button>
       <div class="input-group input-group-merge filtertabel">
         <span class="input-group-text" id="basic-addon-search31"
