@@ -191,6 +191,13 @@ if (isset($_SESSION['token'])) {
 
     <script>
       $(document).ready(function() {
+        let host = window.location.hostname;
+
+        if (host === "sample.beresmocha.my.id") {
+            $("#email").val("admin@gmail.com");
+            $('#password').val('admin123');
+        }
+        
           $("#formLogin").submit(function(event) {
               event.preventDefault();
               const $btn = $('#sbmLogin');
