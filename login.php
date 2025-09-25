@@ -235,7 +235,7 @@ if (isset($_SESSION['token'])) {
                   error: function(xhr) {
                       try {
                           let response = JSON.parse(xhr.responseText);
-                          $("#error").text("Error: " + (response.error || "Terjadi kesalahan"));
+                          $("#error").text("Error: " + (response.message || "Terjadi kesalahan"));
                           $btn.removeAttr('disabled');
                       } catch (e) {
                           $("#error").text("Error: Login Failed");

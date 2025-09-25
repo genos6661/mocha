@@ -59,7 +59,6 @@ $(document).ready(function() {
   $('#range').val('month').trigger('change');
 
   initTable();
-  initEvents();
 
   $.ajax({
     url: url_api + '/role/role-permissions',
@@ -440,14 +439,4 @@ function loadMoreData(reset = false) {
     if (document.querySelector(`.notiflix-loading`)) {
         Loading.remove();
     }
-}
-
-function initEvents() {
-    document.querySelector(".filtertabel input").addEventListener("keyup", function () {
-        const searchValue = this.value;
-        if (searchValue !== lastSearch) {
-            lastSearch = searchValue;
-            loadMoreData(true);
-        }
-    });
 }

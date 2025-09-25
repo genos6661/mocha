@@ -1,4 +1,4 @@
-let currentFilters = {};
+let currentFilters = "";
 let table;
 let offset = 0;
 let limit = 20;
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if(permissions.includes('order')) {
                 initTable();
                 initEvents();
-                loadMoreData();
+                loadMoreData(true);
                 if (!permissions.includes('posting_transaction')) {
                     $('#processBtn').attr('disabled', true);
                 }
@@ -98,30 +98,46 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function updateBrowserURL(params) {
+  const newURL = `${window.location.pathname}?${params.toString()}`;
+  history.replaceState(null, '', newURL);
+}
+
+function getFiltersFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+      cabang: params.get("cabang") || "",
+      start_date: params.get("start_date") || "",
+      end_date: params.get("end_date") || "",
+      closed: params.get("closed") || "",
+  };
+}
+
 $("#sbmFilter").on("click", function () {
     const tanggalAwal = $("#startDate").val();
     const tanggalAkhir = $("#endDate").val();
     const cabangs = $("#cabang").val(); 
     const includeClosed = $("#includeClosed").is(":checked");
 
-    currentFilters = {}; 
+    currentFilters = ""; 
 
-    if (tanggalAwal && tanggalAkhir) {
-        currentFilters.tanggal_awal = tanggalAwal;
-        currentFilters.tanggal_akhir = tanggalAkhir;
+    const params = new URLSearchParams();
+    params.append("start_date", tanggalAwal);
+    params.append("end_date", tanggalAkhir);
+    params.append("cabang", cabangs);
+    params.append("closed", includeClosed);
+
+    updateBrowserURL(params);
+    if(userPermissions.includes('order')) {
+        bootstrap.Modal.getInstance(document.getElementById("modalFilter")).hide();
+        offset = 0;
+        loadMoreData(true);
+    } else {
+        notif.fire({
+            icon: 'error',
+            text: 'Insufficient Permission to load data'
+        });
     }
-
-    if (cabangs && cabangs.length > 0) {
-        currentFilters.cabang = cabangs.join(',');
-    }
-
-    if (includeClosed) {
-        currentFilters.include_closed = 1;
-    }
-
-    bootstrap.Modal.getInstance(document.getElementById("modalFilter")).hide();
-    offset = 0;
-    loadMoreData(true);
 });
 
 function initTable() {
@@ -243,18 +259,24 @@ function loadMoreData(reset = false) {
     const searchInput = document.querySelector(".filtertabel input");
     const searchValue = searchInput ? searchInput.value : "";
 
-    const params = new URLSearchParams();
-    params.append("offset", reset ? 0 : offset);
-    params.append("limit", limit);
-    params.append("search", searchValue);
-    params.append("order_column", orderColumn);
-    params.append("order_dir", orderDir);
+    const filters = getFiltersFromURL();
 
-    for (const key in currentFilters) {
-        params.append(key, currentFilters[key]);
-    }
+    const orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
 
-  fetch(`${url_api}/order/datatable?${params.toString()}`, {
+    const query = new URLSearchParams({
+        offset: offset,
+        limit: limit,
+        search: searchValue,
+        order_column: orderColumn,
+        order_dir: orderDir
+    });
+
+    if (filters.cabang) query.append("cabang", filters.cabang);
+    if (filters.start_date) query.append("start_date", filters.start_date);
+    if (filters.end_date) query.append("end_date", filters.end_date);
+    if (filters.closed && filters.closed === "true") query.append("closed", 1);
+
+  fetch(`${url_api}/order/datatable?${query.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -304,7 +326,7 @@ function initEvents() {
 
     document.querySelector("#tabelOrder_wrapper .dt-scroll-body").addEventListener("scroll", function () {
         if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) {
-            loadMoreData();
+            loadMoreData(false);
         }
     });
 
