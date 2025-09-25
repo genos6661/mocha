@@ -292,17 +292,16 @@ switch ($routeInfo[0]) {
                       </a>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="/beginning-balance">
-                        <i class="icon-base ti tabler-receipt-pound icon-md me-3"></i><span>Beginning Balance</span>
-                      </a>
-                    </li>
-                    <li>
                       <a class="dropdown-item" href="/user-management">
                         <span class="d-flex align-items-center align-middle">
                           <i class="flex-shrink-0 icon-base ti tabler-users icon-md me-3"></i
                           ><span class="flex-grow-1 align-middle">User Management</span>
-                          <!-- <span class="flex-shrink-0 badge rounded-pill bg-danger">4</span> -->
                         </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="/beginning-balance">
+                        <i class="icon-base ti tabler-receipt-pound icon-md me-3"></i><span>Beginning Balance</span>
                       </a>
                     </li>
                     <li>
