@@ -623,3 +623,9 @@ $('#sbmHapus').click(function (e) {
     },
   });
 });
+
+$('#btnReload').click(function (e) {
+  e.preventDefault();
+  offset = 0;
+  loadMoreData(true);
+});

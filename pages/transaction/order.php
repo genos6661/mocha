@@ -2,13 +2,16 @@
 <div class="card">
   <div class="row p-3">
     <div class="col-md d-grid d-md-block mb-2 mb-md-0">
-      <a class="btn btn-primary" href="/order-form">
+      <a class="btn btn-primary mb-md-0 mb-2" href="/order-form">
         <i class="icon-base ti tabler-plus icon-16px me-md-2"></i><span>New Order</span>
       </a>
+      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter">
+        <i class="icon-base  ti tabler-filter icon-16px"></i><span class="d-inline-block d-md-none">Filter</span>
+      </button>
     </div>
     <div class="col-md d-flex justify-content-end gap-1">
-      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter">
-        <i class="icon-base  ti tabler-filter icon-16px"></i><span class="d-md-inline-block d-none"></span>
+      <button class="btn btn-primary" type="button" id="btnReload">
+        <i class="icon-base  ti tabler-reload icon-16px"></i>
       </button>
       <div class="input-group input-group-merge filtertabel">
         <span class="input-group-text" id="basic-addon-search31"
