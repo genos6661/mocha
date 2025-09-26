@@ -192,7 +192,7 @@ if (isset($_SESSION['token'])) {
     <script>
       $(document).ready(function() {
         if (myDomain === "sample.beresmocha.my.id") {
-            var $userInput = $('#username');
+            var $userInput = $('#email');
             var $passInput = $('#password');
 
             $.getJSON('/assets/json/sample-login.json')
@@ -201,7 +201,7 @@ if (isset($_SESSION['token'])) {
                 var users = data.users;
                 var rand = Math.floor(Math.random() * users.length);
                 var u = users[rand];
-                $userInput.val(u.username);
+                $userInput.val(u.email);
                 $passInput.val(u.password);
               })
               .fail(function(jqxhr, textStatus, error){
