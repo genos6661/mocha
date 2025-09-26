@@ -191,11 +191,22 @@ if (isset($_SESSION['token'])) {
 
     <script>
       $(document).ready(function() {
-        let host = window.location.hostname;
+        if (myDomain === "sample.beresmocha.my.id") {
+            var $userInput = $('#username');
+            var $passInput = $('#password');
 
-        if (host === "sample.beresmocha.my.id") {
-            $("#email").val("admin@gmail.com");
-            $('#password').val('admin123');
+            $.getJSON('/assets/json/sample-login.json')
+              .done(function(data){
+                if (!data || !Array.isArray(data.users) || data.users.length === 0) return;
+                var users = data.users;
+                var rand = Math.floor(Math.random() * users.length);
+                var u = users[rand];
+                $userInput.val(u.username);
+                $passInput.val(u.password);
+              })
+              .fail(function(jqxhr, textStatus, error){
+                console.error('Gagal load users.json:', textStatus, error);
+              });
         }
         
           $("#formLogin").submit(function(event) {
