@@ -53,7 +53,7 @@
   <div class="col mb-6">
     <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
       <div class="avatar avatar-lg">
-        <img src="/assets/img/report/lkpe.png" alt="Avatar" class="rounded">
+        <img src="/assets/img/report/LKPE.png" alt="Avatar" class="rounded">
       </div>
       <div>
         <h5 class="mb-0 text-black">LKPE</h5>
