@@ -130,10 +130,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="row w-100">
-          <div class="col-md">
+          <div class="col-md-3">
             <h5 class="modal-title" id="backDropModalTitle">New Transfer</h5>
           </div>
-          <div class="col-md d-flex justify-content-end g-2">
+          <div class="col-md-9 d-flex justify-content-end g-2">
+            <div class="form-check form-check-inline">
+              <label class="switch">
+                <input type="radio" name="tipeTrans" id="tipeBoth" value="tipeBoth" class="switch-input">
+                <span class="switch-toggle-slider">
+                  <span class="switch-on"></span>
+                  <span class="switch-off"></span>
+                </span>
+                <span class="switch-label">Both (auto-reverse)</span>
+              </label>
+            </div>
             <div class="form-check form-check-inline">
               <label class="switch">
                 <input type="radio" name="tipeTrans" id="tipeForex" value="tipeForex" class="switch-input" checked>
@@ -263,6 +273,16 @@
           <div class="col d-flex justify-content-end g-2">
             <div class="form-check form-check-inline">
               <label class="switch">
+                <input type="radio" name="tipeTransEdit" id="tipeBothEdit" value="tipeBoth" class="switch-input">
+                <span class="switch-toggle-slider">
+                  <span class="switch-on"></span>
+                  <span class="switch-off"></span>
+                </span>
+                <span class="switch-label">Both (auto-reverse)</span>
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="switch">
                 <input type="radio" name="tipeTransEdit" id="tipeForexEdit" value="tipeForex" class="switch-input">
                 <span class="switch-toggle-slider">
                   <span class="switch-on"></span>
@@ -367,7 +387,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Adjustment</h5>
+        <h5 class="modal-title" id="backDropModalTitle">Delete Transfer</h5>
         <button
           type="button"
           class="btn-close"
@@ -377,7 +397,7 @@
       <div class="modal-body">
         <form id="formHapus">
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete adjustment <span id="refHapus"></span>?</h4>
+        <h4>Continue to delete transfer <span id="refHapus"></span>?</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>

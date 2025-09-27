@@ -125,8 +125,8 @@ switch ($routeInfo[0]) {
         <nav class="layout-navbar navbar navbar-expand-xl align-items-center" id="layout-navbar">
           <div class="container-xxl">
             <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4 ms-0">
-              <a href="/" class="app-brand-link">
-                <span class="app-brand-logo demo">
+              <a href="/" class="app-brand-link d-flex flex-column flex-md-row">
+                <span class="app-brand-logo demo d-none d-md-block">
                   <span class="text-primary">
                     <!-- <svg width="32" height="22" viewBox="0 0 32 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -192,7 +192,7 @@ switch ($routeInfo[0]) {
                     </svg>
                   </span>
                 </span>
-                <span class="app-brand-text demo menu-text fw-bold text-heading cantata-one" id="navbarNamaPT">BERES Mocha</span>
+                <span class="app-brand-text demo text-wrap menu-text fw-bold text-heading cantata-one" id="navbarNamaPT">BERES Mocha</span>
               </a>
 
               <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">

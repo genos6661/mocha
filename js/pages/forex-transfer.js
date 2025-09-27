@@ -535,7 +535,7 @@ $('#tambahBarisEdit').on('click', function () {
 
 $(document).on('change', 'input[name="tipeTrans"]', function () {
   $('#detailBaru tbody').empty();
-  if ($(this).val() === 'tipeForex') {
+  if ($(this).val() === 'tipeForex' || $(this).val() === 'tipeBoth') {
     $('#boxTabelDetail, #boxNewRow').removeClass('d-none');
     $('#boxRupiah').addClass('d-none');
   } else {
@@ -544,7 +544,7 @@ $(document).on('change', 'input[name="tipeTrans"]', function () {
   }
 });
 
-$('#tipeForexEdit').on('change', function () {
+$('#tipeForexEdit, #tipeBothEdit').on('change', function () {
   if (this.checked) {
     $('#boxDetailEdit, #boxNewRowEdit').removeClass('d-none');
     $('#boxRupiahEdit').addClass('d-none');
@@ -763,6 +763,7 @@ modalHapus.addEventListener('shown.bs.modal', event => {
 
     $('#idHapus').val(id);
     $('#refHapus').text(ref);
+    $('#sbmHapus').trigger('focus');
 });
 
 const modalJurnal = document.getElementById('modalJurnal')
@@ -1093,7 +1094,7 @@ $('#sbmHapus').click(function (e) {
   const id = $('#idHapus').val();
 
   $.ajax({
-    url: url_api + '/penyesuaian/' + id,
+    url: url_api + '/transfer/' + id,
     type: 'DELETE',
     contentType: 'application/json',
     headers: {
