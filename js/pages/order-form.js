@@ -658,7 +658,7 @@ $(document).ready(function () {
       pelanggan: 1,
       karyawan: 0,
       vendor: 0,
-      other: 0,
+      member: 0,
       id_foto: idFoto || null 
     };
 
