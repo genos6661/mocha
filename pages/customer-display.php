@@ -21,7 +21,7 @@ require '../config/config.php';
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/beres.svg" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -241,7 +241,7 @@ require '../config/config.php';
           <div class="text-center boxLogo m-0"></div>
           <div>
             <!-- <h4 class="text-center dm-serif-text-regular m-0 namaPT"></h4> -->
-            <p class="text-center dm-serif-text-regular header m-0">Mocha Display</p>
+            <p class="text-center dm-serif-text-regular header m-0 namaPT">Mocha Display</p>
             <p class="text-center national-park m-0" id="slogan">More Than Trusted</p>
           </div>
         </div>

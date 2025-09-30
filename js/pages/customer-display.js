@@ -98,7 +98,9 @@ function loadSettings(cabang) {
                         <img src="${imgURL}" alt="Logo" style="height:80px;">
                     `);
                 } else {
-                    $('.boxLogo').empty();
+                    $('.boxLogo').html(`
+                        <img src="/assets/img/favicon/beres.svg" alt="Logo" style="height:80px;">
+                    `);
                 }
             };
 
