@@ -163,6 +163,23 @@ document.addEventListener("DOMContentLoaded", function () {
             delay: 250
           }
         });
+
+        $('#pekerjaanEdit').select2({
+          placeholder: 'Choose Occupation',
+          dropdownParent: '#modalEdit',
+          data: [], 
+          allowClear: true,
+          ajax: {
+            transport: function (params, success, failure) {
+              const term = params.data.term ? params.data.term.toLowerCase() : '';
+              const filtered = occupationData.filter(item => {
+                return item.text.toLowerCase().includes(term);
+              });
+              success({ results: filtered });
+            },
+            delay: 250
+          }
+        });
     });
 
     $('#modalTambah').on('shown.bs.modal', function (e) {
@@ -179,6 +196,7 @@ function getUrlParams() {
         pelanggan: params.get("pelanggan"),
         vendor: params.get("vendor"),
         karyawan: params.get("karyawan"),
+        member: params.get("member")
     };
 }
 
@@ -206,7 +224,7 @@ function initTable() {
                     if (row.pelanggan == 1) types.push("Pelanggan");
                     if (row.vendor == 1) types.push("Vendor");
                     if (row.karyawan == 1) types.push("Karyawan");
-                    if (row.other == 1) types.push("Other");
+                    if (row.member == 1) types.push("Member");
                     return types.join(", ");
                 } 
             },
@@ -306,7 +324,7 @@ function loadMoreData(reset = false) {
                 table.rows.add(response.data).draw(false);
             }
         }
-        document.querySelector("#totalContact").textContent = response.recordsTotal;
+        document.querySelector("#totalContact").textContent = response.recordsFiltered;
         isLoading = false;
     })
     .catch(() => {
@@ -388,7 +406,7 @@ function initEvents() {
                 if (data.pelanggan == 1) types.push("Pelanggan");
                 if (data.vendor == 1) types.push("Vendor");
                 if (data.karyawan == 1) types.push("Karyawan");
-                if (data.other == 1) types.push("Other");
+                if (data.member == 1) types.push("member");
                 types.join(", ");
                 let sumTransaksi = data.total_transaksi || 0;
 
@@ -409,6 +427,7 @@ function initEvents() {
                 $('#emailDetail').text(data.email);
                 $('#pekerjaanDetail').text(data.pekerjaan);
                 $('#negaraDetail').text(data.nama_int_negara);
+                $('#rekeningDetail').text(data.rekening);
                 $('#tipeDetail').text(types);
                 $('#transaksiDetail').text("Rp. " + sumTransaksi.toLocaleString('id-ID', {
                         minimumFractionDigits: 2,
@@ -477,6 +496,7 @@ $('#sbmFilter').click(function (e) {
   const pelanggan = $('#filPelanggan').is(':checked') ? 1 : 0;
   const vendor = $('#filVendor').is(':checked') ? 1 : 0;
   const karyawan = $('#filKaryawan').is(':checked') ? 1 : 0;
+  const member = $('#filMember').is(':checked') ? 1 : 0;
 
   const params = new URLSearchParams();
 
@@ -485,9 +505,9 @@ $('#sbmFilter').click(function (e) {
   params.append('pelanggan', pelanggan);
   params.append('vendor', vendor);
   params.append('karyawan', karyawan);
+  params.append('member', member);
 
   const finalUrl = params.toString() ? `?${params.toString()}` : baseUrl;
-  console.log(vendor);
 
   window.history.pushState({}, '', finalUrl);
 
@@ -544,15 +564,20 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             $('#emailEdit').val(response.email);
             $('#negaraEdit').val(response.negara);
             $('#idNumberEdit').val(response.id);
-            $('#pekerjaanEdit').val(response.pekerjaan);
+            $('#rekeningEdit').val(response.rekening);
             $('#pelangganEdit').prop('checked', response.pelanggan == 1);
             $('#vendorEdit').prop('checked', response.vendor == 1);
             $('#karyawanEdit').prop('checked', response.karyawan == 1);
-            $('#otherEdit').prop('checked', response.other == 1);
+            $('#memberEdit').prop('checked', response.member == 1);
 
             if (response.negara && response.negara != '') {
                 const option = new Option(response.negara + ' - ' + response.nama_negara, response.negara, true, true);
                 $('#negaraEdit').append(option).trigger('change');
+            }
+
+            if (response.pekerjaan && response.pekerjaan != '') {
+                const option = new Option(response.pekerjaan, response.pekerjaan, true, true);
+                $('#pekerjaanEdit').append(option).trigger('change');
             }
 
             if (response.jk == 'F') {
@@ -573,6 +598,13 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             });
         }
     });
+});
+
+$('#resetFilter').click(function (e) {
+  e.preventDefault();
+
+  $('#filTipe, #filNegara').val('').trigger('change');
+  $('#filPelanggan, #filVendor, #filKaryawan, #filMember').prop('checked', true);
 });
 
 const modalHapus = document.getElementById('modalHapus')
@@ -646,10 +678,11 @@ $('#sbmTambah').click(async function (e) {
         tipe: $('#tipe').val(),
         id_type: $('#id_type').val(),
         jk: jk,
+        rekening: $('#rekening').val(),
         pelanggan: $('#pelanggan').is(':checked') ? 1 : 0,
         vendor: $('#vendor').is(':checked') ? 1 : 0,
         karyawan: $('#karyawan').is(':checked') ? 1 : 0,
-        other: $('#other').is(':checked') ? 1 : 0,
+        member: $('#member').is(':checked') ? 1 : 0,
         id_foto: idFoto || null 
     };
 
@@ -745,10 +778,11 @@ $('#sbmEdit').click(async function (e) {
         jk: jk,
         tipe: $('#tipeEdit').val(),
         id_type: $('#id_typeEdit').val(),
+        rekening: $('#rekeningEdit').val(),
         pelanggan: $('#pelangganEdit').is(':checked') ? 1 : 0,
         vendor: $('#vendorEdit').is(':checked') ? 1 : 0,
         karyawan: $('#karyawanEdit').is(':checked') ? 1 : 0,
-        other: $('#otherEdit').is(':checked') ? 1 : 0,
+        member: $('#memberEdit').is(':checked') ? 1 : 0,
         id_foto: idFoto || null
     };
 

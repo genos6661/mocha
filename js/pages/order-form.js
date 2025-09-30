@@ -654,6 +654,7 @@ $(document).ready(function () {
       pekerjaan: $('#occupation').val(),
       jk: jk,
       id_type: $('#id_type').val(),
+      rekening: '',
       pelanggan: 1,
       karyawan: 0,
       vendor: 0,

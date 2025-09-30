@@ -359,12 +359,19 @@ function initEvents() {
               } else {
                   let total = 0;
 
+                  if ((data.details || []).some(d => d.dividen == 1)) {
+                      $('#dividenDet').html('<span class="badge bg-label-secondary">Dividen</span>');
+                  } else {
+                      $('#dividenDet').html('');
+                  }
+
                   details.forEach(function (item) {
                     const safeAmount = isNaN(item.jumlah) ? 0 : Number(item.jumlah);
                     total += safeAmount;
 
                     const row = `
                       <tr>
+                        <td>CASH-${item.tipe}</td>
                         <td>
                           <div class="d-flex flex-column nowrap">
                             <a class="text-heading text-truncate">
@@ -387,7 +394,7 @@ function initEvents() {
                   tbody.append(`
                   		<tr>
                   			<td colspan="2"><strong>Total: </strong></td>
-                  			<td colspan="2" class="text-end"><strong>Rp. ${total.toLocaleString('id-ID', {
+                  			<td colspan="3" class="text-end"><strong>Rp. ${total.toLocaleString('id-ID', {
 	                          minimumFractionDigits: 2,
 	                          maximumFractionDigits: 2
 	                        })}</strong></td>
@@ -618,6 +625,12 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             } else {
               let total = 0;
 
+              if ((details || []).some(d => d.dividen == 1)) {
+                    $('#dividenEdit').prop('checked', true);
+              } else {
+                    $('#dividenEdit').removeAttr('checked');
+              }
+
               details.forEach(function (item) {
                 const safeJumlah = isNaN(item.jumlah) ? 0 : Number(item.jumlah);
                 total += safeJumlah;
@@ -786,6 +799,7 @@ $('#sbmTambah').click(function (e) {
 
 	const formData = {
 	    tipe: $('#out').is(':checked') ? "OUT" : "IN",
+        dividen: $('#dividen').is(':checked') ? 1 : 0,
 	    tanggal: $('#tanggal').val(),
 	    kontak: $('#kontak').val(),
 	    cabang: $('#cabang').val(),
@@ -875,6 +889,7 @@ $('#sbmEdit').click(function (e) {
 
 	const formData = {
 	    tipe: $('#outEdit').is(':checked') ? "OUT" : "IN",
+        dividen: $('#dividenEdit').is(':checked') ? 1 : 0,
 	    tanggal: $('#tanggalEdit').val(),
 	    kontak: $('#kontakEdit').val(),
 	    cabang: $('#cabangEdit').val(),

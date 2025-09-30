@@ -49,8 +49,8 @@
       <div class="modal-header d-flex justify-content-between">
         <h5 class="modal-title" id="backDropModalTitle">Cash Transaction Detail</h5>
         <div class="d-flex gap-2">
+          <div id="dividenDet"></div>
           <p class="h5 dataDetail" id="nomorDetail"></p>
-          <div id="tipeDetail" class=""></div>
         </div>
         <button
           type="button"
@@ -97,6 +97,7 @@
           <table class="table table-sm" id="tabelItemDetail">
             <thead>
               <tr>
+                <th>Type</th>
                 <th>Account</th>
                 <th>Alias</th>
                 <th>Note</th>
@@ -124,10 +125,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="row w-100">
-          <div class="col-6">
+          <div class="col-md-3">
             <h5 class="modal-title" id="backDropModalTitle">New Cash Transaction</h5>
           </div>
-          <div class="col-6 d-flex justify-content-end">
+          <div class="col-md-9 d-flex justify-content-end">
+            <div class="form-check form-check-inline">
+              <label class="switch">
+                <input type="checkbox" name="isDividen" id="dividen" class="switch-input">
+                <span class="switch-toggle-slider">
+                  <span class="switch-on"></span>
+                  <span class="switch-off"></span>
+                </span>
+                <span class="switch-label">Dividen</span>
+              </label>
+            </div>
             <div class="form-check form-check-inline">
               <label class="switch">
                 <input type="radio" name="tipeTrans" id="in" class="switch-input">
@@ -227,11 +238,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="row w-100">
-          <div class="col-6 d-flex gap-2">
+          <div class="col-md-4 d-flex gap-2">
             <h5 class="modal-title" id="backDropModalTitle">Edit Cash Transaction</h5>
             <p class="h5"><span id="nomorEdit"></span></p>
           </div>
-          <div class="col-6 d-flex justify-content-end">
+          <div class="col-md-8 d-flex justify-content-end">
+            <div class="form-check form-check-inline">
+              <label class="switch">
+                <input type="checkbox" name="isDividenEdit" id="dividenEdit" class="switch-input">
+                <span class="switch-toggle-slider">
+                  <span class="switch-on"></span>
+                  <span class="switch-off"></span>
+                </span>
+                <span class="switch-label">Dividen</span>
+              </label>
+            </div>
             <div class="form-check form-check-inline">
               <label class="switch">
                 <input type="radio" name="tipeTransEdit" id="inEdit" class="switch-input">
