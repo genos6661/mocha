@@ -318,6 +318,11 @@ switch ($routeInfo[0]) {
                       </a>
                     </li>
                     <li>
+                      <a class="dropdown-item" href="/clear">
+                        <i class="icon-base ti tabler-trash icon-md me-3"></i><span>Clear Cache</span>
+                      </a>
+                    </li>
+                    <li>
                       <a class="dropdown-item" href="logout.php">
                         <i class="icon-base ti tabler-power icon-md me-3"></i><span>Log Out</span>
                       </a>
