@@ -49,10 +49,14 @@ function loadProfile() {
             $('#idProfile').val(response.data.id_profile);
             $('#username').val(response.data.username);
             $('#kodeOld').val(response.data.kode);
+            $('#jkOld').val(response.data.jk);
+            $('#jenisIDOld').val(response.data.jenis_id);
+            $('#tipeKontakOld').val(response.data.tipe_kontak);
+            $('#rekeningOld').val(response.data.rekening);
             $('#isPelangganOld').val(response.data.pelanggan);
             $('#isKaryawanOld').val(response.data.karyawan);
             $('#isVendorOld').val(response.data.vendor);
-            $('#isOtherOld').val(response.data.other);
+            $('#isMemberOld').val(response.data.member);
             $('#roleOld').val(response.data.role);
 
             if (response.data.negara && response.data.negara != '') {
@@ -102,13 +106,15 @@ function loadProfile() {
     // xhr.send();
 }
 
-$('#password').keyup(function (e) {
+$('#password, #username, #email').keyup(function (e) {
     e.preventDefault();
-    let pass = $(this).val();
-    if(pass != '') {
-        $('#boxOldPassword').removeClass('d-none');
-    } else {
+    let pass = $('#password').val();
+    let username = $('#username').val();
+    let email = $('#email').val();
+    if(pass == '' && email == oldData.email && username == oldData.username) {
         $('#boxOldPassword').addClass('d-none');
+    } else {
+        $('#boxOldPassword').removeClass('d-none');
     }
 });
 
@@ -153,10 +159,14 @@ $('#submitBtn').click(function (e) {
         alamat: $('#alamat').val(),
         id: $('#nomorID').val(),
         kode: $('#kodeOld').val(),
+        tipe: $('#tipeKontakOld').val(),
+        id_type: $('#jenisIDOld').val(),
+        jk: $('#jkOld').val(),
+        rekening: $('#rekeningOld').val(),
         pelanggan: $('#isPelangganOld').val(),
         karyawan: $('#isKaryawanOld').val(),
         vendor: $('#isVendorOld').val(),
-        other: $('#isOtherOld').val(),
+        member: $('#isMemberOld').val(),
     };
 
     $.ajax({
@@ -170,18 +180,7 @@ $('#submitBtn').click(function (e) {
         },
         data: JSON.stringify(formData), 
         success: function (response) {
-            if(email !== oldData.email || password !== '' || password !== null) {
-                console.log('ganti password');
-                if(oldPassword == '') {
-                    notif.fire({
-                      icon: 'error',
-                      text: 'Input Old Password First'
-                    });
-                    return false;
-                }
-
-                submitUser(idUser, username, email, password, oldPassword);
-            } else {
+            if (email === oldData.email && username === oldData.username && (password.trim() == '' || password === null)) {
                 console.log('tidak ganti password');
                 notif.fire({
                     icon: 'success',
@@ -195,6 +194,17 @@ $('#submitBtn').click(function (e) {
                     loadProfile();
                     $('input').prop('readonly', true);
                 });
+            } else {
+                console.log(email + oldData.email + password);
+                if(oldPassword == '') {
+                    notif.fire({
+                      icon: 'error',
+                      text: 'Input Old Password First'
+                    });
+                    return false;
+                }
+
+                submitUser(idUser, username, email, password, oldPassword);
             }
         },
         error: function (xhr, status, error) {

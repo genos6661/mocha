@@ -32,10 +32,14 @@
     </div>
     <div class="card-body pt-4">
       <input type="hidden" id="kodeOld">
+      <input type="hidden" id="jkOld">
+      <input type="hidden" id="jenisIDOld">
+      <input type="hidden" id="tipeKontakOld">
+      <input type="hidden" id="rekeningOld">
       <input type="hidden" id="isPelangganOld">
       <input type="hidden" id="isKaryawanOld">
       <input type="hidden" id="isVendorOld">
-      <input type="hidden" id="isOtherOld">
+      <input type="hidden" id="isMemberOld">
       <input type="hidden" id="roleOld">
         <div class="row gy-4 gx-6 mb-6">
           <div class="col-md-6 form-control-validation">
@@ -87,7 +91,7 @@
         <input type="hidden" id="idUser">
         <input type="hidden" id="idProfile">
         <div class="mt-2 d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-primary" id="editBtn">Update Data</button>
+          <button type="button" class="btn btn-primary" id="editBtn">Click to Update Data</button>
           <button type="button" class="btn btn-dark" id="cancelBtn" style="display: none;">Cancel</button>
           <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">Save changes</button>
         </div>
