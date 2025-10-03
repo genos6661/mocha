@@ -74,7 +74,7 @@ $('#sbmReg').click(function (e) {
     pelanggan: 0,
     karyawan: 1,
     vendor: 0,
-    other: 0,
+    member: 0,
   };
 
   $.ajax({
