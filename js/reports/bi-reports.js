@@ -48,7 +48,6 @@ $(document).ready(function () {
   });
 
   $('#showOption').select2({ dropdownParent: $('#filter') });
-  // $('#showOption').val("1").trigger('change');
 
 	$('#range').on('change', function () {
     updateDateRangeSelector(this.value);
@@ -61,26 +60,6 @@ $(document).ready(function () {
   $('#range').select2({dropdownParent: $('#filter')});
   $('#simpleDate').select2({dropdownParent: $('#filter')}).val('today').trigger('change');
 
-  $('#filter').on('shown.bs.modal', function (event) {
-    const button = $(event.relatedTarget);
-    $('#showOption').val("1").trigger('change');
-    // const nama = button.data('nama');     
-    // const range = button.data('range');   
-
-    // $('#judulFilter').text(nama);
-
-    // if (range) {
-    //   $('#range').val(range).trigger('change');
-    // }
-
-    // if (nama === "Summary Valas") {
-    //   $('#boxUser').removeClass('d-none');
-    //   alert('sapi');
-    // } else {
-    //   $('#boxUser').addClass('d-none');
-    // }
-  });
-
 });
 
 const modalFilter = document.getElementById('filter')
@@ -91,6 +70,7 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     const url = button.getAttribute('data-url')
 
     $('#filter input, #filter select').val(null).trigger('change');
+    $('#showOption').val("2").trigger('change');
 
     $('#judulFilter').text(nama);
     $('#urlToGo').val(url);
