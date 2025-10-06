@@ -14,6 +14,6 @@ $url_api = "https://api.beresmocha.my.id";
 
 	let url_api = "https://api.beresmocha.my.id";
 	// let myDomain = "sub2.jagadmocha.com";
-	// let myDomain = window.location.hostname;
+	// let myDomain = window.location.hostnamesapi;
 </script>
 

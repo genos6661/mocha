@@ -139,7 +139,7 @@ function initTableUser() {
 
                         if (userPermissions.includes('edit_user')) {
                             menuHtml += `
-                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEditUser" data-id="${data.id_user}">Edit</a>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEditUser" data-id="${data}">Edit</a>
                             `;
                         }
 
