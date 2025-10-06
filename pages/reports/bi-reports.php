@@ -143,8 +143,8 @@
         <div class="mb-3" id="boxShowing">
           <label for="showOption" class="form-label">Displayed Option</label>
           <select id="showOption" class="form-select">
-            <option value="1" selected>Show All Forexs</option>
-            <option value="2">Only Show Forexs with balance</option>
+            <option value="1">Show All Forexs</option>
+            <option value="2" selected>Only Show Forexs with balance</option>
             <option value="3">Only Show Forexs with mutation</option>
           </select>
         </div>

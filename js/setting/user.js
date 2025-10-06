@@ -419,6 +419,48 @@ $('#sbmHapusUser').click(function (e) {
   });
 });
 
+$('#deactivateBtn').click(function (e) {
+  e.preventDefault();
+
+  var id = $(this).data('id');
+
+  $.ajax({
+    url: url_api + '/users/set-status',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ id: id, status: 0 }),
+    success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then((result) => {
+            offset = 0;
+            table.clear().draw();
+            loadMoreData();
+        });
+        $('#modalDetail').modal('hide'); 
+    },
+    error: function (xhr) {
+        if (xhr.status === 404) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+            });
+        } else {
+            notif.fire({
+              icon: 'error',
+              text: 'Terjadi Kesalahan pada server'
+            });
+        }
+    },
+  });
+});
+
 function disableIfNoRegister() {
     if (!userPermissions.includes('register')) {
         $('#register-account').find('#smbReg').attr('disabled', true);
