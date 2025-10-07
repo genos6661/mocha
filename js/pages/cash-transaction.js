@@ -216,6 +216,30 @@ $(document).ready(function() {
             console.error('Gagal mengambil permissions:', xhr.responseText);
         }
     });
+
+    const formatter = new Intl.NumberFormat('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    });
+
+    $(document).on('blur', '.jumlah', function () {
+        let val = $(this).val()
+          .replace(/\./g, '') 
+          .replace(/,/g, '.'); 
+
+        if (val && !isNaN(val)) {
+          const formatted = formatter.format(parseFloat(val));
+          $(this).val(formatted);
+        }
+        updateTotal();
+        updateTotalEdit();
+    });
+
+    $(document).on('focus', '.jumlah', function () {
+        let val = $(this).val()
+          .replace(/\./g, '');  
+        $(this).val(val);
+    });
 });
 // akhir document ready
 function initTable() {
@@ -461,7 +485,7 @@ $('#tambahBaris').on('click', function () {
           <input type="text" class="form-control catatan">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control jumlah text-end" min="0">
+          <input type="text" class="form-control jumlah text-end">
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -514,7 +538,7 @@ $('#tambahBarisEdit').on('click', function () {
           <input type="text" class="form-control catatan">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control jumlah text-end" min="0">
+          <input type="text" class="form-control jumlah text-end">
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -558,24 +582,45 @@ $(document).on('input', '#detailEdit .jumlah', function () {
 });
 
 function updateTotal() {
-    let total = 0;
+  let total = 0;
 
-    $('#detailBaru .jumlah').each(function () {
-        total += parseFloat($(this).val()) || 0;
-    });
+  $('#detailBaru .jumlah').each(function () {
+    const rawVal = $(this).val()
+      .toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'); 
+    const val = parseFloat(rawVal) || 0;
+    total += val;
+  });
 
-    $('#totalBaru').val(total.toFixed(2));
+  // tampilkan hasil dalam format Indonesia
+  const formatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+  $('#totalBaru').val(formatter.format(total));
 }
+
 
 function updateTotalEdit() {
-    let total = 0;
+  let total = 0;
 
-    $('#detailEdit .jumlah').each(function () {
-        total += parseFloat($(this).val()) || 0;
-    });
+  $('#detailEdit .jumlah').each(function () {
+    const rawVal = $(this).val()
+      .toString()
+      .replace(/\./g, '')
+      .replace(/,/g, '.');
+    const val = parseFloat(rawVal) || 0;
+    total += val;
+  });
 
-    $('#totalEdit').val(total.toFixed(2));
+  const formatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+  $('#totalEdit').val(formatter.format(total));
 }
+
 
 // ~~~~~~~~~~~~~~~~~~~ modal
 const modalTambah = document.getElementById('modalTambah')
@@ -631,23 +676,47 @@ modalEdit.addEventListener('shown.bs.modal', event => {
                     $('#dividenEdit').removeAttr('checked');
               }
 
-              details.forEach(function (item) {
+            details.forEach(function (item) {
                 const safeJumlah = isNaN(item.jumlah) ? 0 : Number(item.jumlah);
                 total += safeJumlah;
+
+                const formatter = new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                });
+                const formattedJumlah = formatter.format(safeJumlah);
+
                 const row = $(`
                     <tr>
                       <td class="px-1 pt-2">
-                        <select class="form-select akun" data-init-value="${item.akun_lawan}" data-init-text="${item.akun_lawan} - ${item.nama}">
-                          <option value="${item.akun_lawan}">${item.akun_lawan} - ${item.nama}</option>
+                        <select class="form-select akun" 
+                                data-init-value="${item.akun_lawan}" 
+                                data-init-text="${item.akun_lawan} - ${item.nama}">
+                          <option value="${item.akun_lawan}">
+                            ${item.akun_lawan} - ${item.nama}
+                          </option>
                         </select>
                       </td>
-                      <td class="px-1 pt-2"><input type="text" class="form-control catatan" value="${item.catatan}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control jumlah text-end" value="${item.jumlah}" /></td>
-                      <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
+                      <td class="px-1 pt-2">
+                        <input type="text" class="form-control catatan" value="${item.catatan}" />
+                      </td>
+                      <td class="px-1 pt-2">
+                        <input type="text" 
+                               class="form-control jumlah text-end" 
+                               value="${formattedJumlah}" />
+                      </td>
+                      <td class="px-1 pt-2 text-end">
+                        <button class="btn btn-outline-danger border-none btnHapusBaris" 
+                                type="button" 
+                                title="Hapus Baris">
+                          <i class="icon-base ti tabler-trash"></i>
+                        </button>
+                      </td>
                     </tr>
                 `);
+
                 tbody.append(row);
-              });
+            });
 
             if (response.cabang && response.cabang != 0) {
               const option = new Option(response.kode_cabang + " - " + response.nama_cabang, response.cabang, true, true);
@@ -784,18 +853,16 @@ $('#sbmTambah').click(function (e) {
 
 	const details = [];
 	$('#detailBaru tbody tr').each(function () {
-	    const akun = $(this).find('select.akun').val();
-	    const catatan = $(this).find('.catatan').val();
-	    const jumlah = parseFloat($(this).find('.jumlah').val());
+      const akun = $(this).find('select.akun').val();
+      const catatan = $(this).find('.catatan').val();
 
-	    if (akun && jumlah && jumlah !== 0) {
-	      details.push({
-	        akun: akun,
-	        catatan: catatan,
-	        jumlah: jumlah
-	      });
-	    }
-	});
+      let jumlahStr = $(this).find('.jumlah').val();
+      let jumlah = parseFloat(jumlahStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
+
+      if (akun && jumlah && jumlah !== 0) {
+        details.push({ akun, catatan, jumlah });
+      }
+    });
 
 	const formData = {
 	    tipe: $('#out').is(':checked') ? "OUT" : "IN",
@@ -873,19 +940,17 @@ $('#sbmEdit').click(function (e) {
 
   const id = $('#idEdit').val();
   const details = [];
-	$('#detailEdit tbody tr').each(function () {
-	    const akun = $(this).find('select.akun').val();
-	    const catatan = $(this).find('.catatan').val();
-	    const jumlah = parseFloat($(this).find('.jumlah').val());
+    $('#detailEdit tbody tr').each(function () {
+      const akun = $(this).find('select.akun').val();
+      const catatan = $(this).find('.catatan').val();
 
-	    if (akun && jumlah && jumlah !== 0) {
-	      details.push({
-	        akun: akun,
-	        catatan: catatan,
-	        jumlah: jumlah
-	      });
-	    }
-	});
+      let jumlahStr = $(this).find('.jumlah').val();
+      let jumlah = parseFloat(jumlahStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
+
+      if (akun && jumlah && jumlah !== 0) {
+        details.push({ akun, catatan, jumlah });
+      }
+    });
 
 	const formData = {
 	    tipe: $('#outEdit').is(':checked') ? "OUT" : "IN",

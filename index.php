@@ -377,7 +377,7 @@ switch ($routeInfo[0]) {
                       <li class="menu-item <?php if($_SERVER['REQUEST_URI'] == '/account') { echo 'active'; } ?>">
                         <a href="/account" class="menu-link">
                           <i class="menu-icon icon-base ti tabler-receipt-dollar"></i>
-                          <div data-i18n="master">Account</div>
+                          <div data-i18n="master">Accounts</div>
                         </a>
                       </li>
                       <li class="menu-item <?php if($_SERVER['REQUEST_URI'] == '/fixed-asset') { echo 'active'; } ?>">

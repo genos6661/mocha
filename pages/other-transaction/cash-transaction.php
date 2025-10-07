@@ -213,7 +213,7 @@
               <tr>
                 <th colspan="2">Total :</th>
                 <th class="px-1 pt-2">
-                  <input type="number" class="form-control text-end" id="totalBaru" readonly>
+                  <input type="text" class="form-control text-end" id="totalBaru" readonly>
                 </th>
                 <th></th>
               </tr>
@@ -328,7 +328,7 @@
               <tr>
                 <th colspan="2">Total :</th>
                 <th class="px-1 pt-2">
-                  <input type="number" class="form-control text-end" id="totalEdit" readonly>
+                  <input type="text" class="form-control text-end" id="totalEdit" readonly>
                 </th>
                 <th></th>
               </tr>
