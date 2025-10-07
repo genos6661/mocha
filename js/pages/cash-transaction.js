@@ -668,55 +668,60 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             if (details.length === 0) {
               tbody.append('<tr><td colspan="4" class="text-center">Detail Data Not Found</td></tr>');
             } else {
-              let total = 0;
+                let total = 0;
 
-              if ((details || []).some(d => d.dividen == 1)) {
+                if ((details || []).some(d => d.dividen == 1)) {
                     $('#dividenEdit').prop('checked', true);
-              } else {
+                } else {
                     $('#dividenEdit').removeAttr('checked');
-              }
-
-            details.forEach(function (item) {
-                const safeJumlah = isNaN(item.jumlah) ? 0 : Number(item.jumlah);
-                total += safeJumlah;
+                }
 
                 const formatter = new Intl.NumberFormat('id-ID', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 2
                 });
-                const formattedJumlah = formatter.format(safeJumlah);
 
-                const row = $(`
-                    <tr>
-                      <td class="px-1 pt-2">
-                        <select class="form-select akun" 
-                                data-init-value="${item.akun_lawan}" 
-                                data-init-text="${item.akun_lawan} - ${item.nama}">
-                          <option value="${item.akun_lawan}">
-                            ${item.akun_lawan} - ${item.nama}
-                          </option>
-                        </select>
-                      </td>
-                      <td class="px-1 pt-2">
-                        <input type="text" class="form-control catatan" value="${item.catatan}" />
-                      </td>
-                      <td class="px-1 pt-2">
-                        <input type="text" 
-                               class="form-control jumlah text-end" 
-                               value="${formattedJumlah}" />
-                      </td>
-                      <td class="px-1 pt-2 text-end">
-                        <button class="btn btn-outline-danger border-none btnHapusBaris" 
-                                type="button" 
-                                title="Hapus Baris">
-                          <i class="icon-base ti tabler-trash"></i>
-                        </button>
-                      </td>
-                    </tr>
-                `);
+                details.forEach(function (item) {
+                    const safeJumlah = isNaN(item.jumlah) ? 0 : Number(item.jumlah);
+                    total += safeJumlah;
 
-                tbody.append(row);
-            });
+                    const formattedJumlah = formatter.format(safeJumlah);
+
+                    const row = $(`
+                        <tr>
+                          <td class="px-1 pt-2">
+                            <select class="form-select akun" 
+                                    data-init-value="${item.akun_lawan}" 
+                                    data-init-text="${item.akun_lawan} - ${item.nama}">
+                              <option value="${item.akun_lawan}">
+                                ${item.akun_lawan} - ${item.nama}
+                              </option>
+                            </select>
+                          </td>
+                          <td class="px-1 pt-2">
+                            <input type="text" class="form-control catatan" value="${item.catatan}" />
+                          </td>
+                          <td class="px-1 pt-2">
+                            <input type="text" 
+                                   class="form-control jumlah text-end" 
+                                   value="${formattedJumlah}" />
+                          </td>
+                          <td class="px-1 pt-2 text-end">
+                            <button class="btn btn-outline-danger border-none btnHapusBaris" 
+                                    type="button" 
+                                    title="Hapus Baris">
+                              <i class="icon-base ti tabler-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                    `);
+
+                    tbody.append(row);
+                });
+                
+                const totalFormatted = formatter.format(total);
+                $('#totalEdit').val(totalFormatted);
+            }
 
             if (response.cabang && response.cabang != 0) {
               const option = new Option(response.kode_cabang + " - " + response.nama_cabang, response.cabang, true, true);
@@ -732,7 +737,6 @@ modalEdit.addEventListener('shown.bs.modal', event => {
               const option = new Option(details[0].akun_kas + " - " + details[0].nama_kas, details[0].akun_kas, true, true);
               $('#akunKasEdit').append(option).trigger('change');
             }
-            $('#totalEdit').val(total);
 
             if (details[0].tipe === "IN") {
 			  $('#inEdit').prop('checked', true);
@@ -743,7 +747,6 @@ modalEdit.addEventListener('shown.bs.modal', event => {
 			}
 
             $('#modalEdit').modal('show');
-          }
         },
         error: function(xhr, status, error) {
             notif.fire({
