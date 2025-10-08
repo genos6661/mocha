@@ -540,6 +540,9 @@ $('#sbmProses').click(function (e) {
             "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         },
+        data: JSON.stringify({
+            localTime: new Date().toISOString()
+        }),
         success: function (response) {
             offset = 0;
             table.clear().draw();

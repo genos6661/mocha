@@ -118,6 +118,55 @@ $(document).ready(function() {
         console.error('Gagal mengambil permissions:', xhr.responseText);
     }
   });
+
+  const formatter = new Intl.NumberFormat('id-ID', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+  });
+
+  $(document).on('blur', '.debit, .kredit', function () {
+    let val = $(this).val();
+
+    val = val.replace(/[^0-9.,]/g, '');
+
+    const parts = val.split(/[,\.]/);
+    if (parts.length > 2) {
+      val = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    const numericVal = parseFloat(val.replace(/\./g, '').replace(/,/g, '.'));
+
+    if (!isNaN(numericVal)) {
+      const formatted = new Intl.NumberFormat('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(numericVal);
+
+      $(this).val(formatted);
+    } else {
+      $(this).val('');
+    }
+
+    updateTotalDebitKredit();
+    updateTotalDebitKreditEdit();
+  });
+
+  $(document).on('focus', '.debit', function () {
+      let val = $(this).val()
+        .replace(/\./g, '');  
+      $(this).val(val);
+  });
+
+  $(document).on('focus', '.kredit', function () {
+      let val = $(this).val()
+        .replace(/\./g, '');  
+      $(this).val(val);
+  });
+
+  $(document).on('shown.bs.modal', '#modalTambah', function () {
+    $('#cabang').trigger('focus');
+    $('input').val('');
+  });
 });
 // akhir document ready
 function initTable() {
@@ -370,10 +419,10 @@ $('#tambahBaris').on('click', function () {
           <select class="form-select akun"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control debit text-end" min="0">
+          <input type="text" class="form-control debit text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control kredit text-end" min="0">
+          <input type="text" class="form-control kredit text-end">
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -421,10 +470,10 @@ $('#tambahBarisEdit').on('click', function () {
           <select class="form-select akun"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control debit text-end" min="0">
+          <input type="text" class="form-control debit text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control kredit text-end" min="0">
+          <input type="text" class="form-control kredit text-end">
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -481,11 +530,21 @@ function updateTotalDebitKredit() {
     let totalKredit = 0;
 
     $('.debit').each(function () {
-        totalDebit += parseFloat($(this).val()) || 0;
+      const rawVal = $(this).val()
+        .toString()
+        .replace(/\./g, '')  
+        .replace(/,/g, '.'); 
+      const val = parseFloat(rawVal) || 0;
+      totalDebit += val;
     });
 
     $('.kredit').each(function () {
-        totalKredit += parseFloat($(this).val()) || 0;
+      const rawVal = $(this).val()
+        .toString()
+        .replace(/\./g, '')  
+        .replace(/,/g, '.'); 
+      const val = parseFloat(rawVal) || 0;
+      totalKredit += val;
     });
 
     if(totalDebit != totalKredit) {
@@ -493,8 +552,14 @@ function updateTotalDebitKredit() {
     } else {
         $('#noteBaru').html('');
     }
-    $('#totalDebit').val(totalDebit.toFixed(2));
-    $('#totalKredit').val(totalKredit.toFixed(2));
+
+    const formatter = new Intl.NumberFormat('id-ID', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+
+    $('#totalDebit').val(formatter.format(totalDebit));
+    $('#totalKredit').val(formatter.format(totalKredit));
 }
 
 function updateTotalDebitKreditEdit() {
@@ -502,11 +567,21 @@ function updateTotalDebitKreditEdit() {
     let totalKredit = 0;
 
     $('#detailEdit .debit').each(function () {
-        totalDebit += parseFloat($(this).val()) || 0;
+      const rawVal = $(this).val()
+        .toString()
+        .replace(/\./g, '')  
+        .replace(/,/g, '.'); 
+      const val = parseFloat(rawVal) || 0;
+      totalDebit += val;
     });
 
     $('#detailEdit .kredit').each(function () {
-        totalKredit += parseFloat($(this).val()) || 0;
+      const rawVal = $(this).val()
+        .toString()
+        .replace(/\./g, '')  
+        .replace(/,/g, '.'); 
+      const val = parseFloat(rawVal) || 0;
+      totalKredit += val;
     });
 
     if(totalDebit != totalKredit) {
@@ -514,8 +589,14 @@ function updateTotalDebitKreditEdit() {
     } else {
         $('#noteEdit').html('');
     }
-    $('#totalDebitEdit').val(totalDebit.toFixed(2));
-    $('#totalKreditEdit').val(totalKredit.toFixed(2));
+
+    const formatter = new Intl.NumberFormat('id-ID', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    });
+
+    $('#totalDebitEdit').val(formatter.format(totalDebit));
+    $('#totalKreditEdit').val(formatter.format(totalKredit));
 }
 
 const modalEdit = document.getElementById('modalEdit')
@@ -559,11 +640,19 @@ modalEdit.addEventListener('shown.bs.modal', event => {
               let totalDebit = 0;
               let totalKredit = 0;
 
+              const formatter = new Intl.NumberFormat('id-ID', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2
+              });
+
               details.forEach(function (item) {
                 const safeDebit = isNaN(item.debit) ? 0 : Number(item.debit);
                 const safeKredit = isNaN(item.kredit) ? 0 : Number(item.kredit);
                 totalDebit += safeDebit;
                 totalKredit += safeKredit;
+
+                const formattedDebit = formatter.format(safeDebit);
+                const formattedKredit = formatter.format(safeKredit);
 
                 const row = $(`
                     <tr>
@@ -572,16 +661,18 @@ modalEdit.addEventListener('shown.bs.modal', event => {
                           <option value="${item.kode}">${item.kode} - ${item.nama}</option>
                         </select>
                       </td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control debit text-end" value="${safeDebit}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control kredit text-end" value="${safeKredit}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control debit text-end" value="${formattedDebit}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control kredit text-end" value="${formattedKredit}" /></td>
                       <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
                     </tr>
                 `);
                 tbody.append(row);
               });
 
-              $('#totalDebitEdit').val(totalDebit);
-              $('#totalKreditEdit').val(totalKredit);
+              const totalDebitFormatted = formatter.format(totalDebit);
+              const totalKreditFormatted = formatter.format(totalKredit);
+              $('#totalDebitEdit').val(totalDebitFormatted);
+              $('#totalKreditEdit').val(totalKreditFormatted);
 
               if(totalDebit != totalKredit) {
                 $('#noteEdit').text(`Debit & Credit Do Not Balance`);
@@ -630,8 +721,11 @@ $('#sbmTambah').click(function (e) {
   const details = [];
   $('#detailBaru tbody tr').each(function () {
     const akun = $(this).find('select.akun').val();
-    const debit = parseFloat($(this).find('.debit').val()) || 0;
-    const kredit = parseFloat($(this).find('.kredit').val()) || 0;
+    let debitStr = String($(this).find('.debit').val() || '0').trim();
+    let kreditStr = String($(this).find('.kredit').val() || '0').trim();
+
+    let debit = parseFloat(debitStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
+    let kredit = parseFloat(kreditStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
 
     if (akun && (debit !== 0 || kredit !== 0)) {
       details.push({
@@ -729,8 +823,11 @@ $('#sbmEdit').click(function (e) {
   const details = [];
   $('#detailEdit tbody tr').each(function () {
     const akun = $(this).find('select.akun').val();
-    const debit = parseFloat($(this).find('.debit').val()) || 0;
-    const kredit = parseFloat($(this).find('.kredit').val()) || 0;
+    let debitStr = String($(this).find('.debit').val() || '0').trim();
+    let kreditStr = String($(this).find('.kredit').val() || '0').trim();
+
+    let debit = parseFloat(debitStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
+    let kredit = parseFloat(kreditStr.replace(/\./g, '').replace(/,/g, '.')) || 0;
 
     if (akun && (debit !== 0 || kredit !== 0)) {
       details.push({

@@ -223,17 +223,31 @@ $(document).ready(function() {
     });
 
     $(document).on('blur', '.jumlah', function () {
-        let val = $(this).val()
-          .replace(/\./g, '') 
-          .replace(/,/g, '.'); 
+        let val = $(this).val();
 
-        if (val && !isNaN(val)) {
-          const formatted = formatter.format(parseFloat(val));
-          $(this).val(formatted);
+        val = val.replace(/[^0-9.,]/g, '');
+
+        const parts = val.split(/[,\.]/);
+        if (parts.length > 2) {
+          val = parts[0] + '.' + parts.slice(1).join('');
         }
+
+        const numericVal = parseFloat(val.replace(/\./g, '').replace(/,/g, '.'));
+
+        if (!isNaN(numericVal)) {
+          const formatted = new Intl.NumberFormat('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          }).format(numericVal);
+
+          $(this).val(formatted);
+        } else {
+          $(this).val('');
+        }
+
         updateTotal();
         updateTotalEdit();
-    });
+      });
 
     $(document).on('focus', '.jumlah', function () {
         let val = $(this).val()
