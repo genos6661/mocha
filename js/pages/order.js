@@ -530,6 +530,8 @@ $('#sbmProses').click(function (e) {
     e.preventDefault();
 
     const id = $('#idProses').val();
+    const now = new Date();
+    const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
 
     $.ajax({
         url: url_api + '/transaction/' + id,
@@ -541,7 +543,7 @@ $('#sbmProses').click(function (e) {
             "X-Client-Domain": myDomain
         },
         data: JSON.stringify({
-            localTime: new Date().toISOString()
+            localTime: localTime
         }),
         success: function (response) {
             offset = 0;
