@@ -1,29 +1,24 @@
-<div class="invoice-print p-7">
-	<div class="row">
-		<div class="col">
-			<p class="h4 text-center mb-0" id="judulNota">Mocha</p>
-			<p class="text-center mb-0" id="namaCabang"></p>
-			<p class="text-center mb-1"><span id="alamatCabang"></span> (<span id="teleponCabang"></span>)</p>
-		</div>
+<div class="invoice-print" style="width: 100%; max-width: 100%;">
+	<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+		<p style="font-size: 1.5em; margin-bottom: 0; text-align: center;" id="judulNota">Mocha</p>
+		<p style="font-size: 1em; margin-bottom: 0; text-align: center;" id="namaCabang"></p>
+		<p style="font-size: 1em; margin-bottom: 15px; text-align: center;"><span id="alamatCabang"></span> (<span id="teleponCabang"></span>)</p>
 	</div>
-	<div class="row">
-		<div class="col">
-			<p class="h5 text-end mb-0">No. #<span id="nomorTrans"></span></p>
-			<p class="text-start mb-0">Date Issues : <span id="tanggalTransaksi"></span></p>
-			<p class="text-start mb-0">Name : <span id="namaPelanggan"></span></p>
-			<p class="text-start mb-0">Nationality : <span id="negara"></span></p>
-			<p class="text-end mb-0">Cashier : <span id="ttdPerusahaan"></span></p>
-		</div>
+	<div style="width: 100%; display: flex; flex-direction: column;">
+		<p style="font-size: 1em; margin-bottom: 0; text-align: right;">No. #<span id="nomorTrans"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Date Issues : <span id="tanggalTransaksi"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Name : <span id="namaPelanggan"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Nationality : <span id="negara"></span></p>
+		<p style="font-size: 1em; margin-bottom: 15px; text-align: right;">Cashier : <span id="ttdPerusahaan"></span></p>
 	</div>
-	<hr class="mb-2">
-	<div class="table-responsive mt-3">
-	    <table class="table table-borderless m-0" id="tabelDetail">
+	<div style="width: 100%; border-bottom: 1px solid;">
+	    <table style="width: 100%; border: none;" id="tabelDetail">
 	      <thead>
-	        <tr class="border-top border-bottom">
-	          <th>Currency</th>
-	          <th class="text-end">Amount</th>
-	          <th class="text-end">Rate</th>
-	          <th class="text-end">Subtotal</th>
+	        <tr>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px;">Currency</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Amount</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Rate</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Subtotal</th>
 	        </tr>
 	      </thead>
 	      <tbody></tbody>

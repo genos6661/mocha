@@ -159,20 +159,40 @@ function loadData(fileDesain) {
           }
           const totalPerItem = qty * item.rate;
           subtotal += totalPerItem;
-          const row = `
-              <tr>
-                <td class="nowrap">${item.kode}</td>
-                <td class="text-end nowrap">${Number(qty).toLocaleString('id-ID')}</td>
-                <td class="text-end nowrap">Rp. ${Number(item.rate).toLocaleString('id-ID', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}</td>
-                <td class="text-end nowrap">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}</td>
-              </tr>
-          `;
+          let row;
+          if (fileDesain == 'small-con') {
+            row = `
+                <tr>
+                  <td colspan="4" style="padding: 3px;">${item.kode} - ${item.nama}</td>
+                </tr>
+                <tr>
+                  <td style="text-align: right; padding: 3px;">${Number(qty).toLocaleString('id-ID')}</td>
+                  <td style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                  <td colspan="2" style="text-align: right; padding: 3px;">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                </tr>
+            `;
+          } else {
+            row = `
+                <tr>
+                  <td class="nowrap">${item.kode}</td>
+                  <td class="text-end nowrap">${Number(qty).toLocaleString('id-ID')}</td>
+                  <td class="text-end nowrap">Rp. ${Number(item.rate).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                  <td class="text-end nowrap">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                </tr>
+            `;
+          }
           tbody.append(row);
         });
 
@@ -185,8 +205,8 @@ function loadData(fileDesain) {
         } else if (fileDesain == 'small-con') {
           tbody.append(`
             <tr>
-              <td colspan="3" class="fw-bold border-top border-bottom">Total : </td>
-              <td class="text-end fw-bold border-top border-bottom">Rp. ${Number(subtotal).toLocaleString('id-ID', {
+              <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700;">Total : </td>
+              <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700; text-align: right;">Rp. ${Number(subtotal).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
                 })}</td>

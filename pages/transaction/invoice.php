@@ -37,14 +37,13 @@ require '../../config/config.php';
     <link rel="stylesheet" href="../../assets/vendor/libs/pickr/pickr-themes.css" />
 
     <link rel="stylesheet" href="../../assets/vendor/css/core.css" />
-    <link rel="stylesheet" href="../../assets/css/demo.css" />
 
     <!-- Vendors CSS -->
 
     <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="../../assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
-    <link rel="stylesheet" href="../../assets/vendor/css/pages/app-invoice-print.css" />
+    <!-- <link rel="stylesheet" href="../../assets/vendor/css/pages/app-invoice-print.css" /> -->
 
     <script src="../../assets/vendor/js/helpers.js"></script>
     <script src="../../assets/vendor/js/template-customizer.js"></script>
