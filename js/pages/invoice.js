@@ -163,6 +163,21 @@ function loadData(fileDesain) {
           if (fileDesain == 'small-con') {
             row = `
                 <tr>
+                  <td style="padding: 3px;">${item.kode}</td>
+                  <td style="text-align: right; padding: 3px;">${Number(qty).toLocaleString('id-ID')}</td>
+                  <td style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                  <td colspan="2" style="text-align: right; padding: 3px;">${Number(totalPerItem).toLocaleString('id-ID', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</td>
+                </tr>
+            `;
+          } else if (fileDesain == 'small-con2') {
+            row = `
+                <tr>
                   <td colspan="4" style="padding: 3px;">${item.kode} - ${item.nama}</td>
                 </tr>
                 <tr>
