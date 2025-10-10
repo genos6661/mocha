@@ -217,7 +217,7 @@ function loadData(fileDesain) {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
           }));
-        } else if (fileDesain == 'small-con') {
+        } else if (fileDesain == 'small-con' || fileDesain == 'small-con2') {
           tbody.append(`
             <tr>
               <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700;">Total : </td>
