@@ -253,15 +253,15 @@ $(document).ready(function () {
       </div>
 
       <div class="col-6 col-md-2">
-        <input type="number" class="form-control amount text-end" min="0" placeholder="Amount">
+        <input type="text" class="form-control amount text-end" placeholder="Amount">
       </div>
 
       <div class="col-6 col-md-3">
-        <input type="number" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate">
+        <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate">
       </div>
 
       <div class="col-6 col-md-3">
-        <input type="number" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
+        <input type="text" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
       </div>
 
       <div class="col-6 col-md-1 text-center">
@@ -309,6 +309,7 @@ $(document).ready(function () {
 
   $('#tabelDetail').on('click', '.btnHapusBaris', function () {
       $(this).closest('.row').remove();
+      updateTotal();
   });
 
   function updateRates(idForex, $inputRate) {
@@ -321,9 +322,9 @@ $(document).ready(function () {
         success: function(response) {
           $isBuy = $('#buy');
           if($isBuy.prop('checked')) {
-            $inputRate.val(response.beli);
+            $inputRate.val(formatter.format(response.beli));
           } else {
-            $inputRate.val(response.jual);
+            $inputRate.val(formatter.format(response.jual));
           }
         },
         error: function(xhr) {
@@ -340,20 +341,29 @@ $(document).ready(function () {
 
   $('#tabelDetail').on('input', '.amount, .rate', function () {
     let $row = $(this).closest('.row');
-    let amount = parseFloat($row.find('.amount').val()) || 0;
-    let rate = parseFloat($row.find('.rate').val()) || 0;
+    const rawAmount = $row.find('.amount').val()
+      .toString()
+      .replace(/,/g, '');
+    const amount = parseFloat(rawAmount) || 0;
+    const rawRate = $row.find('.rate').val()
+      .toString()
+      .replace(/,/g, '');
+    const rate = parseFloat(rawRate) || 0;
     let subtotal = amount * rate;
-    $row.find('.subtotal').val(subtotal.toFixed(2));
+    $row.find('.subtotal').val(formatter.format(subtotal));
     updateTotal();
   });
 
   function updateTotal() {
     let total = 0;
     $('.subtotal').each(function () {
-      let val = parseFloat($(this).val()) || 0;
+      const rawVal = $(this).val()
+      .toString()
+      .replace(/,/g, '');
+      const val = parseFloat(rawVal) || 0;
       total += val;
     });
-    $('.total').val(total.toFixed(2));
+    $('.total').val(formatter.format(total));
   }
 
   function initSelect2() {
@@ -472,6 +482,39 @@ $(document).ready(function () {
       placeholder: 'Choose Source of fund'
     });
   }
+  // akhir select2
+
+  const formatter = new Intl.NumberFormat('en-EN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+  });
+
+  $(document).on('blur', '.rate, .amount', function () {
+    let val = $(this).val();
+
+    val = val.replace(/[^0-9.,]/g, '');
+
+    const numericVal = parseFloat(val.replace(/,/g, ''));
+
+    if (!isNaN(numericVal)) {
+      const formatted = new Intl.NumberFormat('en-EN', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(numericVal);
+
+      $(this).val(formatted);
+    } else {
+      $(this).val('');
+    }
+
+    updateTotal();
+  });
+
+  $(document).on('focus', '.amount, .rate', function () {
+    let val = $(this).val().replace(/,/g, '');
+    $(this).val(val);
+  });
+
 
   function getSetting() {
     if (cachedLogo) {
@@ -789,7 +832,7 @@ $(document).ready(function () {
           setCookie(cookieUserID, response.noindex, 30);
           $("#modalPelanggan").modal("hide");
           showTransaksi(response.noindex, response.nama);
-        });
+        }).trigger('focus');
 
         $("#btnFindTidak").click(function () {
           $('.findBox').addClass('d-none');
@@ -847,8 +890,14 @@ $(document).ready(function () {
     const details = [];
     $('#tabelDetail .row').each(function () {
       const forex = $(this).find('select.forex').val();
-      const amount = parseFloat($(this).find('.amount').val());
-      const rate = parseFloat($(this).find('.rate').val());
+      const rawAmount = $(this).find('.amount').val()
+      .toString()
+      .replace(/,/g, '');
+      const amount = parseFloat(rawAmount) || 0;
+      const rawRate = $(this).find('.rate').val()
+      .toString()
+      .replace(/,/g, '');
+      const rate = parseFloat(rawRate) || 0;
 
       if (forex && amount && rate) {
         details.push({

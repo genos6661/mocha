@@ -5,7 +5,7 @@ async function exportToPDF({
   filename = "export.pdf",
   title,
   nama_pt,
-  start, end
+  start, end, cabang
 } = {}) {
   if (!data || !Array.isArray(data) || data.length === 0) {
     notif.fire({
@@ -43,8 +43,8 @@ async function exportToPDF({
   const filterTgl = `${tanggal_awal} - ${tanggal_akhir}`;
   const tanggalWidth = doc.getTextWidth(tanggalText);
   const filterWidth = doc.getTextWidth(filterTgl);
-  const tanggalX = pageWidth - marginX - tanggalWidth;
-  const filterX = pageWidth - marginX - filterWidth + 11;
+  const tanggalX = pageWidth - marginX - tanggalWidth + 23;
+  const filterX = pageWidth - marginX - filterWidth + 25;
 
   // ====== Header ======
   function drawHeader() {
@@ -54,6 +54,13 @@ async function exportToPDF({
     doc.text(nama_pt, marginX, headerY);
     doc.text(filterTgl, filterX, headerY);
     doc.text(tanggalText, tanggalX, tanggalY);
+
+    if(cabang && cabang != '') {
+      const cabangWidth = doc.getTextWidth(cabang);
+      const cabangX = pageWidth - marginX - cabangWidth;
+      doc.text(cabang, cabangX, 29);
+      console.log('ada cabang');
+    }
 
     doc.setFontSize(18);
     doc.setFont("times", "bold");

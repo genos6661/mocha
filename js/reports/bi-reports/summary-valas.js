@@ -117,7 +117,7 @@ function getCabang(id, callback) {
       "X-Client-Domain": myDomain
     },
     success: function (response) {
-      callback(response.nama); // panggil callback dengan nama cabang
+      callback(response.nama);
     },
     error: function (xhr) {
       if (xhr.status === 404) {
@@ -131,7 +131,7 @@ function getCabang(id, callback) {
           text: 'Terjadi Kesalahan pada server'
         });
       }
-      callback(null); // panggil callback dengan null jika error
+      callback(null);
     }
   });
 }
@@ -476,13 +476,34 @@ $("#export-excel").click(function () {
 });
 
 $("#export-pdf").click(function () {
-  exportToPDF({
-    data: rawData,
-    headers: headers,
-    keys: keys,
-    filename: `Summary_Valas_${start}_${end}.pdf`,
-    title: 'Summary Valas',
-    nama_pt: parsedSetting.NamaPT.strval,
-    start: start, end: end
-  });
+  if (cabang && cabang != '' && cabang != 0) {
+    getCabang(cabang, function (nama) {
+      const namaCabang = nama || '';
+      console.log("Nama cabang:", namaCabang);
+
+      exportToPDF({
+        data: rawData,
+        headers: headers,
+        keys: keys,
+        filename: `Summary_Valas_${start}_${end}.pdf`,
+        title: 'Summary Valas',
+        nama_pt: parsedSetting.NamaPT.strval,
+        start: start,
+        end: end,
+        cabang: namaCabang
+      });
+    });
+  } else {
+    exportToPDF({
+      data: rawData,
+      headers: headers,
+      keys: keys,
+      filename: `Summary_Valas_${start}_${end}.pdf`,
+      title: 'Summary Valas',
+      nama_pt: parsedSetting.NamaPT.strval,
+      start: start,
+      end: end,
+      cabang: ''
+    });
+  }
 });
