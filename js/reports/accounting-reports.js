@@ -23,6 +23,31 @@ $(document).ready(function () {
 	    allowClear: true
 	});
 
+  $('#akun_start, #akun_end').select2({
+      dropdownParent: '#filter',
+      ajax: {
+        url: url_api + '/akun/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain,
+          "Authorization": `Bearer ${window.token}`
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'All Accounts',
+      allowClear: true
+  });
+
   $('#userInput').select2({
       dropdownParent: '#filter',
       ajax: {
@@ -61,6 +86,22 @@ $(document).ready(function () {
   $('#range').select2({dropdownParent: $('#filter')});
   $('#simpleDate').select2({dropdownParent: $('#filter')}).val('today').trigger('change');
 
+  $('#akun_start').on('change', function () {
+    const val = $(this).val();
+
+    if (!val) {
+      $('#akun_end').val(null).trigger('change');
+      return;
+    }
+
+    const startData = $('#akun_start').select2('data');
+    const text = (startData && startData.length) ? startData[0].text : $('#akun_start option:selected').text();
+
+    $('#akun_end').find(`option[value="${val}"]`).remove();
+
+    const newOption = new Option(text, val, true, true); 
+    $('#akun_end').append(newOption).trigger('change');
+  });
 });
 
 const modalFilter = document.getElementById('filter')
@@ -252,8 +293,9 @@ $('#sbmFilter').click(function (e) {
   const startDate = $('#startDate').val();
   const endDate = $('#endDate').val();
   const cabang = $('#cabang').val();
-  const userInput = $('#userInput').val();
-  const showOption = $('#showOption').val() || 1;
+  const akun_start = $('#akun_start').val();
+  const akun_end = $('#akun_end').val();
+  // const showOption = $('#showOption').val() || 1;
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -261,8 +303,9 @@ $('#sbmFilter').click(function (e) {
   if (startDate) params.append('start', startDate);
   if (endDate) params.append('end', endDate);
   if (cabang) params.append('cabang', cabang);
-  if (userInput) params.append('user', userInput);
-  if (showOption) params.append('show', showOption);
+  if (akun_start) params.append('akun_start', akun_start);
+  if (akun_end) params.append('akun_end', akun_end);
+  // if (showOption) params.append('show', showOption);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

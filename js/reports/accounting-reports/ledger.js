@@ -1,4 +1,4 @@
-let start, end, cabang, user, show;
+let start, end, cabang, user, akun_start, akun_end, show;
 $(document).ready(function() {
     $('#cabangFilter').select2({
         dropdownParent: '#modalFilter',
@@ -24,6 +24,31 @@ $(document).ready(function() {
         allowClear: true
     });
 
+    $('#akun_startFilter, #akun_endFilter').select2({
+        dropdownParent: '#modalFilter',
+        ajax: {
+          url: url_api + '/akun/select2',
+          dataType: 'json',
+          headers: {
+            "X-Client-Domain": myDomain,
+            "Authorization": `Bearer ${window.token}`
+          },
+          delay: 250,
+          data: function (params) {
+            return {
+              search: params.term
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: data.results
+            };
+          }
+        },
+        placeholder: 'All Accounts',
+        allowClear: true
+    });
+
     $('#rangeFilter').on('change', function () {
         updateDateRangeSelector(this.value);
     });
@@ -44,6 +69,23 @@ $(document).ready(function() {
         $('#boxSticky').hide();
       }
     });
+
+    $('#akun_startFilter').on('change', function () {
+      const val = $(this).val();
+
+      if (!val) {
+        $('#akun_endFilter').val(null).trigger('change');
+        return;
+      }
+
+      const startData = $('#akun_startFilter').select2('data');
+      const text = (startData && startData.length) ? startData[0].text : $('#akun_startFilter option:selected').text();
+
+      $('#akun_endFilter').find(`option[value="${val}"]`).remove();
+
+      const newOption = new Option(text, val, true, true); 
+      $('#akun_endFilter').append(newOption).trigger('change');
+    });
 });
 
 // akhir document ready
@@ -53,7 +95,8 @@ function getUrlParams() {
         start: params.get("start"),
         end: params.get("end"),
         cabang: params.get("cabang"),
-        user: params.get("user"),
+        akun_start: params.get("akun_start"),
+        akun_end: params.get("akun_end"),
         show: params.get("show")
     };
 }
@@ -107,7 +150,8 @@ function loadHeader() {
     start = params.start;
     end = params.end;
     cabang = params.cabang;
-    user = params.user;
+    akun_start = params.akun_start;
+    akun_end = params.akun_end;
     show = params.show;
 
     const tanggal_awal = new Date(start);
@@ -191,6 +235,8 @@ function loadData() {
   if (start) params.append("start_date", start);
   if (end) params.append("end_date", end);
   if (cabang) params.append("cabang", cabang);
+  if (akun_start) params.append("akun_start", akun_start);
+  if (akun_end) params.append("akun_end", akun_end);
 
   $.ajax({
       url: url_api + `/accounting-report/ledger?${params.toString()}`,
@@ -404,6 +450,8 @@ $('#sbmFilter').click(function (e) {
   const endDate = $('#endDate').val();
   const cabang = $('#cabangFilter').val();
   const show = $('#showOptionFilter').val();
+  const akun_start = $('#akun_startFilter').val();
+  const akun_end = $('#akun_endFilter').val();
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -411,6 +459,8 @@ $('#sbmFilter').click(function (e) {
   if (startDate) params.append('start', startDate);
   if (endDate) params.append('end', endDate);
   if (cabang) params.append('cabang', cabang);
+  if (akun_start) params.append('akun_start', akun_start);
+  if (akun_end) params.append('akun_end', akun_end);
   if (show) params.append('show', show);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;

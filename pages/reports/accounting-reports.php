@@ -139,6 +139,18 @@
           <label for="cabang" class="form-label">Branch</label>
           <select id="cabang" class="form-select"></select>
         </div>
+        <div class="mb-3" id="boxAkun">
+          <div class="row">
+            <div class="col-md">
+              <label for="akun_start" class="form-label">Account From</label>
+              <select id="akun_start" class="form-select"></select>
+            </div>
+            <div class="col-md">
+              <label for="akun_end" class="form-label">Until</label>
+              <select id="akun_end" class="form-select"></select>
+            </div>
+          </div>
+        </div>
         <div class="mb-3 d-none" id="boxUser">
           <label for="userInput" class="form-label">User Input</label>
           <select id="userInput" class="form-select"></select>

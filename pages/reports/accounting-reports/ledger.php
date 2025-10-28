@@ -148,14 +148,26 @@
           <label for="cabangFilter" class="form-label">Branch</label>
           <select id="cabangFilter" class="form-select"></select>
         </div>
-        <div class="mb-3">
+        <div class="mb-3" id="boxAkun">
+          <div class="row">
+            <div class="col-md">
+              <label for="akun_startFilter" class="form-label">Account From</label>
+              <select id="akun_startFilter" class="form-select"></select>
+            </div>
+            <div class="col-md">
+              <label for="akun_endFilter" class="form-label">Until</label>
+              <select id="akun_endFilter" class="form-select"></select>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="mb-3">
           <label for="showOptionFilter" class="form-label">Displayed Option</label>
           <select id="showOptionFilter" class="form-select">
             <option value="1" selected>Show All Forexs</option>
             <option value="2">Only Show Forexs with balance</option>
             <option value="3">Only Show Forexs with mutation</option>
           </select>
-        </div>
+        </div> -->
         <!-- <div class="d-flex justify-content-end mb-0">
           <div class="form-check form-switch mb-0">
             <input class="form-check-input" type="checkbox" id="includeClosed">
