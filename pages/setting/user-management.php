@@ -330,13 +330,23 @@
                 </div>
               </div>
             </div>
-            <div class="col d-flex justify-content-end">
+            <div class="col-md-6">
+              <div class="row">
+                <label class="col-sm-3 col-form-label text-sm-end" for="cabangReg"
+                  >Branchs Limitation</label
+                >
+                <div class="col-sm-9">
+                  <select id="cabangReg" class="form-select" multiple></select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
               <div class="form-check form-switch mb-2">
                 <input class="form-check-input" type="checkbox" id="request" value="1" />
                 <label class="form-check-label" for="request">Allow Rate Request</label>
               </div>
             </div>
-          </div>
+          </div>            
           <div class="row mt-6">
             <div class="col-md d-flex justify-content-end gap-2">
               <button type="reset" class="btn btn-label-secondary">Cancel</button>
@@ -584,6 +594,10 @@
                 <span class="h6 me-1">Email :</span>
                 <span class="dataDetail" id="emailDetail"></span>
               </li>
+              <li class="mb-2">
+                <span class="h6 me-1">Branchs :</span>
+                <span class="dataDetail" id="cabangDetail"></span>
+              </li>
             </ul>
           </div>
           <div class="col-md">
@@ -607,6 +621,10 @@
               <li class="mb-2">
                 <span class="h6 me-1">Country :</span>
                 <span class="dataDetail" id="negaraDetail"></span>
+              </li>
+              <li class="mb-2">
+                <span class="h6 me-1">Allow Request Rate :</span>
+                <span class="dataDetail" id="requestDetail"></span>
               </li>
             </ul>
           </div>
@@ -667,6 +685,12 @@
           <div class="col mb-3">
             <label for="passwordEditUser" class="form-label">Password</label>
             <input type="password" class="form-control" id="passwordEditUser" placeholder="Keep blank unless update the password">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mb-3">
+            <label for="cabangEditUser" class="form-label">Branchs Limitation</label>
+            <select id="cabangEditUser" class="form-select" multiple></select>
           </div>
         </div>
         <div class="row row-cols-md-3 row-cols-2">

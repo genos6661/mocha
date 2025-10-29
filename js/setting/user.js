@@ -250,6 +250,7 @@ function initEventsUser() {
             },
             success: function (response) {
                 const data = response.data;
+                const cabangList = response.cabang || [];
 
                 if (window.level < data.level) {
                     $('#editBtn, #deleteBtn').removeClass('d-none');
@@ -279,6 +280,16 @@ function initEventsUser() {
                 $('#deactivateBtn').attr('data-id', id);
                 $('#editBtn').attr('data-id', id);
                 $('#deleteBtn').attr('data-id', id).attr('data-ref', data.username);
+
+                if (data.request == 0) {
+                    $('#requestDetail').removeClass('text-success').addClass('text-danger').text('Not Allowed');
+                } else {
+                    $('#requestDetail').removeClass('text-danger').addClass('text-success').text('Allowed');
+                }
+
+                const cabangNames = cabangList.map(c => c.nama).join(', ');
+                $('#cabangDetail').text(cabangNames || '-');
+
                 $('#modalDetailUser').modal('show');
             },
             error: function (err) {
@@ -290,42 +301,78 @@ function initEventsUser() {
 }
 
 //modal
-const modalEdit = document.getElementById('modalEditUser')
+const modalEdit = document.getElementById('modalEditUser');
 modalEdit.addEventListener('shown.bs.modal', event => {
-    const button = event.relatedTarget
-    const id = button.getAttribute('data-id')
-    $('#modalEditUser').find('input, textarea').val('').prop('checked', false);
+  const button = event.relatedTarget;
+  const id = button.getAttribute('data-id');
+  $('#modalEditUser').find('input, textarea').val('').prop('checked', false);
 
-    $.ajax({
-        url: url_api + `/users/id/` + id,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${window.token}`,
-            "X-Client-Domain": myDomain
-        },
-        success: function(response) {
-            const data = response.data;
-            $('#idEditUser').val(id);
-            $('#namaEditUser').val(data.username);
-            $('#emailEditUser').val(data.email);
-            if (data.role && data.role != 0) {
-                const option = new Option(data.kode_role + ' - ' + data.nama_role, data.role, true, true);
-                $('#roleEditUser').append(option).trigger('change');
-            }
-            $('#aktifEdit').prop('checked', data.aktif == 1);
-            $('#requestEdit').prop('checked', data.request == 1);
+  $('#cabangEditUser').select2({
+    dropdownParent: $('#modalEditUser'),
+    ajax: {
+      url: url_api + '/cabang/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Branch',
+    allowClear: true
+  });
 
-            $('#modalEditUser').modal('show');
-        },
-        error: function(xhr, status, error) {
-            notif.fire({
-              icon: 'error',
-              text: xhr.responseJSON.message
-            });
-        }
-    });
+  $.ajax({
+    url: url_api + `/users/id/` + id,
+    type: 'GET',
+    dataType: 'json',
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${window.token}`,
+      "X-Client-Domain": myDomain
+    },
+    success: function (response) {
+      const data = response.data;
+      const cabangList = response.cabang || [];
+
+      $('#idEditUser').val(id);
+      $('#namaEditUser').val(data.username);
+      $('#emailEditUser').val(data.email);
+
+      if (data.role && data.role != 0) {
+        const option = new Option(`${data.kode_role} - ${data.nama_role}`, data.role, true, true);
+        $('#roleEditUser').append(option).trigger('change');
+      }
+
+      $('#aktifEdit').prop('checked', data.aktif == 1);
+      $('#requestEdit').prop('checked', data.request == 1);
+
+      if (cabangList.length > 0) {
+        cabangList.forEach(c => {
+          const option = new Option(`${c.kode} - ${c.nama}`, c.noindex, true, true);
+          $('#cabangEditUser').append(option);
+        });
+        $('#cabangEditUser').trigger('change');
+      }
+
+      $('#modalEditUser').modal('show');
+    },
+    error: function (xhr, status, error) {
+      notif.fire({
+        icon: 'error',
+        text: xhr.responseJSON?.message || 'Failed to load data'
+      });
+    }
+  });
 });
 
 const modalHapus = document.getElementById('modalHapusUser')
@@ -349,10 +396,9 @@ $('#sbmEditUser').click(function (e) {
     role: $('#roleEditUser').val(),
     password: $('#passwordEditUser').val(),
     request: $('#requestEdit').is(':checked') ? 1 : 0,
+    cabang: $('#cabangEditUser').val(),
     aktif: $('#aktifEdit').is(':checked') ? 1 : 0,
   };
-
-  console.log(formData);
 
   $.ajax({
     url: url_api + '/users/id/' + id,

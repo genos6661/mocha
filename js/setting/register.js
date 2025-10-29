@@ -51,6 +51,30 @@ function initRegister() {
     $("#usernameReg").val(value);
   });
 
+  $('#cabangReg').select2({
+    // dropdownParent: $('#modalFilter'),
+    ajax: {
+      url: url_api + '/cabang/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Branch',
+    allowClear: true
+  });
+
   if(!userPermissions.includes('register')) {
     $('#sbmReg').attr('disabled', true);
   }
@@ -112,7 +136,8 @@ function submitUser(idProfile) {
     telepon: $('#teleponReg').val(),
     profile: idProfile,
     role: $('#roleReg').val(),
-    request: $('#request').is(':checked') ? 1 : 0
+    request: $('#request').is(':checked') ? 1 : 0,
+    cabang: $('#cabangReg').val()
   };
 
   $.ajax({
@@ -132,6 +157,7 @@ function submitUser(idProfile) {
       }).then((result) => {
           $('#formRegister')[0].reset();
           $('#roleReg').val(null).trigger('change');
+          $('#cabangReg').val(null).trigger('change');
       });
     },
     error: function (xhr, status, error) {

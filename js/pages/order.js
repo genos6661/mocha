@@ -45,7 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
             };
           }
         },
-        placeholder: 'Choose Branch'
+        placeholder: 'Choose Branch',
+        allowClear: true
     });
 
     $('#range').on('change', function () {
