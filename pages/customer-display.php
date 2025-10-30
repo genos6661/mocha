@@ -241,19 +241,19 @@ require '../config/config.php';
           <div class="text-center boxLogo m-0"></div>
           <div>
             <!-- <h4 class="text-center dm-serif-text-regular m-0 namaPT"></h4> -->
-            <p class="text-center dm-serif-text-regular header m-0 namaPT">Mocha Display</p>
-            <p class="text-center national-park m-0" id="slogan">More Than Trusted</p>
+            <p class="text-center dm-serif-text-regular header m-0 namaPT text-black">Mocha Display</p>
+            <p class="text-center national-park m-0 text-black" id="slogan">More Than Trusted</p>
           </div>
         </div>
         <div class="kiritengah bg-white rounded shadow" id="boxCarousel">
         </div>
         <div class="kiribawah bg-white rounded shadow d-flex justify-content-center align-items-center">
-          <p class="h6 national-park mb-0 text-center" id="footer"></p>
+          <p class="h6 national-park mb-0 text-center text-black" id="footer"></p>
         </div>
       </div>
       <div class="kanan rounded shadow bg-white">
         <div class="card-header d-flex justify-content-between pb-2">
-          <h5 class="national-park">Today's Rate</h5>
+          <h5 class="national-park text-black">Today's Rate</h5>
           <div class="d-flex p-0 gap-2 boxSetup">
             <div class="input-group input-group-sm p-0">
               <span class="input-group-text">Max Rows</span>
@@ -264,7 +264,7 @@ require '../config/config.php';
               <button id="fontPlus" class="btn btn-sm btn-outline-primary">A+</button>
             </div>
           </div>
-          <h5 class="national-park"><?php echo date('d F Y'); ?></h5>
+          <h5 class="national-park text-black"><?php echo date('d F Y'); ?></h5>
         </div>
         <div class="card-body overflow-auto">
           <div id="tabelContainer" class="d-flex flex-wrap gap-3"></div>
