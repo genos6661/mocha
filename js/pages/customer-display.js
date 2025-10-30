@@ -159,9 +159,9 @@ function generateTabelHTML(dataArray) {
       <table class="table mb-0 national-park">
         <thead class="">
           <tr>
-            <th class="text-center text-black" colspan="2">Forex</th>
-            <th class="text-end text-black">Buy</th>
-            <th class="text-end text-black">Sell</th>
+            <th class="text-center text-black" colspan="2"><strong>Forex</strong></th>
+            <th class="text-end text-black"><strong>Buy</strong></th>
+            <th class="text-end text-black"><strong>Sell</strong></th>
           </tr>
         </thead>
         <tbody>
@@ -184,9 +184,9 @@ function generateTabelHTML(dataArray) {
                     <img src="${urlFlag}">
                 </div>
               </td>
-              <td class="p-2 text-black">${item.kode}</td>
-              <td class="text-end text-black p-2">${beliFormatted}</td>
-              <td class="text-end text-black p-2">${jualFormatted}</td>
+              <td class="p-2 text-black"><strong>${item.kode}</strong></td>
+              <td class="text-end text-black p-2"><strong>${beliFormatted}</strong></td>
+              <td class="text-end text-black p-2"><strong>${jualFormatted}</strong></td>
             </tr>
         `;
     });
