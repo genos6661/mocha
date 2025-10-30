@@ -194,7 +194,7 @@ function loadData() {
     if (show) params.append("tampilkan", show);
 
     $.ajax({
-        url: url_api + `/bi-report/summary-valas?${params.toString()}`,
+        url: url_api + `/bi-report/lkub?${params.toString()}`,
         type: 'GET',
         contentType: 'application/json',
         headers: {
