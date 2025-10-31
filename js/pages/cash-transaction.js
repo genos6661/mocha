@@ -36,7 +36,7 @@ $(document).ready(function() {
 	$('#cabang').select2({
 	    dropdownParent: $('#modalTambah'),
 	    ajax: {
-	      url: url_api + '/cabang/select2',
+	      url: url_api + '/cabang/select2/limit',
 	      dataType: 'json',
 	      headers: {
 	        "X-Client-Domain": myDomain,
@@ -108,7 +108,7 @@ $(document).ready(function() {
 	$('#cabangEdit').select2({
 	    dropdownParent: $('#modalEdit'),
 	    ajax: {
-	      url: url_api + '/cabang/select2',
+	      url: url_api + '/cabang/select2/limit',
 	      dataType: 'json',
 	      headers: {
 	        "X-Client-Domain": myDomain,

@@ -11,10 +11,11 @@ $(document).ready(function() {
 	$('#from, #to').select2({
     dropdownParent: '#modalTambah',
     ajax: {
-      url: url_api + '/cabang/select2',
+      url: url_api + '/cabang/select2/limit',
       dataType: 'json',
       headers: {
-        "X-Client-Domain": myDomain
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
       },
       delay: 250,
       data: function (params) {
@@ -35,10 +36,11 @@ $(document).ready(function() {
   $('#fromEdit, #toEdit').select2({
     dropdownParent: '#modalEdit',
     ajax: {
-      url: url_api + '/cabang/select2',
+      url: url_api + '/cabang/select2/limit',
       dataType: 'json',
       headers: {
-        "X-Client-Domain": myDomain
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
       },
       delay: 250,
       data: function (params) {
