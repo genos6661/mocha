@@ -136,17 +136,17 @@
           <div class="col-md-9 d-flex justify-content-end g-2">
             <div class="form-check form-check-inline">
               <label class="switch">
-                <input type="radio" name="tipeTrans" id="tipeBoth" value="tipeBoth" class="switch-input">
+                <input type="radio" name="tipeTrans" id="tipeBoth" value="tipeBoth" class="switch-input" checked>
                 <span class="switch-toggle-slider">
                   <span class="switch-on"></span>
                   <span class="switch-off"></span>
                 </span>
-                <span class="switch-label">Both (auto-reverse)</span>
+                <span class="switch-label">Inter-branchs Transaction</span>
               </label>
             </div>
             <div class="form-check form-check-inline">
               <label class="switch">
-                <input type="radio" name="tipeTrans" id="tipeForex" value="tipeForex" class="switch-input" checked>
+                <input type="radio" name="tipeTrans" id="tipeForex" value="tipeForex" class="switch-input">
                 <span class="switch-toggle-slider">
                   <span class="switch-on"></span>
                   <span class="switch-off"></span>
@@ -184,7 +184,7 @@
             <select id="to" class="form-select"></select>
           </div>
         </div>
-        <div class="row">
+        <div class="row d-none" id="boxAkunLawan">
           <div class="col-md mb-3">
             <label for="akunFrom" class="form-label">Account From</label>
             <select id="akunFrom" class="form-select"></select>

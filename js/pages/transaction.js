@@ -478,7 +478,8 @@ function updateDateRangeSelector(selectedValue) {
   $('#endDate').val(endDate);
 }
 
-$('#modalJurnal').on('shown.bs.modal', function (e) {
+const modalJurnal = document.getElementById('modalJurnal')
+modalJurnal.addEventListener('shown.bs.modal', e => {
   const button = e.relatedTarget;
   const id = button.getAttribute('data-id');
   const ref = button.getAttribute('data-ref');

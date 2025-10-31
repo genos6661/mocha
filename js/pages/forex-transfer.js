@@ -535,12 +535,18 @@ $('#tambahBarisEdit').on('click', function () {
 
 $(document).on('change', 'input[name="tipeTrans"]', function () {
   $('#detailBaru tbody').empty();
-  if ($(this).val() === 'tipeForex' || $(this).val() === 'tipeBoth') {
+  if ($(this).val() === 'tipeBoth') {
     $('#boxTabelDetail, #boxNewRow').removeClass('d-none');
     $('#boxRupiah').addClass('d-none');
+    $('#boxAkunLawan').addClass('d-none');
+  } else if ($(this).val() === 'tipeForex') {
+    $('#boxTabelDetail, #boxNewRow').removeClass('d-none');
+    $('#boxRupiah').addClass('d-none');
+    $('#boxAkunLawan').removeClass('d-none');
   } else {
     $('#boxTabelDetail, #boxNewRow').addClass('d-none');
     $('#boxRupiah').removeClass('d-none');
+    $('#boxAkunLawan').removeClass('d-none');
   }
 });
 
