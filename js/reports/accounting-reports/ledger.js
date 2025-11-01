@@ -332,7 +332,7 @@ function loadData() {
                     <td class="text-center p-1">${m.prefix || '-'}</td>
                     <td class="text-center p-1">${m.nomor || '-'}</td>
                     <td class="p-1">${m.kontak || '-'}</td>
-                    <td class="p-1">${m.keterangan || '-'}</td>
+                    <td class="p-1">${m.deskripsi || '-'}</td>
                     <td class="text-end p-1">${m.debit.toLocaleString()}</td>
                     <td class="text-end p-1">${m.kredit.toLocaleString()}</td>
                     <td class="text-end p-1">${saldo.toLocaleString()}</td>
