@@ -206,7 +206,7 @@ function initTable() {
                 data: null,
                 className: "text-end",
                 render: function(data) {
-                  if(userPermissions.includes('edit_transfer') || userPermissions.includes('delete_transfer')) {
+                  if((data.tipe == 7 && userPermissions.includes('edit_transfer')) || userPermissions.includes('delete_transfer')) {
                     let menuHtml = `
                         <div class="dropdown">
                           <a href="javascript:;" class="btn dropdown-toggle hide-arrow btn-icon btn-text-secondary rounded-pill waves-effect p-0" data-bs-toggle="dropdown">
@@ -215,7 +215,7 @@ function initTable() {
                           <div class="dropdown-menu dropdown-menu-end">
                     `;
 
-                    if (userPermissions.includes('edit_transfer')) {
+                    if (userPermissions.includes('edit_transfer') && data.tipe == 7) {
                         menuHtml += `
                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit" data-id="${data.noindex}">Edit</a>
                         `;
@@ -413,8 +413,14 @@ function initEvents() {
                     </tr>
                   `);
               }
+
+              if(data.tipe == 7) {
+                $('#editBtn').attr('data-id', id).removeClass('d-none');
+              } else {
+                $('#editBtn').addClass('d-none');
+              }
+
               $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
-              $('#editBtn').attr('data-id', id);
               $('#deleteBtn').attr('data-id', id).attr('data-ref', data.nomor);
               $('#reprintDetail').attr('href', '/pages/transaction/transfer-receipt.php?number=' + data.nomor);
               $('#modalDetail').modal('show');
