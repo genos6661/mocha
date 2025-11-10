@@ -346,7 +346,7 @@ function loadData() {
           }
       },
       error: function (xhr) {
-          if (xhr.status === 404) {
+          if (xhr.status === 404 || xhr.status === 403) {
               notif.fire({
                 icon: 'error',
                 text: xhr.responseJSON.message
