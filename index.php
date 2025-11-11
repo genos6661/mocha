@@ -415,7 +415,7 @@ switch ($routeInfo[0]) {
                       </li>
                     </ul>
                   </li>
-                  <li class="menu-item <?php if (in_array($current_path, ['/order', '/order/edit', '/transaction'])) { echo 'active'; } ?>">
+                  <li class="menu-item <?php if (in_array($current_path, ['/order', '/order/edit', '/transaction', '/transaction/edit'])) { echo 'active'; } ?>">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                       <i class="menu-icon icon-base ti tabler-mail-dollar"></i>
                       <div data-i18n="transaction">Transaction</div>
@@ -428,7 +428,7 @@ switch ($routeInfo[0]) {
                           <div data-i18n="transaction">Order</div>
                         </a>
                       </li>
-                      <li class="menu-item <?php if($current_path == '/transaction') { echo 'active'; } ?>">
+                      <li class="menu-item <?php if($current_path == '/transaction' || $current_path == '/transaction/edit') { echo 'active'; } ?>">
                         <a href="/transaction" class="menu-link">
                           <i class="menu-icon icon-base ti tabler-file-dollar"></i>
                           <div data-i18n="transaction">Transaction</div>
@@ -495,7 +495,7 @@ switch ($routeInfo[0]) {
                     <script>
                       document.write(new Date().getFullYear());
                     </script>
-                    , made with ❤️ by <a href="#" target="_blank" class="footer-link">Brotherhood Software Solutions</a>
+                    , made with ❤️ by <a href="#" target="_blank" class="footer-link">Brotherhood Report Systems</a>
                   </div>
                   <!-- <div class="d-none d-lg-inline-block">
                     <a

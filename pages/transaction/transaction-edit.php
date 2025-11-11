@@ -44,7 +44,7 @@
 	          <p class="mb-0"><span id="teleponCabang"></span></p>
 	        </div>
 	        <div>
-	          <h4 class="mb-3">Order <span id="nomorOrder"></span></h4>
+	          <h4 class="mb-3">Transaction <span id="nomorTransaksi"></span></h4>
 	          <div class="mb-1 text-heading text-end">
 	            <span>Date Issues:</span>
 	            <span class="fw-medium" id="tanggalTransaksi"></span>
@@ -56,11 +56,21 @@
 	    </div>
 	</div>
 	<div class="card-body px-0">
-		<input type="hidden" id="idOrder">
+		<input type="hidden" id="idTransaksi">
 		<input type="hidden" id="tipeTrans">
+		<div class="row mb-3">
+			<div class="col-md">
+				<label for="tanggal" class="form-label">Transaction Date</label>
+				<input type="date" class="form-control" id="tanggal">
+			</div>
+			<div class="col-md">
+				<label for="tanggal_laporan" class="form-label">Report Date</label>
+				<input type="date" class="form-control" id="tanggal_laporan">
+			</div>
+		</div>
         <div class="row mb-3">
             <div class="col-xl-6 col-md-12 col-sm-5 col-12 mb-xl-0 mb-md-6 mb-sm-0 mb-6">
-              <h6 class="mb-1">Order From :</h6>
+              <h6 class="mb-1">Invoice To :</h6>
               <p class="mb-1 fw-medium"><span id="namaPelanggan"></span></p>
               <p class="mb-1 fw-medium"><span id="alamatPelanggan"></span></p>
               <p class="mb-1 fw-medium"><span id="teleponPelanggan"></span></p>
@@ -97,7 +107,7 @@
         </div>
         <div class="row">
         	<div class="col">
-        		<h5 class="mb-1">Order Details :</h5>
+        		<h5 class="mb-1">Transaction Details :</h5>
         	</div>
         </div>
         <div class="row">
@@ -133,10 +143,10 @@
         </div>
       <div class="row mt-3">
       	<div class="col-md d-grid">
-      			<a href="/order" class="btn btn-dark">Close and Cancel</a>
+      			<a href="/transaction" class="btn btn-dark">Close and Cancel</a>
       	</div>
       	<div class="col-md d-grid">
-      		<button class="btn btn-secondary" onclick="resetOrder()" id="btnReset">Reset Default</button>
+      		<button class="btn btn-secondary" onclick="resetTrans()" id="btnReset">Reset Default</button>
       	</div>
       	<div class="col-md d-grid">
       		<button class="btn btn-primary" id="btnSubmit">Save Update</button>
@@ -145,4 +155,4 @@
     </div>
 </div>
 
-<script src="/js/pages/order-edit.js" type="text/javascript"></script>
+<script src="/js/pages/transaction-edit.js" type="text/javascript"></script>

@@ -14,6 +14,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/account', 'pages/account.php');
     $r->addRoute('GET', '/fixed-asset', 'pages/coming-soon.php');
     $r->addRoute('GET', '/transaction', 'pages/transaction/transaction.php');
+    $r->addRoute('GET', '/transaction/edit', 'pages/transaction/transaction-edit.php');
     $r->addRoute('GET', '/user-management', 'pages/setting/user-management.php');
     $r->addRoute('GET', '/settings', 'pages/setting/settings.php');
     $r->addRoute('GET', '/beginning-balance', 'pages/setting/beginning-balance.php');

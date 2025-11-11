@@ -12,6 +12,8 @@ $(document).ready(function() {
     initTableUser();
     initEventsUser();
 
+    console.log(window.level); //test
+
     $('#roleEditUser').select2({
         dropdownParent: $('#modalEditUser'),
         ajax: {

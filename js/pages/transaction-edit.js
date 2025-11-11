@@ -1,13 +1,13 @@
 const urlParams = new URLSearchParams(window.location.search);
-const orderNomor = urlParams.get('nomor');
+const nomorTrans = urlParams.get('nomor');
 $(document).ready(function() {
-    if (!orderNomor) {
+    if (!nomorTrans) {
         Swal.fire({
 	        title: 'Error',
-	        text: 'Order Number Not Found',
+	        text: 'Transaction Number Not Found',
 	        icon: 'error',
 	        showDenyButton: false,
-	        confirmButtonText: 'Back To Order Page',
+	        confirmButtonText: 'Back To Transaction Page',
 	        customClass: {
 	          confirmButton: 'btn btn-primary'
 	        },
@@ -16,15 +16,15 @@ $(document).ready(function() {
 	        allowEscapeKey: false
 	    }).then((result) => {
 	        if (result.isConfirmed) {
-	          window.location.href = '/order';
+	          window.location.href = '/transaction';
 	        }
 	    });
     } else {
-        resetOrder();
+        resetTrans();
     }
 });
 
-function resetOrder() {
+function resetTrans() {
   const logoUrl = url_api + '/setting/logo/';
 
   const xhr = new XMLHttpRequest();
@@ -45,7 +45,7 @@ function resetOrder() {
   xhr.send();
   
 	$.ajax({
-        url: url_api + '/order/nomor/' + orderNomor, 
+        url: url_api + '/transaction/nomor/' + nomorTrans, 
         type: 'GET',
         contentType: 'application/json',
         headers: {
@@ -75,7 +75,7 @@ function resetOrder() {
            	}
            	$('#jenisTransaksi').text(jenisTransaksi);
            	$('#tipeTrans').val(response.tipe);
-           	$('#idOrder').val(response.noindex);
+           	$('#idTransaksi').val(response.noindex);
 
            	const tanggal = new Date(response.tanggal);
            	const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -84,6 +84,17 @@ function resetOrder() {
 						  day: 'numeric'
 						});
            	$('#tanggalTransaksi').text(formattedDate);
+
+            function toLocalDateInputValue(dateStr) {
+                const date = new Date(dateStr);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            $('#tanggal').val(toLocalDateInputValue(response.tanggal));
+            $('#tanggal_laporan').val(toLocalDateInputValue(response.tanggal_laporan));
             
             const details = response.details || [];
 
@@ -96,8 +107,13 @@ function resetOrder() {
       				let subtotal = 0;
 
       				details.forEach(function (item) {
-
-                const jumlahFormatted = Number(item.jumlah).toLocaleString('id-ID', {
+                let qty;
+                if(response.tipe == 3) {
+                    qty = item.beli;
+                } else if (response.tipe == 4) {
+                    qty = item.jual;
+                }
+                const jumlahFormatted = Number(qty).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 2
                 });
@@ -107,7 +123,7 @@ function resetOrder() {
                     maximumFractionDigits: 2
                 });
 
-                const totalPerItem = item.jumlah * item.rate;
+                const totalPerItem = qty * item.rate;
 
                 const subtotalFormatted = Number(totalPerItem).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
@@ -350,7 +366,6 @@ function updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal) {
       // ambil rate asli
       let rate = (tipe === 'buy') ? response.beli : response.jual;
 
-      // konversi ke number
       rate = parseFloat(rate) || 0;
 
       // format Indonesia → "1.234,56"
@@ -382,7 +397,9 @@ $('#btnSubmit').click(function (e) {
   if ($btn.prop('disabled')) return;
   $btn.prop('disabled', true);
 
-  // --- fungsi normalisasi ---
+  const tanggal = $('#tanggal').val();
+  const tanggal_laporan = $('#tanggal_laporan').val();
+
   function normalizeNumber(str) {
     if (!str) return 0;
     return parseFloat(
@@ -424,21 +441,19 @@ $('#btnSubmit').click(function (e) {
     return;
   }
 
-  // normalisasi id order
-  const idOrder = normalizeString($('#idOrder').val());
+  const idTrans = normalizeString($('#idTransaksi').val());
 
-  if (!idOrder) {
+  if (!idTrans) {
     $btn.prop('disabled', false);
     notif.fire({
       icon: 'warning',
-      text: 'Order tidak valid!'
+      text: 'Transaction is not valid!'
     });
     return;
   }
 
-  // --- AJAX ---
   $.ajax({
-    url: url_api + '/order/' + idOrder,
+    url: url_api + '/transaction/' + idTrans,
     type: 'PUT',
     contentType: 'application/json',
     headers: {
@@ -446,13 +461,13 @@ $('#btnSubmit').click(function (e) {
       "X-Client-Domain": myDomain,
       "Authorization": `Bearer ${window.token}`
     },
-    data: JSON.stringify({ details: details }),
+    data: JSON.stringify({ tanggal: tanggal, tanggal_laporan: tanggal_laporan, details: details }),
     success: function (response) {
       notif.fire({
         icon: 'success',
         text: response.message
       }).then(() => {
-        window.location.href = '/order';
+        window.location.href = '/transaction';
       });
     },
     error: function (xhr) {

@@ -44,6 +44,9 @@ $(document).ready(function () {
         userPermissions = permissions;
         if(permissions.includes('transaction')) {
           loadMoreData();
+          if(!permissions.includes('edit_transaction')) {
+              $('#editBtn').attr('disabled', true).addClass('d-none');
+          }
           if(!permissions.includes('delete_transaction')) {
               $('#deleteBtn').attr('disabled', true);
           }
@@ -139,7 +142,6 @@ $("#sbmFilter").on("click", function () {
       bootstrap.Modal.getInstance(document.getElementById("modalFilter")).hide();
       offset = 0;
       loadMoreData(true);
-      // console.log(currentFilters);
     });
 
 function initTable() {
@@ -194,10 +196,17 @@ function initTable() {
                     <a href="/pages/transaction/invoice.php?transaction=${data.nomor}" class="dropdown-item" target="_blank">Reprint</a>
               `;
 
-              if (userPermissions.includes('delete_transaction')) {
+              if(userPermissions.includes('edit_transaction') || userPermissions.includes('delete_transaction')) {
+                if (userPermissions.includes('edit_transaction')) {
+                  menuHtml += `
+                      <a href="/transaction/edit?nomor=${data.nomor}" class="dropdown-item">Edit</a>
+                  `;
+                }
+                if (userPermissions.includes('delete_transaction')) {
                   menuHtml += `
                       <a class="dropdown-item btnModalHapus" data-bs-toggle="modal" data-bs-target="#modalHapus" data-id="${data.noindex}" data-ref="${data.nomor}">Delete</a>
                   `;
+                }
               }
 
               menuHtml += `
@@ -386,6 +395,7 @@ function initEvents() {
             }
             $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
             $('#reprintDetail').attr('href', '/pages/transaction/invoice.php?transaction=' + nomor);
+            $('#editBtn').attr('href', '/transaction/edit?nomor=' + data.nomor);
             $('#deleteBtn').attr('data-id', id).attr('data-ref', nomor);
             $('#modalDetail').modal('show');
         },
