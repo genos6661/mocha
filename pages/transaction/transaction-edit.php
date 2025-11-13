@@ -58,6 +58,7 @@
 	<div class="card-body px-0">
 		<input type="hidden" id="idTransaksi">
 		<input type="hidden" id="tipeTrans">
+		<input type="hidden" id="idCabang">
 		<div class="row mb-3">
 			<div class="col-md">
 				<label for="tanggal" class="form-label">Transaction Date</label>

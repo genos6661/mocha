@@ -57,7 +57,7 @@ function resetTrans() {
             $('#namaCabang').text(response.nama_cabang);
             $('#alamatCabang').text(response.alamat_cabang);
             $('#teleponCabang').text(response.telepon_cabang);
-            $('#nomorOrder').text(response.nomor);
+            $('#nomorTransaksi').text(response.nomor);
             $('#namaPelanggan').text(response.nama_pelanggan);
             $('#alamatPelanggan').text(response.alamat);
             $('#teleponPelanggan').text(response.telepon);
@@ -68,14 +68,15 @@ function resetTrans() {
             $('#pekerjaan').text(response.pekerjaan);
 
            	let jenisTransaksi = "";
-           	if(response.tipe == "buy") {
+           	if(response.tipe == 3) {
            		jenisTransaksi = "Buying Transaction";
-           	} else if (response.tipe == "sell") {
+           	} else if (response.tipe == 4) {
            		jenisTransaksi = "Selling Transaction";
            	}
            	$('#jenisTransaksi').text(jenisTransaksi);
            	$('#tipeTrans').val(response.tipe);
            	$('#idTransaksi').val(response.noindex);
+            $('#idCabang').val(response.cabang);
 
            	const tanggal = new Date(response.tanggal);
            	const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -173,17 +174,11 @@ function resetTrans() {
                 tbody.append(row);
 
                 selectForex.on('change', function () {
-                    const idForex = $(this).val();
-                    if (!idForex) return;
-
-                    updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal);
+                  updateRates($(this), $inputRate, $inputJumlah, $inputSubtotal);
                 });
               });
 
-      				$('#subtotal, #total').text(Number(subtotal).toLocaleString('id-ID', {
-							  minimumFractionDigits: 2,
-							  maximumFractionDigits: 2
-							}));
+              updateTotal();
       			}
         },
         error: function (xhr, status, error) {
@@ -196,93 +191,111 @@ function resetTrans() {
 }
 
 function initSelect2Valas(select) {
-    const initVal = select.data('init-value');
-    const initText = select.data('init-text');
+  const initVal = select.data('init-value');
+  const initText = select.data('init-text');
 
-    // Init select2 dengan AJAX
-    select.select2({
-      placeholder: "Choose Forex",
-      ajax: {
-        url: url_api + '/forex/select2',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
+  select.select2({
+    placeholder: "Choose Forex",
+    ajax: {
+      url: url_api + '/forex/select2',
+      dataType: 'json',
+      headers: { "X-Client-Domain": myDomain },
+      delay: 250,
+      data: function (params) {
+        return { search: params.term };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results.map(item => ({
+            id: item.id,
+            text: item.text,
+            kode: item.kode,
+            nama: item.nama,
+            beli: item.beli,
+            jual: item.jual
+          }))
+        };
       }
-    });
+    },
+    templateResult: formatOption,
+    templateSelection: formatSelection,
+    escapeMarkup: m => m
+  });
 
-    // Tambahkan option default jika belum ada
-    if (initVal && !select.find(`option[value="${initVal}"]`).length) {
-      const option = new Option(initText, initVal, true, true);
-      select.append(option).trigger('change');
-    }
+  if (initVal && !select.find(`option[value="${initVal}"]`).length) {
+    const option = new Option(initText, initVal, true, true);
+    select.append(option).trigger('change');
+  }
+}
+
+function formatOption(item) {
+  if (!item.id) return item.text;
+  const tipe = $('#tipeTrans').val();
+  const nilai = tipe == 3 ? item.beli : item.jual;
+  const warna = tipe == 3 ? 'text-success' : 'text-danger';
+
+  return `
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="me-2">
+        <div class="d-flex align-items-center">
+          <h6 class="mb-0 me-1">${item.kode || '-'}</h6>
+        </div>
+        <small class="text-body">${item.nama || ''}</small>
+      </div>
+      <div class="user-progress">
+        <p class="fw-medium mb-0 d-flex align-items-center gap-1 ${warna}">
+          ${nilai || ''}
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+// tampilan setelah dipilih → hanya text normal
+function formatSelection(item) {
+  return item.text || '';
 }
 
 $('#tambahBaris').on('click', function () {
-    let baris = $(`
-      <tr>
-        <td class="px-1">
-          <select class="form-select valas"></select>
-        </td>
-        <td class="px-1">
-          <input type="text" class="form-control jumlah text-end">
-        </td>
-        <td class="px-1">
-          <input type="text" class="form-control rate text-end">
-        </td>
-        <td class="px-1">
-          <input type="text" class="form-control subtotal text-end" readonly>
-        </td>
-        <td class="px-1"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
-      </tr>
-    `);
-    $('#tabelDetail tbody').append(baris);
+  let row = $(`
+    <tr>
+      <td class="px-1">
+        <select class="form-select valas" style="width: 100%"></select>
+      </td>
+      <td class="px-1">
+        <input type="text" class="form-control jumlah text-end">
+      </td>
+      <td class="px-1">
+        <input type="text" class="form-control rate text-end">
+      </td>
+      <td class="px-1">
+        <input type="text" class="form-control subtotal text-end" readonly>
+      </td>
+      <td class="px-1">
+        <button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris">
+          <i class="icon-base ti tabler-trash"></i>
+        </button>
+      </td>
+    </tr>
+  `);
 
-    let $selectForex = baris.find('.valas').first();
-    let $inputRate = baris.find('.rate').first();
-    let $inputJumlah = baris.find('.jumlah').first();
-    let $inputSubtotal = baris.find('.subtotal').first();
+  const tbody = $('#tabelDetail tbody');
+  tbody.append(row);
 
-    $selectForex.select2({
-      ajax: {
-        url: url_api + '/forex/select2',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
-      },
-      placeholder: 'Choose Forex'
-    });
+  let selectForex = row.find('.valas').first();
+  let $inputRate = row.find('.rate').first();
+  let $inputJumlah = row.find('.jumlah').first();
+  let $inputSubtotal = row.find('.subtotal').first();
 
-    $selectForex.on('change', function () {
-        const idForex = $(this).val();
-        if (!idForex) return;
+  // pakai fungsi universal kita
+  initSelect2Valas(selectForex);
 
-        updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal);
-    });
+  // event saat forex dipilih
+  selectForex.on('change', function () {
+    updateRates($(this), $inputRate, $inputJumlah, $inputSubtotal);
+  });
 });
+
 
 const formatter = new Intl.NumberFormat('id-ID', {
   minimumFractionDigits: 0,
@@ -346,44 +359,45 @@ $('#tabelDetail').on('blur', '.jumlah, .rate', function () {
 
 function updateTotal() {
   let total = 0;
+
   $('.subtotal').each(function () {
-    let val = parseFloat($(this).val()) || 0;
-    total += val;
+    let val = $(this).val().trim();
+
+    if (val) {
+      // Hapus semua titik pemisah ribuan dan ubah koma menjadi titik desimal
+      val = val.replace(/\./g, '').replace(',', '.');
+    }
+
+    let num = parseFloat(val) || 0;
+    total += num;
   });
-  $('.total').val(total.toFixed(2));
+
+  // Format hasil ke format Indonesia
+  const formattedTotal = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(total);
+
+  $('.total').val(formattedTotal);
 }
 
-function updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal) {
-  $.ajax({
-    url: `${url_api}/forex/id/${idForex}`,
-    type: 'GET',
-    headers: {
-      "X-Client-Domain": myDomain
-    },
-    success: function (response) {
-      const tipe = $('#tipeTrans').val();
+function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
+  const data = $selectForex.select2('data')[0];
+  if (!data) return;
 
-      // ambil rate asli
-      let rate = (tipe === 'buy') ? response.beli : response.jual;
+  const tipe = $('#tipeTrans').val();
+  let rate = tipe == 3 ? data.beli : data.jual;
+  rate = parseFloat(rate) || 0;
 
-      rate = parseFloat(rate) || 0;
+  const formattedRate = formatter.format(rate);
 
-      // format Indonesia → "1.234,56"
-      const formattedRate = formatter.format(rate);
+  $inputRate.val(formattedRate);
+  $inputJumlah.val(1);
 
-      // set nilai awal
-      $inputRate.val(formattedRate);
-      $inputSubtotal.val(formattedRate);
-      $inputJumlah.val(1);
+  const subtotal = rate * 1;
+  $inputSubtotal.val(formatter.format(subtotal));
 
-      updateTotal();
-    },
-    error: function (xhr) {
-      console.error('Error:', xhr.responseJSON?.message);
-      $inputRate.val('0');
-      $inputSubtotal.val('0');
-    }
-  });
+  updateTotal();
 }
 
 $('#tabelDetail').on('click', '.btnHapusBaris', function () {
@@ -461,7 +475,13 @@ $('#btnSubmit').click(function (e) {
       "X-Client-Domain": myDomain,
       "Authorization": `Bearer ${window.token}`
     },
-    data: JSON.stringify({ tanggal: tanggal, tanggal_laporan: tanggal_laporan, details: details }),
+    data: JSON.stringify({ 
+      tanggal: tanggal,
+      tanggal_laporan: tanggal_laporan,
+      cabang: $('#idCabang').val(),
+      tipe: $('#tipeTrans').val(),
+      details: details 
+    }),
     success: function (response) {
       notif.fire({
         icon: 'success',
