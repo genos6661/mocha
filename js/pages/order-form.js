@@ -190,20 +190,26 @@ $(document).ready(function () {
       date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
       expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax; Secure`;
+
+    // Gunakan flag Secure hanya jika di HTTPS
+    const isSecure = window.location.protocol === "https:" ? "; Secure" : "";
+
+    document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax${isSecure}`;
+    return true;
   }
 
   function setSessionCookie(name, value) {
     document.cookie = name + "=" + (value || "") + "; path=/";
+    return true;
   }
 
   function getCookie(name) {
-    let nameEQ = name + "=";
-    let ca = document.cookie.split(";");
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === " ") c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    const nameEQ = name + "=";
+    const cookies = document.cookie.split(";").map(c => c.trim());
+    for (const c of cookies) {
+      if (c.indexOf(nameEQ) === 0) {
+        return c.substring(nameEQ.length);
+      }
     }
     return null;
   }
@@ -247,63 +253,48 @@ $(document).ready(function () {
     const isSelling = $('#sell').is(':checked');
     const allowEdit = authRequest || (isSelling && SellBlank === true);
     let baris = $(`
-    <div class="row g-2 align-items-center border-top py-md-2 py-3 mb-3 mb-md-0">
-      <div class="col-12 col-md-3">
-        <select class="form-select forex"></select>
-      </div>
+      <div class="row g-2 align-items-center border-top py-md-2 py-3 mb-3 mb-md-0">
+        <div class="col-12 col-md-3">
+          <select class="form-select forex"></select>
+        </div>
 
-      <div class="col-6 col-md-2">
-        <input type="text" class="form-control amount text-end" placeholder="Amount">
-      </div>
+        <div class="col-6 col-md-2">
+          <input type="text" class="form-control amount text-end" placeholder="Amount">
+        </div>
 
-      <div class="col-6 col-md-3">
-        <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate">
-      </div>
+        <div class="col-6 col-md-3">
+          <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate">
+        </div>
 
-      <div class="col-6 col-md-3">
-        <input type="text" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
-      </div>
+        <div class="col-6 col-md-3">
+          <input type="text" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
+        </div>
 
-      <div class="col-6 col-md-1 text-center">
-        <button class="btn btn-outline-danger btnHapusBaris" type="button" title="Hapus Baris">
-          <i class="icon-base ti tabler-trash"></i>
-        </button>
+        <div class="col-6 col-md-1 text-center">
+          <button class="btn btn-outline-danger btnHapusBaris" type="button" title="Hapus Baris">
+            <i class="icon-base ti tabler-trash"></i>
+          </button>
+        </div>
       </div>
-    </div>
-  `);
+    `);
     $('#tabelDetail').append(baris);
 
     let $selectForex = baris.find('.forex').first();
     let $inputRate = baris.find('.rate').first();
+    let $inputJumlah = baris.find('.amount').first();
+    let $inputSubtotal = baris.find('.subtotal').first();
 
-    $selectForex.select2({
-      ajax: {
-        url: url_api + '/forex/select2',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
-      },
-      placeholder: 'Choose Forex'
-    });
+    initSelect2Valas($selectForex);
+
+    // $selectForex.on('change', function () {
+    //     const idForex = $(this).val();
+    //     if (!idForex) return;
+
+    //     updateRates(idForex, $inputRate);
+    // });
 
     $selectForex.on('change', function () {
-        const idForex = $(this).val();
-        if (!idForex) return;
-
-        updateRates(idForex, $inputRate);
-        // updateSatuanProduk(idProduk, $selectSatuan);
+      updateRates($(this), $inputRate, $inputJumlah, $inputSubtotal);
     });
   });
 
@@ -312,26 +303,23 @@ $(document).ready(function () {
       updateTotal();
   });
 
-  function updateRates(idForex, $inputRate) {
-    $.ajax({
-        url: `${url_api}/forex/id/${idForex}`,
-        type: 'GET',
-        headers: {
-            "X-Client-Domain": myDomain
-        },
-        success: function(response) {
-          $isBuy = $('#buy');
-          if($isBuy.prop('checked')) {
-            $inputRate.val(formatter.format(response.beli));
-          } else {
-            $inputRate.val(formatter.format(response.jual));
-          }
-        },
-        error: function(xhr) {
-            console.error('Error:', xhr.responseJSON?.message);
-            $inputRatee.val(0);
-        }
-    });
+  function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
+    const data = $selectForex.select2('data')[0];
+    if (!data) return;
+
+    const tipe = $('#buy').prop('checked') ? 'buy' : 'sell';
+    let rate = tipe == 'buy' ? data.beli : data.jual;
+    rate = parseFloat(rate) || 0;
+
+    const formattedRate = formatter.format(rate);
+
+    $inputRate.val(formattedRate);
+    $inputJumlah.val(1);
+
+    const subtotal = rate * 1;
+    $inputSubtotal.val(formatter.format(subtotal));
+
+    updateTotal();
   }
 
   $(document).on('change', 'input[name="tipeTrans"]', function () {
@@ -481,6 +469,73 @@ $(document).ready(function () {
       },
       placeholder: 'Choose Source of fund'
     });
+  }
+
+  function initSelect2Valas(select) {
+    const initVal = select.data('init-value');
+    const initText = select.data('init-text');
+
+    select.select2({
+      placeholder: "Choose Forex",
+      ajax: {
+        url: url_api + '/forex/select2',
+        dataType: 'json',
+        headers: { "X-Client-Domain": myDomain },
+        delay: 250,
+        data: function (params) {
+          return { search: params.term };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results.map(item => ({
+              id: item.id,
+              text: item.text,
+              kode: item.kode,
+              nama: item.nama,
+              beli: item.beli,
+              jual: item.jual
+            }))
+          };
+        }
+      },
+      templateResult: formatOption,
+      templateSelection: formatSelection,
+      escapeMarkup: m => m
+    });
+
+    if (initVal && !select.find(`option[value="${initVal}"]`).length) {
+      const option = new Option(initText, initVal, true, true);
+      select.append(option).trigger('change');
+    }
+  }
+
+  function formatOption(item) {
+    if (!item.id) return item.text;
+    const tipe = $('#buy').prop('checked') ? 'buy' : 'sell';
+    const nilai = tipe == 'buy' ? item.beli : item.jual;
+    const warna = tipe == 'buy' ? 'text-success' : 'text-primary';
+    const nilaiFormatted = formatter.format(nilai);
+
+    return `
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="me-2">
+          <div class="d-flex align-items-center">
+            <h6 class="mb-0 me-1">${item.kode || '-'}</h6>
+          </div>
+          <small class="text-body">${item.nama || ''}</small>
+        </div>
+        <div class="user-progress">
+          <p class="fw-medium mb-0 d-flex align-items-center gap-1 ${warna}">
+            ${nilaiFormatted || ''}
+          </p>
+        </div>
+      </div>
+    `;
+  }
+
+  // tampilan setelah dipilih → hanya text normal
+  function formatSelection(item) {
+    return item.text || '';
   }
   // akhir select2
 
@@ -826,12 +881,21 @@ $(document).ready(function () {
         $('.findBox').removeClass('d-none');
         $('.searchBox').addClass('d-none');
 
-        $("#btnFindYa").click(function () {
-          setSessionCookie(cookieConfirm, "true");
-          setCookie(cookieUser, response.kode, 30);
+        $("#btnFindYa").off('click').on('click', function () {
+          if (setSessionCookie(cookieConfirm, "true")) {
+            console.log('bisa');
+          } else {
+            console.log(' gak bisa');
+          }
+          if (setCookie(cookieUser, response.kode, 30)) {
+            console.log('bisa');
+          } else {
+            console.log('tidak bisa');
+          }
           setCookie(cookieUserID, response.noindex, 30);
           $("#modalPelanggan").modal("hide");
           showTransaksi(response.noindex, response.nama);
+          console.log(getCookie(cookieUser));
         }).trigger('focus');
 
         $("#btnFindTidak").click(function () {
@@ -878,14 +942,7 @@ $(document).ready(function () {
 
     $btn.prop('disabled', true);
 
-    let tipeTransaksi = '';
-
-    $isBuy = $('#buy');
-    if ($isBuy.prop('checked')) {
-      tipeTransaksi = 'buy';
-    } else {
-      tipeTransaksi = 'sell';
-    }
+    const tipeTransaksi = $('#buy').prop('checked') ? 'buy' : 'sell';
 
     const details = [];
     $('#tabelDetail .row').each(function () {
