@@ -82,8 +82,8 @@
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Occupation</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Phone</th>
           <th class="text-center align-middle p-2" style="width: 16%; border: 1px solid;">Address</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Total Transaction</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Total Amount</th>
+          <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Total Transaction</th>
+          <th class="text-center align-middle p-2" style="width: 14%; border: 1px solid;">Total Amount</th>
         </tr>
       </thead>
       <tbody></tbody>
