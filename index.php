@@ -116,7 +116,7 @@ switch ($routeInfo[0]) {
   </head>
 
   <body>
-    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/master-data-reports']; ?>
+    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/master-data-reports', '/customer-report']; ?>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
       <div class="layout-container">
@@ -328,6 +328,11 @@ switch ($routeInfo[0]) {
                     <li>
                       <a class="dropdown-item" href="/clear">
                         <i class="icon-base ti tabler-refresh icon-md me-3"></i><span>Clear Cache</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="icon-base ti tabler-device-floppy icon-md me-3"></i><span>Backup Data</span>
                       </a>
                     </li>
                   </ul>

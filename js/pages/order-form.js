@@ -252,6 +252,7 @@ $(document).ready(function () {
   $('#tambahBaris').on('click', function () {
     const isSelling = $('#sell').is(':checked');
     const allowEdit = authRequest || (isSelling && SellBlank === true);
+    // console.log(isSelling + ' ' + SellBlank)
     let baris = $(`
       <div class="row g-2 align-items-center border-top py-md-2 py-3 mb-3 mb-md-0">
         <div class="col-12 col-md-3">
@@ -622,7 +623,7 @@ $(document).ready(function () {
               
               setSessionCookie(cookieSetting, JSON.stringify(response));
               if(response.SellBlank.boolval === 1) {
-                sellBlank = true;
+                SellBlank = true;
                 $('.rate').prop('readonly', false);
               }
               $('.namaPT').text(response.NamaPT.strval);
@@ -882,20 +883,11 @@ $(document).ready(function () {
         $('.searchBox').addClass('d-none');
 
         $("#btnFindYa").off('click').on('click', function () {
-          if (setSessionCookie(cookieConfirm, "true")) {
-            console.log('bisa');
-          } else {
-            console.log(' gak bisa');
-          }
-          if (setCookie(cookieUser, response.kode, 30)) {
-            console.log('bisa');
-          } else {
-            console.log('tidak bisa');
-          }
+          setSessionCookie(cookieConfirm, "true");
+          setCookie(cookieUser, response.kode, 30);
           setCookie(cookieUserID, response.noindex, 30);
           $("#modalPelanggan").modal("hide");
           showTransaksi(response.noindex, response.nama);
-          console.log(getCookie(cookieUser));
         }).trigger('focus');
 
         $("#btnFindTidak").click(function () {

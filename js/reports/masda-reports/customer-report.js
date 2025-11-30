@@ -1,4 +1,4 @@
-let start, end, cabang, tipeLog, aktivitasLog, emailLog;
+let start, end, cabang, negara, sort_by, sort_dir;
 let offset = 0;
 const limit = 50;
 let isLoading = false;
@@ -29,10 +29,10 @@ $(document).ready(function() {
         allowClear: true
     });
 
-    $('#emailLog').select2({
-      dropdownParent: '#modalFilter',
+    $('#negara').select2({
+      dropdownParent: $('#modalFilter'),
       ajax: {
-        url: url_api + '/other-report/email-log',
+        url: url_api + '/profile/negara/select2',
         dataType: 'json',
         headers: {
           "X-Client-Domain": myDomain
@@ -49,69 +49,15 @@ $(document).ready(function() {
           };
         }
       },
-      placeholder: 'All Types',
-      allowClear: true
-  });
-
-  $('#tipeLog').select2({
-      dropdownParent: '#modalFilter',
-      ajax: {
-        url: url_api + '/other-report/tipe-log',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
-      },
-      placeholder: 'All Types',
-      allowClear: true
-  });
-
-  $('#aktivitasLog').select2({
-      dropdownParent: '#modalFilter',
-      ajax: {
-        url: url_api + '/other-report/aktivitas-log',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            tipe: $('#tipeLog').val(),
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
-      },
-      placeholder: 'All Activity',
-      allowClear: true
-  });
-
-  $('#tipeLog').on('change', function () {
-    $('#aktivitasLog').val('').trigger('change');
+      placeholder: 'Choose Country'
   });
 
   $('#rangeFilter').on('change', function () {
       updateDateRangeSelector(this.value);
   });
 
-  $('#showOptionFilter').select2({ dropdownParent: $('#modalFilter') });
-  $('#showOptionFilter').val("1").trigger('change');
+  $('#sort_by').select2({dropdownParent: $('#modalFilter'), placeholder: 'Select Column to Sort', allowClear: true});
+  $('#sort_dir').select2({dropdownParent: $('#modalFilter'), placeholder: 'Sort Direction', allowClear: true});
   $('#rangeFilter').select2({dropdownParent: $('#modalFilter')});
 
   $('#searchLog').on('input', function () {
@@ -132,9 +78,9 @@ function getUrlParams() {
         start: params.get("start"),
         end: params.get("end"),
         cabang: params.get("cabang"),
-        tipeLog: params.get("tipeLog"),
-        aktivitasLog: params.get("aktivitasLog"),
-        emailLog: params.get("emailLog")
+        negara: params.get("negara"),
+        sort_by: params.get("sort_by"),
+        sort_dir: params.get("sort_dir")
     };
 }
 
@@ -187,9 +133,9 @@ function loadHeader() {
     start = params.start || '';
     end = params.end || '';
     cabang = params.cabang;
-    tipeLog = params.tipeLog;
-    aktivitasLog = params.aktivitasLog;
-    emailLog = params.emailLog;
+    negara = params.negara;
+    sort_by = params.sort_by;
+    sort_dir = params.sort_dir;
 
     if ((start || end) && (start != '' || end != '')) {
       const tanggal_awal = new Date(start);
@@ -199,16 +145,6 @@ function loadHeader() {
       $('#range').text(tanggal_awal.toLocaleDateString('en-ID', options) + ' - ' + tanggal_akhir.toLocaleDateString('en-ID', options));
     } else {
       $('#range').text('All Time');
-    }
-
-    if ((tipeLog && tipeLog !== '') || (aktivitasLog && aktivitasLog != '')) {
-      if (aktivitasLog && aktivitasLog != '') {
-        $('#tipe').removeClass('d-none').text(tipeLog + ', ' + aktivitasLog);
-      } else {
-        $('#tipe').removeClass('d-none').text(tipeLog);
-      }
-    } else {
-      $('#tipe').addClass('d-none').text('');
     }
 
     $.ajax({
@@ -332,35 +268,6 @@ function updateDateRangeSelector(selectedValue) {
   $('#endDate').val(endDate);
 }
 
-$('#sbmFilter').click(function (e) {
-  e.preventDefault();
-
-  const startDate = $('#startDate').val() || null;
-  const endDate = $('#endDate').val() || null;
-  const cabang = $('#cabang').val() || null;
-  const tipeLog = $('#tipeLog').val() || null;
-  const aktivitasLog = $('#aktivitasLog').val() || null;
-  const emailLog = $('#emailLog').val() || null;
-  const baseUrl = $('#urlToGo').val() || 'logs-report';
-
-  const params = new URLSearchParams();
-
-  if (startDate) params.append('start', startDate);
-  if (endDate) params.append('end', endDate);
-  if (cabang) params.append('cabang', cabang);
-  if (tipeLog) params.append('tipeLog', tipeLog);
-  if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
-  if (emailLog) params.append('emailLog', emailLog);
-
-  const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
-
-  window.history.pushState({}, '', finalUrl);
-
-  loadHeader();
-  loadData(true);
-  $('#modalFilter').modal('hide');
-});
-
 function loadData(reset = false) {
   if (isLoading || !hasMoreData) return;
   isLoading = true;
@@ -390,15 +297,16 @@ function loadData(reset = false) {
   const params = new URLSearchParams();
   if (start) params.append("start_date", start);
   if (end) params.append("end_date", end);
-  if (tipeLog) params.append("tipe", tipeLog);
-  if (aktivitasLog) params.append("aktivitas", aktivitasLog);
-  if (emailLog) params.append("email", emailLog);
+  if (cabang) params.append("cabang", cabang);
+  if (negara) params.append("negara", negara);
+  if (sort_by) params.append("sort_by", sort_by);
+  if (sort_dir) params.append("sort_by", sort_dir);
   if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
   params.append("offset", offset);
   params.append("limit", limit);
 
   $.ajax({
-    url: url_api + `/other-report/logs?${params.toString()}`,
+    url: url_api + `/master-report/customer?${params.toString()}`,
     type: 'GET',
     headers: {
       "Authorization": `Bearer ${window.token}`,
@@ -407,37 +315,44 @@ function loadData(reset = false) {
     success: function (response) {
       const details = response.data || [];
       const tbody = $('#tabelData tbody');
-      $('#totalLogs').text(response.total);
+      $('#totalCustomer').text(response.total_count);
 
       if (details.length === 0) {
         if (offset === 0) {
           tbody.append('<tr><td colspan="7" class="text-center">Logs Data Not Found</td></tr>');
         }
         hasMoreData = false;
+        $('.table-responsive').off('scroll');
       } else {
+        let count = 1;
         details.forEach(function (item) {
-          let dateUTC = new Date(item.tanggal);
-          let datePart = dateUTC.toLocaleDateString('en-CA'); 
-          let timePart = dateUTC.toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit' ,
-            hour12: false
-          });
           const row = `
               <tr>
-                <td class="text-center">${datePart || ''}</td>
-                <td class="text-center">${timePart || ''}</td>
-                <td class="text-center">${item.nama || ''}</td>
-                <td class="text-center">${item.email || ''}</td>
-                <td class="text-center">${item.tipe || ''}</td>
-                <td class="text-center">${item.aktivitas || ''}</td>
-                <td class="text-center">${item.nomor || ''}</td>
+                <td class="text-center">${count}</td>
+                <td class="">${item.nama || ''}</td>
+                <td class="text-center">${item.nama_int_negara || ''}</td>
+                <td class="text-center">${item.pekerjaan || ''}</td>
+                <td class="text-center">${item.telepon || ''}</td>
+                <td class="">${item.alamat || ''}</td>
+                <td class="text-end">${Number(item.total_transaksi).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0
+                            }) || '0'}</td>
+                <td class="text-end">Rp. ${Number(item.nilai_transaksi).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0
+                            }) || '0'}</td>
               </tr>
           `;
           tbody.append(row);
+          count++;
         });
-        offset += limit; // naikkan offset
+        offset += limit; 
+
+        if (offset >= response.total_count) {
+          hasMoreData = false;
+          $('.table-responsive').off('scroll');
+        }
       }
 
       isLoading = false;
@@ -458,10 +373,39 @@ function loadData(reset = false) {
   });
 }
 
-// === Infinite Scroll di .table-responsive ===
 $('.table-responsive').on('scroll', function () {
   const $this = $(this);
   if ($this.scrollTop() + $this.innerHeight() >= this.scrollHeight - 50) {
     loadData(); // load berikutnya
   }
+});
+
+$('#sbmFilter').click(function (e) {
+  e.preventDefault();
+
+  const startDate = $('#startDate').val() || null;
+  const endDate = $('#endDate').val() || null;
+  const cabangFil = $('#cabangFilter').val() || null;
+  const negaraFil = $('#negara').val() || null;
+  const sort_byFil = $('#sort_by').val() || null;
+  const sort_dirFil = $('#sort_dir').val() || null;
+  const baseUrl = $('#urlToGo').val() || 'customer-report';
+
+  const params = new URLSearchParams();
+
+  if (startDate) params.append('start', startDate);
+  if (endDate) params.append('end', endDate);
+  if (cabangFil) params.append('cabang', cabangFil);
+  if (negaraFil) params.append('negara', negaraFil);
+  if (sort_byFil) params.append('sort_by', sort_byFil);
+  if (sort_dirFil) params.append('sort_dir', sort_dirFil);
+
+  const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+
+  window.history.pushState({}, '', finalUrl);
+
+  hasMoreData = true;
+  loadHeader();
+  loadData(true);
+  $('#modalFilter').modal('hide');
 });

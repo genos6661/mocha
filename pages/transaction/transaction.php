@@ -164,7 +164,7 @@
       <div class="modal-footer d-flex justify-content-between justify-content-md-end">
         <button class="btn-primary btn mx-1 mb-2 mb-md-0" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
         <a class="btn-outline-primary btn mx-1 mb-2 mb-md-0" target="_blank" id="reprintDetail">Reprint</a>
-        <a href="#" class="btn btn-outline-success mx-1" type="button" id="editBtn">Edit</a>
+        <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
         <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
         <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
       </div>

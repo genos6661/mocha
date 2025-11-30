@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-range="month" data-url="/customer-report">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-users icon-xl"></i>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#" data-nama="LKUB" data-range="month" data-url="/lkub">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user icon-xl"></i>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#" data-nama="Neraca" data-range="today" data-url="/neraca">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user-plus icon-xl"></i>
@@ -93,12 +93,12 @@
       <div class="modal-body pb-2">
         <form id="formFilterOrder">
         <input type="hidden" id="urlToGo">
-        <div class="mb-3 d-none" id="boxSimpleRange">
+        <div class="mb-3" id="boxSimpleRange">
           <label for="range" class="form-label">Simple Range</label>
           <select id="range" class="form-select">
             <option value="today">Today</option>
             <option value="week">This Week</option>
-            <option value="month">This Month (Default)</option>
+            <option value="month">This Month</option>
             <option value="year">This Year</option>
             <option value="yesterday">Yesterday</option>
             <option value="tomorrrow">Tomorrow</option>
@@ -120,7 +120,7 @@
             <option value="lastYear">Last Year</option>
           </select>
         </div>
-        <div class="mb-3 d-none" id="boxRange">
+        <div class="mb-3" id="boxRange">
           <div class="row">
             <div class="col-md">
               <label for="startDate" class="form-label">Date From</label>
@@ -140,9 +140,25 @@
           <label for="cabang" class="form-label">Branch</label>
           <select id="cabang" class="form-select"></select>
         </div>
-        <div class="mb-3 d-none" id="boxUser">
-          <label for="userInput" class="form-label">User Input</label>
-          <select id="userInput" class="form-select"></select>
+        <div class="mb-3">
+          <label for="negara" class="form-label">Country</label>
+          <select id="negara" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+          <label for="sort_by" class="form-label">Sort By</label>
+          <select id="sort_by" class="form-select">
+            <option value="nama">Name</option>
+            <option value="nama_int_negara">Country</option>
+            <option value="total_transaksi">Transactions Count</option>
+            <option value="nilai_transaksi">Transactions Value</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="sort_dir" class="form-label">Sort Direction</label>
+          <select id="sort_dir" class="form-select">
+            <option value="asc">Ascending (ASC)</option>
+            <option value="desc">Descending (DESC)</option>
+          </select>
         </div>
         <div class="mb-3" id="boxShowing">
           <label for="showOption" class="form-label">Displayed Option</label>
