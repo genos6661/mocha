@@ -264,7 +264,7 @@ function loadMedia() {
             const blobUrl = URL.createObjectURL(blob);
             const $slide = $('<div class="slide"></div>');
             const $media = isVideo
-              ? $(`<video muted autoplay preload="auto"><source src="${blobUrl}" type="video/${ext}"></video>`)
+              ? $(`<video autoplay preload="auto"><source src="${blobUrl}" type="video/${ext}"></video>`)
               : $(`<img src="${blobUrl}" alt="gambar">`);
             $slide.append($media);
             $('#boxCarousel').append($slide);
