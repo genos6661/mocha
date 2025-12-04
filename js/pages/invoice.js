@@ -42,6 +42,8 @@ function chooseDesign() {
         fileDesain = 'regular';
       } else if (design == 'small') {
         fileDesain = 'small-con';
+      } else if (design == 'small-2') {
+        fileDesain = 'small-con2';
       } else if (design == 'a4_continous') {
         fileDesain = 'a4-half';
       }
@@ -178,11 +180,11 @@ function loadData(fileDesain) {
           } else if (fileDesain == 'small-con2') {
             row = `
                 <tr>
-                  <td colspan="4" style="padding: 3px;">${item.kode} - ${item.nama}</td>
+                  <td colspan="2" style="padding: 3px;">${item.kode}</td>
+                  <td colspan="2" style="padding: 3px; text-align: center;">${Number(qty).toLocaleString('id-ID')}</td>
                 </tr>
                 <tr>
-                  <td style="text-align: right; padding: 3px;">${Number(qty).toLocaleString('id-ID')}</td>
-                  <td style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
+                  <td colspan="2" style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2
                 })}</td>
