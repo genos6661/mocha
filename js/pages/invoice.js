@@ -185,12 +185,12 @@ function loadData(fileDesain) {
                 </tr>
                 <tr>
                   <td colspan="2" style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
                 })}</td>
                   <td colspan="2" style="text-align: right; padding: 3px;">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
                 })}</td>
                 </tr>
             `;
@@ -224,8 +224,8 @@ function loadData(fileDesain) {
             <tr>
               <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700;">Total : </td>
               <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700; text-align: right;">Rp. ${Number(subtotal).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
                 })}</td>
             </tr>
           `);
