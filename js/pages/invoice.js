@@ -184,7 +184,7 @@ function loadData(fileDesain) {
                   <td colspan="2" style="padding: 3px; text-align: center;">${Number(qty).toLocaleString('id-ID')}</td>
                 </tr>
                 <tr>
-                  <td colspan="2" style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
+                  <td colspan="2" style="text-align: center; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
                   minimumFractionDigits: 0,
                   maximumFractionDigits: 0
                 })}</td>
