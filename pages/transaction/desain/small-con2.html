@@ -1,0 +1,34 @@
+<div class="invoice-print" style="width: 100%; max-width: 100%;">
+	<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+		<p style="font-size: 1.5em; margin-bottom: 0; text-align: center;" id="judulNota">Mocha</p>
+		<p style="font-size: 1em; margin-bottom: 0; text-align: center;" id="namaCabang"></p>
+		<p style="font-size: 1em; margin-bottom: 15px; text-align: center;"><span id="alamatCabang"></span> (<span id="teleponCabang"></span>)</p>
+	</div>
+	<div style="width: 100%; display: flex; flex-direction: column;">
+		<p style="font-size: 1em; margin-bottom: 0; text-align: right;">No. #<span id="nomorTrans"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Date Issues : <span id="tanggalTransaksi"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Name : <span id="namaPelanggan"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Nationality : <span id="negara"></span></p>
+		<p style="font-size: 1em; margin-bottom: 15px; text-align: right;">Cashier : <span id="ttdPerusahaan"></span></p>
+	</div>
+	<div style="width: 100%; border-bottom: 1px solid;">
+	    <table style="width: 100%; border: none; table-layout: auto;" id="tabelDetail">
+	      <thead>
+	        <tr>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; width: 15%;">Currency</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Amount</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Rate</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Subtotal</th>
+	        </tr>
+	      </thead>
+	      <tbody></tbody>
+	    </table>
+	</div>
+	<div class="row mt-4">
+		<div class="col">
+			<p id="footer1" class="d-none text-center mb-0"></p>
+			<p id="footer2" class="d-none text-center mb-0"></p>
+			<p id="footer3" class="d-none text-center mb-0"></p>
+		</div>
+	</div>
+</div>
