@@ -166,12 +166,12 @@ function loadData(fileDesain) {
                   <td style="padding: 3px;">${item.kode}</td>
                   <td style="text-align: right; padding: 3px;">${Number(qty).toLocaleString('id-ID')}</td>
                   <td style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
                 })}</td>
                   <td colspan="2" style="text-align: right; padding: 3px;">${Number(totalPerItem).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0
                 })}</td>
                 </tr>
             `;
