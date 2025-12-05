@@ -4,6 +4,7 @@ const limit = 50;
 let isLoading = false;
 let hasMoreData = true;
 let searchTimeout = null;
+let count = 1;
 $(document).ready(function() {
     $('#cabangFilter').select2({
         dropdownParent: '#modalFilter',
@@ -324,7 +325,6 @@ function loadData(reset = false) {
         hasMoreData = false;
         $('.table-responsive').off('scroll');
       } else {
-        let count = 1;
         details.forEach(function (item) {
           const row = `
               <tr>

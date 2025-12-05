@@ -21,6 +21,26 @@ $(document).ready(function () {
   }
 });
 
+function setDateTime() {
+    const now = new Date();
+
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear().toString().slice(-2);
+
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    hours = String(hours).padStart(2, '0');
+
+    const formatted = `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
+
+    $("#datetimePrint").text(formatted);
+}
+
 function chooseDesign() {
   $.ajax({
     url: url_api + '/setting',
@@ -48,8 +68,22 @@ function chooseDesign() {
         fileDesain = 'a4-half';
       }
 
-      $("body").load(`../../pages/transaction/desain/${fileDesain}.html`);
-      loadData(fileDesain);
+      $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
+
+          loadData(fileDesain);
+
+          if (design == 'a4_continous') {
+              setDateTime();
+          }
+
+          window.onafterprint = function () {
+              window.close();
+          };
+
+          setTimeout(() => {
+            window.print();
+          }, 300);
+      });
     },
     error: function (xhr) {
         if (xhr.status === 404) {
@@ -241,9 +275,6 @@ function loadData(fileDesain) {
           `);
         }
 
-        setTimeout(() => {
-          window.print();
-        }, 300);
       }
     },
     error: function (xhr) {

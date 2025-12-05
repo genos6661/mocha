@@ -784,13 +784,44 @@ $(document).ready(function () {
         }
       },
       error: function (xhr, status, error) {
-        notif.fire({
-          icon: 'error',
-          text: xhr.responseJSON.message
-        });
-        if (document.querySelector(`.notiflix-loading`)) {
-            Loading.remove();
-        }
+          if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
+
+            if (document.querySelector(`.notiflix-loading`)) {
+                Loading.remove();
+            }
+
+            const dup = xhr.responseJSON.fields;
+
+            let msg = "Duplicated data found:<br><br>";
+            if (dup.id) msg += "- ID Number already exists<br>";
+            if (dup.email) msg += "- Email already exists<br>";
+            if (dup.telepon) msg += "- Phone number already exists<br>";
+            msg += "<br>Do you wish to continue?";
+
+            return Swal.fire({
+                title: "Duplication Detected",
+                html: msg,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Continue",
+                cancelButtonText: "Cancel"
+            }).then(result => {
+                if (result.isConfirmed) {
+                    submitForce();  
+                } else {
+                    Loading.remove();
+                }
+            });
+          }
+
+          notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON?.message || "Terjadi kesalahan"
+          });
+
+          if (document.querySelector(`.notiflix-loading`)) {
+              Loading.remove();
+          }
       }
     });
   });
@@ -819,6 +850,72 @@ $(document).ready(function () {
             }
         });
     });
+  }
+
+  function submitForce() {
+    let idFoto = $('#paspor')[0].files[0] ? idFoto : null; 
+    isMale = $('#male');
+    let jk = isMale.prop('checked') ? 'M' : 'F';
+
+    const dataProfil = {
+        nama: $('#fullname').val().trim(),
+        tipe: $('#tipe').val(),
+        email: $('#email').val().trim(),
+        id: $('#idNumber').val().trim(),
+        telepon: $('#waNumber').val().trim(),
+        negara: $('#nationality').val(),
+        alamat: $('#address').val().trim(),
+        pekerjaan: $('#occupation').val(),
+        jk: jk,
+        id_type: $('#id_type').val(),
+        rekening: '',
+        pelanggan: 1,
+        karyawan: 0,
+        vendor: 0,
+        member: 0,
+        id_foto: idFoto || null,
+        force: true                 // ⬅ ini yang melewati pengecekan backend
+    };
+
+    $.ajax({
+        url: url_api + '/profile',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            "Content-Type": "application/json",
+            "X-Client-Domain": myDomain
+        },
+        data: JSON.stringify(dataProfil),
+
+        success: function (response) {
+            setCookie(cookieUser, response.kode, 30);
+            setCookie(cookieUserID, response.noindex, 30);
+            setSessionCookie(cookieConfirm, "true");
+
+            notif.fire({
+                icon: 'success',
+                text: response.message
+            });
+
+            showTransaksi(response.noindex, dataProfil.nama);
+
+            if (document.querySelector(`.notiflix-loading`)) {
+                Loading.remove();
+            }
+        },
+
+        error: function (xhr) {
+            notif.fire({
+                icon: 'error',
+                text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+            });
+
+            if (document.querySelector(`.notiflix-loading`)) {
+                Loading.remove();
+            }
+        }
+    });
+
   }
 
   $('#goSearch').click(function (e) {
