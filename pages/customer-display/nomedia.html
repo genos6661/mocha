@@ -1,0 +1,32 @@
+<div class="full nomedia" style="background: url('/assets/img/background/bali1.jpg'); background-size: cover;">
+	<div class="w-100 rounded blurbg d-flex flex-column justify-content-center shadow p-4">
+		<div class="text-center boxLogo m-0 p-0"></div>
+		<div>
+        <p class="text-center h3 dm-serif-text-regular header m-0 namaPT text-black">Mocha Display</p>
+        <p class="text-center h5 national-park m-0 text-black" id="slogan">More Than Trusted</p>
+      </div>
+	</div>
+	<div class="w-100 rounded blurbg shadow p-4 mt-4">
+		<div class="card-header d-flex justify-content-between pb-0 px-3">
+	    	<h5 class="national-park text-black dynamic-font">Today's Rate</h5>
+	    		<div class="d-flex p-0 gap-2 boxSetup">
+			        <div class="input-group input-group-sm p-0">
+			          <span class="input-group-text">Max Rows</span>
+			          <input type="number" id="maxRows" class="form-control" placeholder="Input Max Rows" min="1" value="10">
+			        </div>
+		          <button id="fontMinus" class="btn btn-sm btn-outline-primary">A-</button>
+		          <button id="fontPlus" class="btn btn-sm btn-outline-primary">A+</button>
+		        </div>	
+	    	<h5 class="national-park text-black dynamic-font" id="nowDate"></h5>
+	    </div>
+	    <div class="card-body overflow-auto">
+	      <div id="tabelContainer" class="d-flex flex-wrap gap-5 px-4"></div>
+	    </div>
+	</div>
+	<div class="w-100 rounded blurbg shadow p-3 mt-4">
+		<p class="h3 national-park m-0 text-center text-black d-none" id="footer"></p>
+		<marquee id="footerScroll" class="h4 m-0 national-park text-center d-none" behavior="scroll" direction="left">Here is some scrolling text... right to left!</marquee>
+	</div>
+</div>
+
+<script src="/js/customer-display/nomedia.js"></script>

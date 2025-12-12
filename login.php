@@ -238,7 +238,6 @@ if (isset($_SESSION['token'])) {
                               success: function(sessionResponse) {
                                   if (sessionResponse.success) {
                                       window.location.href = "/";
-                                      // console.log(sessionResponse.token2);
                                   } else {
                                       $("#error").text("Error: " + sessionResponse.error);
                                       $btn.removeAttr('disabled');

@@ -20,7 +20,7 @@ switch ($routeInfo[0]) {
         $page = $routeInfo[1]; // ✅ Simpan halaman yang benar
         break;
     default:
-        $page = 'pages/home.php'; // ✅ Halaman default
+        $page = 'pages/home.php'; 
 }
 ?>
 <script>

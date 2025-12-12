@@ -105,6 +105,7 @@ function loadSettings() {
             $('#batasJam').val(response.LimitJam3.boolval);
             $('#rateJual').val(response.SellBlank.boolval);
             $('#subheader').val(response.Subheader.strval);
+            $('#desainCD').val(response.DesainDisplay.strval);
             valasDisplayed = response.ValasDisplay.strval;
             const kasRP = response.KasRPDefault;
             const bankRP = response.BankRPDefault;
@@ -591,6 +592,7 @@ $('#sbmCD').click(function(e) {
 
     const data = {
         subheader: $('#subheader').val(),
+        desain: $('#desainCD').val(),
         valas: values
     };
 

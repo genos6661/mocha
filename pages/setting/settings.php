@@ -128,7 +128,14 @@
           <input type="text" id="subheader" class="form-control" placeholder="Input Your Subheader Text" />
         </div>
         <div class="col-md mb-4">
-          <label for="media" class="form-label">Media Display</label>
+          <label for="desainCD" class="form-label">Design</label>
+          <select id="desainCD" class="form-select">
+            <option value="media">With Media</option>
+            <option value="nomedia">Without Media</option>
+          </select>
+        </div>
+        <div class="col-md mb-4">
+          <label for="media" class="form-label">Upload Media file</label>
           <input type="file" id="media" class="form-control">
         </div>
       </div>
