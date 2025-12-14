@@ -252,7 +252,7 @@
           font-size: var(--font-size-header) !important;
         }
         .blurbg {
-          background: rgba(255, 255, 255, 0.4);
+          background: rgba(255, 255, 255, 0.5);
           backdrop-filter: blur(7px);
           border: 2px solid rgba(255, 255, 255, 0.3);
         }

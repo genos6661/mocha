@@ -58,28 +58,35 @@ $(document).ready(function() {
 	});
 
 	$('#kontak').select2({
-	    dropdownParent: $('#modalTambah'),
-	    ajax: {
-	      url: url_api + '/profile/select2',
-	      dataType: 'json',
-	      headers: {
-	        "X-Client-Domain": myDomain,
-	        "Authorization": `Bearer ${window.token}`
-	      },
-	      delay: 250,
-	      data: function (params) {
-	        return {
-	          search: params.term
-	        };
-	      },
-	      processResults: function (data) {
-	        return {
-	          results: data.results
-	        };
-	      }
-	    },
-	    placeholder: 'Choose Contact'
-	});
+      dropdownParent: $('#modalTambah'),
+      ajax: {
+        url: url_api + '/profile/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain,
+          "Authorization": `Bearer ${window.token}`
+        },
+        delay: 1000, // ⏱ delay search 1 detik
+        data: function (params) {
+          return {
+            search: params.term || '',
+            page: params.page || 1
+          };
+        },
+        processResults: function (data, params) {
+          params.page = params.page || 1;
+
+          return {
+            results: data.results,
+            pagination: {
+              more: data.pagination.more // ⬅️ penting untuk infinite scroll
+            }
+          };
+        }
+      },
+      placeholder: 'Choose Contact',
+      minimumInputLength: 0
+    });
 
 	$('#akunKasEdit').select2({
 	    dropdownParent: $('#modalEdit'),
