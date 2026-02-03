@@ -5,7 +5,6 @@ require 'config/config.php';
 
 // Jika sudah login, langsung ke index.php
 if (isset($_SESSION['token'])) {
-    echo $_SESSION['token'];
     header("Location: /");
     exit();
 }

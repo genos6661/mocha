@@ -126,6 +126,17 @@ async function exportToPDF({
       formatNumber(item.kurs_tengah),
       formatNumber(item.saldo_akhir_rupiah)
     ]);
+  } else if (title === "Customer Report") {
+    body = data.map((item, index) => [
+      index + 1,
+      item.nama,
+      item.nama_negara,
+      item.pekerjaan,
+      item.telepon,
+      item.alamat,
+      formatNumber(item.total_transaksi),
+      formatNumber(item.nilai_transaksi)
+    ]);
   } else {
     body = data.map((item) =>
       keys.map((key) =>

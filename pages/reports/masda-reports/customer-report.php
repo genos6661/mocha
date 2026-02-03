@@ -94,13 +94,13 @@
   </div>
 </div>
 
-<!-- <div class="btn-group mt-6" role="group" aria-label="First group">
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
+<div class="btn-group mt-6" role="group" aria-label="First group">
+  <button type="button" id="export-pdf" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-text"></i>TXT</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-printer"></i>Print</button>
-</div> -->
+</div>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalFilter" data-bs-backdrop="static" tabindex="-1">
@@ -173,6 +173,27 @@
         <button type="button" class="btn btn-outline-primary" id="resetFilter">Reset</button>
         <button type="button" id="sbmFilter" class="btn btn-primary">Submit</button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade animate__animated animate__fadeInUp" id="modalProgress" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="btn-close d-none"
+          data-bs-dismiss="modal" id="closeModalProgress"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="h4 text-center">Fetching data</p>
+        <div class="progress w-100" style="height:8px;">
+          <div class="progress-bar bg-primary" id="exportProgress" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="modal-footer"></div>
       </div>
     </div>
   </div>

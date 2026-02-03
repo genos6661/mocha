@@ -1,11 +1,38 @@
-let start, end, cabang, negara, sort_by, sort_dir;
+let start, end, cabang, negara, sort_by, sort_dir, parsedSetting;
 let offset = 0;
-const limit = 50;
+const limit = 20;
 let isLoading = false;
 let hasMoreData = true;
 let searchTimeout = null;
 let count = 1;
+let exportData = [];
+let isExporting = false;
+
+const headers = [
+  "No",
+  "Name",
+  "Country",
+  "Occupation",
+  "Phone",
+  "Address",
+  "Total Transaction",
+  "Total Amount",
+];
+
+const keys = [
+  "nama",
+  "nama_negara",
+  "pekerjaan",
+  "telepon",
+  "alamat",
+  "total_transaksi",
+  "nilai_transaksi"
+];
+
 $(document).ready(function() {
+    if(savedSetting) {
+      parsedSetting = JSON.parse(savedSetting);
+    }
     $('#cabangFilter').select2({
         dropdownParent: '#modalFilter',
         ajax: {
@@ -408,4 +435,110 @@ $('#sbmFilter').click(function (e) {
   loadHeader();
   loadData(true);
   $('#modalFilter').modal('hide');
+});
+
+// export
+function loadAllDataForExport() {
+
+  return new Promise((resolve, reject) => {
+
+    exportData = [];
+    let offsetExport = 0;
+    const limitExport = limit;
+    let total = 0;
+
+    // ===== SHOW MODAL DI SINI =====
+    $('#exportProgress').css('width', '0%').text('0%');
+    $('#modalProgress').modal('show');
+
+    function fetchNext() {
+
+      const params = new URLSearchParams();
+      if (start) params.append("start_date", start);
+      if (end) params.append("end_date", end);
+      if (cabang) params.append("cabang", cabang);
+      if (negara) params.append("negara", negara);
+      if (sort_by) params.append("sort_by", sort_by);
+      if (sort_dir) params.append("sort_dir", sort_dir);
+      if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
+
+      params.append("offset", offsetExport);
+      params.append("limit", limitExport);
+
+      $.ajax({
+        url: url_api + `/master-report/customer?${params.toString()}`,
+        type: 'GET',
+        headers: {
+          "Authorization": `Bearer ${window.token}`,
+          "X-Client-Domain": myDomain
+        },
+
+        success: function (res) {
+
+          if (!res.status) {
+            reject('Gagal load data');
+            return;
+          }
+
+          if (total === 0) total = res.total_count;
+
+          exportData.push(...res.data);
+          offsetExport += limitExport;
+
+          const percent = Math.min(
+            Math.round((exportData.length / total) * 100),
+            100
+          );
+
+          $('#exportProgress')
+            .css('width', percent + '%')
+            .text(percent + '%');
+
+          if (exportData.length < total) {
+            fetchNext();
+          }
+          else {
+
+            // ===== TUTUP MODAL DI SINI =====
+            $('#modalProgress').modal('hide');
+
+            // ===== PENTING: tunggu repaint =====
+            setTimeout(() => {
+              resolve(exportData);
+            }, 200);
+          }
+        },
+
+        error: reject
+      });
+    }
+
+    fetchNext();
+  });
+}
+
+$("#export-pdf").click(function () {
+
+  if (isExporting) return;
+  isExporting = true;
+
+  loadAllDataForExport()
+    .then((allData) => {
+
+      exportToPDF({
+        data: allData,
+        headers,
+        keys,
+        filename: `Customer Report.pdf`,
+        title: 'Customer Report',
+        nama_pt: parsedSetting.NamaPT.strval,
+        start,
+        end
+      });
+
+    })
+    .finally(() => {
+      isExporting = false;
+    });
+
 });
