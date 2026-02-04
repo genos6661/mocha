@@ -1,6 +1,6 @@
 let start, end, cabang, negara, sort_by, sort_dir, parsedSetting;
 let offset = 0;
-const limit = 20;
+const limit = 50;
 let isLoading = false;
 let hasMoreData = true;
 let searchTimeout = null;
