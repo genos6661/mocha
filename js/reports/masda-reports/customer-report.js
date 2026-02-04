@@ -498,14 +498,10 @@ function loadAllDataForExport() {
             fetchNext();
           }
           else {
-
-            // ===== TUTUP MODAL DI SINI =====
-            $('#modalProgress').modal('hide');
-
-            // ===== PENTING: tunggu repaint =====
             setTimeout(() => {
               resolve(exportData);
             }, 200);
+            $('#modalProgress').modal('hide');
           }
         },
 

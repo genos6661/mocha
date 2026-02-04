@@ -190,7 +190,7 @@
       </div>
       <div class="modal-body">
         <p class="h4 text-center">Fetching data</p>
-        <div class="progress w-100" style="height:8px;">
+        <div class="progress w-100" style="height:15px;">
           <div class="progress-bar bg-primary" id="exportProgress" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="modal-footer"></div>
