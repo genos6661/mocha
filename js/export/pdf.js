@@ -186,6 +186,13 @@ async function exportToPDF({
             11: { halign: "right" },
             12: { halign: "right" },
           }
+          : title === "Customer Report"
+        ? {
+            0: { halign: "center" },
+            4: { halign: "center" },
+            6: { halign: "right" },
+            7: { halign: "right" },
+          }
         : {},
     didDrawPage: function (data) {
       drawHeader();
