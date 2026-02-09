@@ -319,6 +319,12 @@ function loadDataEscPos() {
 function mapInvoiceToEscPos(res) {
 
   let subtotal = 0;
+  const tanggal = new Date(res.tanggal);
+  const formattedDate = tanggal.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
 
   const items = res.details.map(item => {
 
@@ -343,9 +349,10 @@ function mapInvoiceToEscPos(res) {
     footer1: res.footer1,
     footer2: res.footer2,
     footer3: res.footer3,
+    user: res.user,
     cabang: res.nama_cabang,
     nomor: res.nomor,
-    tanggal: new Date(res.tanggal),
+    tanggal: formattedDate,
     customer: res.nama_pelanggan,
     items,
     subtotal
@@ -373,7 +380,8 @@ function generateEscPosInvoice(data) {
   cmd += "--------------------------------\n";
   cmd += `Number : ${data.nomor}\n`;
   cmd += `Date : ${data.tanggal}\n`;
-  cmd += `Cust : ${data.customer}\n`;
+  cmd += `Name : ${data.customer}\n\n`;
+  cmd += `Cashier : ${data.user}\n`
   cmd += "--------------------------------\n";
 
   data.items.forEach(i => {
@@ -391,7 +399,7 @@ function generateEscPosInvoice(data) {
   cmd += line("TOTAL", formatNumber(data.subtotal));
   // cmd += esc(27, 69, 0);
   cmd += esc(27, 97, 1);
-  cmd += `\n${data.footer1}\n${data.footer2}\n\n\n`;
+  cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
 
   cmd += esc(29, 86, 0); // cut
 
