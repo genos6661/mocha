@@ -329,6 +329,7 @@ function mapInvoiceToEscPos(res) {
 
     return {
       kode: item.kode,
+      nama: item.nama,
       qty,
       rate: item.rate,
       total
@@ -336,6 +337,12 @@ function mapInvoiceToEscPos(res) {
   });
 
   return {
+    judul_nota: res.judul_nota,
+    alamat_cabang: res.alamat_cabang,
+    telepon_cabang: res.telepon_cabang,
+    footer1: res.footer1,
+    footer2: res.footer2,
+    footer3: res.footer3,
     cabang: res.nama_cabang,
     nomor: res.nomor,
     tanggal: new Date(res.tanggal),
@@ -363,14 +370,15 @@ function generateEscPosInvoice(data) {
   cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
   cmd += esc(27, 97, 0);
 
-  cmd += "-------------------------------\n";
-  cmd += `No : ${data.nomor}\n`;
-  cmd += `Cust : ${data.nama_pelanggan}\n`;
-  cmd += "-------------------------------\n";
+  cmd += "--------------------------------\n";
+  cmd += `Number : ${data.nomor}\n`;
+  cmd += `Date : ${data.tanggal}\n`;
+  cmd += `Cust : ${data.customer}\n`;
+  cmd += "--------------------------------\n";
 
   data.items.forEach(i => {
 
-    cmd += i.kode + "\n";
+    cmd += i.kode + " - " + i.nama + "\n";
 
     cmd += line(
       `${i.qty} x ${formatNumber(i.rate)}`,
@@ -378,12 +386,12 @@ function generateEscPosInvoice(data) {
     );
   });
 
-  cmd += "-------------------------------\n";
+  cmd += "--------------------------------\n";
   cmd += esc(27, 69, 1);
   cmd += line("TOTAL", formatNumber(data.subtotal));
-  cmd += esc(27, 69, 0);
-
-  cmd += `\n${data.footer1}\n${data.footer2}\n`;
+  // cmd += esc(27, 69, 0);
+  cmd += esc(27, 97, 1);
+  cmd += `\n${data.footer1}\n${data.footer2}\n\n\n`;
 
   cmd += esc(29, 86, 0); // cut
 
@@ -400,10 +408,10 @@ function downloadEscPos(cmd) {
 
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${data.nomor}.prn`;
+  a.download = `${transaction}.prn`;
   a.click();
+  window.close();
 }
-
 
 function waitUntilReady() {
   return new Promise(resolve => {
