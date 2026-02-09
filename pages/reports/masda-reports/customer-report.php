@@ -184,7 +184,7 @@
       <div class="modal-header">
         <button
           type="button"
-          class="btn-close d-none"
+          class="btn-close"
           data-bs-dismiss="modal" id="closeModalProgress"
           aria-label="Close"></button>
       </div>

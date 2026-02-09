@@ -733,4 +733,6 @@
     </div>
   </div>
 </div>
+
 <script src="js/pages/contact.js" type="text/javascript"></script>
+<script src="js/pages/contact-new.js" type="text/javascript"></script>

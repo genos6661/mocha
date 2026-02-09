@@ -80,9 +80,11 @@ function chooseDesign() {
               window.close();
           };
 
+          waitUntilReady().then(() => {
           setTimeout(() => {
             window.print();
-          }, 300);
+          }, 500);
+          });
       });
     },
     error: function (xhr) {
@@ -284,5 +286,29 @@ function loadData(fileDesain) {
         text: 'Gagal mengambil data transaksi.'
       });
     }
+  });
+}
+
+function waitUntilReady() {
+  return new Promise(resolve => {
+
+    // tunggu font & image
+    const images = document.images;
+    let loaded = 0;
+
+    if (images.length === 0) return resolve();
+
+    for (let img of images) {
+      if (img.complete) {
+        loaded++;
+      } else {
+        img.onload = img.onerror = () => {
+          loaded++;
+          if (loaded === images.length) resolve();
+        };
+      }
+    }
+
+    if (loaded === images.length) resolve();
   });
 }

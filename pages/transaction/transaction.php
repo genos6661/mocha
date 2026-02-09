@@ -237,4 +237,68 @@
   </div>
 </div>
 
+<!-- modal detail -->
+<div class="modal fade animate__animated animate__fadeInUp" id="modalTambah" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header d-flex justify-content-between flex-md-row flex-column">
+        <h5 class="modal-title" id="backDropModalTitle">Transaction Detail</h5>
+        <div class="d-flex gap-2">
+          <p class="h5 dataDetail" id="nomorDetail"></p>
+          <div id="tipeDetail" class=""></div>
+        </div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-unstyled mb-6">
+          <li class="mb-2">
+            <span class="h6 me-1">Order Number :</span>
+            <span class="dataDetail" id="orderDetail"></span>
+          </li>
+          <li class="mb-2">
+            <span class="h6 me-1">Branch :</span>
+            <span class="dataDetail" id="cabangDetail"></span>
+          </li>
+          <li class="mb-2">
+            <span class="h6 me-1">Date :</span>
+            <span class="dataDetail" id="tanggalDetail"></span>
+          </li>
+          <li class="mb-2">
+            <span class="h6 me-1">Customer :</span>
+            <span class="dataDetail" id="pelangganDetail"></span>
+          </li>
+          <li class="mb-2">
+            <span class="h6 me-1">Nationality :</span>
+            <span class="dataDetail" id="negaraDetail"></span>
+          </li>
+        </ul>
+        <div class="table-responsive" id="itemDetail">
+          <table class="table table-sm" id="tabelItemDetail">
+            <thead>
+              <tr>
+                <th>Forex</th>
+                <th class="text-end">Amount</th>
+                <th class="text-end">Rates</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between justify-content-md-end">
+        <button class="btn-primary btn mx-1 mb-2 mb-md-0" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
+        <a class="btn-outline-primary btn mx-1 mb-2 mb-md-0" target="_blank" id="reprintDetail">Reprint</a>
+        <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
+        <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/pages/transaction.js" type="text/javascript"></script>
