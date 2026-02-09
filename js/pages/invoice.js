@@ -295,7 +295,7 @@ function loadData(fileDesain) {
 }
 
 // ESC / POS
-function loadDataEscPos() {
+async function loadDataEscPos() {
 
   $.ajax({
     url: url_api + '/transaction/nomor/' + transaction,
@@ -308,17 +308,21 @@ function loadDataEscPos() {
 
       const escData = mapInvoiceToEscPos(response);
 
-      let cmd = esc(27, 64);
+      let cmd = esc(27, 64); // init printer
 
+      // ====== LOGO ======
       try {
-        const logoImg = await loadLogoImage();
+        const logoBlob = await loadLogoBlob();
+        const logoImg = await blobToImage(logoBlob);
+
         cmd += esc(27, 97, 1); // center
-        cmd += imageToEscPos(logoImg);
+        cmd += imageToEscPos(logoImg, 384);
         cmd += "\n";
       } catch (e) {
         console.warn("Logo gagal dimuat, lanjut tanpa logo");
       }
 
+      // ====== INVOICE ======
       cmd += generateEscPosInvoice(escData);
 
       downloadEscPos(cmd);
@@ -430,16 +434,41 @@ function downloadEscPos(cmd) {
   window.close();
 }
 
-function loadLogoImage() {
+// logo ESC/POS
+function loadLogoBlob() {
+  return new Promise((resolve, reject) => {
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url_api + '/setting/logo/', true);
+    xhr.setRequestHeader('X-Client-Domain', myDomain);
+    xhr.responseType = 'blob';
+
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject('Gagal load logo');
+      }
+    };
+
+    xhr.onerror = reject;
+    xhr.send();
+  });
+}
+
+function blobToImage(blob) {
   return new Promise((resolve, reject) => {
 
     const img = new Image();
-    img.crossOrigin = "anonymous";
+    const url = URL.createObjectURL(blob);
 
-    img.onload = () => resolve(img);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+
     img.onerror = reject;
-
-    img.src = url_api + '/setting/logo/';
+    img.src = url;
   });
 }
 
@@ -456,10 +485,9 @@ function imageToEscPos(img, maxWidth = 384) {
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, width, height);
 
-  const imageData = ctx.getImageData(0, 0, width, height).data;
-
+  const data = ctx.getImageData(0, 0, width, height).data;
   const bytesPerLine = Math.ceil(width / 8);
-  const bitmap = [];
+  let bitmap = [];
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < bytesPerLine; x++) {
@@ -468,12 +496,11 @@ function imageToEscPos(img, maxWidth = 384) {
 
       for (let bit = 0; bit < 8; bit++) {
         const px = (y * width + x * 8 + bit) * 4;
+        if (px >= data.length) continue;
 
-        if (px >= imageData.length) continue;
-
-        const r = imageData[px];
-        const g = imageData[px + 1];
-        const b = imageData[px + 2];
+        const r = data[px];
+        const g = data[px + 1];
+        const b = data[px + 2];
 
         const gray = (r + g + b) / 3;
         if (gray < 180) byte |= (0x80 >> bit);
@@ -484,7 +511,6 @@ function imageToEscPos(img, maxWidth = 384) {
   }
 
   let cmd = "";
-
   cmd += esc(29, 118, 48, 0);
   cmd += esc(
     bytesPerLine & 0xff,
@@ -494,6 +520,5 @@ function imageToEscPos(img, maxWidth = 384) {
   );
 
   bitmap.forEach(b => cmd += String.fromCharCode(b));
-
   return cmd;
 }
