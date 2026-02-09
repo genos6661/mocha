@@ -80,11 +80,11 @@ function chooseDesign() {
               window.close();
           };
 
-          waitUntilReady().then(() => {
-          setTimeout(() => {
-            window.print();
-          }, 500);
-          });
+          // waitUntilReady().then(() => {
+          // setTimeout(() => {
+          //   window.print();
+          // }, 500);
+          // });
       });
     },
     error: function (xhr) {
