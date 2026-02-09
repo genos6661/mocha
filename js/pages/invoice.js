@@ -360,13 +360,13 @@ function generateEscPosInvoice(data) {
 
   cmd += esc(27, 64); // init
   cmd += esc(27, 97, 1);
-  cmd += "EXCHANGE\n";
+  cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
   cmd += esc(27, 97, 0);
 
-  cmd += "------------------------------\n";
+  cmd += "-------------------------------\n";
   cmd += `No : ${data.nomor}\n`;
-  cmd += `Cust : ${data.customer}\n`;
-  cmd += "------------------------------\n";
+  cmd += `Cust : ${data.nama_pelanggan}\n`;
+  cmd += "-------------------------------\n";
 
   data.items.forEach(i => {
 
@@ -378,12 +378,12 @@ function generateEscPosInvoice(data) {
     );
   });
 
-  cmd += "------------------------------\n";
+  cmd += "-------------------------------\n";
   cmd += esc(27, 69, 1);
   cmd += line("TOTAL", formatNumber(data.subtotal));
   cmd += esc(27, 69, 0);
 
-  cmd += "\nTerima Kasih\n\n\n";
+  cmd += `\n${data.footer1}\n${data.footer2}\n`;
 
   cmd += esc(29, 86, 0); // cut
 
@@ -400,7 +400,7 @@ function downloadEscPos(cmd) {
 
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "invoice.prn";
+  a.download = `${data.nomor}.prn`;
   a.click();
 }
 
