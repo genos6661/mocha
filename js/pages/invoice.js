@@ -66,9 +66,16 @@ function chooseDesign() {
         fileDesain = 'small-con2';
       } else if (design == 'a4_continous') {
         fileDesain = 'a4-half';
+      } else if (design == 'small-escpos') {
+        fileDesain = 'small-escpos';
       }
 
       $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
+
+          if (fileDesain === 'small-escpos') {
+              loadDataEscPos();
+              return;
+          }
 
           loadData(fileDesain);
 
@@ -80,11 +87,11 @@ function chooseDesign() {
               window.close();
           };
 
-          waitUntilReady().then(() => {
+          // waitUntilReady().then(() => {
           setTimeout(() => {
             window.print();
           }, 500);
-          });
+          // });
       });
     },
     error: function (xhr) {
@@ -288,6 +295,115 @@ function loadData(fileDesain) {
     }
   });
 }
+
+// ESC / POS
+function loadDataEscPos() {
+
+  $.ajax({
+    url: url_api + '/transaction/nomor/' + transaction,
+    method: 'GET',
+    headers: {
+      "Authorization": `Bearer ${window.token}`,
+      "X-Client-Domain": myDomain
+    },
+    success: function (response) {
+
+      const escData = mapInvoiceToEscPos(response);
+      const cmd = generateEscPosInvoice(escData);
+
+      downloadEscPos(cmd);
+    }
+  });
+}
+
+function mapInvoiceToEscPos(res) {
+
+  let subtotal = 0;
+
+  const items = res.details.map(item => {
+
+    let qty = res.tipe == 3 ? item.beli : item.jual;
+    let total = qty * item.rate;
+
+    subtotal += total;
+
+    return {
+      kode: item.kode,
+      qty,
+      rate: item.rate,
+      total
+    };
+  });
+
+  return {
+    cabang: res.nama_cabang,
+    nomor: res.nomor,
+    tanggal: new Date(res.tanggal),
+    customer: res.nama_pelanggan,
+    items,
+    subtotal
+  };
+}
+
+function esc(...bytes) {
+  return String.fromCharCode(...bytes);
+}
+
+function line(left, right, width = 32) {
+  const space = width - left.length - right.length;
+  return left + " ".repeat(Math.max(space, 1)) + right + "\n";
+}
+
+function generateEscPosInvoice(data) {
+
+  let cmd = "";
+
+  cmd += esc(27, 64); // init
+  cmd += esc(27, 97, 1);
+  cmd += "EXCHANGE\n";
+  cmd += esc(27, 97, 0);
+
+  cmd += "------------------------------\n";
+  cmd += `No : ${data.nomor}\n`;
+  cmd += `Cust : ${data.customer}\n`;
+  cmd += "------------------------------\n";
+
+  data.items.forEach(i => {
+
+    cmd += i.kode + "\n";
+
+    cmd += line(
+      `${i.qty} x ${formatNumber(i.rate)}`,
+      formatNumber(i.total)
+    );
+  });
+
+  cmd += "------------------------------\n";
+  cmd += esc(27, 69, 1);
+  cmd += line("TOTAL", formatNumber(data.subtotal));
+  cmd += esc(27, 69, 0);
+
+  cmd += "\nTerima Kasih\n\n\n";
+
+  cmd += esc(29, 86, 0); // cut
+
+  return cmd;
+}
+
+function formatNumber(num) {
+  return Number(num).toLocaleString('id-ID');
+}
+
+function downloadEscPos(cmd) {
+
+  const blob = new Blob([cmd], { type: "application/octet-stream" });
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "invoice.prn";
+  a.click();
+}
+
 
 function waitUntilReady() {
   return new Promise(resolve => {

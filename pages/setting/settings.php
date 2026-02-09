@@ -77,6 +77,7 @@
             <option value="A4" selected>Regular A4 Invoice</option>
             <option value="small">Small Continous Paper</option>
             <option value="small-2">Small Continous 2 rows</option>
+            <option value="small-escpos">Small ESC/POS</option>
             <option value="a4_continous">Half A4 Continous Paper</option>
           </select>
         </div>
