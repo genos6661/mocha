@@ -87,11 +87,9 @@ function chooseDesign() {
               window.close();
           };
 
-          // waitUntilReady().then(() => {
           setTimeout(() => {
             window.print();
           }, 500);
-          // });
       });
     },
     error: function (xhr) {
@@ -306,10 +304,22 @@ function loadDataEscPos() {
       "Authorization": `Bearer ${window.token}`,
       "X-Client-Domain": myDomain
     },
-    success: function (response) {
+    success: async function (response) {
 
       const escData = mapInvoiceToEscPos(response);
-      const cmd = generateEscPosInvoice(escData);
+
+      let cmd = esc(27, 64);
+
+      try {
+        const logoImg = await loadLogoImage();
+        cmd += esc(27, 97, 1); // center
+        cmd += imageToEscPos(logoImg);
+        cmd += "\n";
+      } catch (e) {
+        console.warn("Logo gagal dimuat, lanjut tanpa logo");
+      }
+
+      cmd += generateEscPosInvoice(escData);
 
       downloadEscPos(cmd);
     }
@@ -372,7 +382,6 @@ function generateEscPosInvoice(data) {
 
   let cmd = "";
 
-  cmd += esc(27, 64); // init
   cmd += esc(27, 97, 1);
   cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
   cmd += esc(27, 97, 0);
@@ -397,7 +406,7 @@ function generateEscPosInvoice(data) {
   cmd += "--------------------------------\n";
   cmd += esc(27, 69, 1);
   cmd += line("TOTAL", formatNumber(data.subtotal));
-  // cmd += esc(27, 69, 0);
+  
   cmd += esc(27, 97, 1);
   cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
 
@@ -421,26 +430,70 @@ function downloadEscPos(cmd) {
   window.close();
 }
 
-function waitUntilReady() {
-  return new Promise(resolve => {
+function loadLogoImage() {
+  return new Promise((resolve, reject) => {
 
-    // tunggu font & image
-    const images = document.images;
-    let loaded = 0;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
 
-    if (images.length === 0) return resolve();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
 
-    for (let img of images) {
-      if (img.complete) {
-        loaded++;
-      } else {
-        img.onload = img.onerror = () => {
-          loaded++;
-          if (loaded === images.length) resolve();
-        };
-      }
-    }
-
-    if (loaded === images.length) resolve();
+    img.src = url_api + '/setting/logo/';
   });
+}
+
+function imageToEscPos(img, maxWidth = 384) {
+
+  const ratio = Math.min(1, maxWidth / img.width);
+  const width = Math.floor(img.width * ratio);
+  const height = Math.floor(img.height * ratio);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, width, height);
+
+  const imageData = ctx.getImageData(0, 0, width, height).data;
+
+  const bytesPerLine = Math.ceil(width / 8);
+  const bitmap = [];
+
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < bytesPerLine; x++) {
+
+      let byte = 0;
+
+      for (let bit = 0; bit < 8; bit++) {
+        const px = (y * width + x * 8 + bit) * 4;
+
+        if (px >= imageData.length) continue;
+
+        const r = imageData[px];
+        const g = imageData[px + 1];
+        const b = imageData[px + 2];
+
+        const gray = (r + g + b) / 3;
+        if (gray < 180) byte |= (0x80 >> bit);
+      }
+
+      bitmap.push(byte);
+    }
+  }
+
+  let cmd = "";
+
+  cmd += esc(29, 118, 48, 0);
+  cmd += esc(
+    bytesPerLine & 0xff,
+    (bytesPerLine >> 8) & 0xff,
+    height & 0xff,
+    (height >> 8) & 0xff
+  );
+
+  bitmap.forEach(b => cmd += String.fromCharCode(b));
+
+  return cmd;
 }
