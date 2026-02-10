@@ -316,7 +316,7 @@ async function loadDataEscPos() {
         const logoImg = await blobToImage(logoBlob);
 
         cmd += esc(27, 97, 1); // center
-        cmd += imageToEscPos(logoImg, 384);
+        cmd += await imageToEscPos(logoImg, 384);
         cmd += "\n";
       } catch (e) {
         console.warn("Logo gagal dimuat, lanjut tanpa logo");
