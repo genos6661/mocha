@@ -472,53 +472,75 @@ function blobToImage(blob) {
   });
 }
 
-function imageToEscPos(img, maxWidth = 384) {
+async function imageToEscPos(blob) {
 
-  const ratio = Math.min(1, maxWidth / img.width);
-  const width = Math.floor(img.width * ratio);
-  const height = Math.floor(img.height * ratio);
+  const img = await createImageBitmap(blob);
+
+  // ===== Resize sesuai printer 58mm =====
+  const maxWidth = 384;
+  const ratio = img.height / img.width;
 
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = maxWidth;
+  canvas.height = Math.floor(maxWidth * ratio);
 
   const ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, width, height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-  const data = ctx.getImageData(0, 0, width, height).data;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imageData.data;
+
+  const width = canvas.width;
+  const height = canvas.height;
   const bytesPerLine = Math.ceil(width / 8);
-  let bitmap = [];
+
+  let escData = esc(27, 97, 1); // center align
+
+  escData += esc(29, 118, 48, 0,
+    bytesPerLine % 256,
+    Math.floor(bytesPerLine / 256),
+    height % 256,
+    Math.floor(height / 256)
+  );
+
+  let byte = 0;
+  let bitCount = 0;
 
   for (let y = 0; y < height; y++) {
-    for (let x = 0; x < bytesPerLine; x++) {
 
-      let byte = 0;
+    for (let x = 0; x < width; x++) {
 
-      for (let bit = 0; bit < 8; bit++) {
-        const px = (y * width + x * 8 + bit) * 4;
-        if (px >= data.length) continue;
+      const i = (y * width + x) * 4;
 
-        const r = data[px];
-        const g = data[px + 1];
-        const b = data[px + 2];
+      const r = pixels[i];
+      const g = pixels[i + 1];
+      const b = pixels[i + 2];
 
-        const gray = (r + g + b) / 3;
-        if (gray < 180) byte |= (0x80 >> bit);
+      // grayscale
+      const gray = (r + g + b) / 3;
+
+      // threshold (atur kalau logo terlalu gelap)
+      const bit = gray < 160 ? 1 : 0;
+
+      byte = (byte << 1) | bit;
+      bitCount++;
+
+      if (bitCount === 8) {
+        escData += String.fromCharCode(byte);
+        byte = 0;
+        bitCount = 0;
       }
+    }
 
-      bitmap.push(byte);
+    if (bitCount !== 0) {
+      escData += String.fromCharCode(byte << (8 - bitCount));
+      byte = 0;
+      bitCount = 0;
     }
   }
 
-  let cmd = "";
-  cmd += esc(29, 118, 48, 0);
-  cmd += esc(
-    bytesPerLine & 0xff,
-    (bytesPerLine >> 8) & 0xff,
-    height & 0xff,
-    (height >> 8) & 0xff
-  );
+  escData += "\n";
+  escData += esc(27, 97, 0); // balik ke left align
 
-  bitmap.forEach(b => cmd += String.fromCharCode(b));
-  return cmd;
+  return escData;
 }
