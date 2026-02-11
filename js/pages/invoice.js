@@ -311,16 +311,16 @@ async function loadDataEscPos() {
       let cmd = esc(27, 64); // init printer
 
       // ====== LOGO ======
-      // try {
-      //   const logoBlob = await loadLogoBlob();
-      //   const logoImg = await blobToImage(logoBlob);
+      try {
+        const logoBlob = await loadLogoBlob();
+        const logoImg = await blobToImage(logoBlob);
 
-      //   cmd += esc(27, 97, 1); // center
-      //   cmd += await imageToEscPos(logoImg, 384);
-      //   cmd += "\n";
-      // } catch (e) {
-      //   console.warn("Logo gagal dimuat, lanjut tanpa logo");
-      // }
+        cmd += esc(27, 97, 1); // center
+        cmd += await imageToEscPos(logoImg, 384);
+        cmd += "\n";
+      } catch (e) {
+        console.warn("Logo gagal dimuat, lanjut tanpa logo");
+      }
 
       // ====== INVOICE ======
       cmd += generateEscPosInvoice(escData);
@@ -414,7 +414,7 @@ function generateEscPosInvoice(data) {
   cmd += esc(27, 97, 1);
   cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
 
-  cmd += esc(29, 86, 0); // cut
+  cmd += esc(29, 86, 0); 
 
   return cmd;
 }
@@ -476,7 +476,6 @@ async function imageToEscPos(blob) {
 
   const img = await createImageBitmap(blob);
 
-  // ===== Resize sesuai printer 58mm =====
   const maxWidth = 384;
   const ratio = img.height / img.width;
 
@@ -516,10 +515,8 @@ async function imageToEscPos(blob) {
       const g = pixels[i + 1];
       const b = pixels[i + 2];
 
-      // grayscale
       const gray = (r + g + b) / 3;
 
-      // threshold (atur kalau logo terlalu gelap)
       const bit = gray < 160 ? 1 : 0;
 
       byte = (byte << 1) | bit;
@@ -540,7 +537,7 @@ async function imageToEscPos(blob) {
   }
 
   escData += "\n";
-  escData += esc(27, 97, 0); // balik ke left align
+  escData += esc(27, 97, 0); 
 
   return escData;
 }
