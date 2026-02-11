@@ -311,16 +311,16 @@ async function loadDataEscPos() {
       let cmd = esc(27, 64); // init printer
 
       // ====== LOGO ======
-      try {
-        const logoBlob = await loadLogoBlob();
-        const logoImg = await blobToImage(logoBlob);
+      // try {
+      //   const logoBlob = await loadLogoBlob();
+      //   const logoImg = await blobToImage(logoBlob);
 
-        cmd += esc(27, 97, 1); // center
-        cmd += await imageToEscPos(logoImg, 384);
-        cmd += "\n";
-      } catch (e) {
-        console.warn("Logo gagal dimuat, lanjut tanpa logo");
-      }
+      //   cmd += esc(27, 97, 1); // center
+      //   cmd += await imageToEscPos(logoImg, 384);
+      //   cmd += "\n";
+      // } catch (e) {
+      //   console.warn("Logo gagal dimuat, lanjut tanpa logo");
+      // }
 
       // ====== INVOICE ======
       cmd += generateEscPosInvoice(escData);
