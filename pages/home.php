@@ -69,7 +69,7 @@
                 <div class="badge rounded bg-label-danger me-4 p-2"> <i
                     class="icon-base ti tabler-cash icon-lg"></i> </div>
                 <div class="card-info">
-                  <h5 class="mb-0" id="statForex"></h5> <small>Forex Available</small>
+                  <h5 class="mb-0" id="statForex"></h5> <small>Buying Transactions</small>
                 </div>
               </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="badge rounded bg-label-success me-4 p-2"> <i
                     class="icon-base ti tabler-currency-dollar icon-lg"></i> </div>
                 <div class="card-info">
-                  <h5 class="mb-0" id="statTransaction">Rp. 975k</h5> <small>Transactions</small>
+                  <h5 class="mb-0" id="statTransaction"></h5> <small>Selling Transactions</small>
                 </div>
               </div>
             </div>

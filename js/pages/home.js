@@ -538,8 +538,8 @@ function getStatistic() {
     success: function (response) {
       $('#statOrder').text(formatNumberID(response.orders));
       $('#statCustomer').text(formatNumberID(response.customers));
-      $('#statTransaction').text('Rp. ' + formatNumberID(response.transactions_value));
-      $('#statForex').text(formatNumberID(response.forex + ' Kinds'));
+      $('#statTransaction').text('Rp. ' + formatNumberID(response.transactions_value.jual));
+      $('#statForex').text('Rp. ' + formatNumberID(response.transactions_value.beli));
     },
     error: function (xhr) {
       notif.fire({
