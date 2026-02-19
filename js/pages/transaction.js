@@ -25,6 +25,55 @@ $(document).ready(function () {
   `;
   let notiflixBlock = document.querySelector('.notiflix-loading');
   notiflixBlock.innerHTML = customSpinnerHTML;
+
+  $('#negara').select2({
+      dropdownParent: $('#modalKontakBaru'),
+      ajax: {
+        url: url_api + '/profile/negara/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'Choose Country'
+  });
+
+  $.getJSON('/occupation.json', function (data) {
+    occupationData = data;
+
+    $('#pekerjaan').select2({
+      placeholder: 'Choose Occupation',
+      dropdownParent: '#modalKontakBaru',
+      data: [], 
+      allowClear: true,
+      ajax: {
+        transport: function (params, success, failure) {
+          const term = params.data.term ? params.data.term.toLowerCase() : '';
+          const filtered = occupationData.filter(item => {
+            return item.text.toLowerCase().includes(term);
+          });
+          success({ results: filtered });
+        },
+        delay: 250
+      }
+    });
+  });
+
+  $('#modalKontakBaru').on('shown.bs.modal', function (e) {
+      $('#modalKontakBaru #nama').trigger('focus');
+  });
+
   initTable();
   initEvents();
 
@@ -83,6 +132,86 @@ $(document).ready(function () {
 
   $('#cabang').select2({
       dropdownParent: $('#modalFilter'),
+      ajax: {
+        url: url_api + '/cabang/select2/limit',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain,
+          "Authorization": `Bearer ${window.token}`
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'Choose Branch'
+  });
+
+  $('#kontak').select2({
+    dropdownParent: $('#modalTransaksiBaru'),
+    placeholder: 'Choose Contact',
+    allowClear: true,
+    // minimumInputLength: 1,
+
+    ajax: {
+      url: url_api + '/profile/select2',
+      dataType: 'json',
+      delay: 1000,
+      headers: {
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
+      },
+      data: function (params) {
+        return {
+          search: params.term || '',
+          page: params.page || 1
+        };
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+
+        return {
+          results: data.results,
+          pagination: {
+            more: data.pagination?.more || false
+          }
+        };
+      }
+    },
+
+    templateResult: function (data) {
+      if (!data.id) return data.nama;
+
+      return `
+        <div style="padding:6px 4px;">
+          <div style="font-weight:600;">${data.nama}</div>
+          <div style="font-size:12px;color:#666;">
+            📧 ${data.email || '-'}<br>
+            📱 ${data.telepon || '-'}<br>
+            🌍 ${data.nama_negara || '-'}
+          </div>
+        </div>
+      `;
+    },
+
+    templateSelection: function (data) {
+      return `${data.nama} - ${data.nama_negara}` || 'Choose Contact';
+    },
+
+    escapeMarkup: function (markup) {
+      return markup; 
+    }
+  });
+
+  $('#cabangTrans').select2({
+      dropdownParent: $('#modalTransaksiBaru'),
       ajax: {
         url: url_api + '/cabang/select2/limit',
         dataType: 'json',

@@ -79,7 +79,7 @@ $(document).ready(function() {
           return {
             results: data.results,
             pagination: {
-              more: data.pagination.more // ⬅️ penting untuk infinite scroll
+              more: data.pagination.more
             }
           };
         }

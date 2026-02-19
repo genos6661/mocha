@@ -784,44 +784,44 @@ $(document).ready(function () {
         }
       },
       error: function (xhr, status, error) {
-          if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
-
-            if (document.querySelector(`.notiflix-loading`)) {
-                Loading.remove();
-            }
-
-            const dup = xhr.responseJSON.fields;
-
-            let msg = "Duplicated data found:<br><br>";
-            if (dup.id) msg += "- ID Number already exists<br>";
-            if (dup.email) msg += "- Email already exists<br>";
-            if (dup.telepon) msg += "- Phone number already exists<br>";
-            msg += "<br>Do you wish to continue?";
-
-            return Swal.fire({
-                title: "Duplication Detected",
-                html: msg,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Continue",
-                cancelButtonText: "Cancel"
-            }).then(result => {
-                if (result.isConfirmed) {
-                    submitForce();  
-                } else {
-                    Loading.remove();
-                }
-            });
-          }
-
-          notif.fire({
-            icon: 'error',
-            text: xhr.responseJSON?.message || "Terjadi kesalahan"
-          });
+        if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
 
           if (document.querySelector(`.notiflix-loading`)) {
               Loading.remove();
           }
+
+          const dup = xhr.responseJSON.fields;
+
+          let msg = "Duplicated data found:<br><br>";
+          if (dup.id) msg += "- ID Number already exists<br>";
+          if (dup.email) msg += "- Email already exists<br>";
+          if (dup.telepon) msg += "- Phone number already exists<br>";
+          msg += "<br>Do you wish to continue?";
+
+          return Swal.fire({
+              title: "Duplication Detected",
+              html: msg,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Continue",
+              cancelButtonText: "Cancel"
+          }).then(result => {
+              if (result.isConfirmed) {
+                  submitForce();  
+              } else {
+                  Loading.remove();
+              }
+          });
+        }
+
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON?.message || "Terjadi kesalahan"
+        });
+
+        if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+        }
       }
     });
   });
