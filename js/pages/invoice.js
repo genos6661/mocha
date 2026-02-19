@@ -422,6 +422,7 @@ function downloadEscPos(cmd) {
   const blobUrl = URL.createObjectURL(blob);
 
   window.open(blobUrl, "_blank");
+  window.close();
 }
 
 // logo ESC/POS
