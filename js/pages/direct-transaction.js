@@ -257,6 +257,22 @@ window.addEventListener('load', updateReportDate);
 $('#btnSubmit').click(function (e) {
   e.preventDefault();
 
+  Loading.standard({
+    backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
+    svgSize: '0px'
+  });
+  let customSpinnerHTML = `
+    <div class="sk-wave mx-auto">
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+    </div>
+  `;
+  let notiflixBlock = document.querySelector('.notiflix-loading');
+  notiflixBlock.innerHTML = customSpinnerHTML;
+    
   const $btn = $(this);
   if ($btn.prop('disabled')) return;
   $btn.prop('disabled', true);
@@ -305,15 +321,6 @@ $('#btnSubmit').click(function (e) {
 
   const tipeTransaksi = $('#buyTrans').prop('checked') ? 'buy' : 'sell';
 
-  // if (!idTrans) {
-  //   $btn.prop('disabled', false);
-  //   notif.fire({
-  //     icon: 'warning',
-  //     text: 'Transaction is not valid!'
-  //   });
-  //   return;
-  // }
-
   $.ajax({
     url: url_api + '/transaction/',
     type: 'POST',
@@ -332,12 +339,20 @@ $('#btnSubmit').click(function (e) {
       items: details 
     }),
     success: function (response) {
+      $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
+      $('#kontak, #cabangTrans').val(null).trigger('change');
+      $('#tabelDetail tbody').empty();
       notif.fire({
         icon: 'success',
         text: response.message
       }).then(() => {
-        window.location.href = '/transaction';
+          offset = 0;
+          table.clear().draw();
+          loadMoreData();
       });
+      if (document.querySelector(`.notiflix-loading`)) {
+          Loading.remove();
+      }
     },
     error: function (xhr) {
       $btn.prop('disabled', false);
