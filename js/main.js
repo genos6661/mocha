@@ -141,3 +141,30 @@ function loadMainProfile() {
         });
     }
 }
+
+$('#btnBackup').on('click', function () {
+
+  fetch(url_api + '/backup', {
+    method: 'POST',
+    headers: {
+      'X-Client-Domain': myDomain,
+      'Authorization': 'Bearer ' + token
+    }
+  })
+  .then(response => response.blob())
+  .then(blob => {
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'backup.enc';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+  })
+  .catch(err => {
+    alert('Backup gagal');
+  });
+
+});

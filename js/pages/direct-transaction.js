@@ -202,8 +202,8 @@ function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
   const data = $selectForex.select2('data')[0];
   if (!data) return;
 
-  const tipe = $('#tipeTrans').val();
-  let rate = tipe == 3 ? data.beli : data.jual;
+  const tipe = $('#buyTrans').prop('checked') ? 'buy' : 'sell';
+  let rate = tipe == 'buy' ? data.beli : data.jual;
   rate = parseFloat(rate) || 0;
 
   const formattedRate = formatter.format(rate);
