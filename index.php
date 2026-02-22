@@ -100,6 +100,8 @@ switch ($routeInfo[0]) {
     <script src="/assets/js/config.js"></script>
     <script src="/assets/vendor/libs/sweetalert2/sweetalert2.js"></script>
 
+    <script src="/js/main.js"></script>
+
     <script>
       const notif = Swal.mixin({
         toast: true,
@@ -563,7 +565,6 @@ switch ($routeInfo[0]) {
     <!-- Main JS -->
 
     <script src="/assets/js/main.js"></script>
-    <script src="/js/main.js"></script>
     <script src="/js/export/csv.js" type="text/javascript"></script>
     <script src="/js/export/excel.js" type="text/javascript"></script>
     <script src="/js/export/pdf.js" type="text/javascript"></script>

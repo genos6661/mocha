@@ -4,6 +4,7 @@ const logoKey = "cachedLogo";
 let savedProfile = getCookie(cookieUser);
 let savedSetting = getCookie(cookieSetting);
 let cachedLogo = sessionStorage.getItem(logoKey);
+let parsedProfile;
 
 $(document).ready(function () {
 	loadMainSettings();
@@ -106,7 +107,7 @@ function loadMainSettings() {
 
 function loadMainProfile() {
     if(savedProfile) {
-        let parsedProfile = JSON.parse(savedProfile);
+        parsedProfile = JSON.parse(savedProfile);
         $('#navbarRole').text(parsedProfile.nama_role);
         $('#navbarNama').text(parsedProfile.nama);
     } else {

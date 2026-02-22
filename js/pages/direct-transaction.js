@@ -73,6 +73,7 @@ function formatSelection(item) {
 }
 
 $('#tambahBaris').on('click', function () {
+  const isReadonly = (parsedProfile.request == 0) ? 'readonly' : '';
   let row = $(`
     <tr>
       <td class="px-1">
@@ -82,7 +83,7 @@ $('#tambahBaris').on('click', function () {
         <input type="text" class="form-control jumlah text-end">
       </td>
       <td class="px-1">
-        <input type="text" class="form-control rate text-end">
+        <input type="text" class="form-control rate text-end" ${isReadonly}>
       </td>
       <td class="px-1">
         <input type="text" class="form-control subtotal text-end" readonly>
@@ -272,7 +273,7 @@ $('#btnSubmit').click(function (e) {
   `;
   let notiflixBlock = document.querySelector('.notiflix-loading');
   notiflixBlock.innerHTML = customSpinnerHTML;
-    
+
   const $btn = $(this);
   if ($btn.prop('disabled')) return;
   $btn.prop('disabled', true);
@@ -342,6 +343,8 @@ $('#btnSubmit').click(function (e) {
       $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
       $('#kontak, #cabangTrans').val(null).trigger('change');
       $('#tabelDetail tbody').empty();
+      $('#buyTrans').trigger('click');
+      $('#tambahBaris').trigger('click');
       notif.fire({
         icon: 'success',
         text: response.message
