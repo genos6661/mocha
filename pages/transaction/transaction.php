@@ -1,3 +1,11 @@
+<?php
+$nowHour = date('H');
+$reportDate = date('Y-m-d');
+
+if ($nowHour >= 15) {
+    $reportDate = date('Y-m-d', strtotime('+1 day'));
+}
+?>
 <h5 class="mb-3">Transactions</h5>
 <div class="card">
   <div class="row p-3">
@@ -416,6 +424,10 @@
             <input type="date" class="form-control" id="tanggal" value="<?php echo date('Y-m-d'); ?>">
           </div>
           <div class="col-md mb-3">
+            <label for="tanggal_laporan" class="form-label">Report Date</label>
+            <input type="date" class="form-control" id="tanggal_laporan" value="<?php echo $reportDate; ?>">
+          </div>
+          <div class="col-md mb-3">
             <label for="cabangTrans" class="form-label">Branch</label>
             <select id="cabangTrans" class="form-select"></select>
           </div>
@@ -481,7 +493,7 @@
       </div>
       <div class="modal-footer d-flex justify-content-between justify-content-md-end">
         <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
-        <button class="btn-primary btn mx-1" id="submitBtn">Submit</button>
+        <button class="btn-primary btn mx-1" id="btnSubmit">Submit</button>
       </div>
     </div>
   </div>

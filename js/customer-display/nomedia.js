@@ -32,7 +32,7 @@ $(document).ready(function() {
           `);
       } else {
           $('.boxLogo').html(`
-              <img src="/assets/img/favicon/beres.svg" alt="Logo" style="height:70px;">
+              <img src="/assets/img/favicon/logo.svg" alt="Logo" style="height:70px;">
           `);
       }
   };
@@ -90,9 +90,8 @@ function generateTabelHTML(dataArray) {
       <table class="table mb-0 national-park">
         <thead class="">
           <tr>
-            <th class="text-center text-black tabhead-font" colspan="2"><strong>Forex</strong></th>
-            <th class="text-end text-black tabhead-font"><strong>Buy</strong></th>
-            <th class="text-end text-black tabhead-font"><strong>Sell</strong></th>
+            <th class="text-black tabhead-font" colspan="2"><strong>Forex</strong></th>
+            <th class="text-end text-black tabhead-font"><strong>Rate</strong></th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +99,6 @@ function generateTabelHTML(dataArray) {
 
     $.each(dataArray, function(index, item) {
         const beliFormatted = Number(item.beli).toLocaleString('id-ID');
-        const jualFormatted = Number(item.jual).toLocaleString('id-ID');
         let urlFlag;
         if (item.flag === null || item.flag == "") {
             urlFlag = "../assets/img/flags/0noflag.png";
@@ -117,7 +115,6 @@ function generateTabelHTML(dataArray) {
             </td>
             <td class="p-1 text-black"><strong>${item.kode}</strong></td>
             <td class="text-end text-black p-1"><strong>${beliFormatted}</strong></td>
-            <td class="text-end text-black p-1"><strong>${jualFormatted}</strong></td>
           </tr>
         `;
     });
@@ -126,21 +123,48 @@ function generateTabelHTML(dataArray) {
     return html;
 }
 
+// function renderTable(data, maxRows) {
+//   const container = $('#tabelContainer');
+//   container.empty();
+
+//   if (data.length <= maxRows) {
+//     container.append(`<div class="tabel-wrapper">${generateTabelHTML(data)}</div>`);
+//   } else {
+//     const half = Math.ceil(data.length / 2);
+//     const firstHalf = data.slice(0, half);
+//     const secondHalf = data.slice(half);
+
+//     container.append(`<div class="half-width">${generateTabelHTML(firstHalf)}</div>`);
+//     container.append(`<div class="half-width">${generateTabelHTML(secondHalf)}</div>`);
+//   }
+// }
+
 function renderTable(data, maxRows) {
-    const container = $('#tabelContainer');
-    container.empty();
+  const container = $('#tabelContainer3col');
+  container.empty();
 
-    if (data.length <= maxRows) {
-      container.append(`<div class="tabel-wrapper">${generateTabelHTML(data)}</div>`);
-    } else {
-      const half = Math.ceil(data.length / 2);
-      const firstHalf = data.slice(0, half);
-      const secondHalf = data.slice(half);
+  if (data.length <= maxRows) {
+    container.append(`<div class="tabel-wrapper">${generateTabelHTML(data)}</div>`);
+  } else {
 
-      container.append(`<div class="half-width">${generateTabelHTML(firstHalf)}</div>`);
-      container.append(`<div class="half-width">${generateTabelHTML(secondHalf)}</div>`);
+    const columnCount = 3; // <-- jumlah kolom
+    const chunkSize = Math.ceil(data.length / columnCount);
+
+    for (let i = 0; i < columnCount; i++) {
+      const start = i * chunkSize;
+      const end = start + chunkSize;
+      const chunk = data.slice(start, end);
+
+      if (chunk.length > 0) {
+        container.append(`
+          <div class="third-width">
+            ${generateTabelHTML(chunk)}
+          </div>
+        `);
+      }
     }
   }
+}
 
 function loadTabel() {
   const maxRows = parseInt($('#maxRows').val());

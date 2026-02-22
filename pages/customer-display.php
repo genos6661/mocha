@@ -256,6 +256,15 @@
           backdrop-filter: blur(7px);
           border: 2px solid rgba(255, 255, 255, 0.3);
         }
+
+        #tabelContainer3col {
+          display: flex;
+          gap: 10px;
+        }
+
+        .third-width {
+          flex: 1;
+        }
       </style>
     </head>
     <body>

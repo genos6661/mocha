@@ -418,8 +418,8 @@ $('#btnSubmit').click(function (e) {
     if (!str) return 0;
     return parseFloat(
       str.toString()
-         .replace(/\./g, '')  // hilangkan titik ribuan
-         .replace(/,/g, '.')  // ubah koma ke titik
+         .replace(/\./g, '')  
+         .replace(/,/g, '.')  
     ) || 0;
   }
 

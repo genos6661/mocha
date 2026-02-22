@@ -224,3 +224,127 @@ $(document).on('change', 'input[name="tipeTrans"]', function () {
   $('#tabelDetail tbody').empty();
   $('#tambahBaris').trigger('click');
 });
+
+function formatDate(date) {
+    return date.toISOString().split('T')[0];
+}
+
+function updateReportDate() {
+    const selectedDate = document.getElementById('tanggal').value;
+    const reportInput = document.getElementById('tanggal_laporan');
+
+    if (!selectedDate) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+
+    let baseDate = new Date(selectedDate);
+
+    // Jika jam >= 15, tambah 1 hari
+    if (hour >= 15) {
+        baseDate.setDate(baseDate.getDate() + 1);
+    }
+
+    reportInput.value = formatDate(baseDate);
+}
+
+// Trigger saat date berubah
+document.getElementById('tanggal').addEventListener('change', updateReportDate);
+
+// Trigger saat pertama kali load
+window.addEventListener('load', updateReportDate);
+
+$('#btnSubmit').click(function (e) {
+  e.preventDefault();
+
+  const $btn = $(this);
+  if ($btn.prop('disabled')) return;
+  $btn.prop('disabled', true);
+
+  const tanggal = $('#tanggal').val();
+  const tanggal_laporan = $('#tanggal_laporan').val();
+
+  function normalizeNumber(str) {
+    if (!str) return 0;
+    return parseFloat(
+      str.toString()
+         .replace(/\./g, '')  
+         .replace(/,/g, '.')  
+    ) || 0;
+  }
+
+  function normalizeString(str) {
+    return str ? str.toString().trim() : "";
+  }
+
+  const details = [];
+  $('#tabelDetail tbody tr').each(function () {
+    const forex = normalizeString($(this).find('select.valas').val());
+    const amount = normalizeNumber($(this).find('.jumlah').val());
+    const rate   = normalizeNumber($(this).find('.rate').val());
+
+    const isValid = forex && amount !== 0 && rate !== 0;
+
+    if (isValid) {
+      details.push({
+        forex: forex,
+        amount: amount,
+        rate: rate
+      });
+    }
+  });
+
+  if (details.length === 0) {
+    $btn.prop('disabled', false);
+    notif.fire({
+      icon: 'warning',
+      text: 'Minimal satu detail harus diisi!'
+    });
+    return;
+  }
+
+  const tipeTransaksi = $('#buyTrans').prop('checked') ? 'buy' : 'sell';
+
+  // if (!idTrans) {
+  //   $btn.prop('disabled', false);
+  //   notif.fire({
+  //     icon: 'warning',
+  //     text: 'Transaction is not valid!'
+  //   });
+  //   return;
+  // }
+
+  $.ajax({
+    url: url_api + '/transaction/',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+      "Content-Type": "application/json",
+      "X-Client-Domain": myDomain,
+      "Authorization": `Bearer ${window.token}`
+    },
+    data: JSON.stringify({ 
+      id_profile: $('#kontak').val(),
+      date: tanggal,
+      report_date: tanggal_laporan,
+      branch: $('#cabangTrans').val(),
+      tipe: tipeTransaksi,
+      items: details 
+    }),
+    success: function (response) {
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then(() => {
+        window.location.href = '/transaction';
+      });
+    },
+    error: function (xhr) {
+      $btn.prop('disabled', false);
+      notif.fire({
+        icon: 'error',
+        text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+      });
+    }
+  });
+});
