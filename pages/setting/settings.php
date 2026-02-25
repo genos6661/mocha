@@ -78,6 +78,7 @@
             <option value="small">Small Continous Paper</option>
             <option value="small-2">Small Continous 2 rows</option>
             <option value="small-escpos">Small ESC/POS</option>
+            <option value="small-escpos-long">Small ESC/POS Long</option>
             <option value="a4_continous">Half A4 Continous Paper</option>
           </select>
         </div>

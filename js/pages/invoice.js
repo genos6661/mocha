@@ -71,11 +71,13 @@ function chooseDesign() {
         fileDesain = 'a4-half';
       } else if (design == 'small-escpos') {
         fileDesain = 'small-escpos';
+      } else if (design == 'small-escpos-long') {
+        fileDesain = 'small-escpos-long';
       }
 
       $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
 
-          if (fileDesain === 'small-escpos' || fileDesain === 'small-escpos2') {
+          if (fileDesain === 'small-escpos' || fileDesain === 'small-escpos-long') {
               loadDataEscPos(fileDesain);
               return;
           }
@@ -358,6 +360,8 @@ function mapInvoiceToEscPos(res) {
     nomor: res.nomor,
     tanggal: formattedDate,
     customer: res.nama_pelanggan,
+    nationality: res.nationality,
+    id_number: res.idNumber,
     items,
     subtotal
   };
@@ -408,6 +412,26 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += esc(29, 86, 0); 
 
     return cmd;
+  }
+  // desain esc pos long
+  else if (fileDesain === 'small-escpos-long') {
+    let cmd = "";
+
+    cmd += esc(27, 97, 1);
+    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
+    cmd += esc(27, 97, 0);
+
+    cmd += "--------------------------------\n";
+    cmd += esc(27, 69, 1);
+    cmd += `No. ${data.nomor}`;
+    cmd += esc(27, 97, 0);
+    cmd += `Date : ${data.tanggal}\n`;
+    cmd += `Customer : ${data.customer}\n`;
+    cmd += `Passport/ID : ${data.id_number}\n`;
+    cmd += `Nationality : ${data.nationality}\n`;
+    cmd += esc(27, 69, 1);
+    cmd += `Cashier : ${data.user}\n`;
+    cmd += "--------------------------------\n";
   }
 }
 
