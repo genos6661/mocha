@@ -75,8 +75,8 @@ function chooseDesign() {
 
       $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
 
-          if (fileDesain === 'small-escpos') {
-              loadDataEscPos();
+          if (fileDesain === 'small-escpos' || fileDesain === 'small-escpos2') {
+              loadDataEscPos(fileDesain);
               return;
           }
 
@@ -298,7 +298,7 @@ function loadData(fileDesain) {
 }
 
 // ESC / POS
-async function loadDataEscPos() {
+async function loadDataEscPos(fileDesain) {
 
   $.ajax({
     url: url_api + '/transaction/nomor/' + transaction,
@@ -313,7 +313,7 @@ async function loadDataEscPos() {
 
       let cmd = esc(27, 64); 
 
-      cmd += generateEscPosInvoice(escData);
+      cmd += generateEscPosInvoice(escData, fileDesain);
 
       downloadEscPos(cmd);
     }
@@ -372,41 +372,43 @@ function line(left, right, width = 32) {
   return left + " ".repeat(Math.max(space, 1)) + right + "\n";
 }
 
-function generateEscPosInvoice(data) {
+function generateEscPosInvoice(data, fileDesain) {
 
-  let cmd = "";
+  if (fileDesain === 'small-escpos') {
+    let cmd = "";
 
-  cmd += esc(27, 97, 1);
-  cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
-  cmd += esc(27, 97, 0);
+    cmd += esc(27, 97, 1);
+    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
+    cmd += esc(27, 97, 0);
 
-  cmd += "--------------------------------\n";
-  cmd += `Number : ${data.nomor}\n`;
-  cmd += `Date : ${data.tanggal}\n`;
-  cmd += `Name : ${data.customer}\n\n`;
-  cmd += `Cashier : ${data.user}\n`
-  cmd += "--------------------------------\n";
+    cmd += "--------------------------------\n";
+    cmd += `Number : ${data.nomor}\n`;
+    cmd += `Date : ${data.tanggal}\n`;
+    cmd += `Name : ${data.customer}\n\n`;
+    cmd += `Cashier : ${data.user}\n`
+    cmd += "--------------------------------\n";
 
-  data.items.forEach(i => {
+    data.items.forEach(i => {
 
-    cmd += i.kode + " - " + i.nama + "\n";
+      cmd += i.kode + " - " + i.nama + "\n";
 
-    cmd += line(
-      `${i.qty} x ${formatNumber(i.rate)}`,
-      formatNumber(i.total)
-    );
-  });
+      cmd += line(
+        `${i.qty} x ${formatNumber(i.rate)}`,
+        formatNumber(i.total)
+      );
+    });
 
-  cmd += "--------------------------------\n";
-  cmd += esc(27, 69, 1);
-  cmd += line("TOTAL", formatNumber(data.subtotal));
-  
-  cmd += esc(27, 97, 1);
-  cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
+    cmd += "--------------------------------\n";
+    cmd += esc(27, 69, 1);
+    cmd += line("TOTAL", formatNumber(data.subtotal));
+    
+    cmd += esc(27, 97, 1);
+    cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
 
-  cmd += esc(29, 86, 0); 
+    cmd += esc(29, 86, 0); 
 
-  return cmd;
+    return cmd;
+  }
 }
 
 function formatNumber(num) {
@@ -417,121 +419,8 @@ function downloadEscPos(cmd) {
 
   const blob = new Blob([cmd], { type: "application/octet-stream" });
 
-  // const a = document.createElement("a");
-  // a.href = URL.createObjectURL(blob);
-  // a.download = `${transaction}.prn`;
-  // a.click();
-  // window.close();
   const blobUrl = URL.createObjectURL(blob);
 
   window.open(blobUrl, "_blank");
   window.close();
-}
-
-// logo ESC/POS
-function loadLogoBlob() {
-  return new Promise((resolve, reject) => {
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url_api + '/setting/logo/', true);
-    xhr.setRequestHeader('X-Client-Domain', myDomain);
-    xhr.responseType = 'blob';
-
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        resolve(xhr.response);
-      } else {
-        reject('Gagal load logo');
-      }
-    };
-
-    xhr.onerror = reject;
-    xhr.send();
-  });
-}
-
-function blobToImage(blob) {
-  return new Promise((resolve, reject) => {
-
-    const img = new Image();
-    const url = URL.createObjectURL(blob);
-
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      resolve(img);
-    };
-
-    img.onerror = reject;
-    img.src = url;
-  });
-}
-
-async function imageToEscPos(blob) {
-
-  const img = await createImageBitmap(blob);
-
-  const maxWidth = 384;
-  const ratio = img.height / img.width;
-
-  const canvas = document.createElement("canvas");
-  canvas.width = maxWidth;
-  canvas.height = Math.floor(maxWidth * ratio);
-
-  const ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const pixels = imageData.data;
-
-  const width = canvas.width;
-  const height = canvas.height;
-  const bytesPerLine = Math.ceil(width / 8);
-
-  let escData = esc(27, 97, 1); // center align
-
-  escData += esc(29, 118, 48, 0,
-    bytesPerLine % 256,
-    Math.floor(bytesPerLine / 256),
-    height % 256,
-    Math.floor(height / 256)
-  );
-
-  let byte = 0;
-  let bitCount = 0;
-
-  for (let y = 0; y < height; y++) {
-
-    for (let x = 0; x < width; x++) {
-
-      const i = (y * width + x) * 4;
-
-      const r = pixels[i];
-      const g = pixels[i + 1];
-      const b = pixels[i + 2];
-
-      const gray = (r + g + b) / 3;
-
-      const bit = gray < 160 ? 1 : 0;
-
-      byte = (byte << 1) | bit;
-      bitCount++;
-
-      if (bitCount === 8) {
-        escData += String.fromCharCode(byte);
-        byte = 0;
-        bitCount = 0;
-      }
-    }
-
-    if (bitCount !== 0) {
-      escData += String.fromCharCode(byte << (8 - bitCount));
-      byte = 0;
-      bitCount = 0;
-    }
-  }
-
-  escData += "\n";
-  escData += esc(27, 97, 0); 
-
-  return escData;
 }
