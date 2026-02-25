@@ -9,6 +9,7 @@ let parsedProfile;
 $(document).ready(function () {
 	loadMainSettings();
 	loadMainProfile();
+    $('#btnBackup').on('click', backupData);
 });
 
 function setCookie(name, value, days) {
@@ -142,29 +143,75 @@ function loadMainProfile() {
     }
 }
 
-$('#btnBackup').on('click', function () {
+// $('#btnBackup').on('click', function () {
 
-  fetch(url_api + '/backup', {
-    method: 'POST',
+//   fetch(url_api + '/backup', {
+//     method: 'POST',
+//     headers: {
+//       'X-Client-Domain': myDomain,
+//       'Authorization': 'Bearer ' + token
+//     }
+//   })
+//   .then(response => response.blob())
+//   .then(blob => {
+
+//     const url = window.URL.createObjectURL(blob);
+//     const a = document.createElement('a');
+//     a.href = url;
+//     a.download = 'backup.enc';
+//     document.body.appendChild(a);
+//     a.click();
+//     a.remove();
+
+//   })
+//   .catch(err => {
+//     alert('Backup gagal');
+//   });
+
+// });
+
+function backupData() {
+  // $('#btnBackup').prop('disabled', true);
+  // $('#backupStatus').html('Generating backup... please wait');
+
+  $.ajax({
+    url: url_api + '/backup',
+    method: 'GET',
     headers: {
-      'X-Client-Domain': myDomain,
-      'Authorization': 'Bearer ' + token
+      'X-Client-Domain': myDomain
+    },
+    xhrFields: {
+      responseType: 'blob'
+    },
+    success: function (data, status, xhr) {
+      let filename = "database.backup";
+      const disposition = xhr.getResponseHeader('Content-Disposition');
+
+      if (disposition && disposition.indexOf('filename=') !== -1) {
+        filename = disposition.split('filename=')[1].replace(/"/g, '');
+      }
+
+      const blob = new Blob([data]);
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      console.log('berhasil');
+
+      // $('#backupStatus').html('<span style="color:green;">Backup berhasil didownload.</span>');
+      // $('#btnBackup').prop('disabled', false);
+    },
+    error: function (xhr) {
+      // $('#backupStatus').html('<span style="color:red;">Backup gagal.</span>');
+      // $('#btnBackup').prop('disabled', false);
+        console.log('gagal');
     }
-  })
-  .then(response => response.blob())
-  .then(blob => {
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'backup.enc';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-  })
-  .catch(err => {
-    alert('Backup gagal');
   });
 
-});
+}

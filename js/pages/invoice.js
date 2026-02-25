@@ -19,6 +19,9 @@ $(document).ready(function () {
       loadData(fileDesain);
     }
   }
+  window.onafterprint = function () {
+    window.close();
+  };
 });
 
 function setDateTime() {

@@ -332,8 +332,8 @@ switch ($routeInfo[0]) {
                         <i class="icon-base ti tabler-refresh icon-md me-3"></i><span>Clear Cache</span>
                       </a>
                     </li>
-                    <li>
-                      <a class="dropdown-item" href="#">
+                    <li id="btnBackup">
+                      <a class="dropdown-item">
                         <i class="icon-base ti tabler-device-floppy icon-md me-3"></i><span>Backup Data</span>
                       </a>
                     </li>
