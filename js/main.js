@@ -171,47 +171,67 @@ function loadMainProfile() {
 // });
 
 function backupData() {
-  // $('#btnBackup').prop('disabled', true);
-  // $('#backupStatus').html('Generating backup... please wait');
+  Loading.standard({
+      backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
+      svgSize: '0px'
+  });
+  let customSpinnerHTML = `
+        <div class="sk-wave mx-auto">
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+        </div>
+  `;
+  let notiflixBlock = document.querySelector('.notiflix-loading');
+  notiflixBlock.innerHTML = customSpinnerHTML;
 
   $.ajax({
     url: url_api + '/backup',
     method: 'GET',
     headers: {
-      'X-Client-Domain': myDomain
+      'X-Client-Domain': myDomain,
+      "Authorization": `Bearer ${window.token}`
     },
     xhrFields: {
       responseType: 'blob'
     },
     success: function (data, status, xhr) {
+
       let filename = "database.backup";
+
       const disposition = xhr.getResponseHeader('Content-Disposition');
 
-      if (disposition && disposition.indexOf('filename=') !== -1) {
-        filename = disposition.split('filename=')[1].replace(/"/g, '');
+      if (disposition) {
+        const matches = disposition.match(/filename="?([^"]+)"?/);
+        if (matches && matches[1]) {
+          filename = matches[1];
+        }
       }
 
       const blob = new Blob([data]);
-      const url = window.URL.createObjectURL(blob);
+      const downloadUrl = window.URL.createObjectURL(blob);
 
       const a = document.createElement('a');
-      a.href = url;
+      a.href = downloadUrl;
       a.download = filename;
       document.body.appendChild(a);
       a.click();
 
-      window.URL.revokeObjectURL(url);
+      window.URL.revokeObjectURL(downloadUrl);
       document.body.removeChild(a);
-      console.log('berhasil');
 
-      // $('#backupStatus').html('<span style="color:green;">Backup berhasil didownload.</span>');
-      // $('#btnBackup').prop('disabled', false);
+      Loading.remove();
     },
     error: function (xhr) {
-      // $('#backupStatus').html('<span style="color:red;">Backup gagal.</span>');
-      // $('#btnBackup').prop('disabled', false);
-        console.log('gagal');
+        notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+          });
+      if (document.querySelector(`.notiflix-loading`)) {
+          Loading.remove();
+      }
     }
   });
-
 }
