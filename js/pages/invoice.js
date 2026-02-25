@@ -418,12 +418,12 @@ function generateEscPosInvoice(data, fileDesain) {
     let cmd = "";
 
     cmd += esc(27, 97, 1);
-    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
+    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n${data.footer1}\n`;
     cmd += esc(27, 97, 0);
 
     cmd += "--------------------------------\n";
     cmd += esc(27, 69, 1);
-    cmd += `No. ${data.nomor}`;
+    cmd += `No. ${data.nomor}\n`;
     cmd += esc(27, 97, 0);
     cmd += `Date : ${data.tanggal}\n`;
     cmd += `Customer : ${data.customer}\n`;
@@ -431,6 +431,7 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += `Nationality : ${data.nationality}\n`;
     cmd += esc(27, 69, 1);
     cmd += `Cashier : ${data.user}\n`;
+    cmd += esc(27, 97, 0);
     cmd += "--------------------------------\n";
 
 
