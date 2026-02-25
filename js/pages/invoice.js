@@ -432,6 +432,11 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += esc(27, 69, 1);
     cmd += `Cashier : ${data.user}\n`;
     cmd += "--------------------------------\n";
+
+
+    cmd += esc(29, 86, 0); 
+
+    return cmd;
   }
 }
 
