@@ -429,11 +429,26 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += `Customer : ${data.customer}\n`;
     cmd += `Passport/ID : ${data.id_number}\n`;
     cmd += `Nationality : ${data.nationality}\n`;
-    cmd += esc(27, 69, 1);
+    cmd += esc(27, 97, 2);
     cmd += `Cashier : ${data.user}\n`;
     cmd += esc(27, 97, 0);
     cmd += "--------------------------------\n";
+    cmd += `Forex    Amount    Rate    Total\n`;
+    cmd += "--------------------------------\n";
 
+    data.items.forEach(i => {
+
+      cmd += i.kode + " - " + i.nama + "\n";
+
+      cmd += line(
+        `${i.qty} x ${formatNumber(i.rate)}`,
+        formatNumber(i.total)
+      );
+    });
+
+    cmd += "--------------------------------\n";
+    cmd += esc(27, 69, 1);
+    cmd += line("TOTAL", formatNumber(data.subtotal));
 
     cmd += esc(29, 86, 0); 
 
