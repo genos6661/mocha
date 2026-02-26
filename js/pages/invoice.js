@@ -422,7 +422,7 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += esc(27, 97, 0);
 
     cmd += "--------------------------------\n";
-    cmd += esc(27, 69, 1);
+    cmd += esc(27, 97, 2);
     cmd += `No. ${data.nomor}\n`;
     cmd += esc(27, 97, 0);
     cmd += `Date : ${data.tanggal}\n`;
@@ -449,6 +449,9 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += "--------------------------------\n";
     cmd += esc(27, 69, 1);
     cmd += line("TOTAL", formatNumber(data.subtotal));
+
+    cmd += esc(27, 97, 1);
+    cmd += `\n${data.footer2}\n${data.footer3}\n`;
 
     cmd += esc(29, 86, 0); 
 
