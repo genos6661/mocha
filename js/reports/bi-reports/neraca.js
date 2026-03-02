@@ -425,8 +425,10 @@ $('#eksporTXT').click(function (e) {
 });
 
 function padNumber(num) {
-  const intVal = Math.round(Number(num) || 0);
-  return String(intVal).padStart(15, "0");
+  let clean = String(num).replace(/[^\d.-]/g, '');
+  let value = Number(clean) || 0;
+  value = Math.round(value);
+  return String(value).padStart(15, '0');
 }
 
 $('#exportPDF').click(function () {

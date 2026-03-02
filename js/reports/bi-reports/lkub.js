@@ -412,11 +412,10 @@ $('#eksporTXT').click(function (e) {
 
   let lines = [];
 
-  // loop setiap baris tabel
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
     const tds = tr.querySelectorAll("td");
     const kodeValas = tds[1].innerText.trim();
-    const kursTengah = tds[10].innerText.trim() || "0"; // ambil isi contenteditable
+    const kursTengah = tds[10].innerText.trim() || "0";
 
     const item = dataReport[idx];
 
@@ -436,7 +435,7 @@ $('#eksporTXT').click(function (e) {
   });
 
   let tanggalHead = start.replace(/-/g, "");
-  lines.unshift(idBI + 'M' + tanggalHead + 'B0001000000031');
+  lines.unshift(idBI + 'M' + tanggalHead + 'B0001000000001');
 
   let content = lines.join("\n");
 
@@ -448,7 +447,10 @@ $('#eksporTXT').click(function (e) {
 });
 
 function padNumber(num) {
-  return String(num).padStart(15, '0');
+  let clean = String(num).replace(/[^\d.-]/g, '');
+  let value = Number(clean) || 0;
+  value = Math.round(value);
+  return String(value).padStart(15, '0');
 }
 
 $("#export-pdf").click(function () {
