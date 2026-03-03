@@ -9,6 +9,8 @@ $(document).ready(function() {
     updateSizes();
   });
 
+  // $('#today').text();
+
   function updateSizes() {
     document.documentElement.style.setProperty('--tabel-font-size', `${fontSize}rem`);
     const scaledBox = baseBoxSize * fontSize;

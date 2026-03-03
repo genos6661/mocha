@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $('#modalTransaksiBaru').on('shown.bs.modal', function (e) {
     $('#modalTransaksiBaru #kontak').trigger('focus');
-    $('#tambahBaris').trigger('click');
+    // $('#tambahBaris').trigger('click');
   });
 });
 
