@@ -126,7 +126,7 @@ function loadData(fileDesain) {
           const imgBlob = xhr.response;
           const imgURL = URL.createObjectURL(imgBlob);
           $('#boxLogo').html(`
-              <img src="${imgURL}" alt="Logo" style="height: 35px;">
+              <img src="${imgURL}" alt="Logo" style="height: 45px;">
           `);
       }
   };
