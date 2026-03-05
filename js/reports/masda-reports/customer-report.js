@@ -11,6 +11,7 @@ let isExporting = false;
 const headers = [
   "No",
   "Name",
+  "ID",
   "Country",
   "Occupation",
   "Phone",
@@ -21,6 +22,7 @@ const headers = [
 
 const keys = [
   "nama",
+  "id",
   "nama_negara",
   "pekerjaan",
   "telepon",
@@ -357,6 +359,7 @@ function loadData(reset = false) {
               <tr>
                 <td class="text-center">${count}</td>
                 <td class="">${item.nama || ''}</td>
+                <td class="">${item.id || ''}</td>
                 <td class="text-center">${item.nama_int_negara || ''}</td>
                 <td class="text-center">${item.pekerjaan || ''}</td>
                 <td class="text-center">${item.telepon || ''}</td>
@@ -537,4 +540,24 @@ $("#export-pdf").click(function () {
       isExporting = false;
     });
 
+});
+
+$("#export-excel").click(function () {
+  if (isExporting) return;
+  isExporting = true;
+
+  loadAllDataForExport()
+  .then((allData) => {
+
+    exportToExcel({
+      data: allData,
+      headers: headers,
+      keys: keys,
+      filename: "Customer Report.xlsx", 
+    });
+
+  })
+  .finally(() => {
+    isExporting = false;
+  });
 });

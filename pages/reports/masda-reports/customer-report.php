@@ -78,6 +78,7 @@
         <tr>
           <th class="text-center align-middle p-2" style="width: 5%; border: 1px solid;">No</th>
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Name</th>
+          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">ID</th>
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Country</th>
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Occupation</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Phone</th>
@@ -96,7 +97,7 @@
 
 <div class="btn-group mt-6" role="group" aria-label="First group">
   <button type="button" id="export-pdf" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
+  <button type="button" id="export-excel" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-text"></i>TXT</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-printer"></i>Print</button>
