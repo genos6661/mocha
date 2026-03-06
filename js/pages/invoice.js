@@ -67,6 +67,8 @@ function chooseDesign() {
         fileDesain = 'small-con';
       } else if (design == 'small-2') {
         fileDesain = 'small-con2';
+      } else if (design == 'small-sign') {
+        fileDesain = 'small-sign';
       } else if (design == 'a4_continous') {
         fileDesain = 'a4-half';
       } else if (design == 'small-escpos') {
@@ -147,7 +149,7 @@ function loadData(fileDesain) {
       $('#alamatCabang').text(response.alamat_cabang);
       $('#teleponCabang').text(response.telepon_cabang);
       $('#nomorTrans').text(response.nomor);
-      $('#namaPelanggan').text(response.nama_pelanggan);
+      $('#namaPelanggan, .namaPelanggan').text(response.nama_pelanggan);
       $('#alamatPelanggan').text(response.alamat);
       $('#teleponPelanggan').text(response.telepon);
       $('#emailPelanggan').text(response.email);
@@ -165,8 +167,8 @@ function loadData(fileDesain) {
       if(response.footer3 && response.footer3 !== '') {
         $('#footer3').removeClass('d-none').text(response.footer3);
       }
-      $('#ttdPelanggan').text(response.nama_pelanggan || "Pelanggan");
-      $('#ttdPerusahaan').text(response.user);
+      $('#ttdPelanggan, .ttdPelanggan').text(response.nama_pelanggan || "Customer");
+      $('#ttdPerusahaan, .ttdPerusahaan').text(response.user || judul_nota);
 
       if (response.footer1 && response.footer1 !== '') {
         $('#footer1').text(response.footer1);
