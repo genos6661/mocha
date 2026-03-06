@@ -210,7 +210,7 @@ function loadData(fileDesain) {
           const totalPerItem = qty * item.rate;
           subtotal += totalPerItem;
           let row;
-          if (fileDesain == 'small-con') {
+          if (fileDesain == 'small-con' || fileDesain == 'small-sign') {
             row = `
                 <tr>
                   <td style="padding: 3px;">${item.kode}</td>
@@ -267,7 +267,7 @@ function loadData(fileDesain) {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
           }));
-        } else if (fileDesain == 'small-con' || fileDesain == 'small-con2') {
+        } else if (fileDesain == 'small-con' || fileDesain == 'small-con2' || fileDesain == 'small-sign') {
           tbody.append(`
             <tr>
               <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700;">Total : </td>
