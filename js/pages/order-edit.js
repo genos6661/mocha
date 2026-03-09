@@ -76,6 +76,7 @@ function resetOrder() {
            	$('#jenisTransaksi').text(jenisTransaksi);
            	$('#tipeTrans').val(response.tipe);
            	$('#idOrder').val(response.noindex);
+            $('#idCabang').val(response.cabang);
 
            	const tanggal = new Date(response.tanggal);
            	const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -182,6 +183,7 @@ function resetOrder() {
 function initSelect2Valas(select) {
     const initVal = select.data('init-value');
     const initText = select.data('init-text');
+    const cabang = $('#idCabang').val();
 
     // Init select2 dengan AJAX
     select.select2({
@@ -195,7 +197,7 @@ function initSelect2Valas(select) {
         delay: 250,
         data: function (params) {
           return {
-            search: params.term
+            search: params.term, cabang: cabang
           };
         },
         processResults: function (data) {

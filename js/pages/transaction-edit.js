@@ -193,6 +193,7 @@ function resetTrans() {
 function initSelect2Valas(select) {
   const initVal = select.data('init-value');
   const initText = select.data('init-text');
+  const cabang = $('#idCabang').val();
 
   select.select2({
     placeholder: "Choose Forex",
@@ -202,7 +203,7 @@ function initSelect2Valas(select) {
       headers: { "X-Client-Domain": myDomain },
       delay: 250,
       data: function (params) {
-        return { search: params.term };
+        return { search: params.term, cabang: cabang };
       },
       processResults: function (data) {
         return {

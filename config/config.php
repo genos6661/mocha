@@ -5,7 +5,7 @@ $myDomain = $_SERVER['HTTP_HOST'];
 
 $url_api = "https://api.beresmocha.my.id";
 // $myDomain = "sub2.jagadmocha.com";
-// $myDomain = $_SERVER['HTTP_HOST'];
+// $myDomain = $_SERVER['HTTP_HOST'];s
 ?>
 
 <script>

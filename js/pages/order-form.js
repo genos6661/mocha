@@ -484,7 +484,7 @@ $(document).ready(function () {
         headers: { "X-Client-Domain": myDomain },
         delay: 250,
         data: function (params) {
-          return { search: params.term };
+          return { search: params.term, cabang: branchId };
         },
         processResults: function (data) {
           return {

@@ -39,6 +39,7 @@
 	            </span>
 	            <span class="app-brand-text fw-bold fs-4 ms-50" id="judulNota">Beres Mocha</span>
 	          </div>
+	          <input type="hidden" id="idCabang">
 	          <p class="mb-1"><span id="namaCabang"></span></p>
 	          <p class="mb-1"><span id="alamatCabang"></span></p>
 	          <p class="mb-0"><span id="teleponCabang"></span></p>
