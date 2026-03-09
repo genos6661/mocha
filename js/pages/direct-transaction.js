@@ -1,13 +1,25 @@
 $(document).ready(function () {
   $('#modalTransaksiBaru').on('shown.bs.modal', function (e) {
     $('#modalTransaksiBaru #kontak').trigger('focus');
-    // $('#tambahBaris').trigger('click');
+  });
+
+  $("#cabangTrans").on("change", function () {
+    const cabang = $(this).val();
+    $('#tabelDetail tbody').empty();
+    updateTotal();
+
+    if (cabang && cabang !== null) {
+        $("#tambahBaris").prop("disabled", false);
+    } else {
+        $("#tambahBaris").prop("disabled", true);
+    }
   });
 });
 
 function initSelect2Valas(select) {
   const initVal = select.data('init-value');
   const initText = select.data('init-text');
+  const cabang = $('#cabangTrans').val();
 
   select.select2({
     placeholder: "Choose Forex",
@@ -18,7 +30,7 @@ function initSelect2Valas(select) {
       headers: { "X-Client-Domain": myDomain },
       delay: 250,
       data: function (params) {
-        return { search: params.term };
+        return { search: params.term, cabang: cabang };
       },
       processResults: function (data) {
         return {
@@ -219,6 +231,7 @@ function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
 
 $('#tabelDetail').on('click', '.btnHapusBaris', function () {
     $(this).closest('tr').remove();
+    updateTotal();
 });
 
 $(document).on('change', 'input[name="tipeTrans"]', function () {

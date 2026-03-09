@@ -1,4 +1,4 @@
-let table;
+let table, tableRates;
 let offset = 0;
 let limit = 20;
 let isLoading = false;
@@ -9,6 +9,55 @@ let resetOffset = false;
 let userPermissions = [];
 
 document.addEventListener("DOMContentLoaded", function () {
+    $('#cabang').select2({
+        dropdownParent: $('#modalRate'),
+        ajax: {
+            url: url_api + '/cabang/select2/limit',
+            dataType: 'json',
+            headers: {
+              "X-Client-Domain": myDomain,
+              "Authorization": `Bearer ${window.token}`
+            },
+            delay: 250,
+            data: function (params) {
+              return {
+                search: params.term
+              };
+            },
+            processResults: function (data) {
+              return {
+                results: data.results
+              };
+            }
+        },
+        placeholder: 'All Branchs',
+        allowClear: true
+    });
+
+    $('#filterCabang').select2({
+        ajax: {
+            url: url_api + '/cabang/select2/limit',
+            dataType: 'json',
+            headers: {
+              "X-Client-Domain": myDomain,
+              "Authorization": `Bearer ${window.token}`
+            },
+            delay: 250,
+            data: function (params) {
+              return {
+                search: params.term
+              };
+            },
+            processResults: function (data) {
+              return {
+                results: data.results
+              };
+            }
+        },
+        placeholder: 'All Branchs',
+        allowClear: true
+    });
+
     $.ajax({
         url: url_api + '/role/role-permissions',
         method: 'GET',
@@ -58,6 +107,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 text: xhr.responseJSON.message
             });
             console.error('Gagal mengambil permissions:', xhr.responseText);
+        }
+    });
+
+    $("#filterCabang").on("change", function () {
+        offset = 0;
+        resetOffset = true;
+        loadMoreData(true);
+    });
+
+    $("#cabang").on("change", function () {
+        const cabang = $(this).val();
+
+        loadRates();
+        tableRates.destroy();
+
+        if (cabang && cabang !== null) {
+            $("#boxResetRateCabang").addClass("d-none");
+        } else {
+            $("#boxResetRateCabang").removeClass("d-none");
         }
     });
 });
@@ -171,9 +239,12 @@ function loadMoreData(reset = false) {
 
     let searchInput = document.querySelector(".filtertabel input");
     let searchValue = searchInput ? searchInput.value : "";
+
+    let cabang = document.getElementById("filterCabang")?.value || "";
+
     let orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
 
-    fetch(url_api + `/forex/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}`, {
+    fetch(url_api + `/forex/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}&cabang=${cabang}${orderParam}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -183,16 +254,24 @@ function loadMoreData(reset = false) {
     })
         .then(response => response.json())
         .then(response => {
+
             if (response.data.length > 0) {
+
                 offset = reset ? limit : offset + limit;
+
                 if (reset) {
                     table.clear().rows.add(response.data).draw();
                 } else {
                     table.rows.add(response.data).draw(false);
                 }
+
+            } else if (reset) {
+                table.clear().draw();
             }
+
             isLoading = false;
             document.querySelector("#totalForex").textContent = response.recordsTotal;
+
         })
         .catch(() => {
             isLoading = false;
@@ -259,6 +338,8 @@ function initEvents() {
         });
     });
 }
+
+// submit
 
 $('#sbmTambah').click(function (e) {
   e.preventDefault();
@@ -516,8 +597,6 @@ modalHapus.addEventListener('shown.bs.modal', event => {
     $('#refHapus').text(ref);
 });
 
-let tableRates;
-
 function loadRates() {
     Loading.standard({
         backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
@@ -535,8 +614,10 @@ function loadRates() {
     let notiflixBlock = document.querySelector('.notiflix-loading');
     notiflixBlock.innerHTML = customSpinnerHTML;
 
+    let cabang = document.getElementById("cabang")?.value || "";
+
     $.ajax({
-        url: url_api + `/forex/datatable?offset=0&limit=100`,
+        url: url_api + `/forex/datatable?offset=0&limit=1000&cabang=${cabang}`,
         type: 'GET',
         contentType: 'application/json',
         headers: {
@@ -650,6 +731,9 @@ $('#sbmRate').on('click', function(e) {
         return;
     }
 
+    let cabang = document.getElementById("cabang")?.value || null;
+    const resetBranchs = $('#resetRateCabang').is(':checked') ? 1 : 0;
+
     $.ajax({
         url: url_api + '/forex/update-rates', 
         type: 'POST',
@@ -659,7 +743,7 @@ $('#sbmRate').on('click', function(e) {
             "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         },
-        data: JSON.stringify(rates),
+        data: JSON.stringify({ cabang: cabang, reset: resetBranchs, rates: rates }),
         success: function (response) {
             loadRates();
             loadMoreData(true);

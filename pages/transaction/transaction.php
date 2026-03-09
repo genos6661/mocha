@@ -481,7 +481,7 @@ if ($nowHour >= 15) {
                     <input type="text" class="total form-control text-end" readonly>
                   </th>
                   <th class="px-1">
-                    <button class="btn btn-primary w-100" id="tambahBaris" type="button">
+                    <button class="btn btn-primary w-100" id="tambahBaris" type="button" disabled="true">
                       <i class="icon-base ti tabler-plus icon-md"></i>
                     </button>
                   </th>

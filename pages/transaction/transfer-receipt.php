@@ -84,9 +84,9 @@ require '../../config/config.php';
   <body>
     <!-- Content -->
 
-    <div class="invoice-print p-12">
+    <div class="invoice-print">
       <div class="d-flex justify-content-between flex-row">
-        <div class="mb-6">
+        <div class="mb-2">
           <div class="d-flex svg-illustration mb-2 gap-2 flex-column">
             <span class="app-brand-logo demo text-primary" id="boxLogo">
               <span class="text-primary">
@@ -129,18 +129,18 @@ require '../../config/config.php';
         </div>
       </div>
 
-      <hr class="mb-6" />
+      <hr class="mb-3 mt-0" />
 
       <div class="card-body px-0">
         <div class="row">
-          <div class="col-xl-6 col-md-12 col-sm-5 col-12">
+          <div class="col-6">
             <h5>Transfer From :</h5>
             <p class="mb-1 fw-medium"><span id="namaFrom"></span></p>
             <p class="mb-1 fw-medium"><span id="alamatFrom"></span></p>
             <p class="mb-1 fw-medium"><span id="teleponFrom"></span></p>
             <!-- <p class="mb-0"></p> -->
           </div>
-          <div class="col-xl-6 col-md-12 col-sm-7 col-12">
+          <div class="col-6">
             <h5>Transfer To :</h5>
             <p class="mb-1 fw-medium"><span id="namaTo"></span></p>
             <p class="mb-1 fw-medium"><span id="alamatTo"></span></p>
@@ -202,7 +202,7 @@ require '../../config/config.php';
         <div class="col-3 text-center" id="ttdPerusahaan">Mocha</div>
       </div>
       <div class="row">
-        <div class="col mb-5">&nbsp;</div>
+        <div class="col m-0">&nbsp;</div>
       </div>
       <div class="row mt-5">
         <div class="col-3 text-center border-bottom">&nbsp;</div>

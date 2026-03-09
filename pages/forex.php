@@ -14,26 +14,25 @@
 <h5 class="mb-3">Forex Data</h5>
 <div class="card">
   <div class="row p-3">
-    <div class="col-md d-flex gap-3 mb-2 mb-md-0">
+    <div class="col-md-2 d-grid mb-2">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
         <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i>New Forex
       </button>
+    </div>
+    <div class="col-md-2 d-grid mb-2">
       <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalRate" id="btnModalRate">
         Update Rates
       </button>
     </div>
-    <div class="col-md d-flex justify-content-end">
-      <div class="input-group input-group-merge filtertabel">
-        <span class="input-group-text" id="basic-addon-search31"
-          ><i class="icon-base ti tabler-search"></i
-        ></span>
+    <div class="col-md d-grid mb-2">
+      <select id="filterCabang" class="form-select"></select>
+    </div>
+    <div class="col-md filtertabel">
         <input
           type="text"
           class="form-control"
           placeholder="Search..."
-          aria-label="Search..."
-          aria-describedby="basic-addon-search31" />
-      </div>
+          aria-label="Search..." />
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
@@ -267,19 +266,31 @@
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalRate" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between row">
+  <div class="modal-dialog modal-xl modal-simple">
+    <div class="modal-content py-3">
+      <div class="modal-body table-responsive">
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+        <p class="h4 text-center mb-4">Update Rates</p>
         <div class="row w-100">
-          <div class="col-md">
-            <h5 class="modal-title" id="backDropModalTitle">Update Forex's Rate</h5>
+          <div class="col-md mb-3">
+            <select  id="cabang" class="form-select"></select>
           </div>
-          <div class="col-md">
+          <div class="col-md mb-3">
             <input type="text" class="form-control" id="searchRate" placeholder="Search...">
           </div>
         </div>
-      </div>
-      <div class="modal-body table-responsive">
+        <div class="row w-100" id="boxResetRateCabang">
+          <div class="col-md-6 d-flex justify-content-center">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="resetRateCabang" checked>
+              <label class="form-check-label" for="resetRateCabang">Reset Branch's Rate</label>
+            </div>
+          </div>
+        </div>
         <div class="table-scroll">
           <table class="table table-borderless" id="tabelRate">
             <thead class="table-dark position-sticky top-0">
@@ -293,11 +304,17 @@
             </tbody>
           </table>
         </div>
-      </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn btn-outline-primary mx-1" id="resetBtn">Reset</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary mx-1" id="sbmRate">Submit</button>
+        <div class="w-100 row px-5 mt-3">
+          <div class="col-md d-grid">
+            <button class="btn btn-outline-primary mx-1" id="resetBtn">Reset</button>
+          </div>
+          <div class="col-md d-grid">
+            <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+          </div>
+          <div class="col-md d-grid">
+            <button class="btn btn-primary mx-1" id="sbmRate">Submit</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
