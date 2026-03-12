@@ -483,64 +483,78 @@ session_start();
     </div>
 
     <div class="modal fade" id="modalSign" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
-      <div class="modal-dialog modal-dialog-centered modal-simple">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-simple">
         <div class="modal-content">
           <div class="modal-body">
             <div class="text-center mb-6">
               <h4 class="mb-4">Transaction exceeded threshold limit</h4>
               <p class="h5">Please fill in and sign the following form for transactions that exceed the monthly limit</p>
             </div>
-            <div class="mb-3">
-              <label for="npwp" class="form-label">NPWP</label>
-              <input type="text" id="npwp" class="form-control">
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="npwp" class="form-label">NPWP</label>
+                <input type="text" id="npwp" class="form-control">
+              </div>
+              <div class="col-md mb-3">
+                <label for="domisili" class="form-label">Domicile</label>
+                <input type="text" id="domisili" class="form-control">
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="domisili" class="form-label">Domicile</label>
-              <input type="text" id="domisili" class="form-control">
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="penghasilan" class="form-label">Penghasilan</label>
+                <select id="penghasilan" class="form-select"></select>
+              </div>
+              <div class="col-md mb-3">
+                <label for="bentuk_pt" class="form-label">Bentuk PT</label>
+                <select id="bentuk_pt" class="form-select"></select>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="penghasilan" class="form-label">Penghasilan</label>
-              <select id="penghasilan" class="form-select"></select>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="bidang_usaha" class="form-label">Bidang Usaha</label>
+                <input type="text" class="form-control" id="bidang_usaha">
+              </div>
+              <div class="col-md mb-3">
+                <label for="perusahaan" class="form-label">Company Name</label>
+                <input type="text" class="form-control" id="perusahaan">
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="bentuk_pt" class="form-label">Bentuk PT</label>
-              <select id="bentuk_pt" class="form-select"></select>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="pekerjaan" class="form-label">Pekerjaan</label>
+                <select id="pekerjaan" class="form-select"></select>
+              </div>
+              <div class="col-md mb-3">
+                <label for="jabatan" class="form-label">Position</label>
+                <input type="text" id="jabatan" class="form-control">
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="bidang_usaha" class="form-label">Bidang Usaha</label>
-              <input type="text" class="form-control" id="bidang_usaha">
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="tujuan" class="form-label">Transaction Purpose</label>
+                <select id="tujuan" class="form-select"></select>
+              </div>
+              <div class="col-md mb-3">
+                <label for="hubungan" class="form-label">Relation (if represented)</label>
+                <input type="text" id="hubungan" class="form-control">
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="perusahaan" class="form-label">Company Name</label>
-              <input type="text" class="form-control" id="perusahaan">
-            </div>
-            <div class="mb-3">
-              <label for="pekerjaan" class="form-label">Pekerjaan</label>
-              <select id="pekerjaan" class="form-select"></select>
-            </div>
-            <div class="mb-3">
-              <label for="jabatan" class="form-label">Position</label>
-              <input type="text" id="jabatan" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="tujuan" class="form-label">Transaction Purpose</label>
-              <select id="tujuan" class="form-select"></select>
-            </div>
-            <div class="mb-3">
-              <label for="hubungan" class="form-label">Relation (if represented)</label>
-              <input type="text" id="hubungan" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="sumber" class="form-label">Source of Funds</label>
-              <select id="sumber" class="form-select"></select>
-            </div>
-            <div class="mb-3">
-              <label for="signature-pad" class="form-label">Signature</label>
-            </div>
-            <canvas id="signature-pad" class="w-100 border rounded" height="300"></canvas>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="sumber" class="form-label">Source of Funds</label>
+                <select id="sumber" class="form-select"></select>
+                <div class="d-flex justify-content-end mt-5">
+                  <button class="btn btn-outline-danger mt-5 align-self-right" id="btnSignClear">Clear</button>
+                </div>
+              </div>
+              <div class="col-md mb-3">
+                <label for="signature-pad" class="form-label">Signature</label>
+                <canvas id="signature-pad" class="w-100 border rounded" height="300"></canvas>
+              </div>
+            </div>            
             <div class="row mt-3">
-                <div class="col-md d-flex justify-content-center gap-3">
-                  <button class="btn btn-outline-danger" id="btnSignClear">Clear</button>
+                <div class="col-md d-grid px-4">
                   <button class="btn btn-primary" id="btnSignSubmit">Submit</button>
                 </div>
               </div>
