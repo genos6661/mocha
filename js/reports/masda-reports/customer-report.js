@@ -1,4 +1,4 @@
-let start, end, cabang, negara, sort_by, sort_dir, parsedSetting;
+let start, end, cabang, negara, thresholdOnly, sort_by, sort_dir, parsedSetting;
 let offset = 0;
 const limit = 50;
 let isLoading = false;
@@ -16,7 +16,6 @@ const headers = [
   "Occupation",
   "Phone",
   "Address",
-  "Total Transaction",
   "Total Amount",
 ];
 
@@ -27,7 +26,6 @@ const keys = [
   "pekerjaan",
   "telepon",
   "alamat",
-  "total_transaksi",
   "nilai_transaksi"
 ];
 
@@ -109,6 +107,7 @@ function getUrlParams() {
         end: params.get("end"),
         cabang: params.get("cabang"),
         negara: params.get("negara"),
+        thresholdOnly: params.get("threshold_only"),
         sort_by: params.get("sort_by"),
         sort_dir: params.get("sort_dir")
     };
@@ -164,6 +163,7 @@ function loadHeader() {
     end = params.end || '';
     cabang = params.cabang;
     negara = params.negara;
+    thresholdOnly = params.thresholdOnly;
     sort_by = params.sort_by;
     sort_dir = params.sort_dir;
 
@@ -329,6 +329,7 @@ function loadData(reset = false) {
   if (end) params.append("end_date", end);
   if (cabang) params.append("cabang", cabang);
   if (negara) params.append("negara", negara);
+  if (thresholdOnly == 1) params.append("threshold_only", 1);
   if (sort_by) params.append("sort_by", sort_by);
   if (sort_dir) params.append("sort_by", sort_dir);
   if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
@@ -349,7 +350,7 @@ function loadData(reset = false) {
 
       if (details.length === 0) {
         if (offset === 0) {
-          tbody.append('<tr><td colspan="7" class="text-center">Logs Data Not Found</td></tr>');
+          tbody.append('<tr><td colspan="8" class="text-center">Customer Data Not Found</td></tr>');
         }
         hasMoreData = false;
         $('.table-responsive').off('scroll');
@@ -364,10 +365,6 @@ function loadData(reset = false) {
                 <td class="text-center">${item.pekerjaan || ''}</td>
                 <td class="text-center">${item.telepon || ''}</td>
                 <td class="">${item.alamat || ''}</td>
-                <td class="text-end">${Number(item.total_transaksi).toLocaleString('id-ID', {
-                              minimumFractionDigits: 0,
-                              maximumFractionDigits: 0
-                            }) || '0'}</td>
                 <td class="text-end">Rp. ${Number(item.nilai_transaksi).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
@@ -417,6 +414,7 @@ $('#sbmFilter').click(function (e) {
   const endDate = $('#endDate').val() || null;
   const cabangFil = $('#cabangFilter').val() || null;
   const negaraFil = $('#negara').val() || null;
+  const threshold = $('#thresholdOnly').is(':checked') ? 1 : 0;
   const sort_byFil = $('#sort_by').val() || null;
   const sort_dirFil = $('#sort_dir').val() || null;
   const baseUrl = $('#urlToGo').val() || 'customer-report';
@@ -427,6 +425,7 @@ $('#sbmFilter').click(function (e) {
   if (endDate) params.append('end', endDate);
   if (cabangFil) params.append('cabang', cabangFil);
   if (negaraFil) params.append('negara', negaraFil);
+  if (threshold && threshold == 1) params.append('threshold_only', 1);
   if (sort_byFil) params.append('sort_by', sort_byFil);
   if (sort_dirFil) params.append('sort_dir', sort_dirFil);
 

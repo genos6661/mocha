@@ -90,12 +90,12 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       $('#boxSimpleDate, #boxSingleDate').addClass('d-none');
     }
 
-    if(nama === "Summary Valas") {
-      $('#boxUser').removeClass('d-none');
-      $('#boxShowing').removeClass('d-none');
+    if(nama === "Customer Data") {
+      $('#boxShowThreshold').removeClass('d-none');
+      // $('#boxShowing').removeClass('d-none');
     } else {
-      $('#boxUser').addClass('d-none');
-      $('#boxShowing').addClass('d-none');
+      $('#boxShowThreshold').addClass('d-none');
+      // $('#boxShowing').addClass('d-none');
     }
 
     if(url) {
@@ -255,6 +255,7 @@ $('#sbmFilter').click(function (e) {
   const negara = $('#negara').val();
   const sort_by = $('#sort_by').val();
   const sort_dir = $('#sort_dir').val();
+  const threshold = $('#thresholdOnly').is(':checked') ? 1 : 0;
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -263,6 +264,7 @@ $('#sbmFilter').click(function (e) {
   if (endDate) params.append('end', endDate);
   if (cabang) params.append('cabang', cabang);
   if (negara) params.append('negara', negara);
+  if (threshold) params.append('threshold_only', 1);
   if (sort_by) params.append('sort_by', sort_by);
   if (sort_dir) params.append('sort_dir', sort_dir);
 

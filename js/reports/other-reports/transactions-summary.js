@@ -231,6 +231,18 @@ function loadHeader() {
       $('#range').text('All Time');
     }
 
+    if (cabang && cabang !== '') {
+        getCabang(cabang, function (namaCabang) {
+            if (namaCabang) {
+              $('#cabang').removeClass('d-none').text(namaCabang);
+            } else {
+              $('#cabang').addClass('d-none').text('');
+            }
+        });
+    } else {
+      $('#cabang').addClass('d-none').text('');
+    }
+
     $.ajax({
         url: url_api + '/setting',
         type: 'GET',

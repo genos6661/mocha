@@ -168,6 +168,12 @@
             <option value="3">Only Show Forexs with mutation</option>
           </select>
         </div>
+        <div class="mb-1 d-flex d-none justify-content-end" id="boxShowThreshold">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="thresholdOnly">
+            <label class="form-check-label" for="thresholdOnly">Show Exceeded Threshold Only</label>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
