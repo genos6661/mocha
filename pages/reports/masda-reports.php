@@ -160,7 +160,7 @@
             <option value="desc">Descending (DESC)</option>
           </select>
         </div>
-        <div class="mb-3" id="boxShowing">
+        <div class="mb-3 d-none" id="boxShowing">
           <label for="showOption" class="form-label">Displayed Option</label>
           <select id="showOption" class="form-select">
             <option value="1" selected>Show All Forexs</option>

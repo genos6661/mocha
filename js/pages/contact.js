@@ -398,7 +398,14 @@ function initEvents() {
                     $('#npwpDetail').text(data.dokumen.npwp);
                     $('#domisiliDetail').text(data.dokumen.domisili);
                     $('#penghasilanDetail').text(data.dokumen.penghasilan + ' Juta');
-                    $('#pekerjaan2Detail').text(data.dokumen.pekerjaan);
+                    $('#pekerjaan2Detail').text(data.dokumen.label_pekerjaan);
+                    $('#perusahaanDetail').text(data.dokumen.perusahaan);
+                    $('#bentukPTDetail').text(data.dokumen.jenis_pt);
+                    $('#jabatanDetail').text(data.dokumen.jabatan);
+                    $('#bidangDetail').text(data.dokumen.bidang_usaha);
+                    $('#tujuanDetail').text(data.dokumen.label_tujuan);
+                    $('#hubunganDetail').text(data.dokumen.relasi);
+                    $('#sumberDetail').text(data.dokumen.label_sumber_dana);
                 } else {
                     $('#boxDokumen').addClass('d-none');
                 }
