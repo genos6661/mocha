@@ -399,7 +399,7 @@ function loadData(reset = false) {
     success: function (response) {
       const details = response.data || [];
       const tbody = $('#tabelData tbody');
-      $('#totalCustomer').text(response.total_count);
+      $('#totalData').text(response.total_count);
 
       if (details.length === 0) {
         if (offset === 0) {
