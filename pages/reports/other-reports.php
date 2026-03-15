@@ -10,9 +10,24 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Summary" data-range="month" data-url="/transactions-summary">
+      <div class="avatar">
+        <div class="avatar-initial bg-primary rounded">
+          <i class="icon-base ti tabler-list-details icon-xl"></i>
+        </div>
+      </div>
+      <div>
+        <h5 class="mb-0 text-black">Transactions Summary</h5>
+        <span class="text-dark">Summary reports to transaction</span>
+      </div>
+    </div>
+  </div>
+  <div class="col mb-6">
     <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Logs Reports" data-range="all" data-url="/logs-report">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/logs.png" alt="Avatar" class="rounded">
+      <div class="avatar">
+        <div class="avatar-initial bg-primary rounded">
+          <i class="icon-base ti tabler-report icon-xl"></i>
+        </div>
       </div>
       <div>
         <h5 class="mb-0">Logs Report</h5>
@@ -84,6 +99,10 @@
         <div class="mb-3 d-none" id="boxCabang">
           <label for="cabang" class="form-label">Branch</label>
           <select id="cabang" class="form-select"></select>
+        </div>
+        <div class="mb-3 d-none" id="boxCabang">
+          <label for="pelanggan" class="form-label">Customer</label>
+          <select id="pelanggan" class="form-select"></select>
         </div>
         <div class="mb-3 d-none" id="boxTipeLog">
           <label for="tipeLog" class="form-label">Type</label>

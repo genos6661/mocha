@@ -97,6 +97,60 @@ $(document).ready(function () {
       allowClear: true
   });
 
+  $('#pelanggan').select2({
+    dropdownParent: $('#filter'),
+    ajax: {
+      url: url_api + '/profile/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
+      },
+      delay: 1000, // ⏱ delay search 1 detik
+      data: function (params) {
+        return {
+          search: params.term || '',
+          page: params.page || 1
+        };
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+
+        return {
+          results: data.results,
+          pagination: {
+            more: data.pagination.more
+          }
+        };
+      }
+    },
+    templateResult: function (data) {
+      if (!data.id) return data.nama;
+
+      return `
+        <div style="padding:6px 4px;">
+          <div style="font-weight:600;">${data.nama}</div>
+          <div style="font-size:12px;color:#666;">
+            📧 ${data.email || '-'}<br>
+            📱 ${data.telepon || '-'}<br>
+            🌍 ${data.nama_negara || '-'}
+          </div>
+        </div>
+      `;
+    },
+
+    templateSelection: function (data) {
+      return `${data.nama} - ${data.nama_negara}` || 'Choose Contact';
+    },
+
+    escapeMarkup: function (markup) {
+      return markup; 
+    },
+    placeholder: 'Choose Contact',
+    minimumInputLength: 0,
+    allowClear: true
+  });
+
   $('#tipeLog').on('change', function () {
     $('#aktivitasLog').val('').trigger('change');
   });
@@ -132,8 +186,11 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     }
 
     if (nama === "Logs Reports") {
-      $('#boxSimpleDate, #boxSingleDate, #boxCabang').addClass('d-none');
+      $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan').addClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleRange, #boxRange').removeClass('d-none');
+    } else if (nama === "Transactions Summary") {
+      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleDate, #boxSingleDate').addClass('d-none');
+      $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan').removeClass('d-none');
     } else {
       $('#boxSimpleRange, #boxRange').removeClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').addClass('d-none');
@@ -298,6 +355,7 @@ $('#sbmFilter').click(function (e) {
   const tipeLog = $('#tipeLog').val();
   const aktivitasLog = $('#aktivitasLog').val();
   const emailLog = $('#emailLog').val();
+  const pelanggan = $('#pelanggan').val();
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -308,6 +366,7 @@ $('#sbmFilter').click(function (e) {
   if (tipeLog) params.append('tipeLog', tipeLog);
   if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
   if (emailLog) params.append('emailLog', emailLog);
+  if (pelanggan) params.append('pelanggan', pelanggan);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
