@@ -365,6 +365,7 @@ $('#btnSubmit').click(function (e) {
           offset = 0;
           table.clear().draw();
           loadMoreData();
+          $btn.prop('disabled', false);
       });
       if (document.querySelector(`.notiflix-loading`)) {
           Loading.remove();
