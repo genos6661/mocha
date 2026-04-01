@@ -505,7 +505,7 @@ if ($nowHour >= 15) {
       <div class="modal-body">
         <div class="text-center mb-6">
           <h4 class="mb-4">Transaction exceeded threshold limit</h4>
-          <p class="h5">Please fill in and sign the following form for transactions that exceed the monthly limit</p>
+          <p class="h5">Please fill in and sign the following form for transactions that exceeding monthly limit equivalent to 25.000 USD</p>
         </div>
         <div class="mb-3">
           <label for="npwp" class="form-label">NPWP</label>
@@ -532,8 +532,8 @@ if ($nowHour >= 15) {
           <input type="text" class="form-control" id="perusahaan">
         </div>
         <div class="mb-3">
-          <label for="pekerjaan" class="form-label">Pekerjaan</label>
-          <select id="pekerjaan" class="form-select"></select>
+          <label for="pekerjaanSign" class="form-label">Pekerjaan</label>
+          <select id="pekerjaanSign" class="form-select"></select>
         </div>
         <div class="mb-3">
           <label for="jabatan" class="form-label">Position</label>
@@ -551,13 +551,13 @@ if ($nowHour >= 15) {
           <label for="sumber" class="form-label">Source of Funds</label>
           <select id="sumber" class="form-select"></select>
         </div>
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="signature-pad" class="form-label">Signature</label>
         </div>
-        <canvas id="signature-pad" class="w-100 border rounded" height="300"></canvas>
+        <canvas id="signature-pad" class="w-100 border rounded" height="300"></canvas> -->
         <div class="row mt-3">
             <div class="col-md d-flex justify-content-center gap-3">
-              <button class="btn btn-outline-danger" id="btnSignClear">Clear</button>
+              <!-- <button class="btn btn-outline-danger" id="btnSignClear">Clear</button> -->
               <button class="btn btn-primary" id="btnSignSubmit">Submit</button>
             </div>
           </div>

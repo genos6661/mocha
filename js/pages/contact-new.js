@@ -75,8 +75,8 @@ $('#sbmTambah').click(async function (e) {
         },
         data: JSON.stringify(formData),
         success: function (response) {
-            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
-            $('#negara').val(null).trigger('change');
+            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false).prop('selected', false);
+            $('#negara, #pekerjaan').val(null).trigger('change');
             notif.fire({
               icon: 'success',
               text: response.message
@@ -198,8 +198,8 @@ function submitForce() {
         data: JSON.stringify(formData),
 
         success: function (response) {
-            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
-            $('#negara').val(null).trigger('change');
+            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
+            $('#negara, #pekerjaan').val(null).trigger('change');
             notif.fire({
               icon: 'success',
               text: response.message

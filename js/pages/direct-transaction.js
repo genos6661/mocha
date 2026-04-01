@@ -334,6 +334,8 @@ $('#btnSubmit').click(function (e) {
   }
 
   const tipeTransaksi = $('#buyTrans').prop('checked') ? 'buy' : 'sell';
+  const idPelanggan = $('#kontak').val();
+  const cabang = $('#cabangTrans').val();
 
   $.ajax({
     url: url_api + '/transaction/',
@@ -345,30 +347,42 @@ $('#btnSubmit').click(function (e) {
       "Authorization": `Bearer ${window.token}`
     },
     data: JSON.stringify({ 
-      id_profile: $('#kontak').val(),
+      id_profile: idPelanggan,
       date: tanggal,
       report_date: tanggal_laporan,
-      branch: $('#cabangTrans').val(),
+      branch: cabang,
       tipe: tipeTransaksi,
       items: details 
     }),
     success: function (response) {
-      $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
-      $('#kontak, #cabangTrans').val(null).trigger('change');
-      $('#tabelDetail tbody').empty();
-      $('#buyTrans').trigger('click');
-      $('#tambahBaris').trigger('click');
-      notif.fire({
-        icon: 'success',
-        text: response.message
-      }).then(() => {
-          offset = 0;
-          table.clear().draw();
-          loadMoreData();
-          $btn.prop('disabled', false);
-      });
-      if (document.querySelector(`.notiflix-loading`)) {
+      if (response.isExceed) {
+        $("#btnSignSubmit").click(function () {
+          submitSign(idPelanggan, response.nomor, cabang);
+        });
+        initSelect2();
+        $('#modalTransaksiBaru').modal('hide');
+        $('#modalSign').modal('show');
+        if (document.querySelector(`.notiflix-loading`)) {
           Loading.remove();
+        }
+      } else {
+        // $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false);
+        $('#kontak').val(null).trigger('change');
+        $('#tabelDetail tbody').empty();
+        $('#buyTrans').trigger('click');
+        $('#tambahBaris').trigger('click');
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then(() => {
+            offset = 0;
+            table.clear().draw();
+            loadMoreData();
+            $btn.prop('disabled', false);
+        });
+        if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+        } 
       }
     },
     error: function (xhr) {
@@ -380,3 +394,186 @@ $('#btnSubmit').click(function (e) {
     }
   });
 });
+
+function submitSign(idPelanggan, nomor, cabang) {
+  const formData = {
+    id_pelanggan: idPelanggan,
+    npwp: $('#npwp').val(),
+    domisili: $('#domisili').val(),
+    penghasilan: $('#penghasilan').val(),
+    bentuk_pt: $('#bentuk_pt').val(),
+    bidang_usaha: $('#bidang_usaha').val(),
+    perusahaan: $('#perusahaan').val(),
+    pekerjaan: $('#pekerjaanSign').val(),
+    jabatan: $('#jabatan').val(),
+    tujuan: $('#tujuan').val(),
+    hubungan: $('#hubungan').val(),
+    sumber: $('#sumber').val()
+  };
+
+  $.ajax({
+    url: url_api + '/profile/dokumen',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+      "Content-Type": "application/json",
+      "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify(formData),
+    success: function (response) {
+      $('#modalSign .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
+      $('#modalSign').modal('hide');
+      Swal.fire({
+          title: 'Success',
+          text: response.message,
+          icon: 'success',
+          showDenyButton: true,
+          confirmButtonText: 'Print Receipt',
+          denyButtonText: 'Close',
+          customClass: {
+            denyButton: 'btn btn-secondary',
+            confirmButton: 'btn btn-primary'
+          },
+          reverseButtons: true,
+          allowOutsideClick: false, 
+          allowEscapeKey: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/order-preview?order=' + nomor;
+          } // else if (result.isDenied) {
+          //   window.location.href = '/order-form?branch=' + cabang;
+          // }
+        });
+      if (document.querySelector(`.notiflix-loading`)) {
+          Loading.remove();
+      }
+    },
+    error: function (xhr, status, error) {
+      $('#btnSubmit').removeAttr('disabled');
+      notif.fire({
+        icon: 'error',
+        text: xhr.responseJSON.message
+      });
+      if (document.querySelector(`.notiflix-loading`)) {
+          Loading.remove();
+      }
+    }
+  });
+}
+
+function initSelect2() {
+  $('#pekerjaanSign').select2({
+    dropdownParent: $('#modalSign'),
+    ajax: {
+      url: url_api + '/referensi/select2?kategori=pekerjaan',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Occupation'
+  });
+
+  $('#penghasilan').select2({
+    dropdownParent: $('#modalSign'),
+    ajax: {
+      url: url_api + '/referensi/select2?kategori=penghasilan',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Income'
+  });
+
+  $('#bentuk_pt').select2({
+    dropdownParent: $('#modalSign'),
+    ajax: {
+      url: url_api + '/referensi/select2?kategori=jenis_pt',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Company Form'
+  });
+
+  $('#tujuan').select2({
+    dropdownParent: $('#modalSign'),
+    ajax: {
+      url: url_api + '/referensi/select2?kategori=maksud_tujuan',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Transaction Purpose'
+  });
+
+  $('#sumber').select2({
+    dropdownParent: $('#modalSign'),
+    ajax: {
+      url: url_api + '/referensi/select2?kategori=sumber_dana',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'Choose Source of fund'
+  });
+}
