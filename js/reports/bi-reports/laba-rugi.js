@@ -326,7 +326,7 @@ function loadData() {
               maximumFractionDigits: 0
             });
 
-            const penjualanUKA = akunData['410100'].total_kredit - akunData['410100'].total_debit;
+            const penjualanUKA = response.hpp.penjualan;
             const pencairanTC = akunData['410200'].total_kredit - akunData['410200'].total_debit;
             const pendapatanOperasional = penjualanUKA + pencairanTC;
             const saldo_awal = response.hpp.saldo_awal;
@@ -358,6 +358,7 @@ function loadData() {
             const labaRugiSP = lrOperasionalBersih + labaRugiLain;
             const pajakPenghasilan = 0;
             const labaRugi = labaRugiSP - pajakPenghasilan;
+            console.log(hpp);
 
             $('#penjualanUKA').text(formatID(penjualanUKA));
             $('#pencairanTC').text(formatID(pencairanTC));

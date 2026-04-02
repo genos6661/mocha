@@ -75,7 +75,7 @@ $('#sbmTambah').click(async function (e) {
         },
         data: JSON.stringify(formData),
         success: function (response) {
-            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false).prop('selected', false);
+            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
             $('#negara, #pekerjaan').val(null).trigger('change');
             notif.fire({
               icon: 'success',

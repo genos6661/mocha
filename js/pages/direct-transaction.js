@@ -369,7 +369,6 @@ $('#btnSubmit').click(function (e) {
         // $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false);
         $('#kontak').val(null).trigger('change');
         $('#tabelDetail tbody').empty();
-        $('#buyTrans').trigger('click');
         $('#tambahBaris').trigger('click');
         notif.fire({
           icon: 'success',
@@ -423,27 +422,33 @@ function submitSign(idPelanggan, nomor, cabang) {
     success: function (response) {
       $('#modalSign .modal-body').find('input, select, textarea').val('').prop('checked', false).prop('selected', false);
       $('#modalSign').modal('hide');
+      $('#kontak').val(null).trigger('change');
+      $('#tabelDetail tbody').empty();
+      $('#tambahBaris').trigger('click');
       Swal.fire({
-          title: 'Success',
-          text: response.message,
-          icon: 'success',
-          showDenyButton: true,
-          confirmButtonText: 'Print Receipt',
-          denyButtonText: 'Close',
-          customClass: {
-            denyButton: 'btn btn-secondary',
-            confirmButton: 'btn btn-primary'
-          },
-          reverseButtons: true,
-          allowOutsideClick: false, 
-          allowEscapeKey: false
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = '/order-preview?order=' + nomor;
-          } // else if (result.isDenied) {
-          //   window.location.href = '/order-form?branch=' + cabang;
-          // }
-        });
+        title: 'Success',
+        text: response.message,
+        icon: 'success',
+        showDenyButton: true,
+        confirmButtonText: 'Print Receipt',
+        denyButtonText: 'Close',
+        customClass: {
+          denyButton: 'btn btn-secondary',
+          confirmButton: 'btn btn-primary'
+        },
+        reverseButtons: true,
+        allowOutsideClick: false, 
+        allowEscapeKey: false
+      }).then((result) => {
+        offset = 0;
+        table.clear().draw();
+        loadMoreData();
+        if (result.isConfirmed) {
+          window.location.href = '/order-preview?order=' + nomor;
+        } // else if (result.isDenied) {
+        //   window.location.href = '/order-form?branch=' + cabang;
+        // }
+      });
       if (document.querySelector(`.notiflix-loading`)) {
           Loading.remove();
       }
