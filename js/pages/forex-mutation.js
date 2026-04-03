@@ -386,24 +386,36 @@ function loadMoreData(reset = false) {
         let runningNilai = saldoAwalNilai;
         let totalBeli = 0;
         let totalJual = 0;
+        let totalQty = 0;
+        let totalNilaiRate = 0;
 
         const dataWithSaldo = data.map(row => {
-            const beli = parseFloat(row.beli) || 0;
-            const jual = parseFloat(row.jual) || 0;
-            const nilai = parseFloat(row.nilai) || 0;
+          const beli = parseFloat(row.beli) || 0;
+          const jual = parseFloat(row.jual) || 0;
+          const rate = parseFloat(row.rate) || 0;
+          const nilai = parseFloat(row.nilai) || 0;
 
-            totalBeli += beli;
-            totalJual += jual;
+          const qty = beli - jual;
 
-            runningSaldo += (beli - jual);
-            runningNilai += nilai;
+          totalBeli += beli;
+          totalJual += jual;
 
-            return {
-                ...row,
-                saldo_berjalan: runningSaldo,
-                mutasi_nilai: runningNilai
-            };
+          runningSaldo += qty;
+          runningNilai += nilai;
+
+          if (beli > 0) {
+            totalQty += beli;
+            totalNilaiRate += beli * rate;
+          }
+
+          return {
+              ...row,
+              saldo_berjalan: runningSaldo,
+              mutasi_nilai: runningNilai
+          };
         });
+
+        const avgRate = totalQty > 0 ? (totalNilaiRate / totalQty) : 0;
 
         const saldoAkhir = {
             kode_valas: response.mutasi?.[0]?.kode_valas || '',
@@ -412,7 +424,7 @@ function loadMoreData(reset = false) {
             nama_cabang: null,
             beli: totalBeli,
             jual: totalJual,
-            rate: null,
+            rate: avgRate,
             nilai: response.saldo_akhir.nilai,
             saldo_akhir: response.saldo_akhir.qty,
             saldo_berjalan: response.saldo_akhir.qty,
