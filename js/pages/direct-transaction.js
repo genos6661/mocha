@@ -370,6 +370,7 @@ $('#btnSubmit').click(function (e) {
         $('#kontak').val(null).trigger('change');
         $('#tabelDetail tbody').empty();
         $('#tambahBaris').trigger('click');
+        updateTotal();
         notif.fire({
           icon: 'success',
           text: response.message

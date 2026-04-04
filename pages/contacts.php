@@ -120,7 +120,7 @@
         <form id="formCabangBaru">
         <div class="row">
           <div class="col-md mb-3">
-            <label for="nama" class="form-label">Name</label>
+            <label for="nama" class="form-label">Name<sup class="text-danger"> *required</sup></label>
             <input
               type="text"
               id="nama"
@@ -128,7 +128,7 @@
               placeholder="Input Fullname" />
           </div>
           <div class="col-md mb-3">
-            <label for="tipe" class="form-label">Type</label>
+            <label for="tipe" class="form-label">Type<sup class="text-danger"> *required</sup></label>
             <select id="tipe" class="form-select">
               <option value="101" selected>Personal</option>
               <option value="204">Company</option>
@@ -137,7 +137,7 @@
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="id_type" class="form-label">ID Type</label>
+            <label for="id_type" class="form-label">ID Type<sup class="text-danger"> *required</sup></label>
             <select  id="id_type" class="form-select">
               <option value="PSP" selected>Passport</option>
               <option value="KTP">KTP</option>
@@ -149,8 +149,18 @@
             </select>
           </div>
           <div class="col-md mb-3">
-            <label for="idNumber" class="form-label">ID Number</label>
+            <label for="idNumber" class="form-label">ID Number<sup class="text-danger"> *mandatory</sup></label>
             <input type="text" id="idNumber" class="form-control" placeholder="ID Number" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md mb-3">
+            <label for="tempat_lahir" class="form-label">Place of Birth</label>
+            <input type="text" id="tempat_lahir" class="form-control" placeholder="Input Place of birth" />
+          </div>
+          <div class="col-md mb-3">
+            <label for="tanggal_lahir" class="form-label">Date of Birth</label>
+            <input type="date" id="tanggal_lahir" class="form-control" placeholder="Input Place of Birth" />
           </div>
         </div>
         <div class="row">
@@ -165,17 +175,17 @@
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="negara" class="form-label">Country</label>
+            <label for="negara" class="form-label">Country<sup class="text-danger"> *required</sup></label>
             <select id="negara" class="form-select"></select>
           </div>
           <div class="col-md mb-3">
-            <label for="alamat" class="form-label">Address</label>
+            <label for="alamat" class="form-label">Address<sup class="text-danger"> *required</sup></label>
             <input type="text" id="alamat" class="form-control" placeholder="Input Address" />
           </div>
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="pekerjaan" class="form-label">Occupation</label>
+            <label for="pekerjaan" class="form-label">Occupation<sup class="text-danger"> *required</sup></label>
             <select id="pekerjaan" class="form-select"></select>
           </div>
           <div class="col-md mb-3">
@@ -257,156 +267,6 @@
   </div>
 </div>
 
-<!-- modal edit -->
-<!-- <div class="modal fade animate__animated animate__fadeInUp" id="modalEdit2" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between flex-md-row flex-column">
-        <h5 class="modal-title" id="backDropModalTitle">Edit Contact Data</h5>
-        <div class="d-flex gap-2">
-          <p class="h5" id="kodeEdit"></p>
-        </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formEditPajak">
-        <input type="hidden" id="idEdit">
-        <input type="hidden" id="kodeEditVal">
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="namaEdit" class="form-label">Name</label>
-            <input
-              type="text"
-              id="namaEdit"
-              class="form-control"
-              placeholder="Input Branch Name" />
-          </div>
-          <div class="col-md mb-3">
-            <label for="tipeEdit" class="form-label">Type</label>
-            <select id="tipeEdit" class="form-select">
-              <option value="101">Personal</option>
-              <option value="204">Company</option>
-            </select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="id_typeEdit" class="form-label">ID Type</label>
-            <select  id="id_typeEdit" class="form-select">
-              <option value="PSP">Passport</option>
-              <option value="KTP">KTP</option>
-              <option value="SIM">SIM (Driving License)</option>
-              <option value="OTH">Other</option>
-              <option value="SIU">Surat Izin Usaha</option>
-              <option value="SAP">Akta Pendirian</option>
-              <option value="ADR">Anggaran Dasar</option>
-            </select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="idNumberEdit" class="form-label">ID Number</label>
-            <input type="text" id="idNumberEdit" class="form-control" placeholder="ID Number" required />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="emailEdit" class="form-label">Email</label>
-            <input type="text" id="emailEdit" class="form-control" placeholder="Input Email (Optional)" />
-          </div>
-          <div class="col-md mb-3">
-            <label for="teleponEdit" class="form-label">Phone Number</label>
-            <input type="text" id="teleponEdit" class="form-control" placeholder="Input Phone Number" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="negaraEdit" class="form-label">Country</label>
-            <select id="negaraEdit" class="form-select"></select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="alamatEdit" class="form-label">Address</label>
-            <input type="text" id="alamatEdit" class="form-control" placeholder="Input Address" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="pekerjaanEdit" class="form-label">Occupation</label>
-            <input type="text" id="pekerjaanEdit" class="form-control" placeholder="Occupation" />
-          </div>
-          <div class="col-md mb-3">
-            <label class="form-label" for="pasporEdit">Passport Photo</label>
-            <input type="file" class="form-control" id="pasporEdit" accept="image/*">
-          </div>
-        </div>
-        <div class="row row-cols-3">
-          <div class="col mb-2">
-            <label for="jk" class="form-label">Gender</label>
-          </div>
-          <div class="col mb-2">
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="jkEdit" id="maleEdit" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Male</span>
-              </label>
-            </div>
-          </div>
-          <div class="col mb-2">
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="jkEdit" id="femaleEdit" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Female</span>
-              </label>
-            </div>
-          </div>
-          <div class="col mb-2">
-            <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="pelangganEdit" value="1" />
-              <label class="form-check-label" for="pelangganEdit">Pelanggan</label>
-            </div>
-          </div>
-          <div class="col mb-2">
-            <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="vendorEdit" value="1" />
-              <label class="form-check-label" for="vendorEdit">Vendor</label>
-            </div>
-          </div>
-          <div class="col mb-2">
-            <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="karyawanEdit" value="1" />
-              <label class="form-check-label" for="karyawanEdit">Karyawan</label>
-            </div>
-          </div>
-          <div class="col d-none">
-            <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="memberEdit" value="1" />
-              <label class="form-check-label" for="memberEdit">Member</label>
-            </div>
-          </div>
-        </div>
-        <img class="img-fluid d-flex mx-auto my-6 rounded cursor-pointer d-none" id="pasporEditView" alt="Passport Photo" title="click to download">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Tutup
-        </button>
-        <button type="button" id="sbmEdit" class="btn btn-primary">Simpan</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEdit" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-lg modal-simple">
     <div class="modal-content">
@@ -453,6 +313,16 @@
           <div class="col-md mb-3">
             <label for="idNumberEdit" class="form-label">ID Number</label>
             <input type="text" id="idNumberEdit" class="form-control" placeholder="ID Number" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md mb-3">
+            <label for="tempat_lahirEdit" class="form-label">Place of Birth</label>
+            <input type="text" id="tempat_lahirEdit" class="form-control" placeholder="Input Place of birth" />
+          </div>
+          <div class="col-md mb-3">
+            <label for="tanggal_lahirEdit" class="form-label">Date of Birth</label>
+            <input type="date" id="tanggal_lahirEdit" class="form-control" placeholder="Input Place of Birth" />
           </div>
         </div>
         <div class="row">
@@ -618,6 +488,10 @@
                 <span class="dataDetail" id="IDTipeDetail"></span>
               </li>
               <li class="mb-3">
+                <span class="h6 me-1">Place of Birth :</span>
+                <span class="dataDetail" id="tempat_lahirDetail"></span>
+              </li>
+              <li class="mb-3">
                 <span class="h6 me-1">ID Number :</span>
                 <span class="dataDetail" id="idDetail"></span>
               </li>
@@ -648,6 +522,10 @@
               <li class="mb-3">
                 <span class="h6 me-1">Nationality :</span>
                 <span class="dataDetail" id="negaraDetail"></span>
+              </li>
+              <li class="mb-3">
+                <span class="h6 me-1">Date of Birth :</span>
+                <span class="dataDetail" id="tanggal_lahirDetail"></span>
               </li>
               <li class="mb-3">
                 <span class="h6 me-1">Contact Type :</span>

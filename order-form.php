@@ -132,11 +132,14 @@ session_start();
                   </div>
                   <div class="row">
                     <div class="col-md mb-4">
-                      <label for="fullname" class="form-label">Full Name</label>
+                      <label for="fullname" class="form-label">
+                      Full Name
+                      <sup class="text-danger">*required</sup>
+                      </label>
                       <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Your Full Name" autofocus />
                     </div>
                     <div class="col-md mb-4">
-                      <label for="tipe" class="form-label">Contact Type</label>
+                      <label for="tipe" class="form-label">Contact Type<sup class="text-danger"> *required</sup></label>
                       <select id="tipe" class="form-select">
                         <option value="101" selected>Personal</option>
                         <option value="204">Company</option>
@@ -145,7 +148,7 @@ session_start();
                   </div>
                   <div class="row">
                     <div class="col-md mb-4">
-                      <label for="id_type" class="form-label">ID Type</label>
+                      <label for="id_type" class="form-label">ID Type<sup class="text-danger"> *required</sup></label>
                       <select  id="id_type" class="form-select">
                         <option value="PSP" selected>Passport</option>
                         <option value="KTP">KTP</option>
@@ -157,8 +160,18 @@ session_start();
                       </select>
                     </div>
                     <div class="col-md mb-4">
-                      <label class="form-label" for="idNumber">Passport/NIK Number</label>
+                      <label class="form-label" for="idNumber">Passport/NIK Number<sup class="text-danger"> *mandatory</sup></label>
                       <input type="text" id="idNumber" class="form-control" name="idNumber" placeholder="Enter Your ID Number" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md mb-4 form-control-validation">
+                      <label for="tempat_lahir" class="form-label">Place of birth</label>
+                      <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Enter Your Place of Birth" />
+                    </div>
+                    <div class="col-md mb-4">
+                      <label class="form-label" for="tanggal_lahir">Date of birth</label>
+                       <input type="date" id="tanggal_lahir" class="form-control" name="tanggal_lahir" placeholder="Enter Your Birth of Date" />
                     </div>
                   </div>
                   <div class="row">
@@ -173,17 +186,17 @@ session_start();
                   </div>
                   <div class="row">
                     <div class="col-md mb-4 form-control-validation">
-                      <label for="nationality" class="form-label">Nationality</label>
+                      <label for="nationality" class="form-label">Nationality<sup class="text-danger"> *required</sup></label>
                       <select name="" id="nationality" class="form-select"></select>
                     </div>
                     <div class="col-md mb-4">
-                      <label for="address" class="form-label">Local Address</label>
+                      <label for="address" class="form-label">Local Address<sup class="text-danger"> *required</sup></label>
                         <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Local Address" required />
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md mb-4">
-                      <label for="occupation" class="form-label">Occupation</label>
+                      <label for="occupation" class="form-label">Occupation<sup class="text-danger"> *required</sup></label>
                       <select class="form-select" id="occupation"></select>
                     </div>
                     <div class="col-md mb-4">

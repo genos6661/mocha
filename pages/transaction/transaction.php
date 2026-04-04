@@ -261,7 +261,7 @@ if ($nowHour >= 15) {
         <p class="h4 text-center mb-4">New Contact Data</p>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="nama" class="form-label">Name</label>
+            <label for="nama" class="form-label">Name<sup class="text-danger"> *required</sup></label>
             <input
               type="text"
               id="nama"
@@ -269,7 +269,7 @@ if ($nowHour >= 15) {
               placeholder="Input Fullname" />
           </div>
           <div class="col-md mb-3">
-            <label for="tipe" class="form-label">Type</label>
+            <label for="tipe" class="form-label">Type<sup class="text-danger"> *required</sup></label>
             <select id="tipe" class="form-select">
               <option value="101" selected>Personal</option>
               <option value="204">Company</option>
@@ -278,7 +278,7 @@ if ($nowHour >= 15) {
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="id_type" class="form-label">ID Type</label>
+            <label for="id_type" class="form-label">ID Type<sup class="text-danger"> *required</sup></label>
             <select  id="id_type" class="form-select">
               <option value="PSP" selected>Passport</option>
               <option value="KTP">KTP</option>
@@ -290,8 +290,18 @@ if ($nowHour >= 15) {
             </select>
           </div>
           <div class="col-md mb-3">
-            <label for="idNumber" class="form-label">ID Number</label>
+            <label for="idNumber" class="form-label">ID Number<sup class="text-danger"> *mandatory</sup></label>
             <input type="text" id="idNumber" class="form-control" placeholder="ID Number" required />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md mb-3">
+            <label for="tempat_lahir" class="form-label">Place of Birth</label>
+            <input type="text" id="tempat_lahir" class="form-control" placeholder="Input Place of birth" />
+          </div>
+          <div class="col-md mb-3">
+            <label for="tanggal_lahir" class="form-label">Date of Birth</label>
+            <input type="date" id="tanggal_lahir" class="form-control" placeholder="Input Place of Birth" />
           </div>
         </div>
         <div class="row">
@@ -306,17 +316,17 @@ if ($nowHour >= 15) {
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="negara" class="form-label">Country</label>
+            <label for="negara" class="form-label">Country<sup class="text-danger"> *required</sup></label>
             <select id="negara" class="form-select"></select>
           </div>
           <div class="col-md mb-3">
-            <label for="alamat" class="form-label">Address</label>
+            <label for="alamat" class="form-label">Address<sup class="text-danger"> *required</sup></label>
             <input type="text" id="alamat" class="form-control" placeholder="Input Address" />
           </div>
         </div>
         <div class="row">
           <div class="col-md mb-3">
-            <label for="pekerjaan" class="form-label">Occupation</label>
+            <label for="pekerjaan" class="form-label">Occupation<sup class="text-danger"> *required</sup></label>
             <select id="pekerjaan" class="form-select"></select>
           </div>
           <div class="col-md mb-3">
@@ -359,7 +369,7 @@ if ($nowHour >= 15) {
         <div class="row row-cols-4">
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="pelanggan" value="1" />
+              <input class="form-check-input" type="checkbox" id="pelanggan" value="1" checked />
               <label class="form-check-label" for="pelanggan">Pelanggan</label>
             </div>
           </div>
