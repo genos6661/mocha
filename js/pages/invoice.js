@@ -40,8 +40,10 @@ function setDateTime() {
     hours = String(hours).padStart(2, '0');
 
     const formatted = `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
 
     $("#datetimePrint").text(formatted);
+    $("#timePrint").text(formattedTime);
 }
 
 function chooseDesign() {
@@ -86,9 +88,7 @@ function chooseDesign() {
 
           loadData(fileDesain);
 
-          if (design == 'a4_continous') {
-              setDateTime();
-          }
+          setDateTime();
 
           window.onafterprint = function () {
               window.close();
