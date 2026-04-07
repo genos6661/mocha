@@ -154,7 +154,7 @@ function loadData(fileDesain) {
       $('#teleponPelanggan').text(response.telepon);
       $('#emailPelanggan').text(response.email);
       $('#kodePelanggan').text(response.kode_pelanggan);
-      $('#idNumber').text(response.idNumber);
+      $('#idNumber').text(maskIdNumber(response.idNumber));
       $('#negara').text(response.nationality);
       $('#pekerjaan').text(response.pekerjaan);
       document.title = response.nama_pelanggan + '_' + response.nomor;
@@ -299,6 +299,12 @@ function loadData(fileDesain) {
       });
     }
   });
+}
+
+function maskIdNumber(id) {
+    if (!id || id.length <= 4) return 'xxxx';
+
+    return id.slice(0, 2) + 'x'.repeat(id.length - 4) + id.slice(-2);
 }
 
 // ESC / POS
