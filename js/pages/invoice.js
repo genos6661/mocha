@@ -151,7 +151,7 @@ function loadData(fileDesain) {
       $('#nomorTrans').text(response.nomor);
       $('#namaPelanggan, .namaPelanggan').text(response.nama_pelanggan);
       $('#alamatPelanggan').text(response.alamat);
-      $('#teleponPelanggan').text(response.telepon);
+      $('#teleponPelanggan').text(maskIdNumber(response.telepon));
       $('#emailPelanggan').text(response.email);
       $('#kodePelanggan').text(response.kode_pelanggan);
       $('#idNumber').text(maskIdNumber(response.idNumber));
@@ -302,7 +302,7 @@ function loadData(fileDesain) {
 }
 
 function maskIdNumber(id) {
-    if (!id || id.length <= 4) return 'xxxx';
+    if (!id || id.length <= 4 || id == '') return 'xxxx';
 
     return id.slice(0, 2) + 'x'.repeat(id.length - 4) + id.slice(-2);
 }
