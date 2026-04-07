@@ -155,7 +155,7 @@ function loadData(fileDesain) {
       $('#emailPelanggan').text(response.email);
       $('#kodePelanggan').text(response.kode_pelanggan);
       $('#idNumber').text(maskIdNumber(response.idNumber));
-      $('#negara').text(response.nationality);
+      $('#negara').text(response.negara_int);
       $('#pekerjaan').text(response.pekerjaan);
       document.title = response.nama_pelanggan + '_' + response.nomor;
       if(response.footer1 && response.footer1 !== '') {
