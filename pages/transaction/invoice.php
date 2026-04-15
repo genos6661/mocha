@@ -66,7 +66,7 @@ require '../../config/config.php';
     </script>
   </head>
 
-  <body>
+  <body class="bg-white">
 
     <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
 

@@ -42,8 +42,8 @@ function setDateTime() {
     const formatted = `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
     const formattedTime = `${hours}:${minutes} ${ampm}`;
 
-    $("#datetimePrint").text(formatted);
-    $("#timePrint").text(formattedTime);
+    $(".datetimePrint").text(formatted);
+    $(".timePrint").text(formattedTime);
 }
 
 function chooseDesign() {
@@ -77,6 +77,8 @@ function chooseDesign() {
         fileDesain = 'small-escpos';
       } else if (design == 'small-escpos-long') {
         fileDesain = 'small-escpos-long';
+      } else if (design == 'A4-double') {
+        fileDesain = 'a4-double';
       }
 
       $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
@@ -127,7 +129,7 @@ function loadData(fileDesain) {
       if (xhr.status === 200) {
           const imgBlob = xhr.response;
           const imgURL = URL.createObjectURL(imgBlob);
-          $('#boxLogo').html(`
+          $('.boxLogo').html(`
               <img src="${imgURL}" alt="Logo" style="height: 45px;">
           `);
       }
@@ -144,34 +146,34 @@ function loadData(fileDesain) {
         "X-Client-Domain": myDomain
     },
     success: function (response) {
-      $('#namaCabang').text(response.nama_cabang);
-      $('#judulNota').text(response.judul_nota);
-      $('#alamatCabang').text(response.alamat_cabang);
-      $('#teleponCabang').text(response.telepon_cabang);
-      $('#nomorTrans').text(response.nomor);
-      $('#namaPelanggan, .namaPelanggan').text(response.nama_pelanggan);
-      $('#alamatPelanggan').text(response.alamat);
-      $('#teleponPelanggan').text(maskIdNumber(response.telepon));
-      $('#emailPelanggan').text(response.email);
-      $('#kodePelanggan').text(response.kode_pelanggan);
-      $('#idNumber').text(maskIdNumber(response.idNumber));
-      $('#negara').text(response.negara_int);
-      $('#pekerjaan').text(response.pekerjaan);
+      $('.namaCabang').text(response.nama_cabang);
+      $('.judulNota').text(response.judul_nota);
+      $('.alamatCabang').text(response.alamat_cabang);
+      $('.teleponCabang').text(response.telepon_cabang);
+      $('.nomorTrans').text(response.nomor);
+      $('.namaPelanggan').text(response.nama_pelanggan);
+      $('.alamatPelanggan').text(response.alamat);
+      $('.teleponPelanggan').text(maskIdNumber(response.telepon));
+      $('.emailPelanggan').text(response.email);
+      $('.kodePelanggan').text(response.kode_pelanggan);
+      $('.idNumber').text(maskIdNumber(response.idNumber));
+      $('.negara').text(response.negara_int);
+      $('.pekerjaan').text(response.pekerjaan);
       document.title = response.nama_pelanggan + '_' + response.nomor;
       if(response.footer1 && response.footer1 !== '') {
-        $('#footer1').removeClass('d-none').text(response.footer1);
+        $('.footer1').removeClass('d-none').text(response.footer1);
       }
       if(response.footer2 && response.footer2 !== '') {
-        $('#footer2').removeClass('d-none').text(response.footer2);
+        $('.footer2').removeClass('d-none').text(response.footer2);
       }
       if(response.footer3 && response.footer3 !== '') {
-        $('#footer3').removeClass('d-none').text(response.footer3);
+        $('.footer3').removeClass('d-none').text(response.footer3);
       }
-      $('#ttdPelanggan, .ttdPelanggan').text(response.nama_pelanggan || "Customer");
-      $('#ttdPerusahaan, .ttdPerusahaan').text(response.user || judul_nota);
+      $('.ttdPelanggan').text(response.nama_pelanggan || "Customer");
+      $('.ttdPerusahaan').text(response.user || judul_nota);
 
       if (response.footer1 && response.footer1 !== '') {
-        $('#footer1').text(response.footer1);
+        $('.footer1').text(response.footer1);
       }
 
       let jenisTransaksi = "";
@@ -180,7 +182,7 @@ function loadData(fileDesain) {
       } else if (response.tipe == 4) {
         jenisTransaksi = "Selling Transaction";
       }
-      $('#jenisTransaksi').text(jenisTransaksi);
+      $('.jenisTransaksi').text(jenisTransaksi);
 
       const tanggal = new Date(response.tanggal);
       const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -188,11 +190,11 @@ function loadData(fileDesain) {
         month: 'long',
         day: 'numeric'
       });
-      $('#tanggalTransaksi').text(formattedDate);
+      $('.tanggalTransaksi').text(formattedDate);
 
       const details = response.details || [];
 
-      const tbody = $('#tabelDetail tbody');
+      const tbody = $('.tabelDetail tbody');
       tbody.empty();
 
       if (details.length === 0) {
@@ -263,7 +265,7 @@ function loadData(fileDesain) {
 
         // ~~~~~~~~~~ footer ~~~~~~~~~~
         if(fileDesain == 'regular') {
-          $('#subtotal, #total').text(Number(subtotal).toLocaleString('id-ID', {
+          $('.subtotal, .total').text(Number(subtotal).toLocaleString('id-ID', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
           }));
@@ -277,7 +279,7 @@ function loadData(fileDesain) {
                 })}</td>
             </tr>
           `);
-        } else if (fileDesain == 'a4-half') {
+        } else if (fileDesain == 'a4-half' || fileDesain == 'a4-double') {
           tbody.append(`
             <tr>
               <td colspan="3" class="fw-bold">Total : </td>

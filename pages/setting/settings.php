@@ -75,6 +75,7 @@
           <label for="desain" class="form-label">Invoice Design</label>
           <select id="desain" class="form-select">
             <option value="A4" selected>Regular A4 Invoice</option>
+            <option value="A4-double">A4 Double Invoice</option>
             <option value="small">Small Continous Paper</option>
             <option value="small-2">Small Continous 2 rows</option>
             <option value="small-sign">Small With Signature</option>
