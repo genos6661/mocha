@@ -78,7 +78,7 @@ $(document).ready(function () {
   let savedConfirm = getCookie(cookieConfirm);
   let savedSetting = getCookie(cookieSetting);
   let cachedLogo = sessionStorage.getItem(logoKey);
-  let parsedSetting = [];
+  let parsedSetting = null;
 
   if (!branchId) {
     $('#modalBranch').modal('show');
@@ -603,45 +603,53 @@ $(document).ready(function () {
       xhr.send();
     }
 
-    if(savedSetting) {
+    if (savedSetting) {
       parsedSetting = JSON.parse(savedSetting);
-      if(parsedSetting.SellBlank.boolval == 1) {
+    }
+
+    if (!savedSetting || !parsedSetting || parsedSetting.cabang?.noindex !== branchId) {
+      $.ajax({
+        url: url_api + `/setting/customer-display/${branchId}`,
+        type: 'GET',
+        contentType: 'application/json',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${window.token}`,
+          "X-Client-Domain": myDomain
+        },
+        success: function (response) {
+          setSessionCookie(cookieSetting, JSON.stringify(response));
+
+          if (response.SellBlank.boolval === 1) {
+            SellBlank = true;
+            $('.rate').prop('readonly', false);
+          }
+
+          $('.namaPT').text(response.NamaPT.strval);
+          $('.namaCabang').text(response.cabang.nama);
+        },
+        error: function (xhr) {
+          if (xhr.status === 404) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+            });
+          } else {
+            notif.fire({
+              icon: 'error',
+              text: 'Terjadi Kesalahan pada server'
+            });
+          }
+        },
+      });
+
+    } else {
+      if (parsedSetting.SellBlank.boolval == 1) {
         SellBlank = true;
       }
+
       $('.namaPT').text(parsedSetting.NamaPT.strval);
-    } else {
-      $.ajax({
-          url: url_api + '/setting/customer-display',
-          type: 'GET',
-          contentType: 'application/json',
-          headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${window.token}`,
-              "X-Client-Domain": myDomain
-          },
-          success: function (response) {
-              
-              setSessionCookie(cookieSetting, JSON.stringify(response));
-              if(response.SellBlank.boolval === 1) {
-                SellBlank = true;
-                $('.rate').prop('readonly', false);
-              }
-              $('.namaPT').text(response.NamaPT.strval);
-          },
-          error: function (xhr) {
-              if (xhr.status === 404) {
-                  notif.fire({
-                    icon: 'error',
-                    text: xhr.responseJSON.message
-                  });
-              } else {
-                  notif.fire({
-                    icon: 'error',
-                    text: 'Terjadi Kesalahan pada server'
-                  });
-              }
-          },
-      });
+      $('.namaCabang').text(parsedSetting.cabang.nama);
     }
   }
 
