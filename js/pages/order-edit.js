@@ -100,19 +100,19 @@ function resetOrder() {
 
                 const jumlahFormatted = Number(item.jumlah).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const rateFormatted = Number(item.rate).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const totalPerItem = item.jumlah * item.rate;
 
                 const subtotalFormatted = Number(totalPerItem).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const row = $(`
@@ -165,11 +165,12 @@ function resetOrder() {
                 });
               });
 
-      				$('#subtotal, #total').text(Number(subtotal).toLocaleString('id-ID', {
-							  minimumFractionDigits: 2,
-							  maximumFractionDigits: 2
+      				$('.subtotal').text(Number(subtotal).toLocaleString('id-ID', {
+							  minimumFractionDigits: 0,
+							  maximumFractionDigits: 4
 							}));
       			}
+            updateTotal();
         },
         error: function (xhr, status, error) {
             notif.fire({
@@ -272,7 +273,7 @@ $('#tambahBaris').on('click', function () {
 
 const formatter = new Intl.NumberFormat('id-ID', {
   minimumFractionDigits: 0,
-  maximumFractionDigits: 2
+  maximumFractionDigits: 4
 });
 
 // FOCUS: hilangkan titik & ubah koma → titik
@@ -330,13 +331,26 @@ $('#tabelDetail').on('blur', '.jumlah, .rate', function () {
   updateTotal();
 });
 
+function normalizeNumber(str) {
+  if (!str) return 0;
+  return parseFloat(
+    str.toString()
+       .replace(/\./g, '') 
+       .replace(/,/g, '.') 
+  ) || 0;
+}
+
+function normalizeString(str) {
+  return str ? str.toString().trim() : "";
+}
+
 function updateTotal() {
   let total = 0;
   $('.subtotal').each(function () {
-    let val = parseFloat($(this).val()) || 0;
+    let val = normalizeNumber($(this).val()) || 0;
     total += val;
   });
-  $('.total').val(total.toFixed(2));
+  $('.total').val(formatter.format(total));
 }
 
 function updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal) {
@@ -383,20 +397,6 @@ $('#btnSubmit').click(function (e) {
   const $btn = $(this);
   if ($btn.prop('disabled')) return;
   $btn.prop('disabled', true);
-
-  // --- fungsi normalisasi ---
-  function normalizeNumber(str) {
-    if (!str) return 0;
-    return parseFloat(
-      str.toString()
-         .replace(/\./g, '')  // hilangkan titik ribuan
-         .replace(/,/g, '.')  // ubah koma ke titik
-    ) || 0;
-  }
-
-  function normalizeString(str) {
-    return str ? str.toString().trim() : "";
-  }
 
   // --- proses details ---
   const details = [];

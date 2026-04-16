@@ -96,7 +96,7 @@
           <div class="col mb-3">
             <label for="jual" class="form-label">Sell Rate</label>
             <div class="input-group">
-              <input type="number" id="jual" class="form-control" placeholder="Input Sale Rate" min="0" />
+              <input type="text" id="jual" class="form-control" placeholder="Input Sale Rate" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>
@@ -105,7 +105,7 @@
           <div class="col mb-3">
             <label for="beli" class="form-label">Buy Rate</label>
             <div class="input-group">
-              <input type="number" id="beli" class="form-control" placeholder="Input Buy Rate" min="0" />
+              <input type="text" id="beli" class="form-control" placeholder="Input Buy Rate" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>
@@ -161,7 +161,7 @@
           <div class="col mb-3">
             <label for="jualEdit" class="form-label">Sell Rate</label>
             <div class="input-group">
-              <input type="number" id="jualEdit" class="form-control" placeholder="Input Sale Rate" min="0" />
+              <input type="text" id="jualEdit" class="form-control" placeholder="Input Sale Rate" min="0" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>
@@ -170,7 +170,7 @@
           <div class="col mb-3">
             <label for="beliEdit" class="form-label">Buy Rate</label>
             <div class="input-group">
-              <input type="number" id="beliEdit" class="form-control" placeholder="Input Buy Rate" min="0" />
+              <input type="text" id="beliEdit" class="form-control" placeholder="Input Buy Rate" min="0" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>

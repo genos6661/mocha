@@ -542,7 +542,7 @@ $(document).ready(function () {
 
   const formatter = new Intl.NumberFormat('en-EN', {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 4
   });
 
   $(document).on('blur', '.rate, .amount', function () {
@@ -555,7 +555,7 @@ $(document).ready(function () {
     if (!isNaN(numericVal)) {
       const formatted = new Intl.NumberFormat('en-EN', {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 4
       }).format(numericVal);
 
       $(this).val(formatted);

@@ -130,6 +130,71 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+const formatter = new Intl.NumberFormat('id-ID', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 4
+});
+
+function normalizeNumber(str) {
+  if (!str) return 0;
+  return parseFloat(
+    str.toString()
+       .replace(/\./g, '') 
+       .replace(/,/g, '.') 
+  ) || 0;
+}
+
+$(document).on('focus', '#jual, #beli, #jualEdit, #beliEdit, .buyRate, .sellRate', function () {
+  let val = $(this).val() || "";
+  val = val.replace(/\./g, ''); 
+  $(this).val(val);
+});
+
+// BLUR: format kembali & hitung subtotal
+$(document).on('blur', '#jual, #beli, #jualEdit, #beliEdit, .buyRate, .sellRate', function () {
+  let $row = $(this).closest('tr');
+  
+  // --- Format input ---
+  let val = $(this).val() || "";
+
+  // buang karakter aneh
+  val = val.replace(/[^0-9.,]/g, '');
+
+  // normalisasi jika banyak koma/titik
+  const parts = val.split(/[,\.]/);
+  if (parts.length > 2) {
+    val = parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  // convert ke angka JS
+  const numericVal = parseFloat(
+    val.replace(/\./g, '')  // titik ribuan hilang
+       .replace(/,/g, '.')  // koma jadi titik
+  );
+
+  // simpan hasil format ke input
+  if (!isNaN(numericVal)) {
+    $(this).val(formatter.format(numericVal));
+  } else {
+    $(this).val('');
+  }
+
+  // let jumlah = parseFloat(
+  //   $row.find('.jumlah').val().replace(/\./g, '').replace(/,/g, '.')
+  // ) || 0;
+
+  // let rate = parseFloat(
+  //   $row.find('.rate').val().replace(/\./g, '').replace(/,/g, '.')
+  // ) || 0;
+
+  // let subtotal = jumlah * rate;
+
+  // $row.find('.subtotal').val(
+  //   !isNaN(subtotal) ? formatter.format(subtotal) : ''
+  // );
+
+});
+
 function initTable() {
     table = new DataTable("#tabelForex", {
         processing: true,
@@ -153,7 +218,7 @@ function initTable() {
                 render: function(data, type, row) {
                     if (!data) return ""; 
                     
-                    return "Rp " + parseFloat(data).toLocaleString("id-ID");
+                    return "Rp " + formatter.format(data);
                 },
             },
             { 
@@ -163,7 +228,7 @@ function initTable() {
                 render: function(data, type, row) {
                     if (!data) return ""; 
                     
-                    return "Rp " + parseFloat(data).toLocaleString("id-ID");
+                    return "Rp " + formatter.format(data);
                 },
             },
             { data: "aktif", orderable: true, className: "text-center", render: function (data, type, row) {
@@ -220,17 +285,17 @@ function initTable() {
     });
 
     table.on("order.dt", function () {
-    let order = table.order();
-    let columnIndex = order[0][0]; 
-    let direction = order[0][1];
+        let order = table.order();
+        let columnIndex = order[0][0]; 
+        let direction = order[0][1];
 
-    let columnMapping = ["", "kode", "nama", "jual", "beli", "aktif", ""];
-    orderColumn = columnMapping[columnIndex] || "nama";
-    orderDir = direction;
+        let columnMapping = ["", "kode", "nama", "jual", "beli", "aktif", ""];
+        orderColumn = columnMapping[columnIndex] || "nama";
+        orderDir = direction;
 
-    resetOffset = true;
-    loadMoreData(true);
-});
+        resetOffset = true;
+        loadMoreData(true);
+    });
 }
 
 function loadMoreData(reset = false) {
@@ -323,8 +388,8 @@ function initEvents() {
                 $('.dataDetail').text('');
                 $('#kodeDetail').text(data.kode);
                 $('#namaDetail').text(data.nama);
-                $('#beliDetail').text("Rp " + parseFloat(data.beli).toLocaleString("id-ID"));
-                $('#jualDetail').text("Rp " + parseFloat(data.jual).toLocaleString("id-ID"));
+                $('#beliDetail').text("Rp " + formatter.format(data.beli));
+                $('#jualDetail').text("Rp " + formatter.format(data.jual));
                 $('#activateBtn').attr('data-id', id);
                 $('#deactivateBtn').attr('data-id', id);
                 $('#editBtn').attr('data-id', id);
@@ -347,8 +412,8 @@ $('#sbmTambah').click(function (e) {
   const formData = {
     kode: $('#kode').val(),
     nama: $('#nama').val(),
-    jual: $('#jual').val(),
-    beli: $('#beli').val(),
+    jual: normalizeNumber($('#jual').val()),
+    beli: normalizeNumber($('#beli').val()),
   };
   $.ajax({
     url: url_api + '/forex', 
@@ -387,8 +452,8 @@ $('#sbmEdit').click(function (e) {
   const formData = {
     kode: $('#kodeEdit').val(),
     nama: $('#namaEdit').val(),
-    jual: $('#jualEdit').val(),
-    beli: $('#beliEdit').val(),
+    jual: normalizeNumber($('#jualEdit').val()),
+    beli: normalizeNumber($('#beliEdit').val()),
     aktif: $('#aktif').is(':checked') ? 1 : 0,
   };
 
@@ -572,8 +637,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             $('#idEdit').val(id);
             $('#kodeEdit').val(response.kode);
             $('#namaEdit').val(response.nama);
-            $('#jualEdit').val(response.jual);
-            $('#beliEdit').val(response.beli);
+            $('#jualEdit').val(formatter.format(response.jual));
+            $('#beliEdit').val(formatter.format(response.beli));
             $('#aktif').prop('checked', response.aktif == 1);
 
             $('#modalEdit').modal('show');
@@ -639,8 +704,8 @@ function loadRates() {
                         <tr>
                         <input type="hidden" class="idRate" value="${item.noindex}">
                           <td class="p-1 ps-3">${item.kode} - ${item.nama}</td>
-                          <td class="p-1"><input type="number" class="form-control buyRate text-end" value="${item.beli}"></td>
-                          <td class="p-1"><input type="number" class="form-control sellRate text-end" value="${item.jual}"></td>
+                          <td class="p-1"><input type="text" class="form-control buyRate text-end" value="${formatter.format(item.beli)}"></td>
+                          <td class="p-1"><input type="text" class="form-control sellRate text-end" value="${formatter.format(item.jual)}"></td>
                         </tr>
                     `;
                   tbody.append(row);
@@ -711,8 +776,8 @@ $('#sbmRate').on('click', function(e) {
 
     $('#tabelRate tbody tr').each(function () {
         const noindex = $(this).find('.idRate').val();
-        const buy = $(this).find('.buyRate').val();
-        const sell = $(this).find('.sellRate').val();
+        const buy = normalizeNumber($(this).find('.buyRate').val());
+        const sell = normalizeNumber($(this).find('.sellRate').val());
 
         if (noindex) {
             rates.push({

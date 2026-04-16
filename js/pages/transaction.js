@@ -503,12 +503,12 @@ function initEvents() {
                           <td><div class="d-flex flex-column"><a class="text-heading text-truncate"><span class="fw-medium">${item.kode}</span></a><small>${item.nama}</small></div></td>
                           <td class="text-end">${Number(qty).toLocaleString('id-ID')}</td>
                           <td class="text-end">Rp. ${Number(item.rate).toLocaleString('id-ID', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
                             })}</td>
                           <td class="text-end">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
                             })}</td>
                         </tr>
                     `;
@@ -517,8 +517,8 @@ function initEvents() {
                 tbody.append(`
                     <tr><td colspan="3" class="text-end fw-bold">Total : </td>
                         <td class="text-end fw-bold">Rp. ${Number(subtotal).toLocaleString('id-ID', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 4
                         })}</td></tr>
                 `);
             }
@@ -650,12 +650,12 @@ modalJurnal.addEventListener('shown.bs.modal', e => {
               <td>${item.kode}</td>
               <td>${item.nama_akun}</td>
               <td class="text-end">${Number(item.debit).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 4
                 })}</td>
               <td class="text-end">${Number(item.kredit).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 4
                 })}</td>
             </tr>
           `;
@@ -665,12 +665,12 @@ modalJurnal.addEventListener('shown.bs.modal', e => {
           <tr class="bg-light">
               <td colspan="2" class="fw-bold">Total :</td>
               <td class="text-end fw-bold">Rp. ${Number(totalDebit).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 4
                 })}</td>
               <td class="text-end fw-bold">Rp. ${Number(totalKredit).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 4
                 })}</td>
             </tr>
           `;

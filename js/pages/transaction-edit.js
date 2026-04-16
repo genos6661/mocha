@@ -116,19 +116,19 @@ function resetTrans() {
                 }
                 const jumlahFormatted = Number(qty).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const rateFormatted = Number(item.rate).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const totalPerItem = qty * item.rate;
 
                 const subtotalFormatted = Number(totalPerItem).toLocaleString('id-ID', {
                     minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    maximumFractionDigits: 4
                 });
 
                 const row = $(`
@@ -300,7 +300,7 @@ $('#tambahBaris').on('click', function () {
 
 const formatter = new Intl.NumberFormat('id-ID', {
   minimumFractionDigits: 0,
-  maximumFractionDigits: 2
+  maximumFractionDigits: 4
 });
 
 // FOCUS: hilangkan titik & ubah koma → titik
@@ -375,8 +375,8 @@ function updateTotal() {
 
   // Format hasil ke format Indonesia
   const formattedTotal = new Intl.NumberFormat('id-ID', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4
   }).format(total);
 
   $('.total').val(formattedTotal);

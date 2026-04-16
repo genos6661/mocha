@@ -96,22 +96,22 @@ $(document).ready(function() {
 									    <tr>
 									      <td>${item.kode}</td>
 									      <td>${item.nama}</td>
-									      <td class="text-end">${Number(item.jumlah).toLocaleString('id-ID')}</td>
-									      <td class="text-end">Rp. ${Number(item.rate).toLocaleString('id-ID', {
-											  minimumFractionDigits: 2,
-											  maximumFractionDigits: 2
+									      <td class="text-end">${Number(item.jumlah).toLocaleString('en-US')}</td>
+									      <td class="text-end">Rp. ${Number(item.rate).toLocaleString('en-US', {
+											  minimumFractionDigits: 0,
+											  maximumFractionDigits: 4
 											})}</td>
-									      <td class="text-end">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-											  minimumFractionDigits: 2,
-											  maximumFractionDigits: 2
+									      <td class="text-end">Rp. ${Number(totalPerItem).toLocaleString('en-US', {
+											  minimumFractionDigits: 0,
+											  maximumFractionDigits: 4
 											})}</td>
 									    </tr>
 									`;
 								  tbody.append(row);
 								});
-								$('#subtotal, #total').text(Number(subtotal).toLocaleString('id-ID', {
-											  minimumFractionDigits: 2,
-											  maximumFractionDigits: 2
+								$('#subtotal, #total').text(Number(subtotal).toLocaleString('en-US', {
+											  minimumFractionDigits: 0,
+											  maximumFractionDigits: 4
 											}));
 							}
 	        },
