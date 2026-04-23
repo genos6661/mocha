@@ -482,7 +482,7 @@ switch ($routeInfo[0]) {
                     <script>
                       document.write(new Date().getFullYear());
                     </script>
-                    , made with ❤️ by <a href="#" target="_blank" class="footer-link">The Brotherhood</a>
+                    , made with ❤️ by <a href="https://beresmocha.my.id" target="_blank" class="footer-link">The Brotherhood</a>
                   </div>
                   <!-- <div class="d-none d-lg-inline-block">
                     <a
