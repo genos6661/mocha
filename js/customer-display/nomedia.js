@@ -50,7 +50,6 @@ $(document).ready(function() {
   loadTabel();
 
   if (footer && footer != '') {
-    console.log(footer.length);
     if (footer.length >= 95) {
       $('#footerScroll').text(footer).removeClass('d-none');
       $('#footer').addClass('d-none');

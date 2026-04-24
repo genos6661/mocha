@@ -50,8 +50,39 @@ $(document).ready(function() {
   $('.namaPT').text(namaPT);
   $('#slogan').text(slogan);
   if (header) { $('.header').text(header); }
-  if (footer) { $('#footer').text(footer); }
   loadTabel();
+
+  if (footer && footer != '') {
+    if (footer.length >= 40) {
+      $('#footerScroll').text(footer).removeClass('d-none');
+      $('#footer').addClass('d-none');
+    } else {
+      $('#footer').text(footer).removeClass('d-none');
+      $('#footerScroll').addClass('d-none');
+    }
+  }
+
+  function setCurrentDateTime() {
+    const now = new Date();
+
+    const day = now.getDate();
+    const month = now.toLocaleString('en-US', { month: 'long' }); // December
+    const year = now.getFullYear();
+
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;  
+    hours = String(hours).padStart(2, '0');
+
+    const formatted = `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+
+    $("#nowDate").text(formatted);
+  }
+  setInterval(setCurrentDateTime, 1000);
+
 });
 
 let fontSize = 1; 
