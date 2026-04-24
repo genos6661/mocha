@@ -41,8 +41,6 @@ $(document).ready(function() {
       $('.boxLogo').empty();
   };
 
-  xhr.send();
-
   $(document).attr('title', namaPT);
   $('.namaPT').text(namaPT);
   $('#slogan').text(slogan);
@@ -79,6 +77,7 @@ $(document).ready(function() {
     $("#nowDate").text(formatted);
   }
   setInterval(setCurrentDateTime, 1000);
+  xhr.send();
 });
 
 let fontSize = 1; 

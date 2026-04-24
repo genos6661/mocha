@@ -198,7 +198,7 @@ function loadMedia() {
             const blobUrl = URL.createObjectURL(blob);
             const $slide = $('<div class="slide"></div>');
             const $media = isVideo
-              ? $(`<video autoplay preload="auto"><source src="${blobUrl}" type="video/${ext}"></video>`)
+              ? $(`<video autoplay muted preload="auto" control><source src="${blobUrl}" type="video/${ext}"></video>`)
               : $(`<img src="${blobUrl}" alt="gambar">`);
             $slide.append($media);
             $('#boxCarousel').append($slide);
@@ -210,7 +210,9 @@ function loadMedia() {
           .finally(() => {
             loaded++;
             if (loaded === fileNames.length) {
-              startCarousel(mediaElements);
+              setTimeout(() => {
+                startCarousel(mediaElements);
+              }, 2000);
             }
           });
       });
@@ -236,17 +238,21 @@ function startCarousel(mediaList) {
       const video = current.el.querySelector('video');
       if (video) {
         video.currentTime = 0;
-        video.play();
+        
+        // Gunakan promise untuk mendeteksi blokir autoplay
+        video.play().catch(error => {
+          console.warn("Autoplay diblokir oleh browser, mencoba play manual atau skip.", error);
+          // Jika diblokir, kita bisa paksa pindah slide setelah 5 detik
+          setTimeout(() => {
+            index = (index + 1) % mediaList.length;
+            showNext();
+          }, 5000);
+        });
+
         video.onended = () => {
           index = (index + 1) % mediaList.length;
           showNext();
         };
-      } else {
-        // fallback kalau video tidak bisa diputar
-        setTimeout(() => {
-          index = (index + 1) % mediaList.length;
-          showNext();
-        }, 5000);
       }
     } else {
       setTimeout(() => {
