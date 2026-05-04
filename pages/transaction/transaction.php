@@ -408,8 +408,8 @@ if ($nowHour >= 15) {
 </div>
 
 <!-- modal transaksi baru -->
-<div class="modal fade animate__animated animate__fadeInUp" id="modalTransaksiBaru" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-simple">
+<div class="modal fade animate__animated animate__fadeInUp" id="modalTransaksiBaru" data-bs-keyboard="false" data-bs-backdrop="static">
+  <div class="modal-dialog modal-xl modal-simple modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-body">
         <button
@@ -481,7 +481,7 @@ if ($nowHour >= 15) {
                   <th class="py-3"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="tbody-scroll">
                 
               </tbody>
               <tfoot>
@@ -500,10 +500,10 @@ if ($nowHour >= 15) {
             </table>
           </div>
         </div>
-      </div>
-      <div class="modal-footer d-flex justify-content-between justify-content-md-end">
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
-        <button class="btn-primary btn mx-1" id="btnSubmit">Submit</button>
+        <div class="d-flex justify-content-between justify-content-md-end">
+          <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+          <button class="btn-primary btn mx-1" id="btnSubmit">Submit</button>
+        </div>
       </div>
     </div>
   </div>

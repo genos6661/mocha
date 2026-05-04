@@ -239,10 +239,8 @@ function startCarousel(mediaList) {
       if (video) {
         video.currentTime = 0;
         
-        // Gunakan promise untuk mendeteksi blokir autoplay
         video.play().catch(error => {
           console.warn("Autoplay diblokir oleh browser, mencoba play manual atau skip.", error);
-          // Jika diblokir, kita bisa paksa pindah slide setelah 5 detik
           setTimeout(() => {
             index = (index + 1) % mediaList.length;
             showNext();
