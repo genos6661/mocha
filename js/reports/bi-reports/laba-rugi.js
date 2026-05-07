@@ -353,12 +353,11 @@ function loadData() {
             const penjualanAset = akunData['420300'].total_kredit - akunData['420300'].total_debit;
             const selisihKurs = akunData['420400'].total_kredit - akunData['420400'].total_debit;
             const pendapatanLain = akunData['420500'].total_kredit - akunData['420500'].total_debit;
-            const bebanLain = akunData['520100'].total_kredit - akunData['520100'].total_debit;
+            const bebanLain = akunData['520100'].total_debit - akunData['520100'].total_kredit;
             const labaRugiLain = bungaBank - adminBank - bungaPinjaman + penjualanAset + selisihKurs + pendapatanLain - bebanLain;
             const labaRugiSP = lrOperasionalBersih + labaRugiLain;
             const pajakPenghasilan = 0;
             const labaRugi = labaRugiSP - pajakPenghasilan;
-            console.log(hpp);
 
             $('#penjualanUKA').text(formatID(penjualanUKA));
             $('#pencairanTC').text(formatID(pencairanTC));

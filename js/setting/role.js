@@ -409,7 +409,6 @@ function loadEditRole(roleId) {
       $('#namaEdit').val(data.name);
       $('#levelEdit').val(data.level);
 
-      // Render ulang pohon permissions dengan checkbox yang sesuai
       loadPermissionsTree('Edit', data.permissions);
     },
     error: function (xhr) {
