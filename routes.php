@@ -31,6 +31,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/other-reports', 'pages/reports/other-reports.php');
     $r->addRoute('GET', '/master-data-reports', 'pages/reports/masda-reports.php');
     $r->addRoute('GET', '/summary-valas', 'pages/reports/bi-reports/summary-valas.php');
+    $r->addRoute('GET', '/summary-valas-advance', 'pages/reports/bi-reports/summary-valas-advance.php');
     $r->addRoute('GET', '/lkub', 'pages/reports/bi-reports/lkub.php');
     $r->addRoute('GET', '/neraca', 'pages/reports/bi-reports/neraca.php');
     $r->addRoute('GET', '/laba-rugi', 'pages/reports/bi-reports/laba-rugi.php');

@@ -118,7 +118,7 @@ switch ($routeInfo[0]) {
   </head>
 
   <body>
-    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/master-data-reports', '/customer-report']; ?>
+    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', 'summary-valas-advance', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/master-data-reports', '/customer-report']; ?>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
       <div class="layout-container">

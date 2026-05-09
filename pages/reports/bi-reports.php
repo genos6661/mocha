@@ -72,6 +72,17 @@
       </div>
     </div>
   </div>
+  <div class="col mb-6">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas Advance" data-range="month" data-url="/summary-valas-advance">
+      <div class="avatar avatar-lg">
+        <img src="/assets/img/report/logs.png" alt="Avatar" class="rounded">
+      </div>
+      <div>
+        <h5 class="mb-0 text-black">Summary Forex Advance</h5>
+        <span class="text-dark">Ringkasan Mutasi Per Valas Advance</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- filter -->

@@ -89,7 +89,7 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       $('#boxSimpleDate, #boxSingleDate').addClass('d-none');
     }
 
-    if(nama === "Summary Valas") {
+    if(nama === "Summary Valas" || nama === "Summary Valas Advance") {
       $('#boxUser').removeClass('d-none');
       $('#boxShowing').removeClass('d-none');
     } else {

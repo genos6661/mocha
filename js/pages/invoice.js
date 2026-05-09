@@ -370,8 +370,9 @@ function mapInvoiceToEscPos(res) {
     nomor: res.nomor,
     tanggal: formattedDate,
     customer: res.nama_pelanggan,
+    telepon_pelanggan: res.telepon,
     nationality: res.nationality,
-    id_number: res.idNumber,
+    id_number: maskIdNumber(res.idNumber),
     items,
     subtotal
   };
@@ -439,6 +440,9 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += `Customer : ${data.customer}\n`;
     cmd += `Passport/ID : ${data.id_number}\n`;
     cmd += `Nationality : ${data.nationality}\n`;
+    cmd += `Phone : ${data.telepon_pelanggan}\n\n`;
+    cmd += `Source of funds : \n`;
+    cmd += `Transaction Purpose : \n`;
     cmd += esc(27, 97, 2);
     cmd += `Cashier : ${data.user}\n`;
     cmd += esc(27, 97, 0);
