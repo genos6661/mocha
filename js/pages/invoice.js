@@ -440,9 +440,7 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += `Customer : ${data.customer}\n`;
     cmd += `Passport/ID : ${data.id_number}\n`;
     cmd += `Nationality : ${data.nationality}\n`;
-    cmd += `Phone : ${data.telepon_pelanggan}\n\n`;
-    cmd += `Source of funds : \n`;
-    cmd += `Transaction Purpose : \n`;
+    cmd += `Phone : ${data.telepon_pelanggan}\n`;
     cmd += esc(27, 97, 2);
     cmd += `Cashier : ${data.user}\n`;
     cmd += esc(27, 97, 0);
