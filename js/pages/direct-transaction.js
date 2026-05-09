@@ -356,6 +356,7 @@ $('#btnSubmit').click(function (e) {
     }),
     success: function (response) {
       if (response.isExceed) {
+        $btn.prop('disabled', false);
         $("#btnSignSubmit").click(function () {
           submitSign(idPelanggan, response.nomor, cabang);
         });
@@ -371,15 +372,30 @@ $('#btnSubmit').click(function (e) {
         $('#tabelDetail tbody').empty();
         $('#tambahBaris').trigger('click');
         updateTotal();
-        notif.fire({
+        offset = 0;
+        table.clear().draw();
+        loadMoreData();
+        $btn.prop('disabled', false);
+        Swal.fire({
+          title: 'Success',
+          text: response.message,
           icon: 'success',
-          text: response.message
-        }).then(() => {
-            offset = 0;
-            table.clear().draw();
-            loadMoreData();
-            $btn.prop('disabled', false);
+          showDenyButton: true,
+          confirmButtonText: 'Print Invoice',
+          denyButtonText: 'Okay',
+          customClass: {
+            denyButton: 'btn btn-secondary',
+            confirmButton: 'btn btn-primary'
+          },
+          reverseButtons: true,
+          allowOutsideClick: false, 
+          allowEscapeKey: false
+        }).then((result) => {
+          if (result.isConfirmed) {
+              window.open('/pages/transaction/invoice.php?transaction=' + response.nomor, '_blank');
+          }
         });
+
         if (document.querySelector(`.notiflix-loading`)) {
             Loading.remove();
         } 

@@ -202,7 +202,12 @@ $(document).ready(function () {
     },
 
     templateSelection: function (data) {
-      return `${data.nama} - ${data.nama_negara}` || 'Choose Contact';
+
+        if (!data.id) {
+            return 'Choose Contact';
+        }
+
+        return `${data.nama || data.text || ''} - ${data.nama_negara || ''}`;
     },
 
     escapeMarkup: function (markup) {

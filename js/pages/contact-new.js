@@ -44,13 +44,16 @@ $('#sbmTambah').click(async function (e) {
       jk = 'M';
     }
 
+    const nama = $('#nama').val();
+    const negara = $('#negara').val();
+
     const formData = {
         // kode: $('#kode').val(),
-        nama: $('#nama').val(),
+        nama: nama,
         alamat: $('#alamat').val(),
         telepon: $('#telepon').val(),
         email: $('#email').val(),
-        negara: $('#negara').val(),
+        negara: negara,
         id: $('#idNumber').val(),
         pekerjaan: $('#pekerjaan').val(),
         tipe: $('#tipe').val(),
@@ -87,6 +90,27 @@ $('#sbmTambah').click(async function (e) {
                 table.clear().draw();
                 loadMoreData();
             });
+            if ($('#kontak').length && $('#modalTransaksiBaru').length && response.noindex) {
+                $('#modalKontakBaru').modal('hide');
+                $('#modalTransaksiBaru').modal('show');
+                const data = {
+                    id: response.noindex,
+                    nama: nama,
+                    nama_negara: negara,
+                    text: nama + ' - ' + negara
+                };
+
+                const option = new Option(data.text, data.id, true, true);
+
+                $('#kontak').append(option).trigger('change');
+
+                $('#kontak').trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: data
+                    }
+                });
+            }
         },
         error: function (xhr, status, error) {
             if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
