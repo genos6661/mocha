@@ -278,28 +278,37 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="border py-2 px-1"></td>
-                          <td class="border py-2 px-1"></td>
+                          <td class="border text-end py-2 px-1">${Number(item.saldo_awal_rate).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
+                            })}</td>
+                          <td class="border text-end py-2 px-1">${Number(item.saldo_awal_rupiah).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 2
+                            })}</td>
                           <td class="border text-end py-2 px-1">${Number(item.pembelian).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="border text-end py-2 px-1">${Number(item.pembelian_rupiah / item.pembelian || 0).toLocaleString('id-ID', {
+                          <td class="border text-end py-2 px-1">${Number(item.pembelian_rate).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
-                              maximumFractionDigits: 2
+                              maximumFractionDigits: 4
                             })}</td>
                           <td class="border text-end py-2 px-1">${Number(item.pembelian_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 2
                             })}</td>
-                          <td class="border"></td>
+                          <td class="border text-end py-2 px-1">${Number(item.rate_tengah).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
+                            })}</td>
                           <td class="border text-end py-2 px-1">${Number(item.penjualan).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="border text-end py-2 px-1">${Number(item.penjualan_rupiah / item.penjualan || 0).toLocaleString('id-ID', {
+                          <td class="border text-end py-2 px-1">${Number(item.penjualan_rate).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
-                              maximumFractionDigits: 2
+                              maximumFractionDigits: 4
                             })}</td>
                           <td class="border text-end py-2 px-1">${Number(item.penjualan_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
@@ -309,10 +318,13 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="border"></td>
+                          <td class="border text-end py-2 px-1">${Number(item.saldo_akhir_rate).toLocaleString('id-ID', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 4
+                            })}</td>
                           <td class="border text-end py-2 px-1">${Number(item.saldo_akhir_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
-                              maximumFractionDigits: 0
+                              maximumFractionDigits: 2
                             })}</td>
                         </tr>
                     `;
