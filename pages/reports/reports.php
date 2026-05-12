@@ -1,5 +1,5 @@
 <p class="h4 mb-5">Reports</p>
-<div class="row gy-6" id="sortable-cards">
+<div class="row justify-content-center gy-6" id="sortable-cards">
   <div class="col-md-6 col-sm-12">
     <a href="/bi-reports" class="card card-report cursor-pointer">
       <div class="card-body text-center">
@@ -37,10 +37,21 @@
     <a href="/other-reports" class="card card-report cursor-pointer">
       <div class="card-body text-center">
         <h2>
-          <i class="icon-base ti tabler-report-analytics icon-50px text-primary"></i>
+          <i class="icon-base ti tabler-report-analytics icon-50px text-warning"></i>
         </h2>
         <h4>Other Reports</h4>
         <h5>2 Reports in Total</h5>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6 col-sm-12">
+    <a href="/other-features" class="card card-report cursor-pointer">
+      <div class="card-body text-center">
+        <h2>
+          <i class="icon-base ti tabler-device-desktop-star icon-50px text-primary"></i>
+        </h2>
+        <h4>Other Features</h4>
+        <h5>DTTOT & PPATK</h5>
       </div>
     </a>
   </div>

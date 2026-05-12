@@ -465,6 +465,10 @@ function generateEscPosInvoice(data, fileDesain) {
     cmd += esc(27, 97, 1);
     cmd += `\n${data.footer2}\n${data.footer3}\n`;
 
+    cmd += esc(27, 97, 2);
+    cmd += `${data.customer}\n\n\n`;
+    cmd += `....................................`;
+
     cmd += esc(29, 86, 0); 
 
     return cmd;
