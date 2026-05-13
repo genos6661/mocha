@@ -129,7 +129,7 @@
 
 <!-- upload -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalUpload" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">DTTOT Identification</h5>
@@ -139,22 +139,46 @@
           data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
-      <div class="modal-body pb-2">
-        <form id="formExcel">
-        <input type="hidden" id="urlToOpen">
-        <div class="mb-3">
-          <label for="excelDTTOT" class="form-label">Upload File Excel</label>
-          <input type="file" class="form-control" id="excelDTTOT">
+      <div class="modal-body pb-6">
+        <div class="d-none" id="boxTabelDTTOT">
+          <table class="table" id="tabelDTTOT">
+            <thead>
+              <tr>
+                <th>
+                  <input
+                  type="checkbox"
+                  class="form-check-input dttot-check"
+                  value="all" id="checkAllDTTOT">
+                </th>
+                <th class="table-primary">Input Name</th>
+                <th>Customer Name</th>
+                <th>ID Number</th>
+                <th>Address</th>
+                <th class="text-center">Nationality</th>
+                <th class="text-center">Similarity</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" id="generateDTTOT">Generate Report</button>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-        <!-- <button type="button" class="btn btn-outline-primary" id="resetFilter">Reset</button> -->
-        <button type="button" id="sbmUpload" class="btn btn-primary">Submit</button>
-        </form>
+        <input type="hidden" id="urlToOpen">
+        <div id="boxUploadDTTOT">
+          <div class="mb-3">
+            <label for="excelDTTOT" class="form-label">Upload File Excel</label>
+            <input type="file" class="form-control" id="excelDTTOT" accept=".xlsx, .xls">
+          </div>
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" id="sbmUpload" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<script src="js/reports/other-reports.js" type="text/javascript"></script>
+<script src="https://unpkg.com/read-excel-file/bundle/read-excel-file.min.js"></script>
+<script src="js/reports/other-features.js" type="text/javascript"></script>
