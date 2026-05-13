@@ -202,7 +202,7 @@ session_start();
                     </div>
                     <div class="col-md mb-4">
                       <label for="paspor" class="form-label">Passport Photo</label>
-                      <input type="file" class="form-control" id="paspor" accept="image/*">
+                      <input type="file" class="form-control" id="paspor">
                     </div>
                   </div>
                   <div class="row justify-content-center mt-3">
