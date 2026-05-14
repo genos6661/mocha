@@ -406,11 +406,11 @@ function initEvents() {
         }
     });
 
-    document.querySelector("#tabelValas_wrapper .dt-scroll-body").addEventListener("scroll", function () {
-        if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) {
-            loadMoreData();
-        }
-    });
+    // document.querySelector("#tabelValas_wrapper .dt-scroll-body").addEventListener("scroll", function () {
+    //     if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) {
+    //         loadMoreData();
+    //     }
+    // });
 }
 
 $('#sbmFlag').click(function (e) {
