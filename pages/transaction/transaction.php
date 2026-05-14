@@ -332,7 +332,7 @@ if ($nowHour >= 15) {
           <div class="col-md mb-3">
             <label for="paspor" class="form-label">Passport Photo</label>
             <input
-              type="file"  accept="image/*" id="paspor" class="form-control" placeholder="Upload Passport Photo (Optional)" />
+              type="file" id="paspor" class="form-control" placeholder="Upload Passport Photo (Optional)" />
           </div>
         </div>
         <div class="row">

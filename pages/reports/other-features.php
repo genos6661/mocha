@@ -13,7 +13,7 @@
     <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modalUpload" data-nama="DTTOT Identification">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-list-details icon-xl"></i>
+          <i class="icon-base ti tabler-report icon-xl"></i>
         </div>
       </div>
       <div>
@@ -22,19 +22,19 @@
       </div>
     </div>
   </div>
-  <!-- <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Logs Reports" data-range="all" data-url="/logs-report">
+  <div class="col mb-6">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="DTTOT List" data-range="all" data-url="/dttot-list">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-report icon-xl"></i>
+          <i class="icon-base ti tabler-list-details icon-xl"></i>
         </div>
       </div>
       <div>
-        <h5 class="mb-0">Logs Report</h5>
-        <span>Logging report for audit trail</span>
+        <h5 class="mb-0">DTTOT List</h5>
+        <span>Daftar pelanggan terindikasi DTTOT</span>
       </div>
     </div>
-  </div> -->
+  </div>
 </div>
 
 <!-- filter -->
@@ -147,7 +147,7 @@
                 <th>
                   <input
                   type="checkbox"
-                  class="form-check-input dttot-check"
+                  class="form-check-input"
                   value="all" id="checkAllDTTOT">
                 </th>
                 <th class="table-primary">Input Name</th>
@@ -161,7 +161,7 @@
             <tbody></tbody>
           </table>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" id="generateDTTOT">Generate Report</button>
+            <button class="btn btn-primary" id="addToList">Add to DTTOT List</button>
           </div>
         </div>
         <input type="hidden" id="urlToOpen">

@@ -202,7 +202,9 @@ $('#sbmUpload').on('click', async function () {
               </td>
             </tr>
           `);
-
+          if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+          }
           return;
         }
 
@@ -454,4 +456,58 @@ $('#sbmFilter').click(function (e) {
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
   window.location.href = finalUrl;
+});
+
+$('#addToList').click(function (e) {
+  e.preventDefault();
+
+  const selected = [];
+  $('.dttot-check:checked').each(function () {
+    selected.push($(this).val());
+  });
+
+  if (selected.length == 0) {
+    notif.fire({
+      icon: 'error',
+      text: 'Please Check at least 1 profile'
+    });
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/other-features/dttot-status',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ id: selected, status: 1 }),
+    success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        });
+        const tbody = $('#tabelDTTOT tbody');
+        tbody.empty();
+
+        $('#boxTabelDTTOT').addClass('d-none');
+        $('#boxUploadDTTOT').removeClass('d-none');
+        $('#modalUpload').modal('hide');
+    },
+    error: function (xhr) {
+        if (xhr.status === 404) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+            });
+        } else {
+            notif.fire({
+              icon: 'error',
+              text: 'Terjadi Kesalahan pada server'
+            });
+        }
+    },
+  });
 });
