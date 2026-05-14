@@ -322,6 +322,9 @@ function initTable() {
             }
         ],
         columnDefs: [{ orderable: false, targets: -1 }],
+        createdRow: function(row, data) {
+            row.setAttribute("data-id", data.noindex);
+        },
         dom: 'tp',
     });
 
@@ -337,6 +340,8 @@ function initTable() {
 
         loadMoreData(true);
     });
+
+    enableRowDrag();
 }
 
 function loadMoreData(reset = false) {
@@ -345,36 +350,45 @@ function loadMoreData(reset = false) {
 
     const searchInput = document.querySelector(".filtertabel input");
     const searchValue = searchInput ? searchInput.value : "";
-    const orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
 
-    fetch(`${url_api}/forex/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}`, {
+    fetch(`${url_api}/setting/rates`, {
+        method: 'POST',
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
-        }
+        },
+        body: JSON.stringify({
+            valas: valasDisplayed,
+            display_all: 1,
+            search: searchValue
+        })
     })
     .then(response => response.json())
     .then(response => {
-        if (response.data.length > 0) {
+        const data = response.data || response;
+        if (data.length > 0) {
             offset = reset ? limit : offset + limit;
             if (reset) {
-                table.clear().rows.add(response.data).draw();
+                table.clear().rows.add(data).draw();
             } else {
-                table.rows.add(response.data).draw(false);
+                table.rows.add(data).draw(false);
             }
-            let arrDisplay = valasDisplayed.split(",").map(Number);
-            if (arrDisplay.length == 0 || valasDisplayed == '') {
-                $('#displayAllValas').removeAttribute('checked');
-            } if (arrDisplay.length >= response.recordsTotal) {
+            let arrDisplay = valasDisplayed
+                ? valasDisplayed.split(",").map(Number)
+                : [];
+            if (arrDisplay.length === 0) {
+                $('#displayAllValas').prop('checked', false);
+                $('#displayAllValas').prop('indeterminate', false);
+            } else if (arrDisplay.length >= data.length) {
                 $('#displayAllValas').prop('checked', true);
-                console.log('full');
+                $('#displayAllValas').prop('indeterminate', false);
             } else {
+                $('#displayAllValas').prop('checked', false);
                 $('#displayAllValas').prop('indeterminate', true);
             }
         }
         isLoading = false;
-        // document.querySelector("#totalValas").textContent = response.recordsTotal;
     })
     .catch(() => {
         isLoading = false;
@@ -586,9 +600,15 @@ $('#sbmCD').click(function(e) {
     let notiflixBlock = document.querySelector('.notiflix-loading');
     notiflixBlock.innerHTML = customSpinnerHTML;
     e.preventDefault();
-    const values = $('.row-checkbox:checked').map(function () {
-        return this.value;
-    }).get().join(',');
+    const values = $('#tabelValas tbody tr').map(function () {
+
+        const checkbox = $(this).find('.row-checkbox');
+
+        if (checkbox.is(':checked')) {
+            return checkbox.val();
+        }
+
+    }).get().filter(Boolean).join(',');
 
     const data = {
         subheader: $('#subheader').val(),
@@ -801,3 +821,37 @@ $('#removeLogo').click(function (e) {
     }
   });
 });
+
+// orderable
+function enableRowDrag() {
+    const tbody = document.querySelector('#tabelValas tbody');
+
+    new Sortable(tbody, {
+        animation: 150,
+
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+
+        onEnd: function () {
+            updateRowOrder();
+        }
+    });
+}
+
+function updateRowOrder() {
+    let rows = document.querySelectorAll('#tabelValas tbody tr');
+
+    let orderedIds = [];
+
+    rows.forEach((row, index) => {
+        orderedIds.push({
+            id: row.dataset.id,
+            sort_order: index + 1
+        });
+    });
+
+    console.log(orderedIds);
+
+    window.currentOrder = orderedIds;
+}

@@ -1,3 +1,17 @@
+<style>
+  #tabelValas tbody tr {
+    cursor: move;
+  }
+
+  .sortable-ghost {
+    opacity: 0.3;
+    background: #dbeafe;
+  }
+
+  .sortable-chosen {
+    background: #f1f5f9;
+  }
+</style>
 <div class="nav-align-top">
   <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-md-0 gap-2">
     <li class="nav-item">

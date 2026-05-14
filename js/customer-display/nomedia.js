@@ -173,7 +173,7 @@ function loadTabel() {
     headers: {
       'X-Client-Domain': myDomain
     },
-    data: JSON.stringify({ valas: valasDisplayed }),
+    data: JSON.stringify({ valas: valasDisplayed, display_all: 0 }),
     success: function(response) {
       renderTable(response, maxRows);
     }
