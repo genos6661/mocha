@@ -77,13 +77,14 @@
         <tr>
           <th class="text-center align-middle p-2" style="width: 5%; border: 1px solid;">No</th>
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Name</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">ID</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Country</th>
+          <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">ID</th>
+          <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Country</th>
           <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Gender</th>
-          <th class="text-center align-middle p-2" style="width: 13%; border: 1px solid;">Place & Date of Birth</th>
+          <th class="text-center align-middle p-2" style="width: 11%; border: 1px solid;">Place & Date of Birth</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Occupation</th>
-          <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Phone</th>
+          <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Phone</th>
           <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Address</th>
+          <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Status</th>
           <!-- <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Total Transactions</th> -->
         </tr>
       </thead>
@@ -92,10 +93,14 @@
   </div>
   <div class="card-footer d-flex justify-content-between pt-4">
     <p class="h5 px-3">Total Records : <span id="totalData"></span></p>
-    <div class="btn-group p-1" role="group" aria-label="Set Status">
+    <div class="d-flex gap-1">
+      <button type="button" class="btn btn-outline-success waves-effect">Unlist</button>
+      <button type="button" class="btn btn-outline-primary waves-effect">Set as Reported</button>
+    </div>
+    <!-- <div class="btn-group p-1" role="group" aria-label="Set Status">
       <button type="button" class="btn btn-label-success waves-effect">Unlist</button>
       <button type="button" class="btn btn-label-primary waves-effect">Set as Reported</button>
-    </div>
+    </div> -->
   </div>
 </div>
 

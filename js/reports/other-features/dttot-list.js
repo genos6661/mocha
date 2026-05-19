@@ -323,13 +323,14 @@ function loadData(reset = false) {
 
       if (details.length === 0) {
         if (offset === 0) {
-          tbody.append('<tr><td colspan="8" class="text-center">Customer Data Not Found</td></tr>');
+          tbody.append('<tr><td colspan="10" class="text-center">Customer Data Not Found</td></tr>');
         }
         hasMoreData = false;
         $('.table-responsive').off('scroll');
       } else {
         details.forEach(function (item) {
           const jk = item.jk == 'M' ? 'Male' : 'Female';
+          const status = item.dttot == 2 ? 'Reported' : '';
           const row = `
               <tr>
                 <td class="text-center">${count}</td>
@@ -341,6 +342,7 @@ function loadData(reset = false) {
                 <td class="text-center">${item.pekerjaan || ''}</td>
                 <td class="text-center">${item.telepon || ''}</td>
                 <td class="">${item.alamat || ''}</td>
+                <td class="text-center">${status}</td>
               </tr>
           `;
           tbody.append(row);
