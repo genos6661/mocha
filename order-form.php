@@ -143,7 +143,10 @@ session_start();
                       <label for="tipe" class="form-label">Contact Type<sup class="text-danger"> *required</sup></label>
                       <select id="tipe" class="form-select">
                         <option value="101" selected>Personal</option>
-                        <option value="204">Company</option>
+                        <option value="201">Money Changer (Company)</option>
+                        <option value="202">Bank (Company)</option>
+                        <option value="203">Payment Service Provider (PJP)</option>
+                        <option value="204">Company (Others)</option>
                       </select>
                     </div>
                   </div>

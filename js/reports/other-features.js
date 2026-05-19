@@ -78,6 +78,29 @@ $(document).ready(function () {
     allowClear: true
   });
 
+  $('#negara').select2({
+      dropdownParent: $('#filter'),
+      ajax: {
+        url: url_api + '/profile/negara/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
+      },
+      placeholder: 'Choose Country'
+  });
+
   $('#tipeLog').on('change', function () {
     $('#aktivitasLog').val('').trigger('change');
   });
@@ -112,12 +135,9 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       $('#simpleDate').val(range).trigger('change');
     }
 
-    if (nama === "Logs Reports") {
-      $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan').addClass('d-none');
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleRange, #boxRange').removeClass('d-none');
-    } else if (nama === "Transactions Summary") {
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleDate, #boxSingleDate').addClass('d-none');
-      $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan').removeClass('d-none');
+    if (nama === "DTTOT List") {
+      $('#boxSimpleDate, #boxSingleDate, #boxSimpleRange, #boxRange').addClass('d-none');
+      $('#boxNegara, #boxTipeKontak, #boxShowDTTOT').removeClass('d-none');
     } else {
       $('#boxSimpleRange, #boxRange').removeClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').addClass('d-none');
@@ -437,23 +457,34 @@ $('#sbmFilter').click(function (e) {
   const startDate = $('#startDate').val();
   const endDate = $('#endDate').val();
   const cabang = $('#cabang').val();
-  const tipeLog = $('#tipeLog').val();
-  const aktivitasLog = $('#aktivitasLog').val();
-  const emailLog = $('#emailLog').val();
-  const pelanggan = $('#pelanggan').val();
+  const negara = $('#negara').val();
   const baseUrl = $('#urlToGo').val();
-
   const params = new URLSearchParams();
 
   if (startDate) params.append('start', startDate);
   if (endDate) params.append('end', endDate);
   if (cabang) params.append('cabang', cabang);
-  if (tipeLog) params.append('tipeLog', tipeLog);
-  if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
-  if (emailLog) params.append('emailLog', emailLog);
-  if (pelanggan) params.append('pelanggan', pelanggan);
+  if (negara) params.append('negara', negara);
 
-  const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+  const show = [];
+
+  if ($('#showDTTOT-1').is(':checked')) {
+    show.push(-1);
+  }
+  if ($('#showDTTOT1').is(':checked')) {
+    show.push(1);
+  }
+  if ($('#showDTTOT2').is(':checked')) {
+    show.push(2);
+  }
+
+  show.forEach(v => {
+    params.append('show', v);
+  });
+
+  const finalUrl = params.toString()
+    ? `${baseUrl}?${params.toString()}`
+    : baseUrl;
 
   window.location.href = finalUrl;
 });

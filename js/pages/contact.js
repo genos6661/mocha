@@ -420,7 +420,6 @@ function initEvents() {
                 let id_type;
 
                 const gender = { M: 'Male', F: 'Female' }[data.jk] || 'Unknown';
-                const tipe = { 101: 'Personal', 204: 'Company' }[data.tipe_kontak] || 'Unknown'; 
                 const id_tipe = { PSP: 'Passport', KTP: 'KTP', SIM: 'SIM (Driving License)', OTH: 'Other', SIU: 'Surat Izin Usaha', SAP: 'Surat Akta Pendirian', ADR: 'Anggaran Dasar' }[data.jenis_id] || 'Passport';
 
                 let tanggal;
@@ -433,7 +432,7 @@ function initEvents() {
                 $('#kodeDetail').text(data.kode);
                 $('#namaDetail').text(data.nama);
                 $('#jkDetail').text(gender);
-                $('#nttDetail').text(tipe);
+                $('#nttDetail').text(data.tipe_kontak_label);
                 $('#IDTipeDetail').text(id_tipe);
                 $('#teleponDetail').text(data.telepon);
                 $('#alamatDetail').text(data.alamat);

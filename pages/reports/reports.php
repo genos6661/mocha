@@ -7,7 +7,7 @@
           <i class="icon-base ti tabler-building-bank icon-50px text-success"></i>
         </h2>
         <h4>BI Reports</h4>
-        <h5>5 Reports in Total</h5>
+        <h5>6 Reports in Total</h5>
       </div>
     </a>
   </div>

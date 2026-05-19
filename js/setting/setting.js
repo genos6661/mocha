@@ -630,6 +630,7 @@ $('#sbmCD').click(function(e) {
                 icon: 'success',
                 text: response.message
             }).then(() => {
+                valasDisplayed = '';
                 loadSettings();
                 loadMoreData(true);
 

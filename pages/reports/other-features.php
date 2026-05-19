@@ -96,13 +96,20 @@
           <label for="singleDate" class="form-label">Date</label>
           <input type="date" class="form-control" id="singleDate">
         </div>
-        <div class="mb-3 d-none" id="boxCabang">
-          <label for="cabang" class="form-label">Branch</label>
-          <select id="cabang" class="form-select"></select>
+        <div class="mb-3 d-none" id="boxTipeKontak">
+          <label for="tipe_kontak" class="form-label">Contact Type</label>
+          <select id="tipe_kontak" class="form-select">
+            <option value="" selected hidden disabled>All Types</option>
+            <option value="101">Personal</option>
+            <option value="201">Money Changer (Company)</option>
+            <option value="202">Bank (Company)</option>
+            <option value="203">Payment Service Provider (PJP)</option>
+            <option value="204">Company (Others)</option>
+          </select>
         </div>
-        <div class="mb-3 d-none" id="boxCabang">
-          <label for="pelanggan" class="form-label">Customer</label>
-          <select id="pelanggan" class="form-select"></select>
+        <div class="mb-3 d-none" id="boxNegara">
+          <label for="negara" class="form-label">Country</label>
+          <select id="negara" class="form-select"></select>
         </div>
         <div class="mb-3 d-none" id="boxTipeLog">
           <label for="tipeLog" class="form-label">Type</label>
@@ -115,6 +122,20 @@
         <div class="mb-3 d-none" id="boxEmailLog">
           <label for="emailLog" class="form-label">Email</label>
           <select id="emailLog" class="form-select"></select>
+        </div>
+        <div class="mb-1 d-flex d-none justify-content-end gap-2" id="boxShowDTTOT">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="showDTTOT-1" name="showDTTOT" value="-1">
+            <label class="form-check-label" for="showDTTOT-1">Non-DTTOT (Whitelist)</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="showDTTOT1" name="showDTTOT" value="1" checked>
+            <label class="form-check-label" for="showDTTOT1">DTTOT</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="showDTTOT2" name="showDTTOT" value="2" checked>
+            <label class="form-check-label" for="showDTTOT2">DTTOT (Reported)</label>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
