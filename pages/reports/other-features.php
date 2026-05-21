@@ -1,3 +1,8 @@
+<style>
+  #tabelDTTOT tbody tr {
+    cursor: pointer;
+  }
+</style>
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb breadcrumb-custom-icon">
     <li class="breadcrumb-item">
@@ -181,8 +186,12 @@
             </thead>
             <tbody></tbody>
           </table>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" id="addToList">Add to DTTOT List</button>
+          <div class="d-flex justify-content-between">
+            <p class="h6 fst-italic">Click to select data</p>
+            <div class="d-flex justify-content-end gap-3">
+              <p class="h6" id="dttotCountSelect"></p>
+              <button class="btn btn-primary" id="addToList">Add to DTTOT List</button>
+            </div>
           </div>
         </div>
         <input type="hidden" id="urlToOpen">

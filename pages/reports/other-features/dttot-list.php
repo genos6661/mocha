@@ -39,6 +39,10 @@
     color: #fff;
     z-index: 2;
   }
+
+  #tabelData tbody tr {
+    cursor: pointer;
+  }
 </style>
 
 <div class="row mb-2">
@@ -93,14 +97,12 @@
   </div>
   <div class="card-footer d-flex justify-content-between pt-4">
     <p class="h5 px-3">Total Records : <span id="totalData"></span></p>
-    <div class="d-flex gap-1">
-      <button type="button" class="btn btn-outline-success waves-effect">Unlist</button>
-      <button type="button" class="btn btn-outline-primary waves-effect">Set as Reported</button>
+    <div class="d-flex justify-content-end gap-2">
+      <p class="h6 pe-4" id="selectedCount"></p>
+      <button type="button" id="unlistBtn" class="btn btn-outline-success waves-effect">Unlist</button>
+      <button type="button" id="unreportedBtn" class="btn btn-outline-dark waves-effect">Set as Not Reported</button>
+      <button type="button" id="reportedBtn" class="btn btn-outline-primary waves-effect">Set as Reported</button>
     </div>
-    <!-- <div class="btn-group p-1" role="group" aria-label="Set Status">
-      <button type="button" class="btn btn-label-success waves-effect">Unlist</button>
-      <button type="button" class="btn btn-label-primary waves-effect">Set as Reported</button>
-    </div> -->
   </div>
 </div>
 

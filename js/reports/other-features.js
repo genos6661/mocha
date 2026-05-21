@@ -210,6 +210,7 @@ $('#sbmUpload').on('click', async function () {
       success: function (response) {
         const tbody = $('#tabelDTTOT tbody');
         tbody.empty();
+        let count = 1;
 
         $('#boxTabelDTTOT').removeClass('d-none');
         $('#boxUploadDTTOT').addClass('d-none');
@@ -217,7 +218,7 @@ $('#sbmUpload').on('click', async function () {
         if (!response.data || !response.data.length) {
           tbody.append(`
             <tr>
-              <td colspan="8" class="text-center">
+              <td colspan="7" class="text-center">
                 No Data Found
               </td>
             </tr>
@@ -231,12 +232,9 @@ $('#sbmUpload').on('click', async function () {
         response.data.forEach(item => {
 
           tbody.append(`
-            <tr>
-              <td class="py-1">
-                <input
-                  type="checkbox"
-                  class="form-check-input dttot-check"
-                  value="${item.nomor_id}">
+            <tr data-noindex="${item.nomor_id}">
+              <td class="p-1 text-center">
+                ${count}
               </td>
               <td class="p-1 table-primary">
                 ${item.input_name}
@@ -260,6 +258,7 @@ $('#sbmUpload').on('click', async function () {
               </td>
             </tr>
           `);
+          count++;
         });
         if (document.querySelector(`.notiflix-loading`)) {
           Loading.remove();
@@ -287,6 +286,21 @@ $('#sbmUpload').on('click', async function () {
     });
   }
 });
+
+$(document).on('click', '#tabelDTTOT tbody tr', function () {
+  $(this).toggleClass('table-light');
+  updateSelectedCount();
+});
+
+function updateSelectedCount() {
+  const selectedNoindex = [];
+
+  $('#tabelDTTOT tbody tr.table-light').each(function () {
+    selectedNoindex.push($(this).data('noindex'));
+  });
+
+  $('#dttotCountSelect').text(`${selectedNoindex.length} selected`);
+}
 
 function getBadgeColor(level) {
 
@@ -493,8 +507,9 @@ $('#addToList').click(function (e) {
   e.preventDefault();
 
   const selected = [];
-  $('.dttot-check:checked').each(function () {
-    selected.push($(this).val());
+
+  $('#tabelDTTOT tbody tr.table-light').each(function () {
+    selected.push($(this).data('noindex'));
   });
 
   if (selected.length == 0) {

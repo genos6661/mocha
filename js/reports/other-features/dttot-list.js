@@ -276,14 +276,15 @@ function updateDateRangeSelector(selectedValue) {
 }
 
 function loadData(reset = false) {
-  if (isLoading || !hasMoreData) return;
-  isLoading = true;
-
   if (reset) {
+    count = 1;
     offset = 0;
     hasMoreData = true;
     $('#tabelData tbody').empty();
   }
+
+  if (isLoading || !hasMoreData) return;
+  isLoading = true;
 
   Loading.standard({
     backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
@@ -332,7 +333,7 @@ function loadData(reset = false) {
           const jk = item.jk == 'M' ? 'Male' : 'Female';
           const status = item.dttot == 2 ? 'Reported' : '';
           const row = `
-              <tr>
+              <tr data-noindex="${item.noindex}" title="Click to select">
                 <td class="text-center">${count}</td>
                 <td class="">${item.nama || ''}</td>
                 <td class="">${item.id || ''}</td>
@@ -381,6 +382,21 @@ $('.table-responsive').on('scroll', function () {
   }
 });
 
+$(document).on('click', '#tabelData tbody tr', function () {
+  $(this).toggleClass('table-primary');
+  updateSelectedCount();
+});
+
+function updateSelectedCount() {
+  const selectedNoindex = [];
+
+  $('#tabelData tbody tr.table-primary').each(function () {
+    selectedNoindex.push($(this).data('noindex'));
+  });
+
+  $('#selectedCount').text(`${selectedNoindex.length} selected`);
+}
+
 $('#sbmFilter').click(function (e) {
   e.preventDefault();
 
@@ -412,6 +428,13 @@ $('#sbmFilter').click(function (e) {
   loadData(true);
   $('#modalFilter').modal('hide');
 });
+
+// ~~~~~~~~~~~~~~~ read selected rows ~~~~~~~~~~~~~~~
+// const selectedNoindex = [];
+
+// $('#tabelData tbody tr.table-primary').each(function () {
+//   selectedNoindex.push($(this).data('noindex'));
+// });
 
 // export
 function loadAllDataForExport() {
@@ -488,6 +511,177 @@ function loadAllDataForExport() {
     fetchNext();
   });
 }
+
+$('#unlistBtn').click(function (e) {
+  e.preventDefault();
+  const btn = $(this);
+  btn.prop('disabled', true);
+
+  const selectedNoindex = [];
+
+  $('#tabelData tbody tr.table-primary').each(function () {
+    selectedNoindex.push($(this).data('noindex'));
+  });
+
+  if(selectedNoindex.length < 1) {
+    notif.fire({
+      icon: 'warning',
+      text: 'Please select at least 1 data'
+    });
+    btn.prop('disabled', false);
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/other-features/dttot-status',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ id: selectedNoindex, status: 0 }),
+    success: function (response) {
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then(() => { 
+        loadData(true);
+        $('#selectedCount').empty();
+        btn.prop('disabled', false);
+      });
+    },
+    error: function (xhr) {
+      if (xhr.status === 404) {
+          notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON.message
+          });
+      } else {
+          notif.fire({
+            icon: 'error',
+            text: 'Terjadi Kesalahan pada server'
+          });
+      }
+      btn.prop('disabled', false);
+    },
+  });
+});
+
+$('#unreportedBtn').click(function (e) {
+  e.preventDefault();
+  const btn = $(this);
+  btn.prop('disabled', true);
+
+  const selectedNoindex = [];
+
+  $('#tabelData tbody tr.table-primary').each(function () {
+    selectedNoindex.push($(this).data('noindex'));
+  });
+
+  if(selectedNoindex.length < 1) {
+    notif.fire({
+      icon: 'warning',
+      text: 'Please select at least 1 data'
+    });
+    btn.prop('disabled', false);
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/other-features/dttot-status',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ id: selectedNoindex, status: 1 }),
+    success: function (response) {
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then(() => { 
+        loadData(true);
+        $('#selectedCount').empty();
+        btn.prop('disabled', false);
+      });
+    },
+    error: function (xhr) {
+      if (xhr.status === 404) {
+          notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON.message
+          });
+      } else {
+          notif.fire({
+            icon: 'error',
+            text: 'Terjadi Kesalahan pada server'
+          });
+      }
+      btn.prop('disabled', false);
+    },
+  });
+});
+
+$('#reportedBtn').click(function (e) {
+  e.preventDefault();
+  const btn = $(this);
+  btn.prop('disabled', true);
+
+  const selectedNoindex = [];
+
+  $('#tabelData tbody tr.table-primary').each(function () {
+    selectedNoindex.push($(this).data('noindex'));
+  });
+
+  if(selectedNoindex.length < 1) {
+    notif.fire({
+      icon: 'warning',
+      text: 'Please select at least 1 data'
+    });
+    btn.prop('disabled', false);
+    return;
+  }
+
+  $.ajax({
+    url: url_api + '/other-features/dttot-status',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ id: selectedNoindex, status: 2 }),
+    success: function (response) {
+      notif.fire({
+        icon: 'success',
+        text: response.message
+      }).then(() => { 
+        loadData(true);
+        $('#selectedCount').empty();
+        btn.prop('disabled', false);
+      });
+    },
+    error: function (xhr) {
+      if (xhr.status === 404) {
+          notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON.message
+          });
+      } else {
+          notif.fire({
+            icon: 'error',
+            text: 'Terjadi Kesalahan pada server'
+          });
+      }
+      btn.prop('disabled', false);
+    },
+  });
+});
 
 $("#export-pdf").click(function () {
 

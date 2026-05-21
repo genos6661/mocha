@@ -337,6 +337,14 @@ $('#btnSubmit').click(function (e) {
   const idPelanggan = $('#kontak').val();
   const cabang = $('#cabangTrans').val();
 
+  if (!cabang || cabang == '' || !idPelanggan || idPelanggan == '' || !tanggal || tanggal == '' || !tipeTransaksi) {
+    $btn.prop('disabled', false);
+    notif.fire({
+      icon: 'warning',
+      text: 'Missing Required Fields!'
+    });
+  }
+
   $.ajax({
     url: url_api + '/transaction/',
     type: 'POST',
