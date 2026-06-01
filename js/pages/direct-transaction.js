@@ -14,6 +14,14 @@ $(document).ready(function () {
         $("#tambahBaris").prop("disabled", true);
     }
   });
+
+  // $('.jumlah, .rate')
+  // .on('focus', function () {
+  //     $(this).select();
+  // })
+  // .on('mouseup', function (e) {
+  //     e.preventDefault();
+  // });
 });
 
 function initSelect2Valas(select) {
@@ -92,10 +100,10 @@ $('#tambahBaris').on('click', function () {
         <select class="form-select valas" style="width: 100%"></select>
       </td>
       <td class="px-1">
-        <input type="text" class="form-control jumlah text-end">
+        <input type="text" class="form-control jumlah text-end" onclick="this.select()">
       </td>
       <td class="px-1">
-        <input type="text" class="form-control rate text-end" ${isReadonly}>
+        <input type="text" class="form-control rate text-end" onclick="this.select()" ${isReadonly}>
       </td>
       <td class="px-1">
         <input type="text" class="form-control subtotal text-end" readonly>

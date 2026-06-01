@@ -260,11 +260,11 @@ $(document).ready(function () {
         </div>
 
         <div class="col-6 col-md-2">
-          <input type="text" class="form-control amount text-end" placeholder="Amount">
+          <input type="text" class="form-control amount text-end" placeholder="Amount" onclick="this.select()">
         </div>
 
         <div class="col-6 col-md-3">
-          <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate">
+          <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate" onclick="this.select()">
         </div>
 
         <div class="col-6 col-md-3">
