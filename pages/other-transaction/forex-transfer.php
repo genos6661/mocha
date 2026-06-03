@@ -278,7 +278,7 @@
                   <span class="switch-on"></span>
                   <span class="switch-off"></span>
                 </span>
-                <span class="switch-label">Both (auto-reverse)</span>
+                <span class="switch-label">Inter-branchs Transaction</span>
               </label>
             </div>
             <div class="form-check form-check-inline">

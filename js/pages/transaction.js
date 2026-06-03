@@ -7,6 +7,7 @@ let lastSearch = "";
 let orderColumn = "nomor";
 let orderDir = "desc";
 let resetOffset = false;
+let hasMoreData = true;
 let userPermissions = [];
 
 $(document).ready(function () {
@@ -376,64 +377,69 @@ function initTable() {
 }
 
 function loadMoreData(reset = false) {
-  if (isLoading) return;
-  isLoading = true;
 
-  if (reset) {
-    orderDir = "desc";
-  }
+    if (isLoading || !hasMoreData) return;
 
-  const searchInput = document.querySelector(".filtertabel input");
-  const searchValue = searchInput ? searchInput.value : "";
+    isLoading = true;
 
-  const params = new URLSearchParams();
-  params.append("offset", reset ? 0 : offset);
-  params.append("limit", limit);
-  params.append("search", searchValue);
-  params.append("order_column", orderColumn);
-  params.append("order_dir", orderDir);
-
-  for (const key in currentFilters) {
-    params.append(key, currentFilters[key]);
-  }
-
-  fetch(`${url_api}/transaction/datatable?${params.toString()}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${window.token}`,
-      "X-Client-Domain": myDomain
+    if (reset) {
+        offset = 0;
+        hasMoreData = true;
     }
-  })
-    .then(response => response.json())
-    .then(response => {
-      const data = Array.isArray(response.data) ? response.data : [];
-      const total = response.recordsTotal || 0;
 
-      if (reset) {
-        offset = limit;
-        table.clear().draw();
-        if (data.length > 0) {
-          table.rows.add(data).draw();
-        }
-      } else {
-        if (data.length > 0) {
-          table.rows.add(data).draw(false);
-          offset += limit;
-        }
-      }
+    const searchInput = document.querySelector(".filtertabel input");
+    const searchValue = searchInput ? searchInput.value : "";
 
-      document.querySelector("#totaltrans").textContent = total;
-      isLoading = false;
-    })
-    .catch((err) => {
-      console.error("Load data error:", err);
-      isLoading = false;
+    const params = new URLSearchParams({
+        offset,
+        limit,
+        search: searchValue,
+        order_column: orderColumn,
+        order_dir: orderDir
     });
 
-    if (document.querySelector(`.notiflix-loading`)) {
-        Loading.remove();
+    for (const key in currentFilters) {
+        params.append(key, currentFilters[key]);
     }
+
+    fetch(`${url_api}/transaction/datatable?${params.toString()}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        }
+    })
+    .then(r => r.json())
+    .then(response => {
+
+        const data = response.data || [];
+        const total = response.recordsTotal || 0;
+
+        if (reset) {
+            table.clear();
+        }
+
+        if (data.length > 0) {
+
+            // update offset SEBELUM draw
+            offset += data.length;
+
+            table.rows.add(data).draw(false);
+
+        } else {
+            hasMoreData = false;
+        }
+
+        document.querySelector("#totaltrans").textContent = total;
+
+    })
+    .catch(console.error)
+    .finally(() => {
+        isLoading = false;
+        if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+        }
+    });
 }
 
 function initEvents() {
@@ -446,10 +452,23 @@ function initEvents() {
     }
   });
 
-  document.querySelector("#tabelTrans_wrapper .dt-scroll-body").addEventListener("scroll", function () {
-    if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) {
-          loadMoreData();
-    }
+  let scrollTimeout;
+
+  document.querySelector("#tabelTrans_wrapper .dt-scroll-body")
+  .addEventListener("scroll", function () {
+
+      clearTimeout(scrollTimeout);
+
+      scrollTimeout = setTimeout(() => {
+
+          if (
+              this.scrollTop + this.clientHeight >=
+              this.scrollHeight - 50
+          ) {
+              loadMoreData();
+          }
+
+      }, 100);
   });
 
   $('#tabelTrans tbody').on('dblclick', 'tr', function () {

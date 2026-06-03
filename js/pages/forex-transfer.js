@@ -414,10 +414,8 @@ function initEvents() {
                   `);
               }
 
-              if(data.tipe == 7) {
+              if (userPermissions.includes('edit_transfer')) {
                 $('#editBtn').attr('data-id', id).removeClass('d-none');
-              } else {
-                $('#editBtn').addClass('d-none');
               }
 
               $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
