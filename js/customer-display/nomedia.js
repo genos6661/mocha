@@ -111,7 +111,7 @@ function generateTabelHTML(dataArray) {
                   <img src="${urlFlag}">
               </div>
             </td>
-            <td class="p-1 text-black"><strong>${item.kode}</strong></td>
+            <td class="p-1 text-black"><div class="d-flex flex-column"><a class="text-heading text-truncate"><span class="fw-bold">${item.kode}</span></a><small>${item.nama}</small></div></td>
             <td class="text-end text-black p-1"><strong>${beliFormatted}</strong></td>
           </tr>
         `;
