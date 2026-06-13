@@ -17,4 +17,3 @@ $url_api = "https://api.thebrotherhoodlaw.com";
 	// let myDomain = "sub2.jagadmocha.com";
 	// let myDomain = window.location.hostname;
 </script>
-

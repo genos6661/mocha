@@ -637,8 +637,12 @@ const modalEdit = document.getElementById('modalEdit')
 modalEdit.addEventListener('shown.bs.modal', event => {
     const button = event.relatedTarget
     const id = button.getAttribute('data-id')
-    $('#modalEdit').find('input, textarea').val('').prop('checked', false);
-    $('#cabangEdit, #akunEdit').val(null).trigger('change');
+    $('#modalEdit').find('input:not([type="radio"]):not([type="checkbox"]), textarea').val('');
+    $('#modalEdit').find('select').val(null).trigger('change');
+
+    $('#detailEdit tbody').empty();
+    $('#totalAmountEdit').val('');
+    $('#totalSubEdit').val('');
 
     $.ajax({
         url: url_api + `/transfer/id/` + id,
@@ -725,14 +729,16 @@ modalEdit.addEventListener('shown.bs.modal', event => {
 
             if (foundRp) {
               $('#tipeRupiahEdit').prop('checked', true);
-              $('#boxDetailEdit').addClass('d-none');
-              $('#boxRupiahEdit').removeClass('d-none');
-              $('#boxNewRowEdit').addClass('d-none');
+              $('#boxDetailEdit, #boxNewRowEdit').addClass('d-none');
+              $('#boxRupiahEdit, #boxAkunLawanEdit').removeClass('d-none');
+            } else if (response.is_transfer == 2) {
+              $('#tipeBothEdit').prop('checked', true);
+              $('#boxDetailEdit, #boxNewRowEdit').removeClass('d-none');
+              $('#boxRupiahEdit, #boxAkunLawanEdit').addClass('d-none');
             } else {
               $('#tipeForexEdit').prop('checked', true);
-              $('#boxDetailEdit').removeClass('d-none');
+              $('#boxDetailEdit, #boxNewRowEdit, #boxAkunLawanEdit').removeClass('d-none');
               $('#boxRupiahEdit').addClass('d-none');
-              $('#boxNewRowEdit').removeClass('d-none');
             }
 
             if (response.cabang && response.cabang != 0) {
@@ -891,6 +897,10 @@ function initSelect2Valas(select) {
   }
 }
 
+$('#tipeBothEdit, #tipeForexEdit, #tipeRupiahEdit').on('click', function(e){
+    e.preventDefault();
+});
+
 // proses
 $('#sbmTambah').click(function (e) {
   e.preventDefault();
@@ -1026,13 +1036,7 @@ $('#sbmEdit').click(function (e) {
     }
   });
 
-  let tipe;
-  isForex = $('#tipeForexEdit');
-  if (isForex.prop('checked')) {
-    tipe = 'tipeForex';
-  } else {
-    tipe = 'tipeRupiah';
-  }
+  const tipe = $('#modalEdit input[name="tipeTransEdit"]:checked').val();
 
   const data = {
     from: $('#fromEdit').val(),
@@ -1075,9 +1079,12 @@ $('#sbmEdit').click(function (e) {
     },
     data: JSON.stringify(data),
     success: function (response) {
-      $('#modalEdit .modal-body').find('input, textarea').val('').prop('checked', false);
-      $('#modalEdit .modal-body').find('select').val(null).trigger('change');
-      $('#modalEdit #detailEdit tbody').empty();
+      $('#modalEdit').find('input:not([type="radio"]):not([type="checkbox"]), textarea').val('');
+      $('#modalEdit').find('select').val(null).trigger('change');
+
+      $('#detailEdit tbody').empty();
+      $('#totalAmountEdit').val('');
+      $('#totalSubEdit').val('');
       notif.fire({
         icon: 'success',
         text: response.message

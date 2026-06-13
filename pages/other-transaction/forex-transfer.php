@@ -315,7 +315,7 @@
             <select id="toEdit" class="form-select"></select>
           </div>
         </div>
-        <div class="row">
+        <div class="row" id="boxAkunLawanEdit">
           <div class="col-md mb-3">
             <label for="akunFromEdit" class="form-label">Account From</label>
             <select id="akunFromEdit" class="form-select"></select>
