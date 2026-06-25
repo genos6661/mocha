@@ -552,9 +552,6 @@
             </ul>
           </div>
         </div>
-        <div id="pasporDetail"
-             class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden d-none" style="height:40vh;">
-        </div>
         <hr class="my-3">
         <div class="row" id="boxDokumen">
           <p class="h5">Document</p>
@@ -610,6 +607,9 @@
               </li>
             </ul>
           </div>
+        </div>
+        <div id="pasporDetail"
+             class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden d-none" style="height:40vh;">
         </div>
       </div>
       <div class="d-flex gap-2 justify-content-center">
