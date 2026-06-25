@@ -389,8 +389,8 @@ $('#btnSubmit').click(function (e) {
         $('#tambahBaris').trigger('click');
         updateTotal();
         offset = 0;
-        table.clear().draw();
-        loadMoreData();
+        table.clear();
+        loadMoreData(true);
         $btn.prop('disabled', false);
         Swal.fire({
           title: 'Success',
@@ -474,8 +474,8 @@ function submitSign(idPelanggan, nomor, cabang) {
         allowEscapeKey: false
       }).then((result) => {
         offset = 0;
-        table.clear().draw();
-        loadMoreData();
+        table.clear();
+        loadMoreData(true);
         if (result.isConfirmed) {
           window.location.href = '/order-preview?order=' + nomor;
         } // else if (result.isDenied) {

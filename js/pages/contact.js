@@ -387,12 +387,12 @@ function initEvents() {
                 "X-Client-Domain": myDomain
             },
             success: function (data) {
-                if (data.id_foto) {
-                    $('#pasporDetail').attr('data-url', 'https://drive.google.com/uc?id=' + data.id_foto + '&export=download');
-                    $('#pasporDetail').attr('src', 'https://drive.google.com/thumbnail?id=' + data.id_foto).removeClass('d-none');
-                } else {
-                  $('#pasporDetail').addClass('d-none');
-                }
+                // if (data.id_foto) {
+                //     $('#pasporDetail').attr('data-url', 'https://drive.google.com/uc?id=' + data.id_foto + '&export=download');
+                //     $('#pasporDetail').attr('src', 'https://drive.google.com/thumbnail?id=' + data.id_foto).removeClass('d-none');
+                // } else {
+                //   $('#pasporDetail').addClass('d-none');
+                // }
                 if (data.dokumen) {
                     $('#boxDokumen').removeClass('d-none');
                     $('#npwpDetail').text(data.dokumen.npwp);
@@ -452,7 +452,21 @@ function initEvents() {
                 // $('#deactivateBtn').attr('data-id', id);
                 $('#editBtn').attr('data-id', id);
                 $('#deleteBtn').attr('data-id', id).attr('data-ref', data.kode + ' - ' + data.nama);
-                $('#goTrans').attr('href', '/transaction?contact=' + data.kode);
+                const currentYear = new Date().getFullYear();
+                const startDate = `2020-01-01`;
+                const endDate = `${currentYear}-12-31`;
+
+                const params = new URLSearchParams({
+                    pelanggan: id,
+                    start: startDate,
+                    end: endDate
+                });
+
+                $('#goTrans').attr(
+                    'href',
+                    `/transactions-summary?${params.toString()}`
+                );
+                loadPaspor(data.noindex, '#modalDetail #pasporDetail');
                 $('#modalDetail').modal('show');
                 if (document.querySelector(`.notiflix-loading`)) {
                     Loading.remove();
@@ -464,6 +478,72 @@ function initEvents() {
             }
         });
     });
+}
+
+function loadPaspor(noindex, containerSelector = '#pasporDetail') {
+    const url = `${url_api}/profile/paspor/${noindex}`;
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob';
+
+    xhr.setRequestHeader('Authorization', `Bearer ${window.token}`);
+    xhr.setRequestHeader('X-Client-Domain', myDomain);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const blob = xhr.response;
+            const contentType = xhr.getResponseHeader('Content-Type') || '';
+            $(containerSelector).removeClass('d-none');
+
+            if (contentType.startsWith('image/')) {
+                const imgURL = URL.createObjectURL(blob);
+                $(containerSelector).html(`
+                    <img
+                        src="${imgURL}"
+                        alt="Passport Photo"
+                        class="cursor-pointer"
+                        style="max-width:100%; max-height:100%; border-radius: 10px; object-fit:contain;"
+                    >
+                `);
+
+            } else if (contentType.includes('application/pdf')) {
+                const pdfURL = URL.createObjectURL(blob);
+
+                $(containerSelector).html(`
+                    <iframe
+                        src="${pdfURL}"
+                        style="width:100%;height:600px;border:none;border-radius:8px;">
+                    </iframe>
+                `);
+
+            } else {
+                $(containerSelector).html(`
+                    <p class="text-muted text-center">
+                        Format file tidak dikenali.
+                    </p>
+                `);
+            }
+        } else {
+            $(containerSelector).addClass('d-none');
+            $(containerSelector).html(`
+                <p class="text-danger text-center">
+                    File paspor tidak ditemukan.
+                </p>
+            `);
+        }
+    };
+
+    xhr.onerror = function () {
+        $(containerSelector).html(`
+            <p class="text-danger text-center">
+                Gagal memuat file paspor.
+            </p>
+        `);
+    };
+
+    xhr.send();
 }
 
 function uploadFotoPaspor(file, namaFoto) {
@@ -492,15 +572,8 @@ function uploadFotoPaspor(file, namaFoto) {
     });
 }
 
-$('#pasporDetail, #pasporEditView').on('click', function () {
-  const url = $(this).data('url');
-  if (url) {
-    window.location.href = url; // buka di tab yang sama
-    // atau gunakan ini untuk membuka di tab baru:
-    // window.open(url, '_blank');
-  } else {
-    console.warn('Atribut data-url tidak ditemukan.');
-  }
+$('#pasporEditView').on('click', function () {
+  console.log('delete photo on progress');
 });
 
 $('#sbmFilter').click(function (e) {
@@ -561,14 +634,7 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         },
-        success: function(response) {
-            if (response.id_foto) {
-                $('#pasporEditView').attr('data-url', 'https://drive.google.com/uc?id=' + response.id_foto + '&export=download');
-                $('#pasporEditView').attr('src', 'https://drive.google.com/thumbnail?id=' + response.id_foto).removeClass('d-none');
-            } else {
-              $('#pasporEditView').addClass('d-none');
-            }
-            
+        success: function(response) {            
             const tgl = new Date(response.tanggal_lahir);
 
             const formatted =
@@ -610,6 +676,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             } else if (response.jk == 'M') {
                 $('#maleEdit').prop('checked', true);
             }
+
+            loadPaspor(response.noindex, '#modalEdit #pasporEditView');
 
             $('#modalEdit').modal('show');
             if (document.querySelector(`.notiflix-loading`)) {
@@ -664,14 +732,14 @@ $('#sbmEdit').click(async function (e) {
     e.preventDefault(); 
     const id = $('#idEdit').val();
 
-    let idFoto = null;
-    const fotoFile = $('#pasporEdit')[0].files[0]; 
-    const namaFoto = $('#namaEdit').val();
+    let idFoto;
+    const fotoFile = $('#pasporEdit')[0].files[0];  
 
     if (fotoFile) {
         try {
+            const namaFoto = id;
             const fotoResponse = await uploadFotoPaspor(fotoFile, namaFoto);
-            idFoto = fotoResponse.fileId; // ← pastikan response dari backend mengandung ini
+            idFoto = fotoResponse.fileId;
         } catch (err) {
             notif.fire({
                 icon: 'error',
@@ -710,7 +778,7 @@ $('#sbmEdit').click(async function (e) {
         vendor: $('#vendorEdit').is(':checked') ? 1 : 0,
         karyawan: $('#karyawanEdit').is(':checked') ? 1 : 0,
         member: $('#memberEdit').is(':checked') ? 1 : 0,
-        id_foto: idFoto || null
+        id_foto: idFoto || id
     };
 
   $.ajax({

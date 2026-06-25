@@ -1,4 +1,4 @@
-let currentFilters = {};
+let currentFilters = "";
 let table;
 let offset = 0;
 let limit = 20;
@@ -6,7 +6,6 @@ let isLoading = false;
 let lastSearch = "";
 let orderColumn = "nomor";
 let orderDir = "desc";
-let resetOffset = false;
 let hasMoreData = true;
 let userPermissions = [];
 
@@ -93,7 +92,12 @@ $(document).ready(function () {
     success: function (permissions) {
         userPermissions = permissions;
         if(permissions.includes('transaction')) {
-          loadMoreData();
+          const contactValue = getUrlParameter('contact');
+          if (contactValue) {
+              $('.filtertabel input').val(contactValue);
+          }
+
+          loadMoreData(true);
           if(!permissions.includes('edit_transaction')) {
               $('#editBtn').attr('disabled', true).addClass('d-none');
           }
@@ -119,16 +123,6 @@ $(document).ready(function () {
   function getUrlParameter(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
-  }
-
-  const contactValue = getUrlParameter('contact');
-  if (contactValue) {
-      $('.filtertabel input').val(contactValue);
-  }
-
-  if (contactValue && userPermissions.includes('transaction')) {
-    offset = 0;
-    loadMoreData(true);
   }
 
   $('#cabang').select2({
@@ -249,35 +243,53 @@ $(document).ready(function () {
 
 });
 // akhir document ready
-$("#sbmFilter").on("click", function () {
-      const tanggalAwal = $("#startDate").val();
-      const tanggalAkhir = $("#endDate").val();
-      const cabangs = $("#cabang").val(); 
-      const buy = $("#buy").is(":checked");
-      const sell = $("#sell").is(":checked");
+function updateBrowserURL(params) {
+  const newURL = `${window.location.pathname}?${params.toString()}`;
+  history.replaceState(null, '', newURL);
+}
 
-      currentFilters = {}; 
+function getFiltersFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+      cabang: params.get("cabang") || "",
+      start_date: params.get("start_date") || "",
+      end_date: params.get("end_date") || "",
+      buy: params.get("buy") || "",
+      sell: params.get("sell") || ""
+  };
+}
 
-      if (tanggalAwal && tanggalAkhir) {
-        currentFilters.tanggal_awal = tanggalAwal;
-        currentFilters.tanggal_akhir = tanggalAkhir;
-      }
+$("#sbmFilter").on("click", function (e) {
+  e.preventDefault();
+  if (isLoading) {
+    return;
+  }
+  currentFilters = ""; 
+  const tanggalAwal = $("#startDate").val();
+  const tanggalAkhir = $("#endDate").val();
+  const cabangs = $("#cabang").val(); 
+  const isBuy = $("#buy").is(":checked") ? 1 : 0;
+  const isSell = $('#sell').is(":checked") ? 1 : 0;
 
-      if (cabangs && cabangs.length > 0) {
-        currentFilters.cabang = cabangs.join(',');
-      }
+  const params = new URLSearchParams();
+  params.append("start_date", tanggalAwal);
+  params.append("end_date", tanggalAkhir);
+  params.append("cabang", cabangs);
+  params.append("buy", isBuy);
+  params.append("sell", isSell);
 
-      if (buy) {
-        currentFilters.buy = 1;
-      }
-      if (sell) {
-        currentFilters.sell = 1;
-      }
-
+  updateBrowserURL(params);
+  if(userPermissions.includes('transaction')) {
       bootstrap.Modal.getInstance(document.getElementById("modalFilter")).hide();
       offset = 0;
       loadMoreData(true);
-    });
+  } else {
+      notif.fire({
+          icon: 'error',
+          text: 'Insufficient Permission to load data'
+      });
+  }
+});
 
 function initTable() {
   table = new DataTable("#tabelTrans", {
@@ -372,73 +384,70 @@ function initTable() {
       orderDir = direction;
 
       resetOffset = true;
-      loadMoreData(true);
+      // loadMoreData(true);
   });
 }
 
 function loadMoreData(reset = false) {
-
-    if (isLoading || !hasMoreData) return;
-
-    isLoading = true;
-
     if (reset) {
         offset = 0;
         hasMoreData = true;
+        table.clear(); 
     }
+
+    if (isLoading || !hasMoreData) return;
+    isLoading = true;
 
     const searchInput = document.querySelector(".filtertabel input");
     const searchValue = searchInput ? searchInput.value : "";
+    const filters = getFiltersFromURL();
 
-    const params = new URLSearchParams({
-        offset,
-        limit,
+    const query = new URLSearchParams({
+        offset: offset,
+        limit: limit,
         search: searchValue,
         order_column: orderColumn,
         order_dir: orderDir
     });
 
-    for (const key in currentFilters) {
-        params.append(key, currentFilters[key]);
-    }
+    if (filters.cabang) query.append("cabang", filters.cabang);
+    if (filters.start_date) query.append("start_date", filters.start_date);
+    if (filters.end_date) query.append("end_date", filters.end_date);
+    if (filters.buy == 1) query.append("buy", 1);
+    if (filters.sell == 1) query.append("sell", 1);
 
-    fetch(`${url_api}/transaction/datatable?${params.toString()}`, {
+    fetch(`${url_api}/transaction/datatable?${query.toString()}`, {
         method: "GET",
         headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         }
     })
     .then(r => r.json())
     .then(response => {
-
         const data = response.data || [];
         const total = response.recordsTotal || 0;
 
-        if (reset) {
-            table.clear();
-        }
-
         if (data.length > 0) {
-
-            // update offset SEBELUM draw
             offset += data.length;
-
             table.rows.add(data).draw(false);
 
+            // Jika data yang dikembalikan kurang dari limit, berarti tidak ada lagi
+            if (data.length < limit) {
+                hasMoreData = false;
+            }
         } else {
             hasMoreData = false;
         }
 
         document.querySelector("#totaltrans").textContent = total;
-
     })
     .catch(console.error)
     .finally(() => {
         isLoading = false;
-        if (document.querySelector(`.notiflix-loading`)) {
-            Loading.remove();
-        }
+        const loadingEl = document.querySelector(`.notiflix-loading`);
+        if (loadingEl) Loading.remove();
     });
 }
 
@@ -453,23 +462,16 @@ function initEvents() {
   });
 
   let scrollTimeout;
-
   document.querySelector("#tabelTrans_wrapper .dt-scroll-body")
-  .addEventListener("scroll", function () {
-
-      clearTimeout(scrollTimeout);
-
-      scrollTimeout = setTimeout(() => {
-
-          if (
-              this.scrollTop + this.clientHeight >=
-              this.scrollHeight - 50
-          ) {
-              loadMoreData();
-          }
-
-      }, 100);
-  });
+    .addEventListener("scroll", function () {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const el = this;
+            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100) {
+                loadMoreData(); 
+            }
+        }, 300);
+    });
 
   $('#tabelTrans tbody').on('dblclick', 'tr', function () {
     var rowData = table.row(this).data();

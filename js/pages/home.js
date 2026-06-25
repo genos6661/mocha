@@ -1,5 +1,61 @@
 let branchTransactionData = {};
 $(document).ready(function () {
+  Loading.standard({
+    backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
+    svgSize: '0px'
+  });
+  let customSpinnerHTML = `
+    <div class="sk-wave mx-auto">
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+        <div class="sk-rect sk-wave-rect"></div>
+    </div>
+  `;
+  let notiflixBlock = document.querySelector('.notiflix-loading');
+  notiflixBlock.innerHTML = customSpinnerHTML;
+
+  $.ajax({
+      url: url_api + '/role/role-permissions',
+      method: 'GET',
+      data: {
+          sub_kategori: 'Dashboard'
+      },
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${window.token}`,
+          "X-Client-Domain": myDomain
+      },
+      success: function (permissions) {
+          userPermissions = permissions;
+
+          if(permissions.includes('dashboard')) {
+            $('#boxStatistic, #boxBTR, #boxForexTrend, #boxFilter').removeClass('d-none');
+            $('#boxMisc').addClass('d-none');
+            renderBranchTransaction();
+            getStatistic();
+            getForexTrend();
+            getAnnualTransaction();
+          } else {
+            $('#boxStatistic, #boxBTR, #boxForexTrend, #boxFilter').addClass('d-none');
+            $('#boxMisc').removeClass('d-none');
+          }
+          if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+          }
+      },
+      error: function (xhr) {
+          notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON.message
+          });
+          console.error('Gagal mengambil permissions:', xhr.responseText);
+          if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+          }
+      }
+  });
 	$('#cabang, #cabangTR').select2({
 	    ajax: {
 	      url: url_api + '/cabang/select2/limit',
@@ -34,11 +90,6 @@ $(document).ready(function () {
   $('#tahunTR, #cabangTR').on('change', function() {
     getAnnualTransaction();
   });
-
-  renderBranchTransaction();
-  getStatistic();
-  getForexTrend();
-  getAnnualTransaction();
 });
 
 function updateDateRangeSelector(selectedValue) {

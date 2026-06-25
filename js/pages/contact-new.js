@@ -19,23 +19,6 @@ $('#sbmTambah').click(async function (e) {
 
     let idFoto = null;
     const fotoFile = $('#paspor')[0].files[0]; 
-    const namaFoto = $('#nama').val();
-
-    if (fotoFile) {
-        try {
-            const fotoResponse = await uploadFotoPaspor(fotoFile, namaFoto);
-            idFoto = fotoResponse.fileId; // ← pastikan response dari backend mengandung ini
-        } catch (err) {
-            notif.fire({
-                icon: 'error',
-                text: err.message || 'Gagal upload paspor'
-            });
-            if (document.querySelector(`.notiflix-loading`)) {
-                Loading.remove();
-            }
-            return;
-        }
-    }
 
     isFemale = $('#female');
     if (isFemale.prop('checked')) {
@@ -79,7 +62,23 @@ $('#sbmTambah').click(async function (e) {
             "X-Client-Domain": myDomain
         },
         data: JSON.stringify(formData),
-        success: function (response) {
+        success: async function (response) {
+            if (fotoFile) {
+                try {
+                    const namaFoto = response.noindex;
+                    const fotoResponse = await uploadFotoPaspor(fotoFile, namaFoto);
+                    idFoto = fotoResponse.fileId;
+                } catch (err) {
+                    notif.fire({
+                        icon: 'error',
+                        text: err.message || 'Gagal upload paspor'
+                    });
+                    if (document.querySelector(`.notiflix-loading`)) {
+                        Loading.remove();
+                    }
+                    return;
+                }
+            }
             $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
             $('#negara, #pekerjaan').val(null).trigger('change');
             notif.fire({
@@ -185,7 +184,9 @@ function uploadFotoPaspor(file, namaFoto) {
 }
 
 function submitForce() {
-    let idFoto = $('#paspor')[0].files[0] ? idFoto : null; 
+    let idFoto = null;
+    const fotoFile = $('#paspor')[0].files[0]; 
+
     isFemale = $('#female');
     if (isFemale.prop('checked')) {
       jk = 'F';
@@ -223,7 +224,23 @@ function submitForce() {
         },
         data: JSON.stringify(formData),
 
-        success: function (response) {
+        success: async function (response) {
+            if (fotoFile) {
+                try {
+                    const namaFoto = response.noindex;
+                    const fotoResponse = await uploadFotoPaspor(fotoFile, namaFoto);
+                    idFoto = fotoResponse.fileId;
+                } catch (err) {
+                    notif.fire({
+                        icon: 'error',
+                        text: err.message || 'Gagal upload paspor'
+                    });
+                    if (document.querySelector(`.notiflix-loading`)) {
+                        Loading.remove();
+                    }
+                    return;
+                }
+            }
             $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
             $('#negara, #pekerjaan').val(null).trigger('change');
             notif.fire({

@@ -1,4 +1,16 @@
-<div class="card mb-4">
+<div class="text-center">
+  <div class="misc-wrapper" id="boxMisc">
+    <!-- <h1 class="mb-2 mx-2" style="line-height: 6rem;font-size: 6rem;">401</h1> -->
+    <h4 class="mb-1 mx-2">You are not authorized! 🔐</h4>
+    <p class="mb-2 mx-2">You don’t have permission to access dashboard</p>
+    <!-- <a href="index.html" class="btn btn-primary waves-effect waves-light">Back to home</a> -->
+    <div class="mt-2">
+      <img src="../../assets/img/illustrations/page-misc-you-are-not-authorized.png" alt="page-misc-not-authorized" width="170" class="img-fluid">
+    </div>
+  </div>
+</div>
+
+<div class="card mb-4" id="boxFilter">
   <div class="card-body">
     <div class="row">
       <div class="col-md mb-3">
@@ -36,7 +48,7 @@
     </div>
   </div>
 </div>
-<div class="row mb-4">
+<div class="row mb-4" id="boxStatistic">
   <!-- Statistics -->
   <div class="col-md">
     <div class="card h-100">
@@ -89,7 +101,7 @@
   </div>
 </div>
 
-<div class="card mb-4">
+<div class="card mb-4" id="boxBTR">
   <div class="card-body p-0">
     <div class="row row-bordered g-0">
       <div class="col position-relative p-6">
@@ -103,7 +115,7 @@
 </div>
 
 <!-- Forex Trend -->
-<div class="row">
+<div class="row" id="boxForexTrend">
   <div class="col-md mb-4 mb-md-0">
     <div class="card">
       <div class="card-header d-flex justify-content-between">

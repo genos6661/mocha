@@ -422,8 +422,9 @@
             </div>
           </div>
         </div>
+        <div id="pasporEditView" class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden mt-2" style="height:40vh;" title="click to delete image">
+        </div>
       </div>
-      <img class="img-fluid d-flex mx-auto my-6 rounded cursor-pointer d-none" id="pasporEditView" alt="Passport Photo" title="click to download">
       <div class="row justify-content-center">
         <div class="col-md-4 d-grid mb-3 mb-md-0">
           <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
@@ -551,7 +552,9 @@
             </ul>
           </div>
         </div>
-        <img class="img-fluid d-flex mx-auto my-6 rounded cursor-pointer d-none" id="pasporDetail" alt="Passport Photo" title="Click to download">
+        <div id="pasporDetail"
+             class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden d-none" style="height:40vh;">
+        </div>
         <hr class="my-3">
         <div class="row" id="boxDokumen">
           <p class="h5">Document</p>
