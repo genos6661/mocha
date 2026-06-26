@@ -72,10 +72,10 @@
             <th>Total :</th>
             <th id="footerNote"></th>
             <th>
-              <input type="number" class="form-control text-end" id="totalDebit" readonly>
+              <input type="text" class="form-control text-end" id="totalDebit" readonly>
             </th>
             <th>
-              <input type="number" class="form-control text-end" id="totalKredit" readonly>
+              <input type="text" class="form-control text-end" id="totalKredit" readonly>
             </th>
           </tr>
         </tfoot>
@@ -157,14 +157,14 @@
         <div class="row">
           <div class="col mb-3">
             <label for="stok" class="form-label">Balance</label>
-            <input type="number" id="stok" class="form-control" placeholder="Input Balance" min="0" />
+            <input type="text" id="stok" class="form-control" placeholder="Input Balance" min="0" />
           </div>
         </div>
         <div class="row">
           <div class="col mb-3">
             <label for="rate" class="form-label">Rate</label>
             <div class="input-group">
-              <input type="number" id="rate" class="form-control" placeholder="Input Rate" min="0" />
+              <input type="text" id="rate" class="form-control" placeholder="Input Rate" min="0" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>
@@ -211,14 +211,14 @@
         <div class="row">
           <div class="col mb-3">
             <label for="stokEdit" class="form-label">Balance</label>
-            <input type="number" id="stokEdit" class="form-control" placeholder="Input Balance" min="0" />
+            <input type="text" id="stokEdit" class="form-control" placeholder="Input Balance" min="0" />
           </div>
         </div>
         <div class="row">
           <div class="col mb-3">
             <label for="rateEdit" class="form-label">Rate</label>
             <div class="input-group">
-              <input type="number" id="rateEdit" class="form-control" placeholder="Input Rate" min="0" />
+              <input type="text" id="rateEdit" class="form-control" placeholder="Input Rate" min="0" />
               <span class="input-group-text">Rupiah</span>
             </div>
           </div>

@@ -390,8 +390,8 @@ $('#sbmTambahForex').click(function (e) {
       const formData = {
         cabang: $('#cabang').val(),
         valas: $('#valas').val(),
-        stok: $('#stok').val(),
-        rate: $('#rate').val(),
+        stok: $('#stok').val().replace(/\./g, '').replace(/,/g, '.'),
+        rate: $('#rate').val().replace(/\./g, '').replace(/,/g, '.'),
       };
       $.ajax({
         url: url_api + '/beginning-balance/forex', 
@@ -431,8 +431,8 @@ $('#sbmEditForex').click(function (e) {
       const formData = {
         valas: $('#valasEdit').val(),
         cabang: $('#cabangEdit').val(),
-        stok: $('#stokEdit').val(),
-        rate: $('#rateEdit').val(),
+        stok: $('#stokEdit').val().replace(/\./g, '').replace(/,/g, '.'),
+        rate: $('#rateEdit').val().replace(/\./g, '').replace(/,/g, '.'),
       };
 
       $.ajax({
@@ -527,8 +527,8 @@ modalEditForex.addEventListener('shown.bs.modal', event => {
             $('#idEdit').val(id);
             $('#cabangEdit').val(response.cabang);
             $('#valasEdit').val(response.valas);
-            $('#stokEdit').val(response.beli);
-            $('#rateEdit').val(response.rate);
+            $('#stokEdit').val(formatter.format(response.beli));
+            $('#rateEdit').val(formatter.format(response.rate));
 
             if (response.cabang && response.cabang != 0) {
                 const option = new Option(response.kode_cabang + ' - ' + response.nama_cabang, response.cabang, true, true);
@@ -561,6 +561,26 @@ modalHapus.addEventListener('shown.bs.modal', event => {
     $('#refHapus').text(ref);
 });
 
+$(document).on('input', '#stok, #stokEdit, #rate, #rateEdit', function () {
+    let val = $(this).val();
+
+    val = val.replace(/[^0-9,]/g, '');
+
+    let parts = val.split(',');
+
+    if (parts.length > 2) {
+        parts = [parts[0], parts.slice(1).join('')];
+    }
+
+    let integer = parts[0].replace(/\./g, '');
+    integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    let decimal = parts[1] !== undefined ? parts[1].substring(0, 4) : '';
+
+    $(this).val(parts.length > 1 ? `${integer},${decimal}` : integer);
+
+});
+
 // ACCOUNT BB ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 let tableAkun;
@@ -570,6 +590,12 @@ let isLoadingAkun = false;
 let lastSearchAkun = "";
 let orderColumnAkun = "a.kode";
 let orderDirAkun = "asc";
+
+$(document).on('focus', '.jumlah', function () {
+    let val = $(this).val()
+      .replace(/\./g, '');  
+    $(this).val(val);
+});
 
 function initTableAkun() {
     tableAkun = new DataTable("#tabelAkun", {
@@ -591,7 +617,7 @@ function initTableAkun() {
                 orderable: true, 
                 className: "nowrap",
                 render: function(data, type, row, meta) {
-                    return `<input type="number" class="saldo-debit form-control text-end" data-kolom="debit" data-kode="${row.kode}" value="${data}" readonly>`;
+                    return `<input type="text" class="saldo-debit form-control text-end" data-kolom="debit" data-kode="${row.kode}" value="${formatter.format(data)}" readonly>`;
                 },
             },
             { 
@@ -599,7 +625,7 @@ function initTableAkun() {
                 orderable: true, 
                 className: "nowrap",
                 render: function(data, type, row, meta) {
-                     return `<input type="number" class="saldo-kredit form-control text-end" data-kolom="kredit" data-kode="${row.kode}" value="${data}" readonly>`;
+                     return `<input type="text" class="saldo-kredit form-control text-end" data-kolom="kredit" data-kode="${row.kode}" value="${formatter.format(data)}" readonly>`;
                 },
             },
             { data: "index_jurnal", visible: false }
@@ -714,10 +740,10 @@ $('#sbmAkun').click(function (e) {
 
     $('#tabelAkun input.saldo-debit').each(function () {
         const kode = $(this).data('kode');
-        const debit = parseFloat($(this).val()) || 0;
+        const debit = parseFloat($(this).val().replace(/\./g, '').replace(/,/g, '.')) || 0;
 
         const kreditInput = $('#tabelAkun input.saldo-kredit[data-kode="' + kode + '"]');
-        const kredit = parseFloat(kreditInput.val()) || 0;
+        const kredit = parseFloat(kreditInput.val().replace(/\./g, '').replace(/,/g, '.')) || 0;
 
         if (debit !== 0 || kredit !== 0) {
             data.push({ kode, debit, kredit });
@@ -759,7 +785,33 @@ $('#sbmAkun').click(function (e) {
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+const formatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4
+});
+
 $(document).on('input', '.saldo-debit, .saldo-kredit', function () {
+    let val = $(this).val();
+
+    // Hanya angka dan koma
+    val = val.replace(/[^0-9,]/g, '');
+
+    let parts = val.split(',');
+
+    // Hanya satu koma
+    if (parts.length > 2) {
+        parts = [parts[0], parts.slice(1).join('')];
+    }
+
+    // Format bagian integer
+    let integer = parts[0].replace(/\./g, '');
+    integer = integer.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Maksimal 2 digit desimal
+    let decimal = parts[1] !== undefined ? parts[1].substring(0, 2) : '';
+
+    $(this).val(parts.length > 1 ? `${integer},${decimal}` : integer);
+
     updateTotalDebitKredit();
 });
 
@@ -768,11 +820,11 @@ function updateTotalDebitKredit() {
     let totalKredit = 0;
 
     $('.saldo-debit').each(function () {
-        totalDebit += parseFloat($(this).val()) || 0;
+        totalDebit += parseFloat($(this).val().replace(/\./g, '').replace(/,/g, '.')) || 0;
     });
 
     $('.saldo-kredit').each(function () {
-        totalKredit += parseFloat($(this).val()) || 0;
+        totalKredit += parseFloat($(this).val().replace(/\./g, '').replace(/,/g, '.')) || 0;
     });
 
     if(totalDebit != totalKredit) {
@@ -780,6 +832,6 @@ function updateTotalDebitKredit() {
     } else {
         $('#footerNote').html('');
     }
-    $('#totalDebit').val(totalDebit.toFixed(2));
-    $('#totalKredit').val(totalKredit.toFixed(2));
+    $('#totalDebit').val(formatter.format(totalDebit.toFixed(2)));
+    $('#totalKredit').val(formatter.format(totalKredit.toFixed(2)));
 }
