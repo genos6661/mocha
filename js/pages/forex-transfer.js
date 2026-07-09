@@ -333,6 +333,41 @@ function updateTotalEdit() {
     $('#totalAmountEdit').val(formatter.format(amount));
 }
 
+$(document).on('input', '#valRupiah, #valRupiahEdit', function () {
+    let val = $(this).val();
+
+    val = val.replace(/[^0-9,-]/g, '');
+    val = val.replace(/(?!^)-/g, '');
+
+    const parts = val.split(',');
+    if (parts.length > 2) {
+        val = parts[0] + ',' + parts.slice(1).join('');
+    }
+
+    if (val === '-') {
+        $(this).val(val);
+        return;
+    }
+
+    if (val.endsWith(',')) {
+        $(this).val(val);
+        return;
+    }
+
+    const numericVal = parseFloat(val.replace(',', '.'));
+
+    if (!isNaN(numericVal)) {
+        $(this).val(
+            new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 4
+            }).format(numericVal)
+        );
+    } else {
+        $(this).val('');
+    }
+});
+
 function initTable() {
     table = new DataTable("#tabelTransfer", {
         processing: true,

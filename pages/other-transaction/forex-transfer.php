@@ -208,7 +208,7 @@
         <div class="row d-none mb-4" id="boxRupiah">
           <div class="col-md">
             <label for="valRupiah" class="form-label">Transfer Amount</label>
-            <input type="number" class="form-control text-center" id="valRupiah">
+            <input type="text" class="form-control text-center" id="valRupiah">
           </div>
         </div>
         <div class="table-responsive nowrap" id="boxTabelDetail">
@@ -339,7 +339,7 @@
         <div class="row d-none mb-4" id="boxRupiahEdit">
           <div class="col-md">
             <label for="valRupiahEdit" class="form-label">Transfer Amount</label>
-            <input type="number" class="form-control text-center" id="valRupiahEdit">
+            <input type="text" class="form-control text-center" id="valRupiahEdit">
           </div>
         </div>
         <div class="table-responsive nowrap" id="boxDetailEdit">
