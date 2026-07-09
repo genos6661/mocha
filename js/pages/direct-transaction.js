@@ -132,7 +132,7 @@ $('#tambahBaris').on('click', function () {
     updateRates($(this), $inputRate, $inputJumlah, $inputSubtotal);
   });
 });
-
+// akhir document ready
 
 const formatter = new Intl.NumberFormat('id-ID', {
   minimumFractionDigits: 0,
@@ -150,32 +150,26 @@ $('#tabelDetail').on('focus', '.jumlah, .rate', function () {
 $('#tabelDetail').on('blur', '.jumlah, .rate', function () {
   let $row = $(this).closest('tr');
   
-  // --- Format input ---
   let val = $(this).val() || "";
 
-  // buang karakter aneh
   val = val.replace(/[^0-9.,]/g, '');
 
-  // normalisasi jika banyak koma/titik
   const parts = val.split(/[,\.]/);
   if (parts.length > 2) {
     val = parts[0] + '.' + parts.slice(1).join('');
   }
 
-  // convert ke angka JS
   const numericVal = parseFloat(
     val.replace(/\./g, '')  // titik ribuan hilang
        .replace(/,/g, '.')  // koma jadi titik
   );
 
-  // simpan hasil format ke input
   if (!isNaN(numericVal)) {
     $(this).val(formatter.format(numericVal));
   } else {
     $(this).val('');
   }
 
-  // --- Hitung subtotal ---
   let jumlah = parseFloat(
     $row.find('.jumlah').val().replace(/\./g, '').replace(/,/g, '.')
   ) || 0;
@@ -186,7 +180,6 @@ $('#tabelDetail').on('blur', '.jumlah, .rate', function () {
 
   let subtotal = jumlah * rate;
 
-  // tampilkan subtotal terformat
   $row.find('.subtotal').val(
     !isNaN(subtotal) ? formatter.format(subtotal) : ''
   );
@@ -201,7 +194,6 @@ function updateTotal() {
     let val = $(this).val().trim();
 
     if (val) {
-      // Hapus semua titik pemisah ribuan dan ubah koma menjadi titik desimal
       val = val.replace(/\./g, '').replace(',', '.');
     }
 
@@ -209,7 +201,6 @@ function updateTotal() {
     total += num;
   });
 
-  // Format hasil ke format Indonesia
   const formattedTotal = new Intl.NumberFormat('id-ID', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 4

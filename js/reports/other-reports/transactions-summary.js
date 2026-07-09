@@ -1,4 +1,4 @@
-let start, end, cabang, pelanggan, sort_by, sort_dir, parsedSetting;
+let start, end, cabang, pelanggan, buy, sell, sort_by, sort_dir, parsedSetting;
 let offset = 0;
 const limit = 50;
 let isLoading = false;
@@ -163,6 +163,8 @@ function getUrlParams() {
         end: params.get("end"),
         cabang: params.get("cabang"),
         pelanggan: params.get("pelanggan"),
+        buy: params.get("buy"),
+        sell: params.get("sell"),
         sort_by: params.get("sort_by"),
         sort_dir: params.get("sort_dir")
     };
@@ -218,6 +220,8 @@ function loadHeader() {
     end = params.end || '';
     cabang = params.cabang;
     pelanggan = params.pelanggan;
+    buy = params.buy;
+    sell = params.sell;
     sort_by = params.sort_by;
     sort_dir = params.sort_dir;
 
@@ -395,6 +399,8 @@ function loadData(reset = false) {
   if (end) params.append("end_date", end);
   if (cabang) params.append("branch", cabang);
   if (pelanggan) params.append("customer", pelanggan);
+  if (buy) params.append("buy", buy);
+  if (sell) params.append("sell", sell);
   // if (sort_by) params.append("sort_by", sort_by);
   // if (sort_dir) params.append("sort_by", sort_dir);
   // if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
@@ -482,6 +488,8 @@ $('#sbmFilter').click(function (e) {
   const endDate = $('#endDate').val() || null;
   const cabangFil = $('#cabangFilter').val() || null;
   const pelangganFil = $('#pelangganFilter').val() || null;
+  const buyFil = $('#buy').is(':checked') ? 1 : 0;
+  const sellFil = $('#sell').is(':checked') ? 1 : 0;
   const baseUrl = $('#urlToGo').val() || 'transactions-summary';
 
   const params = new URLSearchParams();
@@ -490,6 +498,8 @@ $('#sbmFilter').click(function (e) {
   if (endDate) params.append('end', endDate);
   if (cabangFil) params.append('cabang', cabangFil);
   if (pelangganFil) params.append('pelanggan', pelangganFil);
+  if (buyFil) params.append('buy', buyFil);
+  if (sellFil) params.append('sell', buyFil);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

@@ -116,6 +116,16 @@
           <label for="emailLog" class="form-label">Email</label>
           <select id="emailLog" class="form-select"></select>
         </div>
+        <div class="d-flex justify-content-end mb-0 gap-4 d-none" id="boxTipeTrans">
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="buy" checked>
+            <label class="form-check-label" for="buy">Buy</label>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="sell" checked>
+            <label class="form-check-label" for="sell">Sell</label>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>

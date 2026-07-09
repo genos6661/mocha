@@ -171,6 +171,66 @@ $.ajax({
   });
 });
 // akhir document ready
+const formatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4
+});
+
+function updateSubtotal($row) {
+  let amount = parseFloat($row.find('.amount').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.')) || 0;
+  let rate = parseFloat($row.find('.rate').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.')) || 0;
+  let subtotal = amount * rate;
+  $row.find('.subtotal').val(formatter.format(subtotal));
+}
+
+$(document).on('input', '.amount, .rate', function () {
+    let val = $(this).val();
+    let $row = $(this).closest('tr');
+
+    val = val.replace(/[^0-9,-]/g, '');
+
+    val = val.replace(/(?!^)-/g, '');
+
+    const parts = val.split(',');
+    if (parts.length > 2) {
+        val = parts[0] + ',' + parts.slice(1).join('');
+    }
+
+    if (val === '-') {
+        $(this).val(val);
+        return;
+    }
+
+    if (val.endsWith(',')) {
+        $(this).val(val);
+        return;
+    }
+
+    const numericVal = parseFloat(val.replace(',', '.'));
+
+    if (!isNaN(numericVal)) {
+        $(this).val(
+            new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 4
+            }).format(numericVal)
+        );
+    } else {
+        $(this).val('');
+    }
+
+    updateSubtotal($row);
+});
+
+// $(document).on('focus', '.amount, .rate', function () {
+//     let val = $(this).val()
+//       .replace(/\./g, '');  
+//     $(this).val(val);
+// });
 
 function initTable() {
     table = new DataTable("#tabelAdjust", {
@@ -428,13 +488,13 @@ $('#tambahBaris').on('click', function () {
           <select class="form-select forex"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control amount text-end">
+          <input type="text" class="form-control amount text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control rate text-end" min="0">
+          <input type="text" class="form-control rate text-end" min="0">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control subtotal text-end" readonly>
+          <input type="text" class="form-control subtotal text-end" readonly>
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -481,13 +541,13 @@ $('#tambahBarisEdit').on('click', function () {
           <select class="form-select forex"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control amount text-end">
+          <input type="text" class="form-control amount text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control rate text-end" min="0">
+          <input type="text" class="form-control rate text-end" min="0">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control subtotal text-end" readonly>
+          <input type="text" class="form-control subtotal text-end" readonly>
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -533,24 +593,6 @@ $('#detailBaru').on('click', '.btnHapusBaris', function () {
 
 $('#detailEdit').on('click', '.btnHapusBaris', function () {
     $(this).closest('tr').remove();
-});
-
-$('#detailBaru').on('input', '.amount, .rate', function () {
-  let $row = $(this).closest('tr');
-  let amount = parseFloat($row.find('.amount').val()) || 0;
-  let rate = parseFloat($row.find('.rate').val()) || 0;
-  let subtotal = amount * rate;
-  $row.find('.subtotal').val(subtotal.toFixed(2));
-  // updateTotal();
-});
-
-$('#detailEdit').on('input', '.amount, .rate', function () {
-  let $row = $(this).closest('tr');
-  let amount = parseFloat($row.find('.amount').val()) || 0;
-  let rate = parseFloat($row.find('.rate').val()) || 0;
-  let subtotal = amount * rate;
-  $row.find('.subtotal').val(subtotal.toFixed(2));
-  // updateTotal();
 });
 
 const modalEdit = document.getElementById('modalEdit')
@@ -614,9 +656,9 @@ modalEdit.addEventListener('shown.bs.modal', event => {
                           <option value="${item.valas}">${item.kode} - ${item.nama}</option>
                         </select>
                       </td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control amount text-end" value="${qty}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control rate text-end" value="${safeRate}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control subtotal text-end" value="${totalPerItem}" readonly /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control amount text-end" value="${formatter.format(qty)}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control rate text-end" value="${formatter.format(safeRate)}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control subtotal text-end" value="${formatter.format(totalPerItem)}" readonly /></td>
                       <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
                     </tr>
                 `);
@@ -792,8 +834,12 @@ $('#sbmTambah').click(function (e) {
   const details = [];
   $('#detailBaru tbody tr').each(function () {
     const forex = $(this).find('select.forex').val();
-    const amount = parseFloat($(this).find('.amount').val());
-    const rate = parseFloat($(this).find('.rate').val());
+    const amount = parseFloat($(this).find('.amount').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
+    const rate = parseFloat($(this).find('.rate').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
     let beli = 0;
     let jual = 0;
     if (amount > 0) {
@@ -887,8 +933,12 @@ $('#sbmEdit').click(function (e) {
   const details = [];
   $('#detailEdit tbody tr').each(function () {
     const forex = $(this).find('select.forex').val();
-    const amount = parseFloat($(this).find('.amount').val());
-    const rate = parseFloat($(this).find('.rate').val());
+    const amount = parseFloat($(this).find('.amount').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
+    const rate = parseFloat($(this).find('.rate').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
     let beli = 0;
     let jual = 0;
     if (amount > 0) {

@@ -172,6 +172,167 @@ $(document).ready(function() {
 });
 // akhir document ready
 
+const formatter = new Intl.NumberFormat('id-ID', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 4
+});
+
+$('#detailBaru').on('focus', '.amount, .rate', function () {
+  let val = $(this).val() || "";
+  val = val.replace(/\./g, ''); 
+  $(this).val(val);
+});
+
+$('#detailBaru').on('blur', '.amount, .rate', function () {
+  let $row = $(this).closest('tr');
+  
+  let val = $(this).val() || "";
+
+  val = val.replace(/[^0-9.,]/g, '');
+
+  const parts = val.split(/[,\.]/);
+  if (parts.length > 2) {
+    val = parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  const numericVal = parseFloat(
+    val.replace(/\./g, '')  // titik ribuan hilang
+       .replace(/,/g, '.')  // koma jadi titik
+  );
+
+  if (!isNaN(numericVal)) {
+    $(this).val(formatter.format(numericVal));
+  } else {
+    $(this).val('');
+  }
+
+  let jumlah = parseFloat(
+    $row.find('.amount').val().replace(/\./g, '').replace(/,/g, '.')
+  ) || 0;
+
+  let rate = parseFloat(
+    $row.find('.rate').val().replace(/\./g, '').replace(/,/g, '.')
+  ) || 0;
+
+  let subtotal = jumlah * rate;
+
+  $row.find('.subtotal').val(
+    !isNaN(subtotal) ? formatter.format(subtotal) : ''
+  );
+
+  updateTotal();
+});
+
+function updateTotal() {
+    let total = 0;
+    let amount = 0;
+
+    $('.subtotal').each(function () {
+        const num = parseFloat(
+            (($(this).val() || '') + '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+        );
+
+        if (!isNaN(num)) {
+            total += num;
+        }
+    });
+
+    $('.amount').each(function () {
+        const num = parseFloat(
+            (($(this).val() || '') + '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+        );
+
+        if (!isNaN(num)) {
+            amount += num;
+        }
+    });
+
+    $('#totalSub').val(formatter.format(total));
+    $('#totalAmount').val(formatter.format(amount));
+}
+
+$('#detailEdit').on('focus', '.amountEdit, .rateEdit', function () {
+  let val = $(this).val() || "";
+  val = val.replace(/\./g, ''); 
+  $(this).val(val);
+});
+
+$('#detailEdit').on('blur', '.amountEdit, .rateEdit', function () {
+  let $row = $(this).closest('tr');
+  
+  let val = $(this).val() || "";
+
+  val = val.replace(/[^0-9.,]/g, '');
+
+  const parts = val.split(/[,\.]/);
+  if (parts.length > 2) {
+    val = parts[0] + '.' + parts.slice(1).join('');
+  }
+
+  const numericVal = parseFloat(
+    val.replace(/\./g, '')  // titik ribuan hilang
+       .replace(/,/g, '.')  // koma jadi titik
+  );
+
+  if (!isNaN(numericVal)) {
+    $(this).val(formatter.format(numericVal));
+  } else {
+    $(this).val('');
+  }
+
+  let jumlah = parseFloat(
+    $row.find('.amountEdit').val().replace(/\./g, '').replace(/,/g, '.')
+  ) || 0;
+
+  let rate = parseFloat(
+    $row.find('.rateEdit').val().replace(/\./g, '').replace(/,/g, '.')
+  ) || 0;
+
+  let subtotal = jumlah * rate;
+
+  $row.find('.subtotalEdit').val(
+    !isNaN(subtotal) ? formatter.format(subtotal) : ''
+  );
+
+  updateTotalEdit();
+});
+
+function updateTotalEdit() {
+    let total = 0;
+    let amount = 0;
+
+    $('.subtotalEdit').each(function () {
+        const num = parseFloat(
+            (($(this).val() || '') + '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+        );
+
+        if (!isNaN(num)) {
+            total += num;
+        }
+    });
+
+    $('.amountEdit').each(function () {
+        const num = parseFloat(
+            (($(this).val() || '') + '')
+                .replace(/\./g, '')
+                .replace(',', '.')
+        );
+
+        if (!isNaN(num)) {
+            amount += num;
+        }
+    });
+
+    $('#totalSubEdit').val(formatter.format(total));
+    $('#totalAmountEdit').val(formatter.format(amount));
+}
+
 function initTable() {
     table = new DataTable("#tabelTransfer", {
         processing: true,
@@ -440,13 +601,13 @@ $('#tambahBaris').on('click', function () {
           <select class="form-select forex"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control amount text-end">
+          <input type="text" class="form-control amount text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control rate text-end" min="0">
+          <input type="text" class="form-control rate text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control subtotal text-end" readonly>
+          <input type="text" class="form-control subtotal text-end" readonly>
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBaris" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -493,13 +654,13 @@ $('#tambahBarisEdit').on('click', function () {
           <select class="form-select forexEdit"></select>
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control amountEdit text-end">
+          <input type="text" class="form-control amountEdit text-end">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control rateEdit text-end" min="0">
+          <input type="text" class="form-control rateEdit text-end" min="0">
         </td>
         <td class="px-1 pt-2">
-          <input type="number" class="form-control subtotalEdit text-end" readonly>
+          <input type="text" class="form-control subtotalEdit text-end" readonly>
         </td>
         <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBarisEdit" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
       </tr>
@@ -583,56 +744,6 @@ $('#detailEdit').on('click', '.btnHapusBarisEdit', function () {
     updateTotalEdit();
 });
 
-$('#detailBaru').on('input', '.amount, .rate', function () {
-  let $row = $(this).closest('tr');
-  let amount = parseFloat($row.find('.amount').val()) || 0;
-  let rate = parseFloat($row.find('.rate').val()) || 0;
-  let subtotal = amount * rate;
-  $row.find('.subtotal').val(subtotal.toFixed(2));
-  updateTotal();
-});
-
-$('#detailEdit').on('input', '.amountEdit, .rateEdit', function () {
-  let $row = $(this).closest('tr');
-  let amount = parseFloat($row.find('.amountEdit').val()) || 0;
-  let rate = parseFloat($row.find('.rateEdit').val()) || 0;
-  let subtotal = amount * rate;
-  $row.find('.subtotalEdit').val(subtotal.toFixed(2));
-  updateTotalEdit();
-});
-
-function updateTotal() {
-    let totalAmount = 0;
-    let totalSub = 0;
-
-    $('.amount').each(function () {
-        totalAmount += parseFloat($(this).val()) || 0;
-    });
-
-    $('.subtotal').each(function () {
-        totalSub += parseFloat($(this).val()) || 0;
-    });
-
-    $('#totalAmount').val(totalAmount.toFixed(2));
-    $('#totalSub').val(totalSub.toFixed(2));
-}
-
-function updateTotalEdit() {
-    let totalAmount = 0;
-    let totalSub = 0;
-
-    $('.amountEdit').each(function () {
-        totalAmount += parseFloat($(this).val()) || 0;
-    });
-
-    $('.subtotalEdit').each(function () {
-        totalSub += parseFloat($(this).val()) || 0;
-    });
-
-    $('#totalAmountEdit').val(totalAmount.toFixed(2));
-    $('#totalSubEdit').val(totalSub.toFixed(2));
-}
-
 const modalEdit = document.getElementById('modalEdit')
 modalEdit.addEventListener('shown.bs.modal', event => {
     const button = event.relatedTarget
@@ -703,9 +814,9 @@ modalEdit.addEventListener('shown.bs.modal', event => {
                           <option value="${item.valas}">${item.kode} - ${item.nama}</option>
                         </select>
                       </td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control amountEdit text-end" value="${qty}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control rateEdit text-end" value="${safeRate}" /></td>
-                      <td class="px-1 pt-2"><input type="number" class="form-control subtotalEdit text-end" value="${totalPerItem}" readonly /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control amountEdit text-end" value="${formatter.format(qty)}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control rateEdit text-end" value="${formatter.format(safeRate)}" /></td>
+                      <td class="px-1 pt-2"><input type="text" class="form-control subtotalEdit text-end" value="${formatter.format(totalPerItem)}" readonly /></td>
                       <td class="px-1 pt-2 text-end"><button class="btn btn-outline-danger border-none btnHapusBarisEdit" type="button" title="Hapus Baris"><i class="icon-base ti tabler-trash"></i></button></td>
                     </tr>
                 `);
@@ -715,8 +826,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
                 // let $inputSubtotal = row.find('.subtotal').first();
                 initSelect2Valas(selectForex);
                 tbody.append(row);
-                $('#totalSubEdit').val(subtotal);
-                $('#totalAmountEdit').val(totalAmount);
+                $('#totalSubEdit').val(formatter.format(subtotal));
+                $('#totalAmountEdit').val(formatter.format(totalAmount));
 
                 // selectForex.on('change', function () {
                 //       const idForex = $(this).val();
@@ -724,7 +835,7 @@ modalEdit.addEventListener('shown.bs.modal', event => {
 
                 //       updateRates(idForex, $inputRate, $inputJumlah, $inputSubtotal);
                 // });
-                $('#valRupiahEdit').val(qty);
+                $('#valRupiahEdit').val(formatter.format(qty));
               });
 
             if (foundRp) {
@@ -914,8 +1025,12 @@ $('#sbmTambah').click(function (e) {
   const tipe = $('input[name="tipeTrans"]:checked').val();
   $('#detailBaru tbody tr').each(function () {
     const forex = $(this).find('select.forex').val();
-    const amount = parseFloat($(this).find('.amount').val());
-    const rate = parseFloat($(this).find('.rate').val());
+    const amount = parseFloat($(this).find('.amount').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
+    const rate = parseFloat($(this).find('.rate').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
 
     if (forex && amount && rate && amount != 0 && rate != 0) {
       details.push({
@@ -934,7 +1049,9 @@ $('#sbmTambah').click(function (e) {
     tanggal: $('#tanggal').val(),
     deskripsi: $('#deskripsi').val(),
     tipe: tipe,
-    rupiah: $('#valRupiah').val() || 0,
+    rupiah: $('#valRupiah').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.') || 0,
     details: details
   };
 
@@ -1024,8 +1141,12 @@ $('#sbmEdit').click(function (e) {
   const details = [];
   $('#detailEdit tbody tr').each(function () {
     const forex = $(this).find('select.forexEdit').val();
-    const amount = parseFloat($(this).find('.amountEdit').val());
-    const rate = parseFloat($(this).find('.rateEdit').val());
+    const amount = parseFloat($(this).find('.amountEdit').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
+    const rate = parseFloat($(this).find('.rateEdit').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.'));
 
     if (forex && amount && rate && amount != 0 && rate != 0) {
       details.push({
@@ -1046,7 +1167,9 @@ $('#sbmEdit').click(function (e) {
     tanggal: $('#tanggalEdit').val(),
     deskripsi: $('#deskripsiEdit').val(),
     tipe: tipe,
-    rupiah: $('#valRupiahEdit').val() || 0,
+    rupiah: $('#valRupiahEdit').val().toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.') || 0,
     details: details
   };
 

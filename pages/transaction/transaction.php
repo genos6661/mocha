@@ -518,7 +518,7 @@ if ($nowHour >= 15) {
       <div class="modal-body">
         <div class="text-center mb-6">
           <h4 class="mb-4">Transaction exceeded threshold limit</h4>
-          <p class="h5">Please fill in and sign the following form for transactions that exceeding monthly limit equivalent to 25.000 USD</p>
+          <p class="h5">Please fill in and sign the following form for transactions that exceeding monthly limit equivalent to 10.000 USD</p>
         </div>
         <div class="mb-3">
           <label for="npwp" class="form-label">NPWP</label>

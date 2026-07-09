@@ -282,6 +282,7 @@ $("#sbmFilter").on("click", function (e) {
   if(userPermissions.includes('transaction')) {
       bootstrap.Modal.getInstance(document.getElementById("modalFilter")).hide();
       offset = 0;
+      table.clear().draw();
       loadMoreData(true);
   } else {
       notif.fire({
@@ -433,7 +434,6 @@ function loadMoreData(reset = false) {
             offset += data.length;
             table.rows.add(data).draw(false);
 
-            // Jika data yang dikembalikan kurang dari limit, berarti tidak ada lagi
             if (data.length < limit) {
                 hasMoreData = false;
             }

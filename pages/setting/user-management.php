@@ -210,7 +210,7 @@
         <!-- Personal Info -->
         <div class="tab-pane fade active show" id="register-personal" role="tabregister">
           <form id="formRegister">
-            <div class="row g-6">
+            <div class="row justify-content-end g-6">
               <div class="col-md-6">
                 <div class="row">
                   <label class="col-sm-3 col-form-label text-sm-end" for="namaReg"
@@ -268,6 +268,33 @@
                   >
                   <div class="col-sm-9">
                     <input type="text" id="pekerjaanReg" class="form-control" placeholder="Position on job" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <label class="col-sm-3 col-form-label text-sm-end" for="jkReg">Gender</label>
+                  <div class="col-sm-9 d-flex justify-content-end">
+                    <div class="form-check form-check-inline">
+                      <label class="switch">
+                        <input type="radio" name="jkReg" id="male" class="switch-input" checked>
+                        <span class="switch-toggle-slider">
+                          <span class="switch-on"></span>
+                          <span class="switch-off"></span>
+                        </span>
+                        <span class="switch-label">Male</span>
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="switch">
+                        <input type="radio" name="jkReg" id="female" class="switch-input">
+                        <span class="switch-toggle-slider">
+                          <span class="switch-on"></span>
+                          <span class="switch-off"></span>
+                        </span>
+                        <span class="switch-label">Female</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>

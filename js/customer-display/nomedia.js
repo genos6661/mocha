@@ -1,3 +1,4 @@
+let backgroundSet = false;
 $(document).ready(function() {
   $('#fontPlus').on('click', function () {
     fontSize += 0.1;
@@ -78,6 +79,7 @@ $(document).ready(function() {
   }
   setInterval(setCurrentDateTime, 1000);
   xhr.send();
+  loadMedia();
 });
 
 let fontSize = 1; 
@@ -183,3 +185,83 @@ function loadTabel() {
 $('#maxRows').on('change', function () {
     loadTabel();
 });
+
+function loadMedia() {
+  $('#boxCarousel').empty();
+  $.ajax({
+    url: url_api + '/setting/media',
+    method: 'GET',
+    headers: {
+      "X-Client-Domain": myDomain
+    },
+    success: function (fileNames) {
+      if (!Array.isArray(fileNames) || fileNames.length === 0) {
+        $('#boxCarousel').html('<div class="text-muted">Tidak ada media</div>');
+        return;
+      }
+
+      const mediaElements = [];
+      let loaded = 0;
+
+      fileNames.forEach((fileName, index) => {
+        const ext = fileName.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'webm', 'mov', 'avi'].includes(ext);
+        const fileUrl = `${url_api}/setting/media/${fileName}`;
+
+        fetch(fileUrl, {
+          headers: { 'X-Client-Domain': myDomain }
+        })
+          .then(res => {
+            if (!res.ok) throw new Error('Gagal memuat media');
+            return res.blob();
+          })
+          .then(blob => {
+              const blobUrl = URL.createObjectURL(blob);
+
+              // Jika ini adalah foto pertama, jadikan background
+              if (!isVideo && !backgroundSet) {
+                  $('.full.nomedia').css({
+                      'background-image': `url("${blobUrl}")`,
+                      'background-size': 'cover',
+                      'background-position': 'center',
+                      'background-repeat': 'no-repeat'
+                  });
+
+                  backgroundSet = true;
+              }
+
+              const $slide = $('<div class="slide"></div>');
+              const $media = isVideo
+                  ? $(`
+                      <video autoplay muted preload="auto" controls>
+                          <source src="${blobUrl}" type="video/${ext}">
+                      </video>
+                  `)
+                  : $(`<img src="${blobUrl}" alt="gambar">`);
+
+              $slide.append($media);
+              $('#boxCarousel').append($slide);
+
+              mediaElements.push({
+                  el: $slide[0],
+                  isVideo
+              });
+          })
+          .catch(() => {
+            console.warn('Gagal memuat', fileName);
+          })
+          .finally(() => {
+            loaded++;
+            if (loaded === fileNames.length) {
+              setTimeout(() => {
+                startCarousel(mediaElements);
+              }, 2000);
+            }
+          });
+      });
+    },
+    error: function () {
+      $('#boxCarousel').html('<div class="text-danger">Gagal memuat daftar media</div>');
+    }
+  });
+}

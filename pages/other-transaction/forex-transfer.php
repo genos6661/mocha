@@ -226,9 +226,9 @@
             <tfoot>
               <tr>
                 <th>Total :</th>
-                <th class="px-1 pt-2"><input type="number" class="form-control text-end" id="totalAmount" readonly></th>
+                <th class="px-1 pt-2"><input type="text" class="form-control text-end" id="totalAmount" readonly></th>
                 <th></th>
-                <th class="px-1 pt-2"><input type="number" class="form-control text-end" id="totalSub" readonly></th>
+                <th class="px-1 pt-2"><input type="text" class="form-control text-end" id="totalSub" readonly></th>
                 <th></th>
               </tr>
             </tfoot>
@@ -357,9 +357,9 @@
             <tfoot>
               <tr>
                 <th>Total :</th>
-                <th class="px-1 pt-2"><input type="number" class="form-control text-end" id="totalAmountEdit" readonly></th>
+                <th class="px-1 pt-2"><input type="text" class="form-control text-end" id="totalAmountEdit" readonly></th>
                 <th></th>
-                <th class="px-1 pt-2"><input type="number" class="form-control text-end" id="totalSubEdit" readonly></th>
+                <th class="px-1 pt-2"><input type="text" class="form-control text-end" id="totalSubEdit" readonly></th>
                 <th></th>
               </tr>
             </tfoot>

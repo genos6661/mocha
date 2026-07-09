@@ -229,32 +229,37 @@ $(document).ready(function() {
         maximumFractionDigits: 2
     });
 
-    $(document).on('blur', '.jumlah', function () {
+    $(document).on('keyup', '.jumlah', function () {
         let val = $(this).val();
 
-        val = val.replace(/[^0-9.,]/g, '');
+        val = val.replace(/[^0-9,]/g, '');
 
-        const parts = val.split(/[,\.]/);
+        const parts = val.split(',');
         if (parts.length > 2) {
-          val = parts[0] + '.' + parts.slice(1).join('');
+            val = parts[0] + ',' + parts.slice(1).join('');
         }
 
-        const numericVal = parseFloat(val.replace(/\./g, '').replace(/,/g, '.'));
+        if (val.endsWith(',')) {
+            $(this).val(val);
+            return;
+        }
+
+        const numericVal = parseFloat(val.replace(',', '.'));
 
         if (!isNaN(numericVal)) {
-          const formatted = new Intl.NumberFormat('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 2
-          }).format(numericVal);
-
-          $(this).val(formatted);
+            $(this).val(
+                new Intl.NumberFormat('id-ID', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                }).format(numericVal)
+            );
         } else {
-          $(this).val('');
+            $(this).val('');
         }
 
         updateTotal();
         updateTotalEdit();
-      });
+    });
 
     $(document).on('focus', '.jumlah', function () {
         let val = $(this).val()

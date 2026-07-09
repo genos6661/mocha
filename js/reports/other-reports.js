@@ -186,11 +186,11 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     }
 
     if (nama === "Logs Reports") {
-      $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan').addClass('d-none');
+      $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan, #boxTipeTrans').addClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleRange, #boxRange').removeClass('d-none');
     } else if (nama === "Transactions Summary") {
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleDate, #boxSingleDate').addClass('d-none');
-      $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan').removeClass('d-none');
+      $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan, #boxTipeTrans').removeClass('d-none');
     } else {
       $('#boxSimpleRange, #boxRange').removeClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').addClass('d-none');
@@ -356,6 +356,8 @@ $('#sbmFilter').click(function (e) {
   const aktivitasLog = $('#aktivitasLog').val();
   const emailLog = $('#emailLog').val();
   const pelanggan = $('#pelanggan').val();
+  const buy = $('#buy').is(':checked') ? 1 : 0;
+  const sell = $('#sell').is(':checked') ? 1 : 0;
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -367,6 +369,8 @@ $('#sbmFilter').click(function (e) {
   if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
   if (emailLog) params.append('emailLog', emailLog);
   if (pelanggan) params.append('pelanggan', pelanggan);
+  if (buy) params.append('buy', buy);
+  if (sell) params.append('sell', sell);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
