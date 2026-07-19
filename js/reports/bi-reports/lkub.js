@@ -418,13 +418,22 @@ function formatNumber(value) {
 $('#eksporTXT').click(function (e) {
   e.preventDefault();
 
+  // Daftar kode valas yang diperbolehkan
+  const allowedCurrencies = new Set([ "AED", "AUD", "BND", "CAD", "CHF", "CNH", "CNY", "DKK", "EUR", "GBP", "HKD", "JPY", "KRW", "KWD", "LAK", "MYR", "NOK", "NZD", "PGK", "PHP", "SAR", "SEK", "SGD", "THB", "USD", "VND"
+  ]);
+
   let lines = [];
 
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
     const tds = tr.querySelectorAll("td");
     const kodeValas = tds[1].innerText.trim();
-    const kursTengah = tds[10].innerText.trim() || "0";
 
+    // Skip jika kode valas tidak ada dalam daftar
+    if (!allowedCurrencies.has(kodeValas)) {
+      return;
+    }
+
+    const kursTengah = tds[10].innerText.trim() || "0";
     const item = dataReport[idx];
 
     const line =
@@ -442,16 +451,21 @@ $('#eksporTXT').click(function (e) {
     lines.push(line);
   });
 
-  let tanggalHead = start.replace(/-/g, "");
-  lines.unshift(idBI + 'M' + tanggalHead + 'B0001000000001');
+  const tanggalHead = start.replace(/-/g, "");
+  lines.unshift(idBI + "M" + tanggalHead + "B0001000000001");
 
-  let content = lines.join("\n");
+  const content = lines.join("\n");
 
-  let blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-  let link = document.createElement("a");
+  const blob = new Blob([content], {
+    type: "text/plain;charset=utf-8"
+  });
+
+  const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = `LKUB_${tanggalHead}.txt`;
   link.click();
+
+  URL.revokeObjectURL(link.href);
 });
 
 function padNumber(num) {
