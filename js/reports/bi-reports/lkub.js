@@ -407,6 +407,14 @@ $('#sbmFilter').click(function (e) {
   $('#modalFilter').modal('hide');
 });
 
+function formatNumber(value) {
+  if (typeof value !== "number") return value || "";
+  return new Intl.NumberFormat("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 $('#eksporTXT').click(function (e) {
   e.preventDefault();
 
@@ -458,8 +466,7 @@ $("#export-pdf").click(function () {
 
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
     const tds = tr.querySelectorAll("td");
-    const kodeValas = tds[1].innerText.trim();
-    const kursTengah = tds[10].innerText.trim() || "0"; 
+    const kursTengah = tds[10].innerText.trim() || "0";
 
     let item = { ...dataReport[idx] };
 
@@ -467,14 +474,47 @@ $("#export-pdf").click(function () {
 
     dataFixed.push(item);
   });
+
   exportToPDF({
     data: dataFixed,
-    headers: headers,
-    keys: keys,
+    headers,
+    keys,
     filename: `LKUB_${start}_${end}.pdf`,
-    title: 'LKUB',
+    title: "LKUB",
     nama_pt: parsedSetting.NamaPT.strval,
-    start: start, end: end
+    start,
+    end,
+
+    bodyBuilder: (data) => {
+      return data.map((item, index) => [
+        index + 1,
+        item.kodeValas,
+        "UKA",
+        formatNumber(item.saldo_awal),
+        formatNumber(item.saldo_awal_rupiah),
+        formatNumber(item.saldo_pembelian),
+        formatNumber(item.saldo_pembelian_rupiah),
+        formatNumber(item.penjualan),
+        formatNumber(item.penjualan_rupiah),
+        formatNumber(item.saldo_akhir),
+        formatNumber(item.kurs_tengah),
+        formatNumber(item.saldo_akhir_rupiah)
+      ]);
+    },
+
+    columnStyles: {
+      0: { halign: "center" },
+      2: { halign: "center" },
+      3: { halign: "right" },
+      4: { halign: "right" },
+      5: { halign: "right" },
+      6: { halign: "right" },
+      7: { halign: "right" },
+      8: { halign: "right" },
+      9: { halign: "right" },
+      10: { halign: "right" },
+      11: { halign: "right" }
+    }
   });
 });
 

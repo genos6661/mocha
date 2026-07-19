@@ -527,21 +527,19 @@ function loadAllDataForExport() {
     $('#modalProgress').modal('show');
 
     function fetchNext() {
-
       const params = new URLSearchParams();
       if (start) params.append("start_date", start);
       if (end) params.append("end_date", end);
-      if (cabang) params.append("cabang", cabang);
-      if (negara) params.append("negara", negara);
-      if (sort_by) params.append("sort_by", sort_by);
-      if (sort_dir) params.append("sort_dir", sort_dir);
-      if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
-
+      if (cabang) params.append("branch", cabang);
+      if (pelanggan) params.append("customer", pelanggan);
+      if (buy) params.append("buy", buy);
+      if (sell) params.append("sell", sell);
+      // if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
       params.append("offset", offsetExport);
       params.append("limit", limitExport);
 
       $.ajax({
-        url: url_api + `/master-report/customer?${params.toString()}`,
+        url: url_api + `/other-report/transactions?${params.toString()}`,
         type: 'GET',
         headers: {
           "Authorization": `Bearer ${window.token}`,
@@ -551,12 +549,20 @@ function loadAllDataForExport() {
         success: function (res) {
 
           if (!res.status) {
-            reject('Gagal load data');
-            return;
+              $('#modalProgress').modal('hide');
+              reject("Gagal load data");
+              return;
           }
 
-          if (total === 0) total = res.total_count;
+          if (total === 0) {
+              total = res.total_count;
 
+              if (total === 0) {
+                  $('#modalProgress').modal('hide');
+                  resolve([]);
+                  return;
+              }
+          }
           exportData.push(...res.data);
           offsetExport += limitExport;
 
@@ -580,7 +586,10 @@ function loadAllDataForExport() {
           }
         },
 
-        error: reject
+        error: function(xhr, status, error) {
+            $('#modalProgress').modal('hide');
+            reject(error || status);
+        }
       });
     }
 
@@ -600,8 +609,8 @@ $("#export-pdf").click(function () {
         data: allData,
         headers,
         keys,
-        filename: `Customer Report.pdf`,
-        title: 'Customer Report',
+        filename: `Transactions Summary.pdf`,
+        title: 'Transactions Summary',
         nama_pt: parsedSetting.NamaPT.strval,
         start,
         end

@@ -457,6 +457,14 @@ $('#sbmFilter').click(function (e) {
   $('#modalFilter').modal('hide');
 });
 
+function formatNumber(value) {
+  if (typeof value !== "number") return value || "";
+  return new Intl.NumberFormat("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 $("#export-csv").click(function () {
   exportToCSV({
     data: rawData,
@@ -476,34 +484,136 @@ $("#export-excel").click(function () {
 });
 
 $("#export-pdf").click(function () {
+  const total_beli_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.pembelian_rupiah || 0),
+    0
+  );
+
+  const total_jual_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.penjualan_rupiah || 0),
+    0
+  );
   if (cabang && cabang != '' && cabang != 0) {
     getCabang(cabang, function (nama) {
       const namaCabang = nama || '';
-      console.log("Nama cabang:", namaCabang);
 
       exportToPDF({
         data: rawData,
-        headers: headers,
-        keys: keys,
+        headers,
+        keys,
         filename: `Summary_Valas_${start}_${end}.pdf`,
-        title: 'Summary Valas',
+        title: "Summary Valas",
         nama_pt: parsedSetting.NamaPT.strval,
-        start: start,
-        end: end,
-        cabang: namaCabang
+        start,
+        end,
+        cabang: namaCabang,
+        bodyBuilder: (data) => {
+          return data.map((item) => [
+            item.kodeValas,
+            item.namaValas,
+            formatNumber(item.saldo_awal),
+            formatNumber(item.pembelian),
+            formatNumber(item.penjualan),
+            formatNumber(item.saldo_akhir),
+            formatNumber(item.pembelian_rupiah),
+            formatNumber(item.penjualan_rupiah),
+          ]);
+        },
+        footer: [
+          {
+              content: "Total :",
+              colSpan: 5,
+              styles: {
+                  halign: "right",
+                  fontStyle: "bold"
+              }
+          },
+          {
+              content: "Rp.",
+              styles: {
+                  halign: "center",
+                  fontStyle: "bold"
+              }
+          },
+          {
+              content: total_beli_rupiah,
+              styles: {
+                  halign: "right",
+                  fontStyle: "bold"
+              }
+          },
+          {
+              content: total_jual_rupiah,
+              styles: {
+                  halign: "right",
+                  fontStyle: "bold"
+              }
+          }
+        ]
       });
     });
   } else {
     exportToPDF({
       data: rawData,
-      headers: headers,
-      keys: keys,
+      headers,
+      keys,
       filename: `Summary_Valas_${start}_${end}.pdf`,
-      title: 'Summary Valas',
+      title: "Summary Valas",
       nama_pt: parsedSetting.NamaPT.strval,
-      start: start,
-      end: end,
-      cabang: ''
+      start,
+      end,
+      cabang: '',
+      bodyBuilder: (data) => {
+        return data.map((item) => [
+          item.kodeValas,
+          item.namaValas,
+          formatNumber(item.saldo_awal),
+          formatNumber(item.pembelian),
+          formatNumber(item.penjualan),
+          formatNumber(item.saldo_akhir),
+          formatNumber(item.pembelian_rupiah),
+          formatNumber(item.penjualan_rupiah),
+        ]);
+      },
+      columnStyles: {
+        2: { halign: "right" },
+        3: { halign: "right" },
+        4: { halign: "right" },
+        5: { halign: "right" },
+        6: { halign: "right" },
+        7: { halign: "right" }
+      },
+      footer: [
+        {
+            content: "Total :",
+            colSpan: 5,
+            styles: {
+                halign: "right",
+                fontStyle: "bold"
+            }
+        },
+        {
+            content: "Rp.",
+            styles: {
+                halign: "center",
+                fontStyle: "bold"
+            }
+        },
+        {
+            content: total_beli_rupiah,
+            styles: {
+                halign: "right",
+                fontStyle: "bold"
+            }
+        },
+        {
+            content: total_jual_rupiah,
+            styles: {
+                halign: "right",
+                fontStyle: "bold"
+            }
+        }
+      ]
     });
   }
 });

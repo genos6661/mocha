@@ -267,10 +267,14 @@ function loadData() {
             } else {
                 let total_beli_rupiah = 0;
                 let total_jual_rupiah = 0;
+                let total_saldo_awal = 0;
+                let total_saldo_akhir = 0;
 
                 details.forEach(function (item) {
+                    total_saldo_awal += item.saldo_awal_rupiah;
                     total_beli_rupiah += item.pembelian_rupiah;
                     total_jual_rupiah += item.penjualan_rupiah;
+                    total_saldo_akhir += item.saldo_akhir_rupiah;
                     const row = `
                         <tr>
                           <td class="border fw-bold text-center py-2 px-1">${item.kodeValas}</td>
@@ -332,7 +336,24 @@ function loadData() {
                 });
                 tbody.append(`
                     <tr class="table-dark table-borderless">
-                        <td colspan="14" class="fw-bold"></td>
+                        <td class="fw-bold">Total</td>
+                        <td colspan="3" class="text-end fw-bold">${Number(total_saldo_awal).toLocaleString('id-ID', {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2
+                        })}</td>
+                        <td colspan="3" class="text-end fw-bold">${Number(total_beli_rupiah).toLocaleString('id-ID', {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2
+                        })}</td>
+                        <td></td>
+                        <td colspan="3" class="text-end fw-bold">${Number(total_jual_rupiah).toLocaleString('id-ID', {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2
+                        })}</td>
+                          <td colspan="3" class="text-end fw-bold">${Number(total_saldo_akhir).toLocaleString('id-ID', {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2
+                        })}</td>
                     </tr>
                 `);
             }
@@ -468,6 +489,14 @@ $('#sbmFilter').click(function (e) {
   $('#modalFilter').modal('hide');
 });
 
+function formatNumber(value) {
+  if (typeof value !== "number") return value || "";
+  return new Intl.NumberFormat("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 $("#export-csv").click(function () {
   exportToCSV({
     data: rawData,
@@ -487,34 +516,157 @@ $("#export-excel").click(function () {
 });
 
 $("#export-pdf").click(function () {
-  if (cabang && cabang != '' && cabang != 0) {
-    getCabang(cabang, function (nama) {
-      const namaCabang = nama || '';
-      console.log("Nama cabang:", namaCabang);
 
-      exportToPDF({
-        data: rawData,
-        headers: headers,
-        keys: keys,
-        filename: `Summary_Valas_${start}_${end}.pdf`,
-        title: 'Summary Valas',
-        nama_pt: parsedSetting.NamaPT.strval,
-        start: start,
-        end: end,
-        cabang: namaCabang
-      });
-    });
-  } else {
+  const total_saldo_awal_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.saldo_awal_rupiah || 0), 0
+  );
+
+  const total_beli_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.pembelian_rupiah || 0), 0
+  );
+
+  const total_jual_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.penjualan_rupiah || 0), 0
+  );
+
+  const total_saldo_akhir_rupiah = rawData.reduce(
+    (sum, item) => sum + Number(item.saldo_akhir_rupiah || 0), 0
+  );
+
+  const doExport = (namaCabang = "") => {
     exportToPDF({
       data: rawData,
-      headers: headers,
-      keys: keys,
-      filename: `Summary_Valas_${start}_${end}.pdf`,
-      title: 'Summary Valas',
+
+      headers: [
+        [
+          { content: "CURRENCY", rowSpan: 2 },
+          { content: "BEGINNING BALANCE", colSpan: 3 },
+          { content: "BUYING BANK NOTES", colSpan: 3 },
+          { content: "MIDDLE RATE", rowSpan: 2 },
+          { content: "SELLING BANK NOTES", colSpan: 3 },
+          { content: "BALANCE", colSpan: 3 }
+        ],
+        [
+          "Forex", "Rate", "Rupiah",
+          "Forex", "Rate", "Rupiah",
+          "Forex", "Rate", "Rupiah",
+          "Forex", "Rate", "Rupiah"
+        ]
+      ],
+
+      filename: `Summary_Valas_Advance_${start}_${end}.pdf`,
+      title: "Summary Valas Advance",
+
       nama_pt: parsedSetting.NamaPT.strval,
-      start: start,
-      end: end,
-      cabang: ''
+      start,
+      end,
+      cabang: namaCabang,
+
+      docStyles: {
+        marginX: 9,
+        marginTop: 10
+      },
+
+      headStyles: {
+        fontSize: 7,
+        cellPadding: 1,
+        valign: "middle",
+        halign: "center"
+      },
+
+      styles: {
+        format: "letter",
+        fontSize: 8,
+        cellPadding: 1,
+        overflow: "linebreak",
+        tableMarginTop: 32
+      },
+
+      bodyBuilder: (data) =>
+        data.map(item => [
+          item.kodeValas,
+          formatNumber(item.saldo_awal),
+          formatNumber(item.saldo_awal_rate),
+          formatNumber(item.saldo_awal_rupiah),
+          formatNumber(item.saldo_pembelian),
+          formatNumber(item.pembelian_rate),
+          formatNumber(item.pembelian_rupiah),
+          formatNumber(item.rate_tengah),
+          formatNumber(item.penjualan),
+          formatNumber(item.penjualan_rate),
+          formatNumber(item.penjualan_rupiah),
+          formatNumber(item.saldo_akhir),
+          formatNumber(item.saldo_akhir_rate),
+          formatNumber(item.saldo_akhir_rupiah)
+        ]),
+
+      columnStyles: {
+        1:{halign:"right"},
+        2:{halign:"right"},
+        3:{halign:"right"},
+        4:{halign:"right"},
+        5:{halign:"right"},
+        6:{halign:"right"},
+        7:{halign:"right"},
+        8:{halign:"right"},
+        9:{halign:"right"},
+        10:{halign:"right"},
+        11:{halign:"right"},
+        12:{halign:"right"},
+        13:{halign:"right"}
+      },
+
+      footer: [
+        {
+          content: "Total",
+          styles: {
+            fontStyle: "bold",
+            halign: "center"
+          }
+        },
+        {
+          content: total_saldo_awal_rupiah,
+          colSpan: 3,
+          styles: {
+            fontStyle: "bold",
+            halign: "right"
+          }
+        },
+        {
+          content: total_beli_rupiah,
+          colSpan: 3,
+          styles: {
+            fontStyle: "bold",
+            halign: "right"
+          }
+        },
+        {
+          content: ""
+        },
+        {
+          content: total_jual_rupiah,
+          colSpan: 3,
+          styles: {
+            fontStyle: "bold",
+            halign: "right"
+          }
+        },
+        {
+          content: total_saldo_akhir_rupiah,
+          colSpan: 3,
+          styles: {
+            fontStyle: "bold",
+            halign: "right"
+          }
+        }
+      ]
     });
+  };
+
+  if (cabang && cabang !== "" && cabang !== 0) {
+    getCabang(cabang, nama => doExport(nama || ""));
+  } else {
+    doExport();
   }
+
 });
