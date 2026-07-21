@@ -246,7 +246,7 @@ switch ($routeInfo[0]) {
                     href="javascript:void(0);"
                     data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="/assets/img/avatars/1.png" alt class="rounded-circle" />
+                      <img src="/assets/img/avatars/1.png" alt class="rounded-circle" id="avatarLogin" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">

@@ -18,7 +18,7 @@
               hidden
               accept="image/png, image/jpeg" />
           </label>
-          <button type="button" class="btn btn-label-secondary account-image-reset mb-4">
+          <button type="button" class="btn btn-label-secondary account-image-reset mb-4" id="hapusFoto">
             <i class="icon-base ti tabler-reset d-block d-sm-none"></i>
             <span class="d-none d-sm-block">Delete Photo</span>
           </button>

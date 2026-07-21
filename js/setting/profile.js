@@ -63,6 +63,8 @@ function loadProfile() {
                 const option = new Option(response.data.negara + ' - ' + response.data.nama_negara, response.data.negara, true, true);
                 $('#negara').append(option).trigger('change');
             }
+
+            loadFotoProfile(response.data.id_profile);
         },
         error: function (xhr) {
             if (xhr.status === 404) {
@@ -78,32 +80,43 @@ function loadProfile() {
             }
         },
     });
-    // const logoUrl = url_api + '/setting/logo/';
+}
 
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('GET', logoUrl, true);
-    // xhr.setRequestHeader('X-Client-Domain', myDomain);
-    // xhr.responseType = 'blob';
+function loadFotoProfile(idProfile) {
 
-    // xhr.onload = function () {
-    //     if (xhr.status === 200) {
-    //         const imgBlob = xhr.response;
-    //         const imgURL = URL.createObjectURL(imgBlob);
-    //         $('#boxLogo').html(`
-    //             <h5>Logo : </h5>
-    //             <img src="${imgURL}" alt="Logo" style="height:80px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalHapusLogo">
-    //         `);
-    //     } else {
-    //         // Tidak ditemukan atau error lain
-    //         $('#boxLogo').empty(); // atau tampilkan default/fallback
-    //     }
-    // };
+    const xhr = new XMLHttpRequest();
 
-    // xhr.onerror = function () {
-    //     $('#targetLogo').empty();
-    // };
+    xhr.open(
+        'GET',
+        `${url_api}/profile/paspor/${idProfile}`,
+        true
+    );
 
-    // xhr.send();
+    xhr.responseType = 'blob';
+
+    xhr.setRequestHeader('Authorization', `Bearer ${window.token}`);
+    xhr.setRequestHeader('X-Client-Domain', myDomain);
+
+    xhr.onload = function () {
+
+        if (xhr.status === 200) {
+
+            const blob = xhr.response;
+            const contentType = xhr.getResponseHeader('Content-Type') || '';
+
+            if (contentType.startsWith('image/')) {
+
+                const imgURL = URL.createObjectURL(blob);
+                $('#uploadedAvatar').attr('src', imgURL);
+
+            }
+
+        }
+
+    };
+
+    xhr.send();
+
 }
 
 $('#password, #username, #email').keyup(function (e) {
@@ -257,3 +270,116 @@ function submitUser(idUser, nama, email, password, oldPassword) {
     }
   });
 }
+
+function uploadFoto(file, namaFoto) {
+    return new Promise((resolve, reject) => {
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('namaFile', namaFoto);
+
+        $.ajax({
+            url: url_api + '/profile/paspor',
+            type: 'POST',
+            headers: {
+                "Authorization": `Bearer ${window.token}`,
+                "X-Client-Domain": myDomain
+            },
+            data: formData,
+            contentType: false,
+            processData: false,
+
+            success: function (res) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Foto berhasil diperbarui.'
+                });
+                loadFotoProfile(namaFoto);
+            },
+
+            error: function (xhr) {
+                reject(xhr.responseJSON || {
+                    message: 'Gagal upload file'
+                });
+            }
+
+        });
+
+    });
+}
+
+$('#upload').on('change', async function () {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    try {
+
+        await uploadFoto(
+            file,
+            oldData.id_profile
+        );
+
+    } catch (err) {
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: err.message || 'Terjadi kesalahan.'
+        });
+
+    }
+
+    $(this).val('');
+
+});
+
+$('#hapusFoto').on('click', function () {
+
+    Swal.fire({
+        title: 'Hapus Foto?',
+        text: 'Foto paspor akan dihapus secara permanen.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+
+        if (!result.isConfirmed) return;
+
+        $.ajax({
+            url: `${url_api}/profile/paspor/${oldData.id_profile}`,
+            type: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${window.token}`,
+                "X-Client-Domain": myDomain
+            },
+            success: function (res) {
+
+                notif.fire({
+                    icon: 'success',
+                    text: res.message
+                });
+
+                // Kembalikan ke avatar default
+                $('#uploadedAvatar').attr(
+                    'src',
+                    '../../assets/img/avatars/1.png'
+                );
+
+            },
+            error: function (xhr) {
+
+                notif.fire({
+                    icon: 'error',
+                    text: xhr.responseJSON?.message || 'Gagal menghapus foto'
+                });
+
+            }
+        });
+
+    });
+
+});
