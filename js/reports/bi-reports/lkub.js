@@ -472,7 +472,8 @@ $('#eksporTXT').click(function (e) {
   });
 
   const tanggalHead = start.replace(/-/g, "");
-  lines.unshift(idBI + "M" + tanggalHead + "B0001000000001");
+  const jumlahBaris = String(lines.length).padStart(9, "0");
+  lines.unshift(idBI + "M" + tanggalHead + "B0001" + jumlahBaris);
 
   const content = lines.join("\n");
 
