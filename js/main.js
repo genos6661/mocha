@@ -1,9 +1,11 @@
 const cookieUser = "user";
 const cookieSetting = "setting";
 const logoKey = "cachedLogo";
+const avatarKey = "cachedAvatar";
 let savedProfile = getCookie(cookieUser);
 let savedSetting = getCookie(cookieSetting);
 let cachedLogo = sessionStorage.getItem(logoKey);
+let cachedAvatar = sessionStorage.getItem(avatarKey);
 let parsedProfile;
 
 $(document).ready(function () {
@@ -107,11 +109,18 @@ function loadMainSettings() {
 }
 
 function loadMainProfile() {
-    if(savedProfile) {
+
+    if (savedProfile) {
+
         parsedProfile = JSON.parse(savedProfile);
+
         $('#navbarRole').text(parsedProfile.nama_role);
         $('#navbarNama').text(parsedProfile.nama);
+
+        loadAvatarProfile(parsedProfile.id_profile);
+
     } else {
+
         $.ajax({
             url: url_api + '/users/profile',
             type: 'GET',
@@ -122,25 +131,95 @@ function loadMainProfile() {
                 "X-Client-Domain": myDomain
             },
             success: function (response) {
-                setSessionCookie(cookieUser, JSON.stringify(response.data));
-                $('#navbarRole').text(response.data.nama_role);
-                $('#navbarNama').text(response.data.nama);
+
+                parsedProfile = response.data;
+
+                setSessionCookie(cookieUser, JSON.stringify(parsedProfile));
+
+                $('#navbarRole').text(parsedProfile.nama_role);
+                $('#navbarNama').text(parsedProfile.nama);
+
+                loadAvatarProfile(parsedProfile.id_profile);
+
             },
             error: function (xhr) {
+
                 if (xhr.status === 404) {
                     notif.fire({
-                      icon: 'error',
-                      text: xhr.responseJSON.message
+                        icon: 'error',
+                        text: xhr.responseJSON.message
                     });
                 } else {
                     notif.fire({
-                      icon: 'error',
-                      text: 'Terjadi Kesalahan pada server'
+                        icon: 'error',
+                        text: 'Terjadi Kesalahan pada server'
                     });
                 }
-            },
+
+            }
         });
+
     }
+
+}
+
+function loadAvatarProfile(idProfile) {
+
+    // Gunakan cache jika ada
+    const cachedAvatar = sessionStorage.getItem(avatarKey);
+
+    if (cachedAvatar) {
+        $('.avatarLogin').attr('src', cachedAvatar);
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open(
+        'GET',
+        `${url_api}/profile/paspor/${idProfile}`,
+        true
+    );
+
+    xhr.responseType = 'blob';
+
+    xhr.setRequestHeader('Authorization', `Bearer ${window.token}`);
+    xhr.setRequestHeader('X-Client-Domain', myDomain);
+
+    xhr.onload = function () {
+
+        if (xhr.status === 200) {
+
+            const blob = xhr.response;
+            const contentType = xhr.getResponseHeader('Content-Type') || '';
+
+            if (contentType.startsWith('image/')) {
+
+                const reader = new FileReader();
+
+                reader.onloadend = function () {
+
+                    // Base64
+                    const base64 = reader.result;
+
+                    // simpan cache
+                    sessionStorage.setItem(avatarKey, base64);
+
+                    // tampilkan
+                    $('#avatarLogin').attr('src', base64);
+
+                };
+
+                reader.readAsDataURL(blob);
+
+            }
+
+        }
+
+    };
+
+    xhr.send();
+
 }
 
 // $('#btnBackup').on('click', function () {
