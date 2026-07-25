@@ -415,6 +415,26 @@ function formatNumber(value) {
   }).format(value);
 }
 
+function padNumber(num) {
+  let clean = String(num).replace(/[^\d.-]/g, '');
+  let value = Number(clean) || 0;
+  value = Math.round(value);
+  return String(value).padStart(15, '0');
+}
+
+function padKursTengah(value) {
+  let clean = String(value).trim().replace(/\./g, "").replace(",", ".");
+
+  let num = parseFloat(clean);
+  if (isNaN(num)) num = 0;
+
+  // Kalikan 10000 agar 4 digit desimal menjadi bilangan bulat
+  const scaled = Math.round(num * 10000);
+
+  // Total 9 digit
+  return String(scaled).padStart(9, "0");
+}
+
 $('#eksporTXT').click(function (e) {
   e.preventDefault();
 
@@ -437,7 +457,7 @@ $('#eksporTXT').click(function (e) {
     const item = dataReport[idx];
 
     const line =
-      kodeValas +
+      kodeValas + "1" +
       padNumber(item.saldo_awal) +
       padNumber(item.saldo_awal_rupiah) +
       padNumber(item.pembelian) +
@@ -445,7 +465,7 @@ $('#eksporTXT').click(function (e) {
       padNumber(item.penjualan) +
       padNumber(item.penjualan_rupiah) +
       padNumber(item.saldo_akhir) +
-      padNumber(kursTengah) +
+      padKursTengah(kursTengah) +
       padNumber(item.saldo_akhir_rupiah);
 
     lines.push(line);
@@ -467,13 +487,6 @@ $('#eksporTXT').click(function (e) {
 
   URL.revokeObjectURL(link.href);
 });
-
-function padNumber(num) {
-  let clean = String(num).replace(/[^\d.-]/g, '');
-  let value = Number(clean) || 0;
-  value = Math.round(value);
-  return String(value).padStart(15, '0');
-}
 
 $("#export-pdf").click(function () {
   let dataFixed = [];
