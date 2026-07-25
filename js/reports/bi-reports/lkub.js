@@ -439,7 +439,7 @@ $('#eksporTXT').click(function (e) {
   e.preventDefault();
 
   // Daftar kode valas yang diperbolehkan
-  const allowedCurrencies = new Set([ "AED", "AUD", "BND", "CAD", "CHF", "CNH", "CNY", "DKK", "EUR", "GBP", "HKD", "JPY", "KRW", "KWD", "LAK", "MYR", "NOK", "NZD", "PGK", "PHP", "SAR", "SEK", "SGD", "THB", "USD", "VND"
+  const allowedCurrencies = new Set([ "USD", "THB", "SGD", "SEK", "PHP", "PGK", "NZD", "NOK", "MYR", "KRW", "JPY", "HKD", "GBP", "EUR", "DKK", "CNY", "CHF", "CAD", "BND", "AUD"
   ]);
 
   let lines = [];
