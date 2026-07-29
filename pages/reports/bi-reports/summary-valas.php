@@ -128,7 +128,7 @@
         <button type="button" class="btn btn-outline-primary waves-effect" id="export-excel"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
         <button type="button" class="btn btn-outline-primary waves-effect" id="export-csv"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
         <button type="button" class="btn btn-outline-primary waves-effect" disabled><i class="icon-base ti tabler-file-text"></i>TXT</button>
-        <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-printer"></i>Print</button>
+        <button type="button" class="btn btn-outline-primary waves-effect" id="print"><i class="icon-base ti tabler-printer"></i>Print</button>
       </div>
   <!--   </div>
   </div>

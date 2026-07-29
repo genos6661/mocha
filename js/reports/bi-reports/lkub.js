@@ -448,13 +448,15 @@ $('#eksporTXT').click(function (e) {
     const tds = tr.querySelectorAll("td");
     const kodeValas = tds[1].innerText.trim();
 
-    // Skip jika kode valas tidak ada dalam daftar
     if (!allowedCurrencies.has(kodeValas)) {
       return;
     }
 
-    const kursTengah = tds[10].innerText.trim() || "0";
+    const kursTengah = parseFloat(
+      (tds[10].innerText || "0").replace(/,/g, "")
+    ) || 0;
     const item = dataReport[idx];
+    const saldoAkhirRupiah = Number(item.saldo_akhir || 0) * kursTengah;
 
     const line =
       kodeValas + "1" +
@@ -466,7 +468,7 @@ $('#eksporTXT').click(function (e) {
       padNumber(item.penjualan_rupiah) +
       padNumber(item.saldo_akhir) +
       padKursTengah(kursTengah) +
-      padNumber(item.saldo_akhir_rupiah);
+      padNumber(saldoAkhirRupiah);
 
     lines.push(line);
   });

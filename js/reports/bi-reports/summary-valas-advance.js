@@ -588,7 +588,7 @@ $("#export-pdf").click(function () {
           formatNumber(item.saldo_awal),
           formatNumber(item.saldo_awal_rate),
           formatNumber(item.saldo_awal_rupiah),
-          formatNumber(item.saldo_pembelian),
+          formatNumber(item.pembelian),
           formatNumber(item.pembelian_rate),
           formatNumber(item.pembelian_rupiah),
           formatNumber(item.rate_tengah),
