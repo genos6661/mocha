@@ -155,7 +155,7 @@ if (isset($_SESSION['token'])) {
 
     <script>
       $(document).ready(function() {
-        if (myDomain === "sample.beresmocha.my.id") {
+        if (myDomain === "sample.beresmocha.id") {
             var $userInput = $('#email');
             var $passInput = $('#password');
 

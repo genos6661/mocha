@@ -200,7 +200,7 @@ function initTable() {
 
                         if (userPermissions.includes('posting_transaction')) {
                             menuHtml += `
-                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalProses" data-id="${data.noindex}" data-ref="${data.nomor}">Process</a>
+                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalProses" data-id="${data.noindex}" data-ref="${data.nomor}" data-pelanggan="${data.nama}">Process</a>
                             `;
                         }
 
@@ -409,7 +409,7 @@ function initEvents() {
                             })}</td></tr>
                     `);
                 }
-                $('#processBtn').attr('data-id', id).attr('data-ref', nomor);
+                $('#processBtn').attr('data-id', id).attr('data-ref', nomor).attr('data-pelanggan', data.nama_pelanggan);
                 $('#editBtn').attr('href', `/order/edit?nomor=${nomor}`);
                 $('#deleteBtn').attr('data-id', id).attr('data-ref', nomor);
                 $('#modalDetail').modal('show');
@@ -428,9 +428,11 @@ modalProses.addEventListener('shown.bs.modal', event => {
     const button = event.relatedTarget
     const id = button.getAttribute('data-id')
     const ref = button.getAttribute('data-ref')
+    const nama = button.getAttribute('data-pelanggan')
 
     $('#idProses').val(id);
     $('#refProses').text(ref);
+    $('#namaPelanggan').val(nama);
     $('#sbmProses').trigger('focus');
 });
 
@@ -528,13 +530,14 @@ function updateDateRangeSelector(selectedValue) {
 }
 
 // ~~~~~~~~~~~~~~~~ proses
-$('#sbmProses').click(function (e) {
+$('#sbmProses').click(async function (e) {
     e.preventDefault();
 
     const id = $('#idProses').val();
+    const namaPelanggan = $('#namaPelanggan').val();
     const now = new Date();
     const localTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-
+    await checkDTTOT(namaPelanggan);
     $.ajax({
         url: url_api + '/transaction/' + id,
         type: 'POST',
@@ -636,3 +639,163 @@ $('#btnReload').click(function (e) {
   offset = 0;
   loadMoreData(true);
 });
+
+async function checkDTTOT(name) {
+
+    try {
+
+        const response = await $.ajax({
+            url: "https://apiprovider.thebrotherhoodlaw.com/dttot/check",
+            type: "POST",
+            contentType: "application/json",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${window.token}`,
+                "X-Client-Domain": myDomain
+            },
+            data: JSON.stringify({
+                name: name
+            })
+        });
+
+        if (!response.matched || response.results.length === 0) {
+            return false;
+        }
+
+        let html = `
+            <div style="max-height:500px;overflow-y:auto;padding-right:8px">
+        `;
+
+        response.results.forEach(item => {
+
+            let badge = "secondary";
+
+            switch (item.level) {
+                case "VERY_HIGH":
+                    badge = "danger";
+                    break;
+
+                case "HIGH":
+                    badge = "warning";
+                    break;
+
+                case "MEDIUM":
+                    badge = "info";
+                    break;
+            }
+
+            html += `
+            <div class="card mb-3 shadow-sm border-start border-4 border-${badge}">
+
+                <div class="card-body py-3">
+
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+
+                        <div>
+
+                            <div class="fw-bold fs-6">
+                                ${item.dttot.name}
+                            </div>
+
+                            <small class="text-muted">
+                                Alias cocok : <b>${item.matchedAlias}</b>
+                            </small>
+
+                        </div>
+
+                        <div class="text-end">
+
+                            <span class="badge bg-${badge}">
+                                ${item.level}
+                            </span>
+
+                            <div class="fw-bold mt-1">
+                                ${item.score}%
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row g-2 small">
+
+                        <div class="col-md-6">
+                            <b>Kode Densus</b><br>
+                            ${item.dttot.code}
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Tipe</b><br>
+                            ${item.dttot.suspectType}
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Tanggal Lahir</b><br>
+                            ${item.dttot.birthDate ?? "-"}
+                        </div>
+
+                        <div class="col-md-6">
+                            <b>Negara</b><br>
+                            ${item.dttot.nationality ?? "-"}
+                        </div>
+
+                    </div>
+
+                    <hr class="my-2">
+
+                    <div class="small">
+
+                        <b>Alamat</b>
+
+                        <div class="text-muted mb-2">
+                            ${(item.dttot.address || "-").replace(/\n/g,"<br>")}
+                        </div>
+
+                        <b>Deskripsi</b>
+
+                        <div class="text-muted">
+                            ${(item.dttot.description || "-").replace(/\n/g,"<br>")}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            `;
+
+        });
+
+        html += "</div>";
+
+        await Swal.fire({
+
+            icon: "warning",
+
+            title: "Potensi Kecocokan DTTOT",
+
+            html,
+
+            width: 850,
+
+            confirmButtonText: "Tutup",
+
+            allowOutsideClick: false,
+
+            allowEscapeKey: false,
+
+            focusConfirm: true
+
+        });
+
+        return true;
+
+    } catch (err) {
+
+        console.error(err);
+
+        return false;
+
+    }
+
+}

@@ -155,6 +155,7 @@
       <div class="modal-body">
         <form id="formProsesOrder">
         <input type="hidden" id="idProses">
+        <input type="hidden" id="namaPelanggan">
         <h4>Continue to process the order <span id="refProses"></span>?</h4>
       </div>
       <div class="modal-footer">
