@@ -40,6 +40,19 @@
         <i class="icon-base ti tabler-device-desktop-cog icon-sm me-1_5"></i> Customer Display
       </button>
     </li>
+    <li class="nav-item">
+      <button
+        id="btnTabRef"
+        type="button"
+        class="nav-link"
+        data-bs-toggle="tab"
+        data-bs-target="#ref-tab"
+        aria-controls="ref-tab"
+        role="tab"
+        aria-selected="true">
+        <i class="icon-base ti tabler-list-numbers icon-sm me-1_5"></i> Reference Number
+      </button>
+    </li>
   </ul>
 </div>
 
@@ -202,6 +215,40 @@
       </div>
     </div>
   </div>
+
+  <!-- ~~~~~~~~~~~~~~~~~~~~~ Reference Num ~~~~~~~~~~~~~~~~~~~~~ -->
+  <div class="card p-3 tab-pane fade" id="ref-tab" role="tabpanel">
+    <div class="card-header border-bottom p-2">
+      <div class="row px-3">
+        <div class="col-md p-0">
+          <h5 class="card-title">Reference Number</h5>
+        </div>
+      </div>      
+    </div>
+    <div class="card-body p-2">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th width="220">Nama</th>
+              <th>Alias</th>
+              <th width="120">Prefix</th>
+              <th width="140">Last Number</th>
+              <th width="120" class="text-center">Percabang</th>
+            </tr>
+          </thead>
+
+          <tbody id="tbodyReferenceNumber"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md d-flex justify-content-end align-items-end mb-2">
+          <button class="btn btn-primary" id="saveRefNum" >Submit & Save</button>
+        </div>
+      </div>
+  </div>
+
 </div>
 
 <!-- modal flags -->

@@ -130,6 +130,9 @@ function loadSettings() {
             if(response.InvoiceDesain.strval) {
                 $('#desain').val(response.InvoiceDesain.strval).trigger('change');
             }
+            if (response.tipe_trans) {
+                loadReferenceNumber(response.tipe_trans);
+            }
         },
         error: function (xhr) {
             if (xhr.status === 404) {
@@ -174,6 +177,44 @@ function loadSettings() {
     if (document.querySelector(`.notiflix-loading`)) {
         Loading.remove();
     }
+}
+
+function loadReferenceNumber(data) {
+    const tbody = $('#tbodyReferenceNumber');
+    tbody.empty();
+
+    data.forEach(item => {
+        tbody.append(`
+            <tr data-kode="${item.kode}">
+                <td>${item.nama}</td>
+                <td class="text-muted">
+                    ${item.alias}
+                </td>
+                <td>
+                    <input
+                        type="text"
+                        class="form-control form-control-sm prefix"
+                        maxlength="5"
+                        value="${item.prefix ?? ''}">
+                </td>
+                <td>
+                    <input
+                        type="number"
+                        class="form-control form-control-sm text-end last-number"
+                        min="0"
+                        value="${item.last_number}">
+                </td>
+                <td class="text-center">
+                    <div class="form-check form-switch d-inline-block">
+                        <input
+                            class="form-check-input percabang"
+                            type="checkbox"
+                            ${item.percabang ? 'checked' : ''}>
+                    </div>
+                </td>
+            </tr>
+        `);
+    });
 }
 
 $('#sbmGeneral').click(function(e) {
@@ -821,6 +862,81 @@ $('#removeLogo').click(function (e) {
       });
     }
   });
+});
+
+function getReferenceNumberData() {
+
+    const result = [];
+
+    $('#tbodyReferenceNumber tr').each(function () {
+
+        result.push({
+            kode: $(this).data('kode'),
+            prefix: $(this).find('.prefix').val().trim(),
+            last_number: parseInt($(this).find('.last-number').val()) || 0,
+            percabang: $(this).find('.percabang').is(':checked') ? 1 : 0
+        });
+
+    });
+
+    return result;
+
+}
+
+$('#saveRefNum').on('click', function () {
+
+    const tipe_trans = getReferenceNumberData();
+
+    Loading.standard({
+        backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ',0.5)',
+        svgSize: '0px'
+    });
+
+    let customSpinnerHTML = `
+        <div class="sk-wave mx-auto">
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+        </div>
+    `;
+
+    document.querySelector('.notiflix-loading').innerHTML = customSpinnerHTML;
+
+    $.ajax({
+        url: url_api + '/setting/reference',
+        type: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        },
+        data: JSON.stringify({
+            tipe_trans: tipe_trans
+        }),
+        success: function () {
+
+            Loading.remove();
+
+            notif.fire({
+                icon: 'success',
+                text: 'Reference Number berhasil diperbarui.'
+            });
+
+        },
+        error: function (xhr) {
+
+            Loading.remove();
+
+            notif.fire({
+                icon: 'error',
+                text: xhr.responseJSON?.message || 'Terjadi kesalahan pada server.'
+            });
+
+        }
+    });
+
 });
 
 // orderable
