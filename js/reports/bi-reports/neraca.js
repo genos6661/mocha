@@ -472,3 +472,7 @@ $('#exportExcel').click(function () {
 
   XLSX.writeFile(wb, "Neraca.xlsx");
 });
+
+$('#print').click(function () {
+  printReport('cardData');
+});

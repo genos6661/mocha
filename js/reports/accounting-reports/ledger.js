@@ -1,4 +1,4 @@
-let start, end, cabang, user, akun_start, akun_end, show;
+let start, end, cabang, user, akun_start, akun_end, show, namaPT, reportData = {};
 $(document).ready(function() {
     $('#cabangFilter').select2({
         dropdownParent: '#modalFilter',
@@ -188,7 +188,8 @@ function loadHeader() {
             "X-Client-Domain": myDomain
         },
         success: function (response) {
-            $('#namaPT').text(response.NamaPT.strval);
+            namaPT = response.NamaPT.strval;
+            $('#namaPT').text(namaPT);
             if (document.querySelector(`.notiflix-loading`)) {
                 Loading.remove();
             }
@@ -254,6 +255,7 @@ function loadData() {
 
         // Kosongkan container dulu
         $('#card-body').empty();
+        reportData = response;
 
         // Loop setiap akun
         Object.keys(response).forEach(kode => {
@@ -467,7 +469,116 @@ $('#sbmFilter').click(function (e) {
 
   window.history.pushState({}, '', finalUrl);
 
-  loadHeader(); 
+  loadHeader();
   loadData();
   $('#modalFilter').modal('hide');
+});
+
+function formatAngka(value) {
+  return (Number(value) || 0).toLocaleString();
+}
+
+function buildLedgerSections() {
+  const sections = [];
+
+  Object.keys(reportData).forEach(kode => {
+    const akun = reportData[kode];
+
+    let saldo = akun.saldo_awal || 0;
+
+    const kepala = parseInt(kode.toString().charAt(0), 10);
+    const isDebitNormal = [1, 5, 6, 7, 9].includes(kepala);
+
+    const body = [
+      [
+        { content: "Saldo Awal", colSpan: 7, styles: { halign: "left", fontStyle: "bold" } },
+        { content: formatAngka(saldo), styles: { halign: "right", fontStyle: "bold" } },
+      ],
+    ];
+
+    let totalDebit = 0, totalKredit = 0;
+
+    (akun.mutasi || []).forEach(m => {
+      if (isDebitNormal) {
+        saldo += (m.debit - m.kredit);
+      } else {
+        saldo += (m.kredit - m.debit);
+      }
+
+      totalDebit += m.debit;
+      totalKredit += m.kredit;
+
+      body.push([
+        new Date(m.tanggal).toLocaleDateString(),
+        m.prefix || '-',
+        m.nomor || '-',
+        m.kontak || '-',
+        m.deskripsi || '-',
+        formatAngka(m.debit),
+        formatAngka(m.kredit),
+        formatAngka(saldo),
+      ]);
+    });
+
+    sections.push({
+      heading: `${kode}   ${akun.nama_akun} - ${akun.alias_akun}   |   ${akun.nama_master}   |   ${akun.alias_subklas}`,
+      body,
+      foot: [
+        { content: "Total :", colSpan: 5 },
+        formatAngka(totalDebit),
+        formatAngka(totalKredit),
+        formatAngka(saldo),
+      ],
+      columnStyles: {
+        1: { halign: "center" },
+        2: { halign: "center" },
+        5: { halign: "right" },
+        6: { halign: "right" },
+        7: { halign: "right" },
+      },
+    });
+  });
+
+  return sections;
+}
+
+$("#export-pdf").click(function () {
+  if (!reportData || Object.keys(reportData).length === 0) {
+    notif.fire({
+      icon: "error",
+      title: "Tidak ada data untuk diekspor",
+    });
+    return;
+  }
+
+  exportToPDF({
+    sections: buildLedgerSections(),
+    headers: ["Date", "Type", "Number", "Contact", "Description", "Debit", "Credit", "Balance"],
+    filename: `Ledger_${start}_${end}.pdf`,
+    title: "Ledger",
+    nama_pt: namaPT,
+    start,
+    end,
+    cabang: $('#cabang').text() || '',
+  });
+});
+
+$("#export-excel").click(function () {
+  if (!reportData || Object.keys(reportData).length === 0) {
+    notif.fire({
+      icon: "error",
+      title: "Tidak ada data untuk diekspor",
+    });
+    return;
+  }
+
+  exportToExcel({
+    sections: buildLedgerSections(),
+    headers: ["Date", "Type", "Number", "Contact", "Description", "Debit", "Credit", "Balance"],
+    filename: `Ledger_${start}_${end}.xlsx`,
+  });
+});
+
+$('#print').click(function () {
+  printReport('cardData');
 });

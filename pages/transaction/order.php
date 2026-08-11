@@ -2,7 +2,7 @@
 <div class="card">
   <div class="row p-3">
     <div class="col-md d-grid d-md-block mb-2 mb-md-0">
-      <a class="btn btn-primary mb-md-0 mb-2" href="/order-form">
+      <a class="btn btn-primary mb-md-0 mb-2" href="/order-form" target="_blank">
         <i class="icon-base ti tabler-plus icon-16px me-md-2"></i><span>New Order</span>
       </a>
       <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter">

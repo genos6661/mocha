@@ -497,24 +497,6 @@ function formatNumber(value) {
   }).format(value);
 }
 
-$("#export-csv").click(function () {
-  exportToCSV({
-    data: rawData,
-    headers: headers,
-    keys: keys,
-    filename: "summary-valas-report.csv",
-  });
-});
-
-$("#export-excel").click(function () {
-  exportToExcel({
-    data: rawData,
-    headers: headers,
-    keys: keys,
-    filename: "summary-valas-report.xlsx", 
-  });
-});
-
 $("#export-pdf").click(function () {
 
   const total_saldo_awal_rupiah = rawData.reduce(
@@ -669,4 +651,55 @@ $("#export-pdf").click(function () {
     doExport();
   }
 
+});
+
+$('#print').click(function () {
+  printReport('cardData');
+});
+
+$("#export-excel").click(function () {
+  if (!rawData || rawData.length === 0) {
+    notif.fire({
+      icon: "error",
+      title: "Tidak ada data untuk diekspor",
+    });
+    return;
+  }
+
+  exportToExcel({
+    data: rawData,
+    headers: [
+      "Currency",
+      "Beginning Balance",
+      "Beginning Rate",
+      "Beginning Balance (Rp)",
+      "Buy",
+      "Buy Rate",
+      "Buy (Rp)",
+      "Middle Rate",
+      "Sell",
+      "Sell Rate",
+      "Sell (Rp)",
+      "Ending Balance",
+      "Ending Rate",
+      "Ending Balance (Rp)",
+    ],
+    keys: [
+      "kodeValas",
+      "saldo_awal",
+      "saldo_awal_rate",
+      "saldo_awal_rupiah",
+      "pembelian",
+      "pembelian_rate",
+      "pembelian_rupiah",
+      "rate_tengah",
+      "penjualan",
+      "penjualan_rate",
+      "penjualan_rupiah",
+      "saldo_akhir",
+      "saldo_akhir_rate",
+      "saldo_akhir_rupiah",
+    ],
+    filename: `Summary_Valas_Advance_${start}_${end}.xlsx`,
+  });
 });

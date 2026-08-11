@@ -619,34 +619,5 @@ $("#export-pdf").click(function () {
 });
 
 $('#print').click(function () {
-  const { jsPDF } = window.jspdf;
-
-  html2canvas(document.querySelector("#cardData"), {
-    scale: 2,
-    useCORS: true
-  }).then(canvas => {
-
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "pt",
-      format: "a4"
-    });
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth - 40;
-    const imgHeight = canvas.height * imgWidth / canvas.width;
-
-    const y = (pageHeight - imgHeight) / 2;
-
-    pdf.addImage(imgData, "PNG", 20, y, imgWidth, imgHeight);
-
-    pdf.autoPrint();
-
-    const blob = pdf.output("bloburl");
-    window.open(blob, "_blank");
-  });
+  printReport('cardData');
 });

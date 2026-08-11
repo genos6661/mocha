@@ -125,7 +125,7 @@
   <button type="button" class="btn btn-outline-primary waves-effect" id="export-excel"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="export-csv"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="eksporTXT"><i class="icon-base ti tabler-file-text"></i>TXT</button>
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-printer"></i>Print</button>
+  <button type="button" class="btn btn-outline-primary waves-effect" id="print"><i class="icon-base ti tabler-printer"></i>Print</button>
 </div>
 
 <!-- filter -->
@@ -198,4 +198,5 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.3.3/dist/html2canvas-pro.min.js"></script>
 <script src="js/reports/bi-reports/lkub.js" type="text/javascript"></script>

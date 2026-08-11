@@ -106,13 +106,13 @@
   </div>
 </div>
 
-<!-- <div class="btn-group mt-6" role="group" aria-label="First group">
+<div class="btn-group mt-6" role="group" aria-label="First group">
   <button type="button" id="export-pdf" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" id="export-excel" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-text"></i>TXT</button>
-  <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-printer"></i>Print</button>
-</div> -->
+  <button type="button" class="btn btn-outline-primary waves-effect" disabled><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
+  <button type="button" class="btn btn-outline-primary waves-effect" disabled><i class="icon-base ti tabler-file-text"></i>TXT</button>
+  <button type="button" class="btn btn-outline-primary waves-effect" disabled><i class="icon-base ti tabler-printer"></i>Print</button>
+</div>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalFilter" data-bs-backdrop="static" tabindex="-1">

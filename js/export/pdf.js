@@ -19,10 +19,17 @@ async function exportToPDF({
 
     autoTableOptions = {},
 
-    columnStyles = {}
+    columnStyles = {},
+
+    // Array of { heading, body, foot, columnStyles } to render as separate
+    // stacked tables (e.g. one per account in a Ledger report). When
+    // provided, `data`/`keys`/`bodyBuilder`/`footer` are ignored.
+    sections = null
 
 } = {}) {
-  if (!data || !Array.isArray(data) || data.length === 0) {
+  const hasSections = Array.isArray(sections) && sections.length > 0;
+
+  if (!hasSections && (!data || !Array.isArray(data) || data.length === 0)) {
     notif.fire({
       icon: "error",
       title: "Tidak ada data untuk diekspor",
@@ -68,14 +75,12 @@ async function exportToPDF({
     month: "long",
     day: "numeric",
   });
-  let tanggal_awal = new Date(start);
-  let tanggal_akhir = new Date(end);
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  tanggal_awal = tanggal_awal.toLocaleDateString('en-ID', options);
-  tanggal_akhir = tanggal_akhir.toLocaleDateString('en-ID', options);
+  const filterTgl = (start && end)
+    ? `${new Date(start).toLocaleDateString('en-ID', options)} - ${new Date(end).toLocaleDateString('en-ID', options)}`
+    : 'All Time';
 
   const tanggalText = `Dicetak : ${formattedDate}`;
-  const filterTgl = `${tanggal_awal} - ${tanggal_akhir}`;
   const tanggalWidth = doc.getTextWidth(tanggalText);
   const filterWidth = doc.getTextWidth(filterTgl);
   const tanggalX = pageWidth - marginX - tanggalWidth + 23;
@@ -132,7 +137,9 @@ async function exportToPDF({
     Array.isArray(headers[0]) ? headers : [headers];
   let body = [];
 
-  if(typeof bodyBuilder === "function"){
+  if (hasSections) {
+    // body/footer/columnStyles are built per-section below
+  } else if(typeof bodyBuilder === "function"){
 
     body = bodyBuilder(data);
 
@@ -218,60 +225,157 @@ async function exportToPDF({
         }
       : {};
 
-  doc.autoTable({
-    head: tableHeaders,
-    body: body,
+  if (hasSections) {
 
-    foot: tableFooter,
-    showFoot: footer ? "lastPage" : "never",
+    const colCount = tableHeaders[tableHeaders.length - 1].length;
 
-    margin: {
-      top: pdfStyle.tableMarginTop,
-      left: marginX,
-      right: marginX
-    },
+    sections.forEach((section, index) => {
 
-    styles: {
-      fontSize: pdfStyle.fontSize,
-    },
+      const sectionHead = [];
 
-    headStyles: {
-      fillColor: pdfStyle.headFillColor,
-      textColor: pdfStyle.headTextColor,
-      fontStyle: pdfStyle.headFontStyle,
-      halign: "center",
-    },
+      if (section.heading) {
+        sectionHead.push([{
+          content: section.heading,
+          colSpan: colCount,
+          styles: { halign: "left" },
+        }]);
+      }
 
-    bodyStyles: {
-      fillColor: pdfStyle.bodyFillColor,
-      textColor: pdfStyle.bodyTextColor,
-    },
+      sectionHead.push(...tableHeaders);
 
-    alternateRowStyles: {
-      fillColor: pdfStyle.alternateRowColor,
-    },
+      const sectionFoot = section.foot
+        ? [section.foot.map(item => {
+            if (typeof item === "object") {
+              return {
+                ...item,
+                content:
+                  typeof item.content === "number"
+                    ? formatNumber(item.content)
+                    : item.content
+              };
+            }
 
-    footStyles: styles.footStyles || {
-      fillColor: [52, 58, 64],
-      textColor: 255,
-      fontStyle: "bold",
-    },
+            return typeof item === "number"
+              ? formatNumber(item)
+              : item;
+          })]
+        : [];
 
-    columnStyles: {
-      ...defaultColumnStyles,
-      ...columnStyles,
-    },
+      doc.autoTable({
+        head: sectionHead,
+        body: section.body || [],
 
-    didDrawPage() {
-      drawHeader();
-      drawFooter(
-        doc.internal.getNumberOfPages(),
-        "{total_pages_count_string}"
-      );
-    },
+        foot: sectionFoot,
+        showFoot: section.foot ? "lastPage" : "never",
 
-    ...autoTableOptions,
-  });
+        startY: index === 0 ? undefined : doc.lastAutoTable.finalY + 8,
+
+        margin: {
+          top: pdfStyle.tableMarginTop,
+          left: marginX,
+          right: marginX
+        },
+
+        styles: {
+          fontSize: pdfStyle.fontSize,
+        },
+
+        headStyles: {
+          fillColor: pdfStyle.headFillColor,
+          textColor: pdfStyle.headTextColor,
+          fontStyle: pdfStyle.headFontStyle,
+          halign: "center",
+        },
+
+        bodyStyles: {
+          fillColor: pdfStyle.bodyFillColor,
+          textColor: pdfStyle.bodyTextColor,
+        },
+
+        alternateRowStyles: {
+          fillColor: pdfStyle.alternateRowColor,
+        },
+
+        footStyles: styles.footStyles || {
+          fillColor: [52, 58, 64],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+
+        columnStyles: {
+          ...(section.columnStyles || columnStyles),
+        },
+
+        didDrawPage() {
+          drawHeader();
+          drawFooter(
+            doc.internal.getNumberOfPages(),
+            "{total_pages_count_string}"
+          );
+        },
+
+        ...autoTableOptions,
+      });
+    });
+
+  } else {
+
+    doc.autoTable({
+      head: tableHeaders,
+      body: body,
+
+      foot: tableFooter,
+      showFoot: footer ? "lastPage" : "never",
+
+      margin: {
+        top: pdfStyle.tableMarginTop,
+        left: marginX,
+        right: marginX
+      },
+
+      styles: {
+        fontSize: pdfStyle.fontSize,
+      },
+
+      headStyles: {
+        fillColor: pdfStyle.headFillColor,
+        textColor: pdfStyle.headTextColor,
+        fontStyle: pdfStyle.headFontStyle,
+        halign: "center",
+      },
+
+      bodyStyles: {
+        fillColor: pdfStyle.bodyFillColor,
+        textColor: pdfStyle.bodyTextColor,
+      },
+
+      alternateRowStyles: {
+        fillColor: pdfStyle.alternateRowColor,
+      },
+
+      footStyles: styles.footStyles || {
+        fillColor: [52, 58, 64],
+        textColor: 255,
+        fontStyle: "bold",
+      },
+
+      columnStyles: {
+        ...defaultColumnStyles,
+        ...columnStyles,
+      },
+
+      didDrawPage() {
+        drawHeader();
+        drawFooter(
+          doc.internal.getNumberOfPages(),
+          "{total_pages_count_string}"
+        );
+      },
+
+      ...autoTableOptions,
+    });
+
+  }
 
   if (typeof doc.putTotalPages === "function") {
     doc.putTotalPages("{total_pages_count_string}");

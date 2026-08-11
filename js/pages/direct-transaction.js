@@ -410,6 +410,9 @@ $('#btnSubmit').click(function (e) {
     },
     error: function (xhr) {
       $btn.prop('disabled', false);
+      if (document.querySelector(`.notiflix-loading`)) {
+        Loading.remove();
+      }
       notif.fire({
         icon: 'error',
         text: xhr.responseJSON?.message || 'Terjadi kesalahan'

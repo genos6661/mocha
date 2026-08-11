@@ -540,3 +540,7 @@ $('#exportExcel').click(function () {
 
   XLSX.writeFile(wb, "Laba Rugi.xlsx");
 });
+
+$('#print').click(function () {
+  printReport('cardData');
+});

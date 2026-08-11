@@ -21,6 +21,7 @@ const headers = [
 ];
 
 const keys = [
+  "no",
   "tanggal",
   "nomor",
   "tipe",
@@ -548,12 +549,6 @@ function loadAllDataForExport() {
 
         success: function (res) {
 
-          if (!res.status) {
-              $('#modalProgress').modal('hide');
-              reject("Gagal load data");
-              return;
-          }
-
           if (total === 0) {
               total = res.total_count;
 
@@ -597,6 +592,22 @@ function loadAllDataForExport() {
   });
 }
 
+function buildExportRows(allData) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  return allData.map((item, index) => ({
+    no: index + 1,
+    tanggal: new Date(item.tanggal).toLocaleDateString('id-ID', options),
+    nomor: item.nomor || '-',
+    tipe: (item.tipe || '').toUpperCase(),
+    nama_cabang: item.nama_cabang || '-',
+    nama_pelanggan: item.nama_pelanggan || '-',
+    id: item.id || '-',
+    negara: item.negara || '-',
+    nilai_transaksi: Number(item.nilai_transaksi || 0).toLocaleString('id-ID'),
+  }));
+}
+
 $("#export-pdf").click(function () {
 
   if (isExporting) return;
@@ -606,14 +617,19 @@ $("#export-pdf").click(function () {
     .then((allData) => {
 
       exportToPDF({
-        data: allData,
+        data: buildExportRows(allData),
         headers,
         keys,
-        filename: `Transactions Summary.pdf`,
+        filename: `Transactions_Summary_${start || 'all'}_${end || 'all'}.pdf`,
         title: 'Transactions Summary',
         nama_pt: parsedSetting.NamaPT.strval,
         start,
-        end
+        end,
+        columnStyles: {
+          0: { halign: "center" },
+          3: { halign: "center" },
+          8: { halign: "right" },
+        },
       });
 
     })
@@ -631,14 +647,26 @@ $("#export-excel").click(function () {
   .then((allData) => {
 
     exportToExcel({
-      data: allData,
+      data: buildExportRows(allData),
       headers: headers,
       keys: keys,
-      filename: "Customer Report.xlsx", 
+      filename: `Transactions_Summary_${start || 'all'}_${end || 'all'}.xlsx`,
     });
 
   })
   .finally(() => {
     isExporting = false;
+  });
+});
+
+$('#print').click(function () {
+  const $cardBody = $('#card-body');
+  const prevMaxHeight = $cardBody.css('max-height');
+  const prevOverflow = $cardBody.css('overflow-y');
+
+  $cardBody.css({ 'max-height': 'none', 'overflow-y': 'visible' });
+
+  printReport('cardData').finally(() => {
+    $cardBody.css({ 'max-height': prevMaxHeight, 'overflow-y': prevOverflow });
   });
 });

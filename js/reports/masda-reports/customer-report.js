@@ -20,9 +20,10 @@ const headers = [
 ];
 
 const keys = [
+  "no",
   "nama",
   "id",
-  "nama_negara",
+  "nama_int_negara",
   "pekerjaan",
   "telepon",
   "alamat",
@@ -477,11 +478,6 @@ function loadAllDataForExport() {
 
         success: function (res) {
 
-          if (!res.status) {
-            reject('Gagal load data');
-            return;
-          }
-
           if (total === 0) total = res.total_count;
 
           exportData.push(...res.data);
@@ -515,6 +511,19 @@ function loadAllDataForExport() {
   });
 }
 
+function buildExportRows(allData) {
+  return allData.map((item, index) => ({
+    no: index + 1,
+    nama: item.nama || '-',
+    id: item.id || '-',
+    nama_int_negara: item.nama_int_negara || '-',
+    pekerjaan: item.pekerjaan || '-',
+    telepon: item.telepon || '-',
+    alamat: item.alamat || '-',
+    nilai_transaksi: Number(item.nilai_transaksi || 0).toLocaleString('id-ID'),
+  }));
+}
+
 $("#export-pdf").click(function () {
 
   if (isExporting) return;
@@ -524,14 +533,22 @@ $("#export-pdf").click(function () {
     .then((allData) => {
 
       exportToPDF({
-        data: allData,
+        data: buildExportRows(allData),
         headers,
         keys,
-        filename: `Customer Report.pdf`,
+        filename: `Customer_Report.pdf`,
         title: 'Customer Report',
         nama_pt: parsedSetting.NamaPT.strval,
         start,
-        end
+        end,
+        // explicit bodyBuilder bypasses pdf.js's hardcoded "Customer Report"
+        // branch, which reads stale/wrong field names (nama_negara, total_transaksi)
+        bodyBuilder: (data) => data.map((row) => keys.map((k) => row[k])),
+        columnStyles: {
+          0: { halign: "center" },
+          3: { halign: "center" },
+          7: { halign: "right" },
+        },
       });
 
     })
@@ -549,14 +566,26 @@ $("#export-excel").click(function () {
   .then((allData) => {
 
     exportToExcel({
-      data: allData,
+      data: buildExportRows(allData),
       headers: headers,
       keys: keys,
-      filename: "Customer Report.xlsx", 
+      filename: "Customer_Report.xlsx",
     });
 
   })
   .finally(() => {
     isExporting = false;
+  });
+});
+
+$('#print').click(function () {
+  const $cardBody = $('#card-body');
+  const prevMaxHeight = $cardBody.css('max-height');
+  const prevOverflow = $cardBody.css('overflow-y');
+
+  $cardBody.css({ 'max-height': 'none', 'overflow-y': 'visible' });
+
+  printReport('cardData').finally(() => {
+    $cardBody.css({ 'max-height': prevMaxHeight, 'overflow-y': prevOverflow });
   });
 });

@@ -422,3 +422,7 @@ $('#exportExcel').click(function () {
   
   XLSX.writeFile(wb, `LKPE_${start}_${end}.xlsx`);
 });
+
+$('#print').click(function () {
+  printReport('cardData');
+});

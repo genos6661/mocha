@@ -13,20 +13,25 @@ const headers = [
   "Name",
   "ID",
   "Country",
+  "Gender",
+  "Place & Date of Birth",
   "Occupation",
   "Phone",
   "Address",
-  "Total Amount",
+  "Status",
 ];
 
 const keys = [
+  "no",
   "nama",
   "id",
-  "nama_negara",
+  "nama_int_negara",
+  "jk",
+  "lahir",
   "pekerjaan",
   "telepon",
   "alamat",
-  "nilai_transaksi"
+  "status"
 ];
 
 $(document).ready(function() {
@@ -453,19 +458,16 @@ function loadAllDataForExport() {
     function fetchNext() {
 
       const params = new URLSearchParams();
-      if (start) params.append("start_date", start);
-      if (end) params.append("end_date", end);
-      if (cabang) params.append("cabang", cabang);
+      if (tipe_kontak) params.append("tipe_kontak", tipe_kontak);
       if (negara) params.append("negara", negara);
-      if (sort_by) params.append("sort_by", sort_by);
-      if (sort_dir) params.append("sort_dir", sort_dir);
+      if (show) params.append("show", show);
       if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
 
       params.append("offset", offsetExport);
       params.append("limit", limitExport);
 
       $.ajax({
-        url: url_api + `/master-report/customer?${params.toString()}`,
+        url: url_api + `/other-features/dttot-list?${params.toString()}`,
         type: 'GET',
         headers: {
           "Authorization": `Bearer ${window.token}`,
@@ -474,12 +476,15 @@ function loadAllDataForExport() {
 
         success: function (res) {
 
-          if (!res.status) {
-            reject('Gagal load data');
-            return;
-          }
+          if (total === 0) {
+            total = res.total_count;
 
-          if (total === 0) total = res.total_count;
+            if (total === 0) {
+              $('#modalProgress').modal('hide');
+              resolve([]);
+              return;
+            }
+          }
 
           exportData.push(...res.data);
           offsetExport += limitExport;
@@ -504,7 +509,10 @@ function loadAllDataForExport() {
           }
         },
 
-        error: reject
+        error: function (xhr, status, error) {
+          $('#modalProgress').modal('hide');
+          reject(error || status);
+        }
       });
     }
 
@@ -683,6 +691,21 @@ $('#reportedBtn').click(function (e) {
   });
 });
 
+function buildExportRows(allData) {
+  return allData.map((item, index) => ({
+    no: index + 1,
+    nama: item.nama || '-',
+    id: item.id || '-',
+    nama_int_negara: item.nama_int_negara || '-',
+    jk: item.jk == 'M' ? 'Male' : 'Female',
+    lahir: `${item.tempat_lahir || ''} ${item.tanggal_lahir || ''}`.trim() || '-',
+    pekerjaan: item.pekerjaan || '-',
+    telepon: item.telepon || '-',
+    alamat: item.alamat || '-',
+    status: item.dttot == 2 ? 'Reported' : '-',
+  }));
+}
+
 $("#export-pdf").click(function () {
 
   if (isExporting) return;
@@ -692,14 +715,19 @@ $("#export-pdf").click(function () {
     .then((allData) => {
 
       exportToPDF({
-        data: allData,
+        data: buildExportRows(allData),
         headers,
         keys,
-        filename: `Customer Report.pdf`,
-        title: 'Customer Report',
+        filename: `DTTOT_List.pdf`,
+        title: 'DTTOT List',
         nama_pt: parsedSetting.NamaPT.strval,
-        start,
-        end
+        columnStyles: {
+          0: { halign: "center" },
+          3: { halign: "center" },
+          4: { halign: "center" },
+          5: { halign: "center" },
+          9: { halign: "center" },
+        },
       });
 
     })
@@ -717,10 +745,10 @@ $("#export-excel").click(function () {
   .then((allData) => {
 
     exportToExcel({
-      data: allData,
+      data: buildExportRows(allData),
       headers: headers,
       keys: keys,
-      filename: "Customer Report.xlsx", 
+      filename: "DTTOT_List.xlsx",
     });
 
   })

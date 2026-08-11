@@ -209,4 +209,5 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.3.3/dist/html2canvas-pro.min.js"></script>
 <script src="js/reports/bi-reports/summary-valas.js" type="text/javascript"></script>

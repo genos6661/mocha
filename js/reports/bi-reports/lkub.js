@@ -565,3 +565,7 @@ $("#export-excel").click(function () {
     filename: "LKUB.xlsx", 
   });
 });
+
+$('#print').click(function () {
+  printReport('cardData');
+});

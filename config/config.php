@@ -6,7 +6,7 @@ $myDomain = $_SERVER['HTTP_HOST'];
 // $url_api = "https://api.beresmocha.my.id";
 $url_api = "https://api.thebrotherhoodlaw.com";
 
-?>
+?>	
 
 <script>
 	// let url_api = "http://localhost:3030";

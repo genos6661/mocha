@@ -548,6 +548,7 @@ switch ($routeInfo[0]) {
     <script src="/js/export/csv.js" type="text/javascript"></script>
     <script src="/js/export/excel.js" type="text/javascript"></script>
     <script src="/js/export/pdf.js" type="text/javascript"></script>
+    <script src="/js/export/print.js" type="text/javascript"></script>
 
     <!-- Page JS -->
   </body>
