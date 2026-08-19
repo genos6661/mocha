@@ -423,9 +423,9 @@ function padNumber(num) {
 }
 
 function padKursTengah(value) {
-  let clean = String(value).trim().replace(/\./g, "").replace(",", ".");
+  // let clean = String(value).trim().replace(/\./g, "").replace(",", ".");
 
-  let num = parseFloat(clean);
+  let num = parseFloat(value);
   if (isNaN(num)) num = 0;
 
   // Kalikan 10000 agar 4 digit desimal menjadi bilangan bulat
@@ -453,10 +453,13 @@ $('#eksporTXT').click(function (e) {
     }
 
     const kursTengah = parseFloat(
-      (tds[10].innerText || "0").replace(/,/g, "")
-    ) || 0;
+      (tds[10].innerText || "0").toString()
+      .replace(/\./g, '')  
+      .replace(/,/g, '.')) || 0;
+
     const item = dataReport[idx];
     const saldoAkhirRupiah = Number(item.saldo_akhir || 0) * kursTengah;
+    console.log(kodeValas + ' - ' + kursTengah + ' - ' + saldoAkhirRupiah);
 
     const line =
       kodeValas + "1" +
