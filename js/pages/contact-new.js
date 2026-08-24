@@ -90,27 +90,7 @@ $('#sbmTambah').click(async function (e) {
                 loadMoreData();
                 checkDTTOT(nama);
             });
-            if ($('#kontak').length && $('#modalTransaksiBaru').length && response.noindex) {
-                $('#modalKontakBaru').modal('hide');
-                $('#modalTransaksiBaru').modal('show');
-                const data = {
-                    id: response.noindex,
-                    nama: nama,
-                    nama_negara: negara,
-                    text: nama + ' - ' + negara
-                };
-
-                const option = new Option(data.text, data.id, true, true);
-
-                $('#kontak').append(option).trigger('change');
-
-                $('#kontak').trigger({
-                    type: 'select2:select',
-                    params: {
-                        data: data
-                    }
-                });
-            }
+            selectNewContact(response, nama, negara);
         },
         error: function (xhr, status, error) {
             if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
@@ -122,6 +102,7 @@ $('#sbmTambah').click(async function (e) {
             const dup = xhr.responseJSON.fields;
 
             let msg = "Duplicated data found:<br><br>";
+            if (dup.nama) msg += "- Name already exists<br>";
             if (dup.id) msg += "- ID Number already exists<br>";
             if (dup.email) msg += "- Email already exists<br>";
             if (dup.telepon) msg += "- Phone number already exists<br>";
@@ -157,6 +138,40 @@ $('#sbmTambah').click(async function (e) {
         }
     });
 });
+
+// Selects a just-created contact into the #kontak field on the New
+// Transaction modal and swaps back to it. Shared by the normal save path
+// and submitForce() (the duplicate-confirm retry) so both behave the same.
+function selectNewContact(response, nama, negara) {
+    if (!($('#kontak').length && $('#modalTransaksiBaru').length && response.noindex)) {
+        return;
+    }
+
+    $('#modalKontakBaru').modal('hide');
+    $('#modalTransaksiBaru').modal('show');
+
+    const data = {
+        id: response.noindex,
+        nama: nama,
+        nama_negara: negara,
+        text: nama + ' - ' + negara
+    };
+
+    // drop any option left over from a previous new-contact submission so
+    // #kontak doesn't keep accumulating stale entries across repeated uses
+    $('#kontak').find('option').remove();
+
+    const option = new Option(data.text, data.id, true, true);
+
+    $('#kontak').append(option).trigger('change');
+
+    $('#kontak').trigger({
+        type: 'select2:select',
+        params: {
+            data: data
+        }
+    });
+}
 
 function uploadFotoPaspor(file, namaFoto) {
     return new Promise((resolve, reject) => {
@@ -196,19 +211,22 @@ function submitForce() {
     }
 
     const nama = $('#nama').val();
+    const negara = $('#negara').val();
 
     const formData = {
         nama: nama,
         alamat: $('#alamat').val(),
         telepon: $('#telepon').val(),
         email: $('#email').val(),
-        negara: $('#negara').val(),
+        negara: negara,
         id: $('#idNumber').val(),
         pekerjaan: $('#pekerjaan').val(),
         tipe: $('#tipe').val(),
         id_type: $('#id_type').val(),
         jk: jk,
         rekening: $('#rekening').val(),
+        tempat_lahir: $('#tempat_lahir').val() || null,
+        tanggal_lahir: $('#tanggal_lahir').val() || null,
         pelanggan: $('#pelanggan').is(':checked') ? 1 : 0,
         vendor: $('#vendor').is(':checked') ? 1 : 0,
         karyawan: $('#karyawan').is(':checked') ? 1 : 0,
@@ -223,6 +241,7 @@ function submitForce() {
         contentType: 'application/json',
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         },
         data: JSON.stringify(formData),
@@ -255,6 +274,7 @@ function submitForce() {
                 loadMoreData();
                 checkDTTOT(nama);
             });
+            selectNewContact(response, nama, negara);
             if (document.querySelector(`.notiflix-loading`)) {
                 Loading.remove();
             }

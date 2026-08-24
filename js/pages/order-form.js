@@ -803,6 +803,7 @@ $(document).ready(function () {
           const dup = xhr.responseJSON.fields;
 
           let msg = "Duplicated data found:<br><br>";
+          if (dup.nama) msg += "- Name already exists<br>";
           if (dup.id) msg += "- ID Number already exists<br>";
           if (dup.email) msg += "- Email already exists<br>";
           if (dup.telepon) msg += "- Phone number already exists<br>";
@@ -862,8 +863,27 @@ $(document).ready(function () {
     });
   }
 
-  function submitForce() {
-    let idFoto = $('#paspor')[0].files[0] ? idFoto : null; 
+  async function submitForce() {
+    let idFoto = null;
+    const fotoFile = $('#paspor')[0].files[0];
+    const namaFoto = $('#fullname').val();
+
+    if (fotoFile) {
+        try {
+            const fotoResponse = await uploadFotoPaspor(fotoFile, namaFoto);
+            idFoto = fotoResponse.fileId;
+        } catch (err) {
+            notif.fire({
+                icon: 'error',
+                text: err.message || 'Gagal upload paspor'
+            });
+            if (document.querySelector(`.notiflix-loading`)) {
+                Loading.remove();
+            }
+            return;
+        }
+    }
+
     isMale = $('#male');
     let jk = isMale.prop('checked') ? 'M' : 'F';
 

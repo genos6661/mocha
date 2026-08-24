@@ -136,6 +136,7 @@ $('#sbmReg').click(function (e) {
         const dup = xhr.responseJSON.fields;
 
         let msg = "Duplicated data found:<br><br>";
+        if (dup.nama) msg += "- Name already exists<br>";
         if (dup.id) msg += "- ID Number already exists<br>";
         if (dup.email) msg += "- Email already exists<br>";
         if (dup.telepon) msg += "- Phone number already exists<br>";
@@ -246,6 +247,7 @@ function submitForce() {
         contentType: 'application/json',
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
             "X-Client-Domain": myDomain
         },
         data: JSON.stringify(formData),
