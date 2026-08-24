@@ -79,8 +79,7 @@ $('#sbmTambah').click(async function (e) {
                     return;
                 }
             }
-            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
-            $('#negara, #pekerjaan').val(null).trigger('change');
+            resetContactForm();
             notif.fire({
                 icon: 'success',
                 text: response.message
@@ -138,6 +137,25 @@ $('#sbmTambah').click(async function (e) {
         }
     });
 });
+
+// Clears the New Contact form after a successful save. Radio/checkbox
+// inputs (gender, contact type) are restored to their original HTML
+// `checked` default instead of being force-unchecked, so e.g. Male /
+// Pelanggan stay selected for the next entry instead of the modal
+// reopening with nothing picked at all.
+function resetContactForm() {
+    $('#modalTambah .modal-body, #modalKontakBaru .modal-body')
+        .find('input, textarea')
+        .each(function () {
+            if (this.type === 'radio' || this.type === 'checkbox') {
+                this.checked = this.defaultChecked;
+            } else {
+                this.value = '';
+            }
+        });
+
+    $('#negara, #pekerjaan').val(null).trigger('change');
+}
 
 // Selects a just-created contact into the #kontak field on the New
 // Transaction modal and swaps back to it. Shared by the normal save path
@@ -263,8 +281,7 @@ function submitForce() {
                     return;
                 }
             }
-            $('#modalTambah .modal-body, #modalKontakBaru .modal-body').find('input, textarea').val('').prop('checked', false);
-            $('#negara, #pekerjaan').val(null).trigger('change');
+            resetContactForm();
             notif.fire({
                 icon: 'success',
                 text: response.message

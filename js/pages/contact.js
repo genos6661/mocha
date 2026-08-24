@@ -144,42 +144,43 @@ document.addEventListener("DOMContentLoaded", function () {
         placeholder: 'Choose Country'
     });
 
+    function initOccupationSelect2($select, dropdownParent) {
+        $select.select2({
+          placeholder: 'Choose Occupation',
+          dropdownParent: dropdownParent,
+          data: [],
+          allowClear: true,
+          tags: true,
+          ajax: {
+            transport: function (params, success, failure) {
+              const term = params.data.term ? params.data.term.toLowerCase() : '';
+              const filtered = occupationData.filter(item => {
+                return item.text.toLowerCase().includes(term);
+              });
+              success({ results: filtered });
+            },
+            delay: 250
+          }
+        });
+
+        // Picking "Others" clears it and reopens the same field so the
+        // user can type their own occupation right there, instead of
+        // submitting the literal "Others" value or needing a separate
+        // text input.
+        $select.on('select2:select', function (e) {
+          const selected = e.params.data;
+          if (!selected.newTag && selected.id && selected.id.trim() === 'Others') {
+            $select.val(null).trigger('change');
+            $select.select2('open');
+          }
+        });
+    }
+
     $.getJSON('/occupation.json', function (data) {
         occupationData = data;
 
-        $('#pekerjaan').select2({
-          placeholder: 'Choose Occupation',
-          dropdownParent: '#modalTambah',
-          data: [], 
-          allowClear: true,
-          ajax: {
-            transport: function (params, success, failure) {
-              const term = params.data.term ? params.data.term.toLowerCase() : '';
-              const filtered = occupationData.filter(item => {
-                return item.text.toLowerCase().includes(term);
-              });
-              success({ results: filtered });
-            },
-            delay: 250
-          }
-        });
-
-        $('#pekerjaanEdit').select2({
-          placeholder: 'Choose Occupation',
-          dropdownParent: '#modalEdit',
-          data: [], 
-          allowClear: true,
-          ajax: {
-            transport: function (params, success, failure) {
-              const term = params.data.term ? params.data.term.toLowerCase() : '';
-              const filtered = occupationData.filter(item => {
-                return item.text.toLowerCase().includes(term);
-              });
-              success({ results: filtered });
-            },
-            delay: 250
-          }
-        });
+        initOccupationSelect2($('#pekerjaan'), '#modalTambah');
+        initOccupationSelect2($('#pekerjaanEdit'), '#modalEdit');
     });
 
     $('#modalTambah').on('shown.bs.modal', function (e) {

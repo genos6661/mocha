@@ -51,8 +51,9 @@ $(document).ready(function () {
 
     $('#occupation').select2({
       placeholder: 'Choose Occupation',
-      data: [], 
+      data: [],
       allowClear: true,
+      tags: true,
       ajax: {
         transport: function (params, success, failure) {
           const term = params.data.term ? params.data.term.toLowerCase() : '';
@@ -62,6 +63,17 @@ $(document).ready(function () {
           success({ results: filtered });
         },
         delay: 250
+      }
+    });
+
+    // Picking "Others" clears it and reopens the same field so the user
+    // can type their own occupation right there, instead of submitting
+    // the literal "Others" value or needing a separate text input.
+    $('#occupation').on('select2:select', function (e) {
+      const selected = e.params.data;
+      if (!selected.newTag && selected.id && selected.id.trim() === 'Others') {
+        $('#occupation').val(null).trigger('change');
+        $('#occupation').select2('open');
       }
     });
   });
