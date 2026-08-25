@@ -24,23 +24,54 @@ function printReport(divId, options = {}) {
     scale,
     useCORS: true,
   }).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-
     const pdf = new jsPDF({
       orientation,
       unit: "pt",
       format,
     });
 
+    const margin = 20;
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth - 40;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgWidth = pageWidth - margin * 2;
 
-    const y = (pageHeight - imgHeight) / 2;
+    // How many source canvas pixels (at the captured scale) fit into one
+    // PDF page's printable height, once the canvas is scaled down to imgWidth.
+    const canvasPxPerPage = ((pageHeight - margin * 2) * canvas.width) / imgWidth;
 
-    pdf.addImage(imgData, "PNG", 20, y, imgWidth, imgHeight);
+    let renderedHeight = 0;
+
+    // Content taller than one page is common for these reports (their
+    // scroll container is expanded before capture so the full list is
+    // included), so slice the canvas across as many pages as needed
+    // instead of clipping everything past the first page.
+    while (renderedHeight < canvas.height) {
+      const sliceHeight = Math.min(canvasPxPerPage, canvas.height - renderedHeight);
+
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceHeight;
+
+      pageCanvas
+        .getContext("2d")
+        .drawImage(
+          canvas,
+          0, renderedHeight, canvas.width, sliceHeight,
+          0, 0, canvas.width, sliceHeight
+        );
+
+      const sliceImgHeight = (sliceHeight * imgWidth) / canvas.width;
+
+      if (renderedHeight > 0) {
+        pdf.addPage();
+      }
+
+      pdf.addImage(pageCanvas.toDataURL("image/png"), "PNG", margin, margin, imgWidth, sliceImgHeight);
+
+      renderedHeight += sliceHeight;
+    }
+
     pdf.autoPrint();
 
     const blob = pdf.output("bloburl");

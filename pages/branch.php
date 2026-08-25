@@ -44,20 +44,17 @@
 
 <!-- modal tambah -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalTambah" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-simple">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">New Branch Data</h5>
+      <div class="modal-body">
         <button
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formCabangBaru">
+        <p class="h4 text-center mb-4">New Branch Data</p>
         <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="kode" class="form-label">Code</label>
             <input
               type="text"
@@ -65,9 +62,7 @@
               class="form-control"
               placeholder="Input Branch Code" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="nama" class="form-label">Name</label>
             <input
               type="text"
@@ -77,60 +72,55 @@
           </div>
         </div>
         <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="alamat" class="form-label">Address</label>
             <input type="text" id="alamat" class="form-control" placeholder="Input Branch Address" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="telepon" class="form-label">Phone Number</label>
             <input type="text" id="telepon" class="form-control" placeholder="Input Phone Number" />
           </div>
         </div>
         <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="judul" class="form-label">Receipt's Title</label>
             <input type="text" id="judul" class="form-control" placeholder="Fill Receipt's Title" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="footer1" class="form-label">Footer 1</label>
             <input type="text" id="footer1" class="form-control" placeholder="Input Footer 1" />
           </div>
         </div>
         <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="footer2" class="form-label">Footer 2</label>
             <input type="text" id="footer2" class="form-control" placeholder="Input Footer 2" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="footer3" class="form-label">Footer 3</label>
             <input type="text" id="footer3" class="form-control" placeholder="Input Branch Footer 3" />
           </div>
         </div>
         <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="cdHead" class="form-label">Customer Display Header</label>
             <input type="text" id="cdHead" class="form-control" placeholder="Text for branch's Customer Display" />
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
+          <div class="col-md mb-3">
             <label for="cdFoot" class="form-label">Customer Display Footer</label>
             <input type="text" id="cdFoot" class="form-control" placeholder="Text for branch's Customer Display" />
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmTambah" class="btn btn-primary">Save</button>
-        </form>
+      <div class="row justify-content-center">
+        <div class="col-md-4 d-grid mb-3 mb-md-0">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+        <div class="col-md-4 d-grid mb-3 mb-md-0">
+          <button type="button" id="sbmTambah" class="btn btn-primary">Save</button>
+        </div>
       </div>
     </div>
   </div>
@@ -138,102 +128,140 @@
 
 <!-- modal edit -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEdit" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-simple">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Edit Branch Data</h5>
+      <div class="modal-body">
         <button
           type="button"
           class="btn-close"
           data-bs-dismiss="modal"
           aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formEditPajak">
+        <p class="h4 text-center mb-4">Edit Branch Data</p>
         <input type="hidden" id="idEdit">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="kodeEdit" class="form-label">Code</label>
-            <input
-              type="text"
-              id="kodeEdit"
-              class="form-control"
-              placeholder="Input Branch Code" />
+
+        <ul class="nav nav-tabs mb-4" role="tablist">
+          <li class="nav-item">
+            <button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabEditGeneral" role="tab" aria-selected="true">General</button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" data-bs-toggle="tab" data-bs-target="#tabEditNomorNota" role="tab" aria-selected="false">Document Last Numbers</button>
+          </li>
+        </ul>
+
+        <div class="tab-content p-0">
+          <div class="tab-pane fade active show" id="tabEditGeneral" role="tabpanel">
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="kodeEdit" class="form-label">Code</label>
+                <input
+                  type="text"
+                  id="kodeEdit"
+                  class="form-control"
+                  placeholder="Input Branch Code" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="namaEdit" class="form-label">Name</label>
+                <input
+                  type="text"
+                  id="namaEdit"
+                  class="form-control"
+                  placeholder="Input Branch Name" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="alamatEdit" class="form-label">Address</label>
+                <input type="text" id="alamatEdit" class="form-control" placeholder="Input Branch Address" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="teleponEdit" class="form-label">Phone Number</label>
+                <input type="text" id="teleponEdit" class="form-control" placeholder="Input Phone Number" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="judulEdit" class="form-label">Receipt's Title</label>
+                <input type="text" id="judulEdit" class="form-control" placeholder="Fill Receipt's Title" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="footer1Edit" class="form-label">Footer 1</label>
+                <input type="text" id="footer1Edit" class="form-control" placeholder="Input Footer 1" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="footer2Edit" class="form-label">Footer 2</label>
+                <input type="text" id="footer2Edit" class="form-control" placeholder="Input Footer 2" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="footer3Edit" class="form-label">Footer 3</label>
+                <input type="text" id="footer3Edit" class="form-control" placeholder="Input Branch Footer 3" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="cdHeadEdit" class="form-label">Customer Display Header</label>
+                <input type="text" id="cdHeadEdit" class="form-control" placeholder="Text for branch's Customer Display" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="cdFootEdit" class="form-label">Customer Display Footer</label>
+                <input type="text" id="cdFootEdit" class="form-control" placeholder="Text for branch's Customer Display" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="aktif">
+                  <label class="form-check-label" for="aktif">Aktif</label>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="namaEdit" class="form-label">Name</label>
-            <input
-              type="text"
-              id="namaEdit"
-              class="form-control"
-              placeholder="Input Branch Name" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="alamatEdit" class="form-label">Address</label>
-            <input type="text" id="alamatEdit" class="form-control" placeholder="Input Branch Address" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="teleponEdit" class="form-label">Phone Number</label>
-            <input type="text" id="teleponEdit" class="form-control" placeholder="Input Phone Number" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="judulEdit" class="form-label">Receipt's Title</label>
-            <input type="text" id="judulEdit" class="form-control" placeholder="Fill Receipt's Title" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="footer1Edit" class="form-label">Footer 1</label>
-            <input type="text" id="footer1Edit" class="form-control" placeholder="Input Footer 1" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="footer2Edit" class="form-label">Footer 2</label>
-            <input type="text" id="footer2Edit" class="form-control" placeholder="Input Footer 2" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="footer3Edit" class="form-label">Footer 3</label>
-            <input type="text" id="footer3Edit" class="form-control" placeholder="Input Branch Footer 3" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="cdHeadEdit" class="form-label">Customer Display Header</label>
-            <input type="text" id="cdHeadEdit" class="form-control" placeholder="Text for branch's Customer Display" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="cdFootEdit" class="form-label">Customer Display Footer</label>
-            <input type="text" id="cdFootEdit" class="form-control" placeholder="Text for branch's Customer Display" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="aktif">
-              <label class="form-check-label" for="aktif">Aktif</label>
+
+          <div class="tab-pane fade" id="tabEditNomorNota" role="tabpanel">
+            <div class="d-flex justify-content-end mb-3">
+              <button type="button" class="btn btn-outline-primary btn-sm" id="btnReloadNomorNota" title="Refresh current numbers">
+                <i class="icon-base ti tabler-refresh icon-16px me-1"></i>Reload
+              </button>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="orderNumEdit" class="form-label">Order Last Number</label>
+                <input type="number" id="orderNumEdit" class="form-control" placeholder="0" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="transNumEdit" class="form-label">Transaction Last Number</label>
+                <input type="number" id="transNumEdit" class="form-control" placeholder="0" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="cashNumEdit" class="form-label">Cash Transaction Last Number</label>
+                <input type="number" id="cashNumEdit" class="form-control" placeholder="0" />
+              </div>
+              <div class="col-md mb-3">
+                <label for="jurnalNumEdit" class="form-label">Journal Voucher Last Number</label>
+                <input type="number" id="jurnalNumEdit" class="form-control" placeholder="0" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md mb-3">
+                <label for="adjustNumEdit" class="form-label">Adjustment Last Number</label>
+                <input type="number" id="adjustNumEdit" class="form-control" placeholder="0" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Tutup
-        </button>
-        <button type="button" id="sbmEdit" class="btn btn-primary">Simpan</button>
-        </form>
+      <div class="row justify-content-center">
+        <div class="col-md-4 d-grid mb-3 mb-md-0">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+        <div class="col-md-4 d-grid mb-3 mb-md-0">
+          <button type="button" id="sbmEdit" class="btn btn-primary">Save</button>
+        </div>
       </div>
     </div>
   </div>

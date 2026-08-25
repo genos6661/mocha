@@ -302,6 +302,13 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             $('#cdFootEdit').val(response.cd_footer);
             $('#aktif').prop('checked', response.aktif == 1);
 
+            populateNomorNota(response);
+
+            $('#modalEdit .nav-tabs .nav-link.active').removeClass('active');
+            $('#modalEdit .tab-pane.active').removeClass('active show');
+            $('#modalEdit .nav-tabs .nav-link').first().addClass('active');
+            $('#modalEdit .tab-pane').first().addClass('active show');
+
             $('#modalEdit').modal('show');
         },
         error: function(xhr, status, error) {
@@ -309,6 +316,46 @@ modalEdit.addEventListener('shown.bs.modal', event => {
               icon: 'error',
               text: xhr.responseJSON.message
             });
+        }
+    });
+});
+
+function populateNomorNota(response) {
+    $('#orderNumEdit').val(response.order_num || 0);
+    $('#transNumEdit').val(response.trans_num || 0);
+    $('#cashNumEdit').val(response.cash_num || 0);
+    $('#jurnalNumEdit').val(response.jurnal_num || 0);
+    $('#adjustNumEdit').val(response.adjust_num || 0);
+}
+
+$('#btnReloadNomorNota').click(function (e) {
+    e.preventDefault();
+    const id = $('#idEdit').val();
+    if (!id) return;
+
+    const $btn = $(this);
+    $btn.prop('disabled', true);
+
+    $.ajax({
+        url: url_api + `/cabang/id/` + id,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        },
+        success: function (response) {
+            populateNomorNota(response);
+        },
+        error: function (xhr) {
+            notif.fire({
+              icon: 'error',
+              text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+            });
+        },
+        complete: function () {
+            $btn.prop('disabled', false);
         }
     });
 });
@@ -386,6 +433,11 @@ $('#sbmEdit').click(function (e) {
     cd_header: $('#cdHeadEdit').val(),
     cd_footer: $('#cdFootEdit').val(),
     aktif: $('#aktif').is(':checked') ? 1 : 0,
+    order_num: parseInt($('#orderNumEdit').val()) || 0,
+    trans_num: parseInt($('#transNumEdit').val()) || 0,
+    cash_num: parseInt($('#cashNumEdit').val()) || 0,
+    jurnal_num: parseInt($('#jurnalNumEdit').val()) || 0,
+    adjust_num: parseInt($('#adjustNumEdit').val()) || 0,
   };
 
   $.ajax({

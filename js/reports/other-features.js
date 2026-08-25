@@ -214,6 +214,7 @@ $('#sbmUpload').on('click', async function () {
 
         $('#boxTabelDTTOT').removeClass('d-none');
         $('#boxUploadDTTOT').addClass('d-none');
+        $('#checkAllDTTOT').prop('checked', false);
 
         if (!response.data || !response.data.length) {
           tbody.append(`
@@ -290,6 +291,13 @@ $('#sbmUpload').on('click', async function () {
 $(document).on('click', '#tabelDTTOT tbody tr', function () {
   $(this).toggleClass('table-light');
   updateSelectedCount();
+  syncCheckAllDTTOT();
+});
+
+$(document).on('change', '#checkAllDTTOT', function () {
+  const checked = $(this).is(':checked');
+  $('#tabelDTTOT tbody tr[data-noindex]').toggleClass('table-light', checked);
+  updateSelectedCount();
 });
 
 function updateSelectedCount() {
@@ -300,6 +308,13 @@ function updateSelectedCount() {
   });
 
   $('#dttotCountSelect').text(`${selectedNoindex.length} selected`);
+}
+
+function syncCheckAllDTTOT() {
+  const $rows = $('#tabelDTTOT tbody tr[data-noindex]');
+  const selected = $rows.filter('.table-light').length;
+
+  $('#checkAllDTTOT').prop('checked', $rows.length > 0 && selected === $rows.length);
 }
 
 function getBadgeColor(level) {
