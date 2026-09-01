@@ -2,8 +2,8 @@
 <div class="card">
   <div class="row p-3">
     <div class="col-md d-grid d-md-flex gap-2 mb-2 mb-md-0">
-      <button class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#modalFilter" id="btnModalFilter">
-        <i class="icon-base ti tabler-filter icon-lg me-2"></i>Filter
+      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter" id="btnModalFilter">
+        <i class="icon-base ti tabler-filter icon-20px"></i>
       </button>
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
         <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i>New Transfer

@@ -119,7 +119,7 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       const today = new Date();
       $('#bulanFilter').val(today.getMonth() + 1).trigger('change');
       $('#tahunFilter').val(today.getFullYear()).trigger('change');
-      $('#showOptionLKUB').val("1").trigger('change');
+      $('#showOptionLKUB').val("2").trigger('change');
     } else if (nama === "Neraca" || nama === "LKPE") {
       $('#boxSimpleRange, #boxRange, #boxBulanTahun').addClass('d-none');
       $('#boxSimpleDate, #boxSingleDate').removeClass('d-none');

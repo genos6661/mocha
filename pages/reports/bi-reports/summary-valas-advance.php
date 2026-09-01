@@ -42,6 +42,38 @@
     font-weight: 500;
     font-style: normal;
   }
+
+  /* Summary Valas Advance: visual hierarchy so 14 dense numeric columns
+     are easier to scan without changing any computed values or colors.
+     Column positions are fixed by the table structure (1=currency,
+     2-4=beginning balance, 5-7=buying, 8=middle rate, 9-11=selling,
+     12-14=balance), so styling is done purely via nth-child. Extra
+     padding/line-height gives the rows breathing room instead of relying
+     on background tinting. */
+  #tabelData tbody td, #tabelData thead th {
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+    padding-left: 0.6rem !important;
+    padding-right: 0.6rem !important;
+  }
+  #tabelData tbody tr {
+    line-height: 1.6;
+  }
+  /* Forex (valas) amount is the headline figure per group */
+  #tabelData tbody td:nth-child(2), #tabelData tbody td:nth-child(5),
+  #tabelData tbody td:nth-child(9), #tabelData tbody td:nth-child(12) {
+    font-weight: 600;
+  }
+  /* Rate and Rupiah are supporting figures — smaller */
+  #tabelData tbody td:nth-child(3), #tabelData tbody td:nth-child(4),
+  #tabelData tbody td:nth-child(6), #tabelData tbody td:nth-child(7),
+  #tabelData tbody td:nth-child(10), #tabelData tbody td:nth-child(11),
+  #tabelData tbody td:nth-child(13), #tabelData tbody td:nth-child(14) {
+    font-size: 0.8125rem;
+  }
+  #tabelData tbody td:nth-child(8) {
+    font-weight: 600;
+  }
 </style>
 
 <div class="row mb-2">

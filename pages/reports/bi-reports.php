@@ -195,8 +195,8 @@
         <div class="mb-3 d-none" id="boxShowingLKUB">
           <label for="showOptionLKUB" class="form-label">Displayed Option</label>
           <select id="showOptionLKUB" class="form-select">
-            <option value="1" selected>Show All Forexs</option>
-            <option value="2">Only Show Forexs with Rate Tengah</option>
+            <option value="1">Show All Forexs</option>
+            <option value="2" selected>Only Show Forexs with Rate Tengah</option>
           </select>
         </div>
       </div>

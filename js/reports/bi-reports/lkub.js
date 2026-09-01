@@ -71,7 +71,7 @@ $(document).ready(function() {
     });
 
     $('#showOptionFilter').select2({ dropdownParent: $('#modalFilter') });
-    $('#showOptionFilter').val("1").trigger('change');
+    $('#showOptionFilter').val("2").trigger('change');
 
     const currentYear = new Date().getFullYear();
     let yearOptions = '';
@@ -180,7 +180,7 @@ function loadHeader() {
     tahun = parseInt(params.tahun) || today.getFullYear();
     cabang = params.cabang;
     user = params.user;
-    show = params.show;
+    show = params.show || '2';
 
     $('#range').text(monthNames[bulan - 1] + ' ' + tahun);
     $('#bulanFilter').val(bulan).trigger('change');
