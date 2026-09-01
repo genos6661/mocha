@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#" data-nama="LKUB" data-range="month" data-url="/lkub">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user icon-xl"></i>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#" data-nama="Neraca" data-range="today" data-url="/neraca">
+    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user-plus icon-xl"></i>

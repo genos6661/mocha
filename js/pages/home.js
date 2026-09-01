@@ -623,8 +623,8 @@ function getForexTrend() {
         let totalNilai = formatNumberID(item.total_nilai);
         const li = `
           <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <img src="/assets/img/flags/${item.flag}" class="rounded-circle fs-2" alt="">
+            <div class="flex-shrink-0 me-4">
+              <img src="/assets/img/flags/${item.flag}" class="rounded" alt="" style="width: 2.5rem; height: 1.75rem; object-fit: cover;">
             </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">

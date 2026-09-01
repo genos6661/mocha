@@ -342,7 +342,7 @@ function initTable() {
         columns: [
             { data: null, orderable: false,
                 render: function (data, type, row) {
-                    if (valasDisplayed !== '' && valasDisplayed !== null) {
+                    if (valasDisplayed) {
                         let arrDisplay = valasDisplayed.split(",").map(Number);
                         let isDisplayed = arrDisplay.includes(row.noindex);
                         return `<input class="form-check-input row-checkbox" type="checkbox" value="${row.noindex}" onChange="updateHeaderCheckboxState()" id="customCheck${row.noindex}" ${isDisplayed ? 'checked' : ''}>`;
@@ -671,7 +671,12 @@ $('#sbmCD').click(function(e) {
                 icon: 'success',
                 text: response.message
             }).then(() => {
-                valasDisplayed = '';
+                // Reflect what was just submitted, not blank — loadSettings()
+                // will overwrite this once its own request resolves, but
+                // loadMoreData() below re-renders row checkboxes immediately
+                // and runs independently, so it can't be left relying on a
+                // response that hasn't come back yet.
+                valasDisplayed = values;
                 loadSettings();
                 loadMoreData(true);
 

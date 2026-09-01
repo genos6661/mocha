@@ -12,7 +12,38 @@ $(document).ready(function () {
 	loadMainSettings();
 	loadMainProfile();
     $('#btnBackup').on('click', backupData);
+    addCopyStartDateButton();
 });
+
+// Every page's date-range filter uses the same #startDate/#endDate pair.
+// Add a small button between them that copies Date From into Until, so
+// users don't have to pick the same date twice for a single-day filter.
+function addCopyStartDateButton() {
+    const start = document.getElementById('startDate');
+    const end = document.getElementById('endDate');
+
+    if (!start || !end || start.type !== 'date' || end.type !== 'date') return;
+    if (!start.parentElement || start.parentElement.querySelector('.btnCopyStartDate')) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-outline-secondary btnCopyStartDate d-flex align-items-center justify-content-center px-2';
+    btn.title = 'Set Until the same as Date From';
+    btn.innerHTML = '<i class="icon-base ti tabler-equal"></i>';
+    btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (!start.value) return;
+        end.value = start.value;
+        end.dispatchEvent(new Event('change', { bubbles: true }));
+        end.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+
+    const btnCol = document.createElement('div');
+    btnCol.className = 'col-auto d-flex align-items-end mb-3';
+    btnCol.appendChild(btn);
+
+    start.parentElement.after(btnCol);
+}
 
 function setCookie(name, value, days) {
     let expires = "";

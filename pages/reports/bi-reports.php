@@ -143,6 +143,39 @@
           <label for="singleDate" class="form-label">Date</label>
           <input type="date" class="form-control" id="singleDate">
         </div>
+        <div class="mb-3 d-none" id="boxBulanTahun">
+          <div class="mb-3">
+            <label for="rangeLKUB" class="form-label">Simple Range</label>
+            <select id="rangeLKUB" class="form-select">
+              <option value="" selected hidden>Choose a quick range (optional)</option>
+              <option value="thisMonth">This Month</option>
+              <option value="lastMonth">Last Month</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-md">
+              <label for="bulanFilter" class="form-label">Month</label>
+              <select id="bulanFilter" class="form-select">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+            <div class="col-md">
+              <label for="tahunFilter" class="form-label">Year</label>
+              <select id="tahunFilter" class="form-select"></select>
+            </div>
+          </div>
+        </div>
         <div class="mb-3">
           <label for="cabang" class="form-label">Branch</label>
           <select id="cabang" class="form-select"></select>
@@ -157,6 +190,13 @@
             <option value="1">Show All Forexs</option>
             <option value="2" selected>Only Show Forexs with balance</option>
             <option value="3">Only Show Forexs with mutation</option>
+          </select>
+        </div>
+        <div class="mb-3 d-none" id="boxShowingLKUB">
+          <label for="showOptionLKUB" class="form-label">Displayed Option</label>
+          <select id="showOptionLKUB" class="form-select">
+            <option value="1" selected>Show All Forexs</option>
+            <option value="2">Only Show Forexs with Rate Tengah</option>
           </select>
         </div>
       </div>

@@ -1,7 +1,10 @@
 <h5 class="mb-3">Forex Transfer</h5>
 <div class="card">
   <div class="row p-3">
-    <div class="col-md d-grid d-md-flex mb-2 mb-md-0">
+    <div class="col-md d-grid d-md-flex gap-2 mb-2 mb-md-0">
+      <button class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#modalFilter" id="btnModalFilter">
+        <i class="icon-base ti tabler-filter icon-lg me-2"></i>Filter
+      </button>
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
         <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i>New Transfer
       </button>
@@ -119,6 +122,66 @@
         <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
         <button class="btn btn-danger mx-1" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
         <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- filter -->
+<div class="modal fade animate__animated animate__fadeInUp" id="modalFilter" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="judulFilter">Filter Transfer</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-2">
+        <form id="formFilterTransfer">
+        <div class="mb-3">
+          <label for="rangeFilter" class="form-label">Simple Range</label>
+          <select id="rangeFilter" class="form-select">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year (Default)</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="tomorrrow">Tomorrow</option>
+            <option value="lastWeek">Last Week</option>
+            <option value="lastMonth">Last Month</option>
+            <option value="lastYear">Last Year</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <div class="row">
+            <div class="col-md">
+              <label for="startDate" class="form-label">Date From</label>
+              <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md">
+              <label for="endDate" class="form-label">Until</label>
+              <input type="date" class="form-control" id="endDate">
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="cabangFromFilter" class="form-label">Branch From</label>
+          <select id="cabangFromFilter" class="form-select"></select>
+        </div>
+        <div class="mb-3">
+          <label for="cabangToFilter" class="form-label">Branch To</label>
+          <select id="cabangToFilter" class="form-select"></select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" id="resetFilter">Reset</button>
+        <button type="button" id="sbmFilter" class="btn btn-primary">Submit</button>
+        </form>
       </div>
     </div>
   </div>

@@ -8,6 +8,37 @@ let orderDir = "desc";
 let userPermissions = [];
 
 $(document).ready(function() {
+	$('#cabangFromFilter, #cabangToFilter').select2({
+    dropdownParent: '#modalFilter',
+    ajax: {
+      url: url_api + '/cabang/select2',
+      dataType: 'json',
+      headers: {
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
+      },
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term
+        };
+      },
+      processResults: function (data) {
+        return {
+          results: data.results
+        };
+      }
+    },
+    placeholder: 'All Branchs',
+    allowClear: true
+	});
+
+	$('#rangeFilter').select2({ dropdownParent: '#modalFilter' });
+	$('#rangeFilter').on('change', function () {
+		updateDateRangeSelector(this.value);
+	});
+	$('#rangeFilter').val('year').trigger('change');
+
 	$('#from, #to').select2({
     dropdownParent: '#modalTambah',
     ajax: {
@@ -457,6 +488,21 @@ function initTable() {
     });
 }
 
+function updateBrowserURL(params) {
+  const newURL = `${window.location.pathname}?${params.toString()}`;
+  history.replaceState(null, '', newURL);
+}
+
+function getFiltersFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+      cabang_from: params.get("cabang_from") || "",
+      cabang_to: params.get("cabang_to") || "",
+      start_date: params.get("start_date") || "",
+      end_date: params.get("end_date") || ""
+  };
+}
+
 function loadMoreData(reset = false) {
     if (isLoading) return;
     isLoading = true;
@@ -465,7 +511,18 @@ function loadMoreData(reset = false) {
     const searchValue = searchInput ? searchInput.value : "";
     const orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
 
-    fetch(`${url_api}/transfer/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}`, {
+    const params = new URLSearchParams();
+    params.append("offset", reset ? 0 : offset);
+    params.append("limit", limit);
+    params.append("search", searchValue);
+
+    const filters = getFiltersFromURL();
+    if (filters.start_date) params.append("start_date", filters.start_date);
+    if (filters.end_date) params.append("end_date", filters.end_date);
+    if (filters.cabang_from) params.append("cabang_from", filters.cabang_from);
+    if (filters.cabang_to) params.append("cabang_to", filters.cabang_to);
+
+    fetch(`${url_api}/transfer/datatable?${params.toString()}${orderParam}`, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${window.token}`,
@@ -499,6 +556,137 @@ function loadMoreData(reset = false) {
     if (document.querySelector(`.notiflix-loading`)) {
         Loading.remove();
     }
+}
+
+$('#sbmFilter').click(function (e) {
+    e.preventDefault();
+    if (isLoading) {
+      return;
+    }
+
+    const startDate = $('#startDate').val();
+    const endDate = $('#endDate').val();
+
+    if ((startDate && !endDate) || (!startDate && endDate)) {
+        notif.fire({
+            icon: 'warning',
+            text: 'Isi Date From dan Until sekaligus agar filter tanggal aktif'
+        });
+        return;
+    }
+
+    const cabangFrom = $('#cabangFromFilter').val() || '';
+    const cabangTo = $('#cabangToFilter').val() || '';
+
+    const params = new URLSearchParams();
+    params.append("start_date", startDate);
+    params.append("end_date", endDate);
+    params.append("cabang_from", cabangFrom);
+    params.append("cabang_to", cabangTo);
+
+    updateBrowserURL(params);
+    $('#modalFilter').modal('hide');
+    offset = 0;
+    table.clear().draw();
+    loadMoreData(true);
+});
+
+$('#resetFilter').click(function (e) {
+    e.preventDefault();
+
+    $('#rangeFilter').val('year').trigger('change');
+    $('#cabangFromFilter, #cabangToFilter').val(null).trigger('change');
+
+    history.replaceState(null, '', window.location.pathname);
+
+    $('#modalFilter').modal('hide');
+    offset = 0;
+    table.clear().draw();
+    loadMoreData(true);
+});
+
+function updateDateRangeSelector(selectedValue) {
+    const today = new Date();
+    let startDate = '';
+    let endDate = '';
+
+    function formatDate(d) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    switch (selectedValue) {
+        case 'today':
+            startDate = endDate = formatDate(today);
+            break;
+
+        case 'yesterday':
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+            startDate = endDate = formatDate(yesterday);
+            break;
+
+        case 'tomorrrow':
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            startDate = endDate = formatDate(tomorrow);
+            break;
+
+        case 'week':
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            startDate = formatDate(startOfWeek);
+            endDate = formatDate(today);
+            break;
+
+        case 'lastWeek':
+            const lastWeekStart = new Date(today);
+            lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
+            const lastWeekEnd = new Date(lastWeekStart);
+            lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+            startDate = formatDate(lastWeekStart);
+            endDate = formatDate(lastWeekEnd);
+            break;
+
+        case 'month':
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            startDate = formatDate(startOfMonth);
+            endDate = formatDate(endOfMonth);
+            break;
+
+        case 'lastMonth':
+            const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+            startDate = formatDate(lastMonthStart);
+            endDate = formatDate(lastMonthEnd);
+            break;
+
+        case 'year':
+            const startOfYear = new Date(today.getFullYear(), 0, 1);
+            const endOfYear = new Date(today.getFullYear(), 11, 31);
+            startDate = formatDate(startOfYear);
+            endDate = formatDate(endOfYear);
+            break;
+
+        case 'lastYear':
+            const lastYearStart = new Date(today.getFullYear() - 1, 0, 1);
+            const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
+            startDate = formatDate(lastYearStart);
+            endDate = formatDate(lastYearEnd);
+            break;
+
+        case 'all':
+        default:
+            startDate = '';
+            endDate = '';
+            break;
+    }
+
+    $('#startDate').val(startDate);
+    $('#endDate').val(endDate);
 }
 
 function initEvents() {

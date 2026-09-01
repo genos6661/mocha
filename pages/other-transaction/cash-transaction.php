@@ -1,7 +1,10 @@
 <h5 class="mb-3">Cash Transaction</h5>
 <div class="card">
   <div class="row p-3">
-    <div class="col-md d-grid d-md-flex mb-2 mb-md-0">
+    <div class="col-md d-grid d-md-flex gap-2 mb-2 mb-md-0">
+      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter">
+        <i class="icon-base ti tabler-filter icon-20px"></i>
+      </button>
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
         <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i>New Cash Transaction
       </button>
@@ -39,6 +42,70 @@
       <div class="col-md">
           <p>Total Transaction : <span id="totalCash"></span></p>
       </div>
+  </div>
+</div>
+
+<!-- modal filter -->
+<div class="modal fade animate__animated animate__fadeInUp" id="modalFilter" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="backDropModalTitle">Filter Cash Transaction</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-2">
+        <form id="formFilterOrder">
+        <div class="mb-3">
+          <label for="range" class="form-label">Simple Range</label>
+          <select id="range" class="form-select select2">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year (Default)</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="tomorrrow">Tomorrow</option>
+            <option value="lastWeek">Last Week</option>
+            <option value="lastMonth">Last Month</option>
+            <option value="lastYear">Last Year</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+        <div class="row">
+          <div class="col-md mb-3">
+            <label for="startDate" class="form-label">Date From</label>
+            <input type="date" class="form-control" id="startDate">
+          </div>
+          <div class="col-md mb-3">
+            <label for="endDate" class="form-label">Until</label>
+            <input type="date" class="form-control" id="endDate">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="cabangFilter" class="form-label">Branch</label>
+          <select id="cabangFilter" class="form-select" multiple></select>
+        </div>
+        <div class="d-flex justify-content-end mb-0 gap-4">
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="cashIn" checked>
+            <label class="form-check-label" for="cashIn">Cash In</label>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="cashOut" checked>
+            <label class="form-check-label" for="cashOut">Cash Out</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary me-0" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-outline-primary me-0" id="resetFilter">Reset</button>
+        <button type="button" id="sbmFilter" class="btn btn-primary">Apply</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

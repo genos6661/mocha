@@ -1,4 +1,16 @@
-let start, end, cabang, user, show, dataReport, idBI, parsedSetting;
+let bulan, tahun, cabang, user, show, dataReport, idBI, parsedSetting;
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+// Currencies BI requires a Middle Rate for on the LKUB report — used both
+// for the "Only Show Forexs with Rate Tengah" filter and the TXT export.
+const allowedCurrencies = new Set([
+  "USD", "THB", "SGD", "SEK", "PHP", "PGK", "NZD", "NOK", "MYR", "KRW",
+  "JPY", "HKD", "GBP", "EUR", "DKK", "CNY", "CHF", "CAD", "BND", "AUD"
+]);
 
 const headers = [
   "NO",
@@ -58,13 +70,38 @@ $(document).ready(function() {
         allowClear: true
     });
 
-    $('#rangeFilter').on('change', function () {
-        updateDateRangeSelector(this.value);
-    });
-
     $('#showOptionFilter').select2({ dropdownParent: $('#modalFilter') });
     $('#showOptionFilter').val("1").trigger('change');
+
+    const currentYear = new Date().getFullYear();
+    let yearOptions = '';
+    for (let y = currentYear; y >= currentYear - 5; y--) {
+      yearOptions += `<option value="${y}">${y}</option>`;
+    }
+    $('#tahunFilter').html(yearOptions);
+
+    $('#bulanFilter').select2({dropdownParent: $('#modalFilter')});
+    $('#tahunFilter').select2({dropdownParent: $('#modalFilter')});
+
     $('#rangeFilter').select2({dropdownParent: $('#modalFilter')});
+    $('#rangeFilter').on('change', function () {
+      const today = new Date();
+      let targetBulan = today.getMonth() + 1;
+      let targetTahun = today.getFullYear();
+
+      if (this.value === 'lastMonth') {
+        targetBulan -= 1;
+        if (targetBulan < 1) {
+          targetBulan = 12;
+          targetTahun -= 1;
+        }
+      } else if (this.value !== 'thisMonth') {
+        return;
+      }
+
+      $('#bulanFilter').val(targetBulan).trigger('change');
+      $('#tahunFilter').val(targetTahun).trigger('change');
+    });
 
     loadHeader();
     loadData();
@@ -84,8 +121,8 @@ $(document).ready(function() {
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     return {
-        start: params.get("start"),
-        end: params.get("end"),
+        bulan: params.get("bulan"),
+        tahun: params.get("tahun"),
         cabang: params.get("cabang"),
         user: params.get("user"),
         show: params.get("show")
@@ -138,17 +175,16 @@ function loadHeader() {
     let notiflixBlock = document.querySelector('.notiflix-loading');
     notiflixBlock.innerHTML = customSpinnerHTML;
     const params = getUrlParams();
-    start = params.start;
-    end = params.end;
+    const today = new Date();
+    bulan = parseInt(params.bulan) || (today.getMonth() + 1);
+    tahun = parseInt(params.tahun) || today.getFullYear();
     cabang = params.cabang;
     user = params.user;
     show = params.show;
 
-    const tanggal_awal = new Date(start);
-    const tanggal_akhir = new Date(end);
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    
-    $('#range').text(tanggal_awal.toLocaleDateString('en-ID', options) + ' - ' + tanggal_akhir.toLocaleDateString('en-ID', options));
+    $('#range').text(monthNames[bulan - 1] + ' ' + tahun);
+    $('#bulanFilter').val(bulan).trigger('change');
+    $('#tahunFilter').val(tahun).trigger('change');
 
     if (cabang && cabang !== '') {
         getCabang(cabang, function (namaCabang) {
@@ -188,8 +224,8 @@ function loadData() {
     let notiflixBlock = document.querySelector('.notiflix-loading');
     notiflixBlock.innerHTML = customSpinnerHTML;
     const params = new URLSearchParams();
-    if (start) params.append("start_date", start);
-    if (end) params.append("end_date", end);
+    if (bulan) params.append("bulan", bulan);
+    if (tahun) params.append("tahun", tahun);
     if (cabang) params.append("cabang", cabang);
     if (show) params.append("tampilkan", show);
 
@@ -203,8 +239,35 @@ function loadData() {
             "X-Client-Domain": myDomain
         },
         success: function (response) {
-            const details = response.data || [];
-            dataReport = response.data || [];
+            let details = response.data || [];
+
+            // "Only Show Forexs with Rate Tengah" keeps only the currencies
+            // BI actually requires a Middle Rate for on this report — this
+            // is a fixed list, not "rate_tengah > 0 this month", so it's
+            // filtered client-side against allowedCurrencies regardless of
+            // what the backend did with the tampilkan param.
+            if (show == '2') {
+                details = details.filter(item => allowedCurrencies.has(item.kodeValas));
+            }
+
+            // Buy/Sell/Ending balance rupiah are derived on the frontend from
+            // this period's rate_tengah: qty * rate_tengah when a rate has
+            // been saved for this period, otherwise 0.
+            //
+            // saldo_awal_rupiah is different: the backend computes it from
+            // *last* month's saved rate_tengah, which isn't a value this
+            // period's response exposes separately — so it's displayed
+            // exactly as the backend returns it, never recomputed here.
+            details.forEach(function (item) {
+                const rate = Number(item.rate_tengah) || 0;
+                item.rate_tengah = rate;
+                item.saldo_awal_rupiah = Number(item.saldo_awal_rupiah) || 0;
+                item.pembelian_rupiah = rate > 0 ? Number(item.pembelian || 0) * rate : 0;
+                item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * rate : 0;
+                item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
+            });
+
+            dataReport = details;
 
             const tbody = $('#tabelData tbody');
             tbody.empty();
@@ -219,8 +282,14 @@ function loadData() {
                 details.forEach(function (item) {
                     total_beli_rupiah += item.pembelian_rupiah;
                     total_jual_rupiah += item.penjualan_rupiah;
+
+                    const rateNotSaved = item.saldo_awal_rupiah === 0 && Number(item.saldo_awal) !== 0;
+                    const rateNotSavedIcon = rateNotSaved
+                      ? ` <i class="icon-base ti tabler-alert-triangle text-warning" style="cursor:help;" title="Rate tengah bulan sebelumnya belum tersimpan"></i>`
+                      : '';
+
                     const row = `
-                        <tr>
+                        <tr data-kode="${item.kodeValas}">
                           <td>${counter}</td>
                           <td>${item.kodeValas}</td>
                           <td>UKA</td>
@@ -228,15 +297,15 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="text-end">${Number(item.saldo_awal_rupiah).toLocaleString('id-ID', {
+                          <td class="text-end saldoAwalRupiah">${Number(item.saldo_awal_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
-                            })}</td>
+                            })}${rateNotSavedIcon}</td>
                           <td class="text-end">${Number(item.pembelian).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="text-end">${Number(item.pembelian_rupiah).toLocaleString('id-ID', {
+                          <td class="text-end pembelianRupiah">${Number(item.pembelian_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
@@ -244,7 +313,7 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                           <td class="text-end">${Number(item.penjualan_rupiah).toLocaleString('id-ID', {
+                           <td class="text-end penjualanRupiah">${Number(item.penjualan_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
@@ -252,8 +321,8 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="text-end px-1" contenteditable="true"></td>
-                          <td class="text-end">${Number(item.saldo_akhir_rupiah).toLocaleString('id-ID', {
+                          <td class="text-end px-1 rateTengah" contenteditable="true">${item.rate_tengah ? formatNumber(item.rate_tengah) : ''}</td>
+                          <td class="text-end saldoAkhirRupiah">${Number(item.saldo_akhir_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 2
                             })}</td>
@@ -298,103 +367,42 @@ function loadData() {
     });
 }
 
-function updateDateRangeSelector(selectedValue) {
-  const today = new Date();
-  let startDate = '';
-  let endDate = '';
+// Recompute a row's Buy/Sell/Ending balance rupiah columns live as the
+// user edits its Middle Rate cell, using the same rate>0 ? qty*rate : 0
+// formula used on load. Bg. Balance (Rp) is intentionally left alone here:
+// it reflects *last* month's saved rate, not the one being typed now.
+$('#tabelData tbody').on('input blur', '.rateTengah', function () {
+  const $row = $(this).closest('tr');
+  const item = dataReport.find(d => d.kodeValas === $row.data('kode'));
+  if (!item) return;
 
-  function formatDate(d) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
+  const rate = parseFloat(
+    ($(this).text() || '0').replace(/\./g, '').replace(/,/g, '.')
+  ) || 0;
 
-  switch (selectedValue) {
-    case 'today':
-      startDate = endDate = formatDate(today);
-      break;
+  item.rate_tengah = rate;
+  item.pembelian_rupiah = rate > 0 ? Number(item.pembelian || 0) * rate : 0;
+  item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * rate : 0;
+  item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
 
-    case 'yesterday':
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      startDate = endDate = formatDate(yesterday);
-      break;
-
-    case 'tomorrrow':
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      startDate = endDate = formatDate(tomorrow);
-      break;
-
-    case 'week':
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay());
-      startDate = formatDate(startOfWeek);
-      endDate = formatDate(today);
-      break;
-
-    case 'lastWeek':
-      const lastWeekStart = new Date(today);
-      lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
-      const lastWeekEnd = new Date(lastWeekStart);
-      lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
-      startDate = formatDate(lastWeekStart);
-      endDate = formatDate(lastWeekEnd);
-      break;
-
-    case 'month':
-      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-      startDate = formatDate(startOfMonth);
-      endDate = formatDate(endOfMonth);
-      break;
-
-    case 'lastMonth':
-      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-      startDate = formatDate(lastMonthStart);
-      endDate = formatDate(lastMonthEnd);
-      break;
-
-    case 'year':
-      const startOfYear = new Date(today.getFullYear(), 0, 1);
-      const endOfYear = new Date(today.getFullYear(), 11, 31);
-      startDate = formatDate(startOfYear);
-      endDate = formatDate(endOfYear);
-      break;
-
-    case 'lastYear':
-      const lastYearStart = new Date(today.getFullYear() - 1, 0, 1);
-      const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
-      startDate = formatDate(lastYearStart);
-      endDate = formatDate(lastYearEnd);
-      break;
-
-    case 'all':
-    default:
-      startDate = '';
-      endDate = '';
-      break;
-  }
-
-  $('#startDate').val(startDate);
-  $('#endDate').val(endDate);
-}
+  $row.find('.pembelianRupiah').text(formatNumber(item.pembelian_rupiah));
+  $row.find('.penjualanRupiah').text(formatNumber(item.penjualan_rupiah));
+  $row.find('.saldoAkhirRupiah').text(formatNumber(item.saldo_akhir_rupiah));
+});
 
 $('#sbmFilter').click(function (e) {
   e.preventDefault();
 
-  const startDate = $('#startDate').val();
-  const endDate = $('#endDate').val();
+  const bulanFilter = $('#bulanFilter').val();
+  const tahunFilter = $('#tahunFilter').val();
   const cabang = $('#cabangFilter').val();
   const show = $('#showOptionFilter').val();
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
 
-  if (startDate) params.append('start', startDate);
-  if (endDate) params.append('end', endDate);
+  if (bulanFilter) params.append('bulan', bulanFilter);
+  if (tahunFilter) params.append('tahun', tahunFilter);
   if (cabang) params.append('cabang', cabang);
   if (show) params.append('show', show);
 
@@ -402,7 +410,7 @@ $('#sbmFilter').click(function (e) {
 
   window.history.pushState({}, '', finalUrl);
 
-  loadHeader(); 
+  loadHeader();
   loadData();
   $('#modalFilter').modal('hide');
 });
@@ -422,6 +430,19 @@ function padNumber(num) {
   return String(value).padStart(15, '0');
 }
 
+// First/last day of the selected bulan/tahun as YYYY-MM-DD, used where
+// export code still wants a date range (PDF header text) or a YYYYMMDD
+// stamp (TXT file header/name).
+function getPeriodDates() {
+  const pad = (n) => String(n).padStart(2, '0');
+  const lastDay = new Date(tahun, bulan, 0).getDate();
+
+  return {
+    start: `${tahun}-${pad(bulan)}-01`,
+    end: `${tahun}-${pad(bulan)}-${pad(lastDay)}`,
+  };
+}
+
 function padKursTengah(value) {
   // let clean = String(value).trim().replace(/\./g, "").replace(",", ".");
 
@@ -437,10 +458,6 @@ function padKursTengah(value) {
 
 $('#eksporTXT').click(function (e) {
   e.preventDefault();
-
-  // Daftar kode valas yang diperbolehkan
-  const allowedCurrencies = new Set([ "USD", "THB", "SGD", "SEK", "PHP", "PGK", "NZD", "NOK", "MYR", "KRW", "JPY", "HKD", "GBP", "EUR", "DKK", "CNY", "CHF", "CAD", "BND", "AUD"
-  ]);
 
   let lines = [];
 
@@ -476,7 +493,7 @@ $('#eksporTXT').click(function (e) {
     lines.push(line);
   });
 
-  const tanggalHead = start.replace(/-/g, "");
+  const tanggalHead = getPeriodDates().start.replace(/-/g, "");
   const jumlahBaris = String(lines.length).padStart(9, "0");
   lines.unshift(idBI + "M" + tanggalHead + "B0001" + jumlahBaris);
 
@@ -508,15 +525,17 @@ $("#export-pdf").click(function () {
     dataFixed.push(item);
   });
 
+  const period = getPeriodDates();
+
   exportToPDF({
     data: dataFixed,
     headers,
     keys,
-    filename: `LKUB_${start}_${end}.pdf`,
+    filename: `LKUB_${tahun}${String(bulan).padStart(2, '0')}.pdf`,
     title: "LKUB",
     nama_pt: parsedSetting.NamaPT.strval,
-    start,
-    end,
+    start: period.start,
+    end: period.end,
 
     bodyBuilder: (data) => {
       return data.map((item, index) => [
@@ -571,4 +590,84 @@ $("#export-excel").click(function () {
 
 $('#print').click(function () {
   printReport('cardData');
+});
+
+$('#sbmSave').click(function (e) {
+  e.preventDefault();
+
+  const valas = [];
+
+  document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
+    const item = dataReport[idx];
+    if (!item) return;
+
+    const tds = tr.querySelectorAll("td");
+    const rateTengah = parseFloat(
+      (tds[10].innerText || "0").toString().replace(/\./g, '').replace(/,/g, '.')
+    ) || 0;
+
+    valas.push({
+      kode_valas: item.kodeValas,
+      stok_awal: Number(item.saldo_awal) || 0,
+      buy: Number(item.pembelian) || 0,
+      sell: Number(item.penjualan) || 0,
+      stok_akhir: Number(item.saldo_akhir) || 0,
+      rate_tengah: rateTengah,
+    });
+  });
+
+  if (valas.length === 0) {
+    notif.fire({
+      icon: 'error',
+      title: 'Tidak ada data untuk disimpan'
+    });
+    return;
+  }
+
+  Loading.standard({
+      backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
+      svgSize: '0px'
+  });
+  let customSpinnerHTML = `
+        <div class="sk-wave mx-auto">
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+            <div class="sk-rect sk-wave-rect"></div>
+        </div>
+  `;
+  let notiflixBlock = document.querySelector('.notiflix-loading');
+  notiflixBlock.innerHTML = customSpinnerHTML;
+
+  $.ajax({
+    url: url_api + '/bi-report/lkub',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+    },
+    data: JSON.stringify({ bulan, tahun, valas }),
+    success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then(() => {
+            loadData();
+        });
+    },
+    error: function (xhr) {
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+        });
+    },
+    complete: function () {
+        if (document.querySelector(`.notiflix-loading`)) {
+            Loading.remove();
+        }
+    }
+  });
 });

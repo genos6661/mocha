@@ -173,6 +173,129 @@
   </div>
 </div>
 
+<!-- modal detail -->
+<div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title mb-1" id="backDropModalTitle">Transaction Detail</h5>
+          <div class="d-flex align-items-center gap-2">
+            <span class="dataDetail fw-medium" id="nomorDetail"></span>
+            <span id="tipeDetail"></span>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-2 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="text-muted small">Date</div>
+            <div class="dataDetail fw-medium" id="tanggalDetail"></div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="text-muted small">Branch</div>
+            <div class="dataDetail fw-medium" id="cabangDetail"></div>
+          </div>
+        </div>
+
+        <div class="card bg-light-subtle border mb-4">
+          <div class="card-body">
+            <h6 class="d-flex align-items-center gap-1 mb-3">
+              <i class="icon-base ti tabler-user-circle icon-lg"></i>
+              Customer Information
+            </h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="text-muted small">Name</div>
+                <div class="dataDetail fw-medium" id="pelangganDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Customer Code</div>
+                <div class="dataDetail fw-medium" id="kodePelangganDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">ID Number</div>
+                <div class="dataDetail fw-medium" id="idNumberDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Nationality</div>
+                <div class="dataDetail fw-medium" id="negaraDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Occupation</div>
+                <div class="dataDetail fw-medium" id="pekerjaanDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Phone</div>
+                <div class="dataDetail fw-medium" id="teleponDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Email</div>
+                <div class="dataDetail fw-medium" id="emailDetail"></div>
+              </div>
+              <div class="col-md-6">
+                <div class="text-muted small">Address</div>
+                <div class="dataDetail fw-medium" id="alamatDetail"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="mb-2">Forex Detail</h6>
+        <div class="table-responsive" id="itemDetail">
+          <table class="table table-sm table-bordered" id="tabelItemDetail">
+            <thead>
+              <tr>
+                <th>Forex</th>
+                <th class="text-end">Amount</th>
+                <th class="text-end">Rates</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between justify-content-md-end">
+        <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
+        <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal hapus -->
+<div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="backDropModalTitle">Delete Transaction</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formHapusTransaksi">
+        <input type="hidden" id="idHapus">
+        <h4>Continue to delete transaction <span id="refHapus"></span>?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade animate__animated animate__fadeInUp" id="modalProgress" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">

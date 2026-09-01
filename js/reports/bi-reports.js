@@ -49,6 +49,27 @@ $(document).ready(function () {
   });
 
   $('#showOption').select2({ dropdownParent: $('#filter') });
+  $('#showOptionLKUB').select2({ dropdownParent: $('#filter') });
+
+  $('#rangeLKUB').select2({dropdownParent: $('#filter')});
+  $('#rangeLKUB').on('change', function () {
+    const today = new Date();
+    let targetBulan = today.getMonth() + 1;
+    let targetTahun = today.getFullYear();
+
+    if (this.value === 'lastMonth') {
+      targetBulan -= 1;
+      if (targetBulan < 1) {
+        targetBulan = 12;
+        targetTahun -= 1;
+      }
+    } else if (this.value !== 'thisMonth') {
+      return;
+    }
+
+    $('#bulanFilter').val(targetBulan).trigger('change');
+    $('#tahunFilter').val(targetTahun).trigger('change');
+  });
 
 	$('#range').on('change', function () {
     updateDateRangeSelector(this.value);
@@ -60,6 +81,16 @@ $(document).ready(function () {
 
   $('#range').select2({dropdownParent: $('#filter')});
   $('#simpleDate').select2({dropdownParent: $('#filter')}).val('today').trigger('change');
+
+  const currentYear = new Date().getFullYear();
+  let yearOptions = '';
+  for (let y = currentYear; y >= currentYear - 5; y--) {
+    yearOptions += `<option value="${y}">${y}</option>`;
+  }
+  $('#tahunFilter').html(yearOptions);
+
+  $('#bulanFilter').select2({dropdownParent: $('#filter')});
+  $('#tahunFilter').select2({dropdownParent: $('#filter')});
 
 });
 
@@ -81,12 +112,26 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       $('#simpleDate').val(range).trigger('change');
     }
 
-    if (nama === "Neraca" || nama === "LKPE") {
-      $('#boxSimpleRange, #boxRange').addClass('d-none');
+    if (nama === "LKUB") {
+      $('#boxSimpleRange, #boxRange, #boxSimpleDate, #boxSingleDate').addClass('d-none');
+      $('#boxBulanTahun').removeClass('d-none');
+
+      const today = new Date();
+      $('#bulanFilter').val(today.getMonth() + 1).trigger('change');
+      $('#tahunFilter').val(today.getFullYear()).trigger('change');
+      $('#showOptionLKUB').val("1").trigger('change');
+    } else if (nama === "Neraca" || nama === "LKPE") {
+      $('#boxSimpleRange, #boxRange, #boxBulanTahun').addClass('d-none');
       $('#boxSimpleDate, #boxSingleDate').removeClass('d-none');
     } else {
       $('#boxSimpleRange, #boxRange').removeClass('d-none');
-      $('#boxSimpleDate, #boxSingleDate').addClass('d-none');
+      $('#boxSimpleDate, #boxSingleDate, #boxBulanTahun').addClass('d-none');
+    }
+
+    if (nama === "LKUB") {
+      $('#boxShowingLKUB').removeClass('d-none');
+    } else {
+      $('#boxShowingLKUB').addClass('d-none');
     }
 
     if(nama === "Summary Valas" || nama === "Summary Valas Advance") {
@@ -252,13 +297,23 @@ $('#sbmFilter').click(function (e) {
   const endDate = $('#endDate').val();
   const cabang = $('#cabang').val();
   const userInput = $('#userInput').val();
-  const showOption = $('#showOption').val() || 1;
+  const showOption = $('#boxShowingLKUB').hasClass('d-none')
+    ? ($('#showOption').val() || 1)
+    : ($('#showOptionLKUB').val() || 1);
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
 
-  if (startDate) params.append('start', startDate);
-  if (endDate) params.append('end', endDate);
+  if (!$('#boxBulanTahun').hasClass('d-none')) {
+    const bulan = $('#bulanFilter').val();
+    const tahun = $('#tahunFilter').val();
+
+    if (bulan) params.append('bulan', bulan);
+    if (tahun) params.append('tahun', tahun);
+  } else {
+    if (startDate) params.append('start', startDate);
+    if (endDate) params.append('end', endDate);
+  }
   if (cabang) params.append('cabang', cabang);
   if (userInput) params.append('user', userInput);
   if (showOption) params.append('show', showOption);

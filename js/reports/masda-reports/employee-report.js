@@ -1,4 +1,4 @@
-let start, end, cabang, pelanggan, buy, sell, sort_by, sort_dir, parsedSetting;
+let start, end, cabang, negara, thresholdOnly, sort_by, sort_dir, parsedSetting;
 let offset = 0;
 const limit = 50;
 let isLoading = false;
@@ -10,25 +10,23 @@ let isExporting = false;
 
 const headers = [
   "No",
-  "Date",
-  "Number",
-  "Type",
-  "Branch",
   "Name",
   "ID",
   "Country",
-  "Amount (Rp)",
+  "Occupation",
+  "Phone",
+  "Address",
+  "Total Amount",
 ];
 
 const keys = [
   "no",
-  "tanggal",
-  "nomor",
-  "tipe",
-  "nama_cabang",
-  "nama_pelanggan",
+  "nama",
   "id",
-  "negara",
+  "nama_int_negara",
+  "pekerjaan",
+  "telepon",
+  "alamat",
   "nilai_transaksi"
 ];
 
@@ -83,60 +81,6 @@ $(document).ready(function() {
       placeholder: 'Choose Country'
   });
 
-  $('#pelangganFilter').select2({
-    dropdownParent: $('#modalFilter'),
-    ajax: {
-      url: url_api + '/profile/select2',
-      dataType: 'json',
-      headers: {
-        "X-Client-Domain": myDomain,
-        "Authorization": `Bearer ${window.token}`
-      },
-      delay: 1000, // ⏱ delay search 1 detik
-      data: function (params) {
-        return {
-          search: params.term || '',
-          page: params.page || 1
-        };
-      },
-      processResults: function (data, params) {
-        params.page = params.page || 1;
-
-        return {
-          results: data.results,
-          pagination: {
-            more: data.pagination.more
-          }
-        };
-      }
-    },
-    templateResult: function (data) {
-      if (!data.id) return data.nama;
-
-      return `
-        <div style="padding:6px 4px;">
-          <div style="font-weight:600;">${data.nama}</div>
-          <div style="font-size:12px;color:#666;">
-            📧 ${data.email || '-'}<br>
-            📱 ${data.telepon || '-'}<br>
-            🌍 ${data.nama_negara || '-'}
-          </div>
-        </div>
-      `;
-    },
-
-    templateSelection: function (data) {
-      return `${data.nama} - ${data.nama_negara}` || 'Choose Contact';
-    },
-
-    escapeMarkup: function (markup) {
-      return markup; 
-    },
-    placeholder: 'Choose Contact',
-    minimumInputLength: 0,
-    allowClear: true
-  });
-
   $('#rangeFilter').on('change', function () {
       updateDateRangeSelector(this.value);
   });
@@ -148,7 +92,7 @@ $(document).ready(function() {
   $('#searchLog').on('input', function () {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
-      loadData(true); 
+      loadData(true);
     }, 1000);
   });
 
@@ -163,9 +107,8 @@ function getUrlParams() {
         start: params.get("start"),
         end: params.get("end"),
         cabang: params.get("cabang"),
-        pelanggan: params.get("pelanggan"),
-        buy: params.get("buy"),
-        sell: params.get("sell"),
+        negara: params.get("negara"),
+        thresholdOnly: params.get("threshold_only"),
         sort_by: params.get("sort_by"),
         sort_dir: params.get("sort_dir")
     };
@@ -220,9 +163,8 @@ function loadHeader() {
     start = params.start || '';
     end = params.end || '';
     cabang = params.cabang;
-    pelanggan = params.pelanggan;
-    buy = params.buy;
-    sell = params.sell;
+    negara = params.negara;
+    thresholdOnly = params.thresholdOnly;
     sort_by = params.sort_by;
     sort_dir = params.sort_dir;
 
@@ -230,22 +172,10 @@ function loadHeader() {
       const tanggal_awal = new Date(start);
       const tanggal_akhir = new Date(end);
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      
+
       $('#range').text(tanggal_awal.toLocaleDateString('en-ID', options) + ' - ' + tanggal_akhir.toLocaleDateString('en-ID', options));
     } else {
       $('#range').text('All Time');
-    }
-
-    if (cabang && cabang !== '') {
-        getCabang(cabang, function (namaCabang) {
-            if (namaCabang) {
-              $('#cabang').removeClass('d-none').text(namaCabang);
-            } else {
-              $('#cabang').addClass('d-none').text('');
-            }
-        });
-    } else {
-      $('#cabang').addClass('d-none').text('');
     }
 
     $.ajax({
@@ -398,18 +328,17 @@ function loadData(reset = false) {
   const params = new URLSearchParams();
   if (start) params.append("start_date", start);
   if (end) params.append("end_date", end);
-  if (cabang) params.append("branch", cabang);
-  if (pelanggan) params.append("customer", pelanggan);
-  if (buy) params.append("buy", buy);
-  if (sell) params.append("sell", sell);
-  // if (sort_by) params.append("sort_by", sort_by);
-  // if (sort_dir) params.append("sort_by", sort_dir);
-  // if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
+  if (cabang) params.append("cabang", cabang);
+  if (negara) params.append("negara", negara);
+  if (thresholdOnly == 1) params.append("threshold_only", 1);
+  if (sort_by) params.append("sort_by", sort_by);
+  if (sort_dir) params.append("sort_by", sort_dir);
+  if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
   params.append("offset", offset);
   params.append("limit", limit);
 
   $.ajax({
-    url: url_api + `/other-report/transactions?${params.toString()}`,
+    url: url_api + `/master-report/employee?${params.toString()}`,
     type: 'GET',
     headers: {
       "Authorization": `Bearer ${window.token}`,
@@ -418,28 +347,25 @@ function loadData(reset = false) {
     success: function (response) {
       const details = response.data || [];
       const tbody = $('#tabelData tbody');
-      $('#totalData').text(response.total_count);
+      $('#totalEmployee').text(response.total_count);
 
       if (details.length === 0) {
         if (offset === 0) {
-          tbody.append('<tr><td colspan="9" class="text-center">Transactions Data Not Found</td></tr>');
+          tbody.append('<tr><td colspan="8" class="text-center">Employee Data Not Found</td></tr>');
         }
         hasMoreData = false;
         $('.table-responsive').off('scroll');
       } else {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
         details.forEach(function (item) {
-          const tanggal = new Date(item.tanggal).toLocaleDateString('id-ID', options);
           const row = `
-              <tr class="cursor-pointer" title="Double Click to show details" data-nomor="${item.nomor}">
+              <tr>
                 <td class="text-center">${count}</td>
-                <td class="">${tanggal}</td>
-                <td class="">${item.nomor}</td>
-                <td class="text-center">${(item.tipe || '').toUpperCase()}</td>
-                <td class="text-center">${item.nama_cabang}</td>
-                <td class="">${item.nama_pelanggan || ''}</td>
+                <td class="">${item.nama || ''}</td>
                 <td class="">${item.id || ''}</td>
-                <td class="text-center">${item.negara || ''}</td>
+                <td class="text-center">${item.nama_int_negara || ''}</td>
+                <td class="text-center">${item.pekerjaan || ''}</td>
+                <td class="text-center">${item.telepon || ''}</td>
+                <td class="">${item.alamat || ''}</td>
                 <td class="text-end">Rp. ${Number(item.nilai_transaksi).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
@@ -449,7 +375,7 @@ function loadData(reset = false) {
           tbody.append(row);
           count++;
         });
-        offset += limit; 
+        offset += limit;
 
         if (offset >= response.total_count) {
           hasMoreData = false;
@@ -488,200 +414,30 @@ $('#sbmFilter').click(function (e) {
   const startDate = $('#startDate').val() || null;
   const endDate = $('#endDate').val() || null;
   const cabangFil = $('#cabangFilter').val() || null;
-  const pelangganFil = $('#pelangganFilter').val() || null;
-  const buyFil = $('#buy').is(':checked') ? 1 : 0;
-  const sellFil = $('#sell').is(':checked') ? 1 : 0;
-  const baseUrl = $('#urlToGo').val() || 'transactions-summary';
+  const negaraFil = $('#negara').val() || null;
+  const threshold = $('#thresholdOnly').is(':checked') ? 1 : 0;
+  const sort_byFil = $('#sort_by').val() || null;
+  const sort_dirFil = $('#sort_dir').val() || null;
+  const baseUrl = $('#urlToGo').val() || 'employee-report';
 
   const params = new URLSearchParams();
 
   if (startDate) params.append('start', startDate);
   if (endDate) params.append('end', endDate);
   if (cabangFil) params.append('cabang', cabangFil);
-  if (pelangganFil) params.append('pelanggan', pelangganFil);
-  if (buyFil) params.append('buy', buyFil);
-  if (sellFil) params.append('sell', buyFil);
+  if (negaraFil) params.append('negara', negaraFil);
+  if (threshold && threshold == 1) params.append('threshold_only', 1);
+  if (sort_byFil) params.append('sort_by', sort_byFil);
+  if (sort_dirFil) params.append('sort_dir', sort_dirFil);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
   window.history.pushState({}, '', finalUrl);
 
   hasMoreData = true;
-  count = 1;
   loadHeader();
   loadData(true);
   $('#modalFilter').modal('hide');
-});
-
-$('#tabelData tbody').on('dblclick', 'tr', function () {
-  const nomor = $(this).data('nomor');
-  if (!nomor) return;
-
-  Loading.standard({
-    backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
-    svgSize: '0px'
-  });
-  let customSpinnerHTML = `
-      <div class="sk-wave mx-auto">
-          <div class="sk-rect sk-wave-rect"></div>
-          <div class="sk-rect sk-wave-rect"></div>
-          <div class="sk-rect sk-wave-rect"></div>
-          <div class="sk-rect sk-wave-rect"></div>
-          <div class="sk-rect sk-wave-rect"></div>
-      </div>
-  `;
-  let notiflixBlock = document.querySelector('.notiflix-loading');
-  if (notiflixBlock) notiflixBlock.innerHTML = customSpinnerHTML;
-
-  $.ajax({
-    url: url_api + `/transaction/nomor/${nomor}`,
-    method: 'GET',
-    dataType: 'json',
-    contentType: 'application/json',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${window.token}`,
-      "X-Client-Domain": myDomain
-    },
-    success: function (data) {
-      const tanggal = new Date(data.tanggal);
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      if (data.tipe == 3) {
-        $('#tipeDetail').html('<span class="badge bg-label-primary">BUY</span>');
-      } else if (data.tipe == 4) {
-        $('#tipeDetail').html('<span class="badge bg-label-primary">SELL</span>');
-      }
-      $('.dataDetail').text('');
-      $('#nomorDetail').text('#' + data.nomor);
-      $('#cabangDetail').text(data.nama_cabang);
-      $('#pelangganDetail').text(data.nama_pelanggan);
-      $('#kodePelangganDetail').text(data.kode_pelanggan);
-      $('#idNumberDetail').text(data.idNumber);
-      $('#pekerjaanDetail').text(data.pekerjaan);
-      $('#teleponDetail').text(data.telepon);
-      $('#emailDetail').text(data.email);
-      $('#alamatDetail').text(data.alamat);
-      $('#negaraDetail').text(data.nationality);
-      $('#tanggalDetail').text(tanggal.toLocaleDateString('en-ID', options));
-
-      const details = data.details || [];
-      const tbody = $('#tabelItemDetail tbody');
-      tbody.empty();
-
-      if (details.length === 0) {
-        tbody.append('<tr><td colspan="4" class="text-center">Detail Data Not Found</td></tr>');
-      } else {
-        let subtotal = 0;
-
-        details.forEach(function (item) {
-          let qty;
-          if (data.tipe == 3) {
-            qty = item.beli;
-          } else if (data.tipe == 4) {
-            qty = item.jual;
-          }
-          const totalPerItem = qty * item.rate;
-          subtotal += totalPerItem;
-          const row = `
-              <tr>
-                <td><div class="d-flex flex-column"><a class="text-heading text-truncate"><span class="fw-medium">${item.kode}</span></a><small>${item.nama}</small></div></td>
-                <td class="text-end">${Number(qty).toLocaleString('id-ID')}</td>
-                <td class="text-end">Rp. ${Number(item.rate).toLocaleString('id-ID', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 4
-                  })}</td>
-                <td class="text-end">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 4
-                  })}</td>
-              </tr>
-          `;
-          tbody.append(row);
-        });
-        tbody.append(`
-            <tr><td colspan="3" class="text-end fw-bold">Total : </td>
-                <td class="text-end fw-bold">Rp. ${Number(subtotal).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 4
-                })}</td></tr>
-        `);
-      }
-
-      $('#editBtn').attr('href', '/transaction/edit?nomor=' + data.nomor);
-      $('#deleteBtn').attr('data-id', data.noindex).attr('data-ref', data.nomor);
-      $('#modalDetail').modal('show');
-      if (document.querySelector(`.notiflix-loading`)) {
-        Loading.remove();
-      }
-    },
-    error: function (err) {
-      notif.fire({
-        icon: 'error',
-        text: err.responseJSON?.message || "Gagal mengambil data detail"
-      });
-      if (document.querySelector(`.notiflix-loading`)) {
-        Loading.remove();
-      }
-    }
-  });
-});
-
-const modalHapus = document.getElementById('modalHapus');
-modalHapus.addEventListener('shown.bs.modal', event => {
-  const button = event.relatedTarget;
-  const id = button.getAttribute('data-id');
-  const ref = button.getAttribute('data-ref');
-
-  $('#idHapus').val(id);
-  $('#refHapus').text(ref);
-});
-
-$('#sbmHapus').click(function (e) {
-  e.preventDefault();
-
-  const id = $('#idHapus').val();
-  if (!id) {
-    notif.fire({
-      icon: 'error',
-      text: 'Transaction ID not found'
-    });
-    return;
-  }
-
-  const $btn = $(this);
-  if ($btn.prop('disabled')) return;
-  $btn.prop('disabled', true);
-
-  $.ajax({
-    url: url_api + '/transaction/' + id,
-    type: 'DELETE',
-    contentType: 'application/json',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${window.token}`,
-      "X-Client-Domain": myDomain
-    },
-    success: function (response) {
-      $btn.removeAttr('disabled');
-      notif.fire({
-        icon: 'success',
-        text: response.message
-      }).then(() => {
-        hasMoreData = true;
-        count = 1;
-        loadData(true);
-      });
-      $('#modalHapus').modal('hide');
-      $('#modalDetail').modal('hide');
-    },
-    error: function (xhr) {
-      $btn.removeAttr('disabled');
-      notif.fire({
-        icon: 'error',
-        text: xhr.responseJSON?.message || 'Terjadi Kesalahan pada server'
-      });
-    },
-  });
 });
 
 // export
@@ -699,19 +455,21 @@ function loadAllDataForExport() {
     $('#modalProgress').modal('show');
 
     function fetchNext() {
+
       const params = new URLSearchParams();
       if (start) params.append("start_date", start);
       if (end) params.append("end_date", end);
-      if (cabang) params.append("branch", cabang);
-      if (pelanggan) params.append("customer", pelanggan);
-      if (buy) params.append("buy", buy);
-      if (sell) params.append("sell", sell);
-      // if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
+      if (cabang) params.append("cabang", cabang);
+      if (negara) params.append("negara", negara);
+      if (sort_by) params.append("sort_by", sort_by);
+      if (sort_dir) params.append("sort_dir", sort_dir);
+      if ($('#searchLog').val()) params.append("search", $('#searchLog').val());
+
       params.append("offset", offsetExport);
       params.append("limit", limitExport);
 
       $.ajax({
-        url: url_api + `/other-report/transactions?${params.toString()}`,
+        url: url_api + `/master-report/employee?${params.toString()}`,
         type: 'GET',
         headers: {
           "Authorization": `Bearer ${window.token}`,
@@ -720,15 +478,8 @@ function loadAllDataForExport() {
 
         success: function (res) {
 
-          if (total === 0) {
-              total = res.total_count;
+          if (total === 0) total = res.total_count;
 
-              if (total === 0) {
-                  $('#modalProgress').modal('hide');
-                  resolve([]);
-                  return;
-              }
-          }
           exportData.push(...res.data);
           offsetExport += limitExport;
 
@@ -752,10 +503,7 @@ function loadAllDataForExport() {
           }
         },
 
-        error: function(xhr, status, error) {
-            $('#modalProgress').modal('hide');
-            reject(error || status);
-        }
+        error: reject
       });
     }
 
@@ -764,17 +512,14 @@ function loadAllDataForExport() {
 }
 
 function buildExportRows(allData) {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-
   return allData.map((item, index) => ({
     no: index + 1,
-    tanggal: new Date(item.tanggal).toLocaleDateString('id-ID', options),
-    nomor: item.nomor || '-',
-    tipe: (item.tipe || '').toUpperCase(),
-    nama_cabang: item.nama_cabang || '-',
-    nama_pelanggan: item.nama_pelanggan || '-',
+    nama: item.nama || '-',
     id: item.id || '-',
-    negara: item.negara || '-',
+    nama_int_negara: item.nama_int_negara || '-',
+    pekerjaan: item.pekerjaan || '-',
+    telepon: item.telepon || '-',
+    alamat: item.alamat || '-',
     nilai_transaksi: Number(item.nilai_transaksi || 0).toLocaleString('id-ID'),
   }));
 }
@@ -791,15 +536,16 @@ $("#export-pdf").click(function () {
         data: buildExportRows(allData),
         headers,
         keys,
-        filename: `Transactions_Summary_${start || 'all'}_${end || 'all'}.pdf`,
-        title: 'Transactions Summary',
+        filename: `Employee_Report.pdf`,
+        title: 'Employee Report',
         nama_pt: parsedSetting.NamaPT.strval,
         start,
         end,
+        bodyBuilder: (data) => data.map((row) => keys.map((k) => row[k])),
         columnStyles: {
           0: { halign: "center" },
           3: { halign: "center" },
-          8: { halign: "right" },
+          7: { halign: "right" },
         },
       });
 
@@ -821,7 +567,7 @@ $("#export-excel").click(function () {
       data: buildExportRows(allData),
       headers: headers,
       keys: keys,
-      filename: `Transactions_Summary_${start || 'all'}_${end || 'all'}.xlsx`,
+      filename: "Employee_Report.xlsx",
     });
 
   })

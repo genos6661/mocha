@@ -57,6 +57,37 @@ $(document).ready(function() {
 	    placeholder: 'Choose Branch'
 	});
 
+	$('#cabangFilter').select2({
+	    dropdownParent: $('#modalFilter'),
+	    ajax: {
+	      url: url_api + '/cabang/select2/limit',
+	      dataType: 'json',
+	      headers: {
+	        "X-Client-Domain": myDomain,
+	        "Authorization": `Bearer ${window.token}`
+	      },
+	      delay: 250,
+	      data: function (params) {
+	        return {
+	          search: params.term
+	        };
+	      },
+	      processResults: function (data) {
+	        return {
+	          results: data.results
+	        };
+	      }
+	    },
+	    placeholder: 'Choose Branch'
+	});
+
+	$('#range').on('change', function () {
+	  updateDateRangeSelector(this.value);
+	});
+
+	$('#range').select2({dropdownParent: $('#modalFilter')});
+	$('#range').val('year').trigger('change');
+
 	$('#kontak').select2({
       dropdownParent: $('#modalTambah'),
       ajax: {
@@ -268,6 +299,129 @@ $(document).ready(function() {
     });
 });
 // akhir document ready
+function updateDateRangeSelector(selectedValue) {
+  const today = new Date();
+  let startDate = '';
+  let endDate = '';
+
+  function formatDate(d) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  switch (selectedValue) {
+    case 'today':
+      startDate = endDate = formatDate(today);
+      break;
+
+    case 'yesterday':
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      startDate = endDate = formatDate(yesterday);
+      break;
+
+    case 'tomorrrow':
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      startDate = endDate = formatDate(tomorrow);
+      break;
+
+    case 'week':
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay());
+      startDate = formatDate(startOfWeek);
+      endDate = formatDate(today);
+      break;
+
+    case 'lastWeek':
+      const lastWeekStart = new Date(today);
+      lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
+      const lastWeekEnd = new Date(lastWeekStart);
+      lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
+      startDate = formatDate(lastWeekStart);
+      endDate = formatDate(lastWeekEnd);
+      break;
+
+    case 'month':
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      startDate = formatDate(startOfMonth);
+      endDate = formatDate(today);
+      break;
+
+    case 'lastMonth':
+      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      startDate = formatDate(lastMonthStart);
+      endDate = formatDate(lastMonthEnd);
+      break;
+
+    case 'year':
+      const startOfYear = new Date(today.getFullYear(), 0, 1);
+      startDate = formatDate(startOfYear);
+      endDate = formatDate(today);
+      break;
+
+    case 'lastYear':
+      const lastYearStart = new Date(today.getFullYear() - 1, 0, 1);
+      const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
+      startDate = formatDate(lastYearStart);
+      endDate = formatDate(lastYearEnd);
+      break;
+
+    case 'all':
+    default:
+      startDate = '';
+      endDate = '';
+      break;
+  }
+
+  $('#startDate').val(startDate);
+  $('#endDate').val(endDate);
+}
+
+function updateBrowserURL(params) {
+  const newURL = `${window.location.pathname}?${params.toString()}`;
+  history.replaceState(null, '', newURL);
+}
+
+function getFiltersFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+      cabang: params.get("cabang") || "",
+      start_date: params.get("start_date") || "",
+      end_date: params.get("end_date") || "",
+      in: params.get("in") || "",
+      out: params.get("out") || ""
+  };
+}
+
+$("#sbmFilter").on("click", function (e) {
+  e.preventDefault();
+  if (isLoading) {
+    return;
+  }
+  const tanggalAwal = $("#startDate").val();
+  const tanggalAkhir = $("#endDate").val();
+  const cabangs = $("#cabangFilter").val();
+  const isIn = $("#cashIn").is(":checked") ? 1 : 0;
+  const isOut = $('#cashOut').is(":checked") ? 1 : 0;
+
+  const params = new URLSearchParams();
+  params.append("start_date", tanggalAwal);
+  params.append("end_date", tanggalAkhir);
+  params.append("cabang", cabangs);
+  params.append("in", isIn);
+  params.append("out", isOut);
+
+  updateBrowserURL(params);
+  $('#modalFilter').modal('hide');
+  offset = 0;
+  table.clear().draw();
+  loadMoreData(true);
+});
+
 function initTable() {
 	table = new DataTable("#tabelCash", {
         processing: true,
@@ -472,7 +626,15 @@ function loadMoreData(reset = false) {
     let searchValue = searchInput ? searchInput.value : "";
     let orderParam = `&order_column=${orderColumn}&order_dir=${orderDir}`;
 
-    fetch(url_api + `/kas/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}`, {
+    const filters = getFiltersFromURL();
+    let filterParam = "";
+    if (filters.cabang) filterParam += `&cabang=${filters.cabang}`;
+    if (filters.start_date) filterParam += `&start_date=${filters.start_date}`;
+    if (filters.end_date) filterParam += `&end_date=${filters.end_date}`;
+    if (filters.in == 1) filterParam += `&in=1`;
+    if (filters.out == 1) filterParam += `&out=1`;
+
+    fetch(url_api + `/kas/datatable?offset=${reset ? 0 : offset}&limit=${limit}&search=${searchValue}${orderParam}${filterParam}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

@@ -65,6 +65,14 @@
   </div>
 </div>
 
+<div class="alert alert-info d-flex align-items-center gap-2 mb-4" role="alert">
+  <i class="icon-base ti tabler-info-circle icon-lg"></i>
+  <div>
+    Jangan lupa klik <b>Simpan</b> untuk menyimpan Middle Rate bulan ini — nilai ini dipakai sebagai
+    <b>Bg. Balance (Rp)</b> (saldo awal) bulan <b>berikutnya</b>. Kalau tidak disimpan, saldo awal bulan depan akan tampil Rp 0.
+  </div>
+</div>
+
 <div class="card py-0 px-6" id="boxSticky">
   <div class="card-body p-0 table-responsive">
     <table class="table table-bordered" id="tabelData">
@@ -121,6 +129,7 @@
 </div>
 
 <div class="btn-group mt-6" role="group" aria-label="First group">
+  <button type="button" class="btn btn-primary waves-effect" id="sbmSave"><i class="icon-base ti tabler-device-floppy"></i>Simpan</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="export-pdf"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="export-excel"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="export-csv"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>
@@ -146,26 +155,33 @@
         <div class="mb-3">
           <label for="rangeFilter" class="form-label">Simple Range</label>
           <select id="rangeFilter" class="form-select">
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month (Default)</option>
-            <option value="year">This Year</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="tomorrrow">Tomorrow</option>
-            <option value="lastWeek">Last Week</option>
+            <option value="" selected hidden>Choose a quick range (optional)</option>
+            <option value="thisMonth">This Month</option>
             <option value="lastMonth">Last Month</option>
-            <option value="lastYear">Last Year</option>
           </select>
         </div>
         <div class="mb-3">
           <div class="row">
             <div class="col-md">
-              <label for="startDate" class="form-label">Date From</label>
-              <input type="date" class="form-control" id="startDate">
+              <label for="bulanFilter" class="form-label">Month</label>
+              <select id="bulanFilter" class="form-select">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
             </div>
             <div class="col-md">
-              <label for="endDate" class="form-label">Until</label>
-              <input type="date" class="form-control" id="endDate">
+              <label for="tahunFilter" class="form-label">Year</label>
+              <select id="tahunFilter" class="form-select"></select>
             </div>
           </div>
         </div>
@@ -177,8 +193,7 @@
           <label for="showOptionFilter" class="form-label">Displayed Option</label>
           <select id="showOptionFilter" class="form-select">
             <option value="1" selected>Show All Forexs</option>
-            <option value="2">Only Show Forexs with balance</option>
-            <option value="3">Only Show Forexs with mutation</option>
+            <option value="2">Only Show Forexs with Rate Tengah</option>
           </select>
         </div>
         <!-- <div class="d-flex justify-content-end mb-0">
