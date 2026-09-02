@@ -315,10 +315,11 @@ function loadData() {
               hutangKirimUang: ['220100'],
               hutangLain: ['240100'],
               totalKewajiban: ['210100', '210200', '210300', '220100', '240100'],
-              modal: ['310100'],
-              totalKewajibanEkuitas: ['210100', '210200', '210300', '220100', '240100', '310100']
+              modal: ['310100']
           };
-          
+
+          const groupTotals = {};
+
           Object.entries(akunMap).forEach(([elementId, kodeArray]) => {
             let total = 0;
 
@@ -333,6 +334,8 @@ function loadData() {
               total += value;
             });
 
+            groupTotals[elementId] = total;
+
             $('#' + elementId).text(
               Number(total).toLocaleString('id-ID', {
                 minimumFractionDigits: 0,
@@ -340,6 +343,43 @@ function loadData() {
               })
             );
           });
+
+          // Laba Ditahan (320100) is accumulated together with Laba
+          // Berjalan (current-year running profit/loss — key LABA_BERJALAN,
+          // non-numeric, looked up by plain string so it never goes near a
+          // numeric-code sort/parse path) into the existing "- Laba" /
+          // "- Rugi" fields rather than a new row — no new fields allowed
+          // on this report.
+          const labaDitahan = response['320100'] || { total_debit: 0, total_kredit: 0 };
+          const labaBerjalan = response['LABA_BERJALAN'] || { total_debit: 0, total_kredit: 0 };
+
+          const labaRugiNet =
+            (Number(labaDitahan.total_kredit) || 0) - (Number(labaDitahan.total_debit) || 0) +
+            (Number(labaBerjalan.total_kredit) || 0) - (Number(labaBerjalan.total_debit) || 0);
+
+          const labaRugiFormatted = Number(Math.abs(labaRugiNet)).toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+          });
+
+          $('#laba').text(labaRugiNet > 0 ? labaRugiFormatted : '0');
+          $('#rugi').text(labaRugiNet < 0 ? labaRugiFormatted : '0');
+
+          const totalEkuitas = groupTotals.modal + labaRugiNet;
+          $('#totalEkuitas').text(
+            Number(totalEkuitas).toLocaleString('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2
+            })
+          );
+
+          const totalKewajibanEkuitas = groupTotals.totalKewajiban + totalEkuitas;
+          $('#totalKewajibanEkuitas').text(
+            Number(totalKewajibanEkuitas).toLocaleString('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2
+            })
+          );
 
           if (document.querySelector(`.notiflix-loading`)) {
               Loading.remove();

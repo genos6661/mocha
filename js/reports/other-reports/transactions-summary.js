@@ -154,6 +154,15 @@ $(document).ready(function() {
 
   loadHeader();
   loadData(true);
+
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'info',
+    text: 'Double click a row to show transaction details',
+    showConfirmButton: false,
+    showCloseButton: true
+  });
 });
 
 // akhir document ready

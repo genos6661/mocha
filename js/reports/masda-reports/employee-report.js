@@ -16,7 +16,7 @@ const headers = [
   "Occupation",
   "Phone",
   "Address",
-  "Total Amount",
+  "Email",
 ];
 
 const keys = [
@@ -27,7 +27,7 @@ const keys = [
   "pekerjaan",
   "telepon",
   "alamat",
-  "nilai_transaksi"
+  "email"
 ];
 
 $(document).ready(function() {
@@ -366,10 +366,7 @@ function loadData(reset = false) {
                 <td class="text-center">${item.pekerjaan || ''}</td>
                 <td class="text-center">${item.telepon || ''}</td>
                 <td class="">${item.alamat || ''}</td>
-                <td class="text-end">Rp. ${Number(item.nilai_transaksi).toLocaleString('id-ID', {
-                              minimumFractionDigits: 0,
-                              maximumFractionDigits: 0
-                            }) || '0'}</td>
+                <td class="">${item.email || ''}</td>
               </tr>
           `;
           tbody.append(row);
@@ -520,7 +517,7 @@ function buildExportRows(allData) {
     pekerjaan: item.pekerjaan || '-',
     telepon: item.telepon || '-',
     alamat: item.alamat || '-',
-    nilai_transaksi: Number(item.nilai_transaksi || 0).toLocaleString('id-ID'),
+    email: item.email || '-',
   }));
 }
 
@@ -545,7 +542,6 @@ $("#export-pdf").click(function () {
         columnStyles: {
           0: { halign: "center" },
           3: { halign: "center" },
-          7: { halign: "right" },
         },
       });
 

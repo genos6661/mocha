@@ -83,7 +83,7 @@
           <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Occupation</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Phone</th>
           <th class="text-center align-middle p-2" style="width: 13%; border: 1px solid;">Address</th>
-          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Total Transactions</th>
+          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Email</th>
         </tr>
       </thead>
       <tbody></tbody>

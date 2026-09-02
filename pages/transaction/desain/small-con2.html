@@ -1,13 +1,18 @@
 <div class="invoice-print" style="width: 100%; max-width: 100%;">
 	<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+		<div class="d-flex justify-content-center align-items-center boxLogo"></div>
 		<p style="font-size: 1.5em; margin-bottom: 0; text-align: center;" class="judulNota">Mocha</p>
 		<p style="font-size: 1em; margin-bottom: 0; text-align: center;" class="namaCabang"></p>
-		<p style="font-size: 1em; margin-bottom: 15px; text-align: center;"><span class="alamatCabang"></span> (<span id="teleponCabang"></span>)</p>
+		<p style="font-size: 1em; margin-bottom: 0; text-align: center;"><span class="alamatCabang"></span></p>
+		<p style="font-size: 1em; margin-bottom: 15px; text-align: center;"><span class="teleponCabang"></span></p>
 	</div>
 	<div style="width: 100%; display: flex; flex-direction: column;">
 		<p style="font-size: 1em; margin-bottom: 0; text-align: right;">No. #<span class="nomorTrans"></span></p>
-		<p style="font-size: 1em; margin-bottom: 0;">Date Issues : <span class="tanggalTransaksi"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Issued Date : <span class="tanggalTransaksi"></span> <span class="timePrint"></span></p>
 		<p style="font-size: 1em; margin-bottom: 0;">Name : <span class="namaPelanggan"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">ID Number : <span class="idNumber"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Phone : <span class="teleponPelanggan"></span></p>
+		<p style="font-size: 1em; margin-bottom: 0;">Address : <span class="alamatPelanggan"></span></p>
 		<p style="font-size: 1em; margin-bottom: 0;">Nationality : <span class="negara"></span></p>
 		<p style="font-size: 1em; margin-bottom: 15px; text-align: right;">Cashier : <span class="ttdPerusahaan"></span></p>
 	</div>
@@ -16,8 +21,8 @@
 	      <thead>
 	        <tr>
 	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; width: 15%;">Currency</th>
+	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: center;">Rate</th>
 	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Amount</th>
-	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Rate</th>
 	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Subtotal</th>
 	        </tr>
 	      </thead>
@@ -26,9 +31,19 @@
 	</div>
 	<div class="row mt-4">
 		<div class="col">
-			<p id="footer1" class="d-none text-center mb-0"></p>
-			<p id="footer2" class="d-none text-center mb-0"></p>
-			<p id="footer3" class="d-none text-center mb-0"></p>
+			<p class="d-none text-center mb-0 footer1"></p>
+			<p class="d-none text-center mb-0 footer2"></p>
+			<p class="d-none text-center mb-0 footer3"></p>
 		</div>
+	</div>
+	<div class="row mt-1">
+		<div class="col-5 text-center ttdPerusahaan"></div>
+		<div class="col-2"></div>
+		<div class="col-5 text-center namaPelanggan"></div>
+	</div>
+	<div class="row mt-6">
+		<div class="col-5 text-center">___________________</div>
+		<div class="col-2"></div>
+		<div class="col-5 text-center">___________________</div>
 	</div>
 </div>
