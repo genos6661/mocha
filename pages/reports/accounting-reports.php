@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Ledger" data-range="month" data-url="/ledger">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Ledger" data-range="month" data-url="/ledger">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/ledger.png" alt="Avatar" class="rounded">
       </div>
@@ -21,7 +21,7 @@
     </div>
   </div>
   <!-- <div class="col-md-4 mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
       <div class="avatar">
         <div class="avatar-initial bg-label-primary rounded">
           <i class="icon-base ti tabler-building-bank icon-xl"></i>
@@ -34,7 +34,7 @@
     </div>
   </div>
   <div class="col-md-4 mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
       <div class="avatar">
         <div class="avatar-initial bg-label-primary rounded">
           <i class="icon-base ti tabler-building-bank icon-xl"></i>
@@ -50,7 +50,7 @@
 
 <!-- <div class="row justify-content-center">
   <div class="col-md-4 mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
       <div class="avatar">
         <div class="avatar-initial bg-label-primary rounded">
           <i class="icon-base ti tabler-building-bank icon-xl"></i>
@@ -63,7 +63,7 @@
     </div>
   </div>
   <div class="col-md-4">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
       <div class="avatar">
         <div class="avatar-initial bg-label-primary rounded">
           <i class="icon-base ti tabler-building-bank icon-xl"></i>

@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Summary" data-range="month" data-url="/transactions-summary">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Summary" data-range="month" data-url="/transactions-summary">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-list-details icon-xl"></i>
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Detail" data-range="month" data-url="/transactions-detail">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Detail" data-range="month" data-url="/transactions-detail">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-file-invoice icon-xl"></i>
@@ -36,7 +36,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Logs Reports" data-range="all" data-url="/logs-report">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Logs Reports" data-range="all" data-url="/logs-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-report icon-xl"></i>

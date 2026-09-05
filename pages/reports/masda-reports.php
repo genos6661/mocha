@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-users icon-xl"></i>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user icon-xl"></i>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user-plus icon-xl"></i>
@@ -55,7 +55,7 @@
 
 <!-- <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/lkpe.png" alt="Avatar" class="rounded">
       </div>
@@ -66,7 +66,7 @@
     </div>
   </div>
   <div class="col mb-6">
-    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/labarugi.png" alt="Avatar" class="rounded">
       </div>
