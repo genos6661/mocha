@@ -15,20 +15,20 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modalUpload" data-nama="DTTOT Identification">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#modalUpload" data-nama="DTTOT Identification">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-report icon-xl"></i>
         </div>
       </div>
       <div>
-        <h5 class="mb-0 text-black">DTTOT Identification</h5>
-        <span class="text-dark">Upload file excel untuk identifikasi DTTOT</span>
+        <h5 class="mb-0 text-body">DTTOT Identification</h5>
+        <span class="text-body-secondary">Upload file excel untuk identifikasi DTTOT</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="DTTOT List" data-range="all" data-url="/dttot-list">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="DTTOT List" data-range="all" data-url="/dttot-list">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-list-details icon-xl"></i>

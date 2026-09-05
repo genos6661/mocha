@@ -227,9 +227,16 @@ async function exportToPDF({
 
   if (hasSections) {
 
-    const colCount = tableHeaders[tableHeaders.length - 1].length;
-
     sections.forEach((section, index) => {
+
+      // Per-section header override — lets different sections in the same
+      // export use different column layouts (e.g. a wide transaction-summary
+      // row followed by a narrower currency-breakdown table), falling back
+      // to the shared `headers` passed to exportToPDF when not given.
+      const sectionHeaders = section.headers
+        ? (Array.isArray(section.headers[0]) ? section.headers : [section.headers])
+        : tableHeaders;
+      const colCount = sectionHeaders[sectionHeaders.length - 1].length;
 
       const sectionHead = [];
 
@@ -241,7 +248,7 @@ async function exportToPDF({
         }]);
       }
 
-      sectionHead.push(...tableHeaders);
+      sectionHead.push(...sectionHeaders);
 
       const sectionFoot = section.foot
         ? [section.foot.map(item => {
@@ -272,7 +279,10 @@ async function exportToPDF({
 
         margin: {
           top: pdfStyle.tableMarginTop,
-          left: marginX,
+          // Optional per-section left indent (mm) — e.g. so a currency
+          // breakdown table can sit visually nested under a wider summary
+          // row's later column instead of starting flush at the margin.
+          left: marginX + (section.indent || 0),
           right: marginX
         },
 
@@ -285,6 +295,11 @@ async function exportToPDF({
           textColor: pdfStyle.headTextColor,
           fontStyle: pdfStyle.headFontStyle,
           halign: "center",
+          // Per-section override (e.g. so most sections in a long list can
+          // stay neutral while only one — a Grand Total block, say — keeps
+          // the strong fill color) — falls back to the shared style above
+          // when a section doesn't specify one.
+          ...(section.headStyles || {}),
         },
 
         bodyStyles: {
@@ -296,10 +311,13 @@ async function exportToPDF({
           fillColor: pdfStyle.alternateRowColor,
         },
 
-        footStyles: styles.footStyles || {
-          fillColor: [52, 58, 64],
-          textColor: 255,
-          fontStyle: "bold",
+        footStyles: {
+          ...(styles.footStyles || {
+            fillColor: [52, 58, 64],
+            textColor: 255,
+            fontStyle: "bold",
+          }),
+          ...(section.footStyles || {}),
         },
 
         columnStyles: {

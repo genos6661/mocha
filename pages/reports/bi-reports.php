@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas" data-range="month" data-url="/summary-valas">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas" data-range="month" data-url="/summary-valas">
       <!-- <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-building-bank icon-xl"></i>
@@ -20,30 +20,30 @@
         <img src="/assets/img/report/sv.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">Summary Forex</h5>
-        <span class="text-dark">Ringkasan Mutasi Per Valas</span>
+        <h5 class="mb-0 text-body">Summary Forex</h5>
+        <span class="text-body-secondary">Ringkasan Mutasi Per Valas</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/LKUB.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">LKUB</h5>
-        <span class="text-dark">Laporan Kegiatan Usaha Bulanan</span>
+        <h5 class="mb-0 text-body">LKUB</h5>
+        <span class="text-body-secondary">Laporan Kegiatan Usaha Bulanan</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/neraca.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">Balance Sheet</h5>
-        <span class="text-dark">Laporan Neraca (BI)</span>
+        <h5 class="mb-0 text-body">Balance Sheet</h5>
+        <span class="text-body-secondary">Laporan Neraca (BI)</span>
       </div>
     </div>
   </div>
@@ -51,35 +51,35 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/LKPE.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">LKPE</h5>
-        <span class="text-dark">Laporan Keuangan Perubahan Ekuitas</span>
+        <h5 class="mb-0 text-body">LKPE</h5>
+        <span class="text-body-secondary">Laporan Keuangan Perubahan Ekuitas</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/labarugi.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">Profit & Loss</h5>
-        <span class="text-dark">Laporan Keuangan Laba/Rugi</span>
+        <h5 class="mb-0 text-body">Profit & Loss</h5>
+        <span class="text-body-secondary">Laporan Keuangan Laba/Rugi</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas Advance" data-range="month" data-url="/summary-valas-advance">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas Advance" data-range="month" data-url="/summary-valas-advance">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/logs.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">Summary Forex Advance</h5>
-        <span class="text-dark">Ringkasan Mutasi Per Valas Advance</span>
+        <h5 class="mb-0 text-body">Summary Forex Advance</h5>
+        <span class="text-body-secondary">Ringkasan Mutasi Per Valas Advance</span>
       </div>
     </div>
   </div>

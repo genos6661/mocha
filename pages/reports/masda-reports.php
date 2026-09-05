@@ -10,7 +10,7 @@
 
 <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-users icon-xl"></i>
@@ -20,34 +20,34 @@
         <img src="/assets/img/report/sv.png" alt="Avatar" class="rounded">
       </div> -->
       <div>
-        <h5 class="mb-0 text-black">Customer Data</h5>
-        <span class="text-dark">Customer Data Report in details</span>
+        <h5 class="mb-0 text-body">Customer Data</h5>
+        <span class="text-body-secondary">Customer Data Report in details</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user icon-xl"></i>
         </div>
       </div>
       <div>
-        <h5 class="mb-0 text-black">Employee Data</h5>
-        <span class="text-dark">Employee report details</span>
+        <h5 class="mb-0 text-body">Employee Data</h5>
+        <span class="text-body-secondary">Employee report details</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
       <div class="avatar">
         <div class="avatar-initial bg-primary rounded">
           <i class="icon-base ti tabler-user-plus icon-xl"></i>
         </div>
       </div>
       <div>
-        <h5 class="mb-0 text-black">Partner Data</h5>
-        <span class="text-dark">Guide or partner details</span>
+        <h5 class="mb-0 text-body">Partner Data</h5>
+        <span class="text-body-secondary">Guide or partner details</span>
       </div>
     </div>
   </div>
@@ -55,24 +55,24 @@
 
 <!-- <div class="row row-cols-md-3 row-cols-1 justify-content-center">
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/lkpe.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">LKPE</h5>
-        <span class="text-dark">Laporan Keuangan Perubahan Ekuitas</span>
+        <h5 class="mb-0 text-body">LKPE</h5>
+        <span class="text-body-secondary">Laporan Keuangan Perubahan Ekuitas</span>
       </div>
     </div>
   </div>
   <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 bg-white p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
+    <div class="card shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
       <div class="avatar avatar-lg">
         <img src="/assets/img/report/labarugi.png" alt="Avatar" class="rounded">
       </div>
       <div>
-        <h5 class="mb-0 text-black">Profit & Loss</h5>
-        <span class="text-dark">Laporan Keuangan Laba/Rugi</span>
+        <h5 class="mb-0 text-body">Profit & Loss</h5>
+        <span class="text-body-secondary">Laporan Keuangan Laba/Rugi</span>
       </div>
     </div>
   </div>

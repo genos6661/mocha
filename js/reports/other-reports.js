@@ -188,7 +188,7 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     if (nama === "Logs Reports") {
       $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan, #boxTipeTrans').addClass('d-none');
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleRange, #boxRange').removeClass('d-none');
-    } else if (nama === "Transactions Summary") {
+    } else if (nama === "Transactions Summary" || nama === "Transactions Detail") {
       $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleDate, #boxSingleDate').addClass('d-none');
       $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan, #boxTipeTrans').removeClass('d-none');
     } else {

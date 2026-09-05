@@ -137,6 +137,13 @@
   <button type="button" class="btn btn-outline-primary waves-effect" id="print"><i class="icon-base ti tabler-printer"></i>Print</button>
 </div>
 
+<div class="alert alert-warning d-flex align-items-center gap-2 mt-4" role="alert">
+  <i class="icon-base ti tabler-alert-triangle icon-lg"></i>
+  <div>
+    Khusus valas <b>JPY</b>, Rate Tengah yang dimasukkan adalah nilai <b>per 100 JPY</b>, bukan per 1 JPY.
+  </div>
+</div>
+
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalFilter" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog">

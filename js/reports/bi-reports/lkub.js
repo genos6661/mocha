@@ -5,6 +5,13 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+// Every currency's Rate Tengah is quoted per 1 unit, except JPY — BI
+// convention quotes it per 100 JPY — so anywhere a rate is turned into a
+// rupiah value, JPY needs an extra /100.
+function effectiveRate(kodeValas, rate) {
+  return kodeValas === 'JPY' ? rate / 100 : rate;
+}
+
 // Currencies BI requires a Middle Rate for on the LKUB report — used for
 // the "Only Show Forexs with Rate Tengah" filter, and as the default
 // selection when the "Custom Forex" filter's checkboxes are first shown.
@@ -304,7 +311,7 @@ function loadData() {
                 item.saldo_awal_rupiah = Number(item.saldo_awal_rupiah) || 0;
                 item.pembelian_rupiah = Number(item.pembelian_rupiah) || 0;
                 item.penjualan_rupiah = Number(item.penjualan_rupiah) || 0;
-                item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
+                item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * effectiveRate(item.kodeValas, rate) : 0;
             });
 
             dataReport = details;
@@ -421,14 +428,25 @@ function moveCaretToEnd(el) {
 }
 
 // Live-formats the Middle Rate cell as id-ID Rupiah (thousands separator,
-// up to 2 decimals) as the user types, same approach as the .jumlah amount
+// up to 4 decimals) as the user types, same approach as the .jumlah amount
 // fields in cash-transaction.js — then recomputes the row's Buy/Sell/Ending
 // balance rupiah columns from the parsed rate, using the same
 // rate>0 ? qty*rate : 0 formula used on load. Bg. Balance (Rp) is
 // intentionally left alone here: it reflects *last* month's saved rate,
 // not the one being typed now.
-$('#tabelData tbody').on('input blur', '.rateTengah', function () {
-  const $cell = $(this);
+//
+// This used to run synchronously on every keystroke, resetting the caret
+// via Selection/Range each time. Typing fast enough (a short integer rate
+// like JPY's is the common case) could re-enter this handler before the
+// previous call's DOM mutation + caret reset had settled, corrupting the
+// contenteditable's selection state badly enough that focus could no
+// longer move to another cell. Debouncing the reformat to 500ms after the
+// last keystroke — and only forcing the caret back to end while the cell
+// is still actually focused — avoids that race entirely; a normal blur
+// still commits the value immediately, no debounce needed there.
+let rateTengahDebounce = null;
+
+function commitRateTengah($cell) {
   let val = $cell.text();
 
   val = val.replace(/[^0-9,]/g, '');
@@ -450,7 +468,9 @@ $('#tabelData tbody').on('input blur', '.rateTengah', function () {
 
   if (val !== $cell.text()) {
     $cell.text(val);
-    moveCaretToEnd(this);
+    if (document.activeElement === $cell[0]) {
+      moveCaretToEnd($cell[0]);
+    }
   }
 
   const $row = $cell.closest('tr');
@@ -461,14 +481,29 @@ $('#tabelData tbody').on('input blur', '.rateTengah', function () {
     (val || '0').replace(/\./g, '').replace(/,/g, '.')
   ) || 0;
 
+  const effRate = effectiveRate(item.kodeValas, rate);
+
   item.rate_tengah = rate;
-  item.pembelian_rupiah = rate > 0 ? Number(item.pembelian || 0) * rate : 0;
-  item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * rate : 0;
-  item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
+  item.pembelian_rupiah = rate > 0 ? Number(item.pembelian || 0) * effRate : 0;
+  item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * effRate : 0;
+  item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * effRate : 0;
 
   // $row.find('.pembelianRupiah').text(formatNumber(item.pembelian_rupiah));
   // $row.find('.penjualanRupiah').text(formatNumber(item.penjualan_rupiah));
   $row.find('.saldoAkhirRupiah').text(formatNumber(item.saldo_akhir_rupiah));
+}
+
+$('#tabelData tbody').on('input', '.rateTengah', function () {
+  const $cell = $(this);
+  clearTimeout(rateTengahDebounce);
+  rateTengahDebounce = setTimeout(function () {
+    commitRateTengah($cell);
+  }, 500);
+});
+
+$('#tabelData tbody').on('blur', '.rateTengah', function () {
+  clearTimeout(rateTengahDebounce);
+  commitRateTengah($(this));
 });
 
 $('#tabelData tbody').on('focus', '.rateTengah', function () {
@@ -624,8 +659,7 @@ $('#eksporTXT').click(function (e) {
       .replace(/,/g, '.')) || 0;
 
     const item = dataReport[idx];
-    const saldoAkhirRupiah = Number(item.saldo_akhir || 0) * kursTengah;
-    console.log(kodeValas + ' - ' + kursTengah + ' - ' + saldoAkhirRupiah);
+    const saldoAkhirRupiah = Number(item.saldo_akhir || 0) * effectiveRate(kodeValas, kursTengah);
 
     const line =
       kodeValas + "1" +

@@ -40,7 +40,7 @@
           <i class="icon-base ti tabler-report-analytics icon-50px text-warning"></i>
         </h2>
         <h4>Other Reports</h4>
-        <h5>2 Reports in Total</h5>
+        <h5>3 Reports in Total</h5>
       </div>
     </a>
   </div>

@@ -15,12 +15,6 @@
     font-style: normal;
   }
 
-  .instrument-serif {
-    font-family: "Instrument Serif", serif;
-    font-weight: 500;
-    font-style: normal;
-  }
-
   .spectral {
     font-family: "Spectral", serif;
     font-weight: 500;
@@ -29,7 +23,7 @@
 
   #card-body {
     max-height: 75vh;
-    overflow-y: auto; 
+    overflow-y: auto;
   }
 
   #tabelData thead th {
@@ -38,6 +32,33 @@
     background: var(--bs-primary);
     color: #fff;
     z-index: 2;
+  }
+
+  /* Nested per-transaction breakdown table — deliberately shorter/denser
+     rows than the outer transaction table so the two are visually distinct
+     at a glance, not just indented. */
+  .nested-detail-table thead th,
+  .nested-detail-table tbody td {
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.8125rem !important;
+    line-height: 1.2 !important;
+    vertical-align: middle !important;
+    border: none !important;
+  }
+
+  .nested-detail-table thead th {
+    position: static !important;
+    background: rgba(var(--bs-primary-rgb), 0.12) !important;
+    font-weight: 700 !important;
+  }
+
+  .nested-detail-table tbody tr:nth-child(odd) td {
+    background: rgba(var(--bs-primary-rgb), 0.03);
+  }
+
+  .nested-total-row td {
+    background: rgba(var(--bs-primary-rgb), 0.12) !important;
+    border-top: 1px solid rgba(var(--bs-primary-rgb), 0.3);
   }
 
   #periodBox {
@@ -60,7 +81,7 @@
           <a href="/other-reports">Other Reports</a>
           <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
         </li>
-        <li class="breadcrumb-item active">Transactions Summary Report</li>
+        <li class="breadcrumb-item active">Transactions Detail Report</li>
       </ol>
     </nav>
   </div>
@@ -74,8 +95,8 @@
   <div class="card-header d-flex flex-wrap align-items-start justify-content-between gap-3">
     <div>
       <p class="h4 mb-0 spectral" id="namaPT"></p>
-      <p class="h2 mb-1 dm-serif-text-regular text-primary">Transactions Summary Report</p>
-      <p class="h5 mb-0 text-secondary spectral">Ringkasan Transaksi</p>
+      <p class="h2 mb-1 dm-serif-text-regular text-primary">Transactions Details Report</p>
+      <p class="h5 mb-0 text-secondary spectral">Laporan Rincian Transaksi (per Valas)</p>
       <p class="h5 mb-0 text-secondary national-park d-none" id="cabang"></p>
       <p class="h6 text-secondary national-park fst-italic d-none" id="pelanggan"></p>
     </div>
@@ -91,15 +112,15 @@
     <table class="table table-bordered table-hover" id="tabelData">
       <thead>
         <tr>
-          <th class="text-center align-middle p-2" style="width: 5%; border: 1px solid;">No</th>
-          <th class="text-center align-middle p-2" style="width: 14%; border: 1px solid;">Date</th>
-          <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Number</th>
-          <th class="text-center align-middle p-2" style="width: 6%; border: 1px solid;">Type</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Branch</th>
-          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Name</th>
+          <th class="text-center align-middle p-2" style="width: 4%; border: 1px solid;">No</th>
+          <th class="text-center align-middle p-2" style="width: 11%; border: 1px solid;">Date</th>
+          <th class="text-center align-middle p-2" style="width: 11%; border: 1px solid;">Number</th>
+          <th class="text-center align-middle p-2" style="width: 7%; border: 1px solid;">Type</th>
+          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Branch</th>
+          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Name</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">ID</th>
           <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Country</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Amount (Rp)</th>
+          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Amount (Rp)</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -123,7 +144,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="judulFilter">Transactions Summary Report</h5>
+        <h5 class="modal-title" id="judulFilter">Transactions Detail Report</h5>
         <button
           type="button"
           class="btn-close"
@@ -188,129 +209,6 @@
   </div>
 </div>
 
-<!-- modal detail -->
-<div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div>
-          <h5 class="modal-title mb-1" id="backDropModalTitle">Transaction Detail</h5>
-          <div class="d-flex align-items-center gap-2">
-            <span class="dataDetail fw-medium" id="nomorDetail"></span>
-            <span id="tipeDetail"></span>
-          </div>
-        </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row g-2 mb-4">
-          <div class="col-6 col-md-3">
-            <div class="text-muted small">Date</div>
-            <div class="dataDetail fw-medium" id="tanggalDetail"></div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="text-muted small">Branch</div>
-            <div class="dataDetail fw-medium" id="cabangDetail"></div>
-          </div>
-        </div>
-
-        <div class="card bg-light-subtle border mb-4">
-          <div class="card-body">
-            <h6 class="d-flex align-items-center gap-1 mb-3">
-              <i class="icon-base ti tabler-user-circle icon-lg"></i>
-              Customer Information
-            </h6>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <div class="text-muted small">Name</div>
-                <div class="dataDetail fw-medium" id="pelangganDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Customer Code</div>
-                <div class="dataDetail fw-medium" id="kodePelangganDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">ID Number</div>
-                <div class="dataDetail fw-medium" id="idNumberDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Nationality</div>
-                <div class="dataDetail fw-medium" id="negaraDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Occupation</div>
-                <div class="dataDetail fw-medium" id="pekerjaanDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Phone</div>
-                <div class="dataDetail fw-medium" id="teleponDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Email</div>
-                <div class="dataDetail fw-medium" id="emailDetail"></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-muted small">Address</div>
-                <div class="dataDetail fw-medium" id="alamatDetail"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h6 class="mb-2">Forex Detail</h6>
-        <div class="table-responsive" id="itemDetail">
-          <table class="table table-sm table-bordered" id="tabelItemDetail">
-            <thead>
-              <tr>
-                <th>Forex</th>
-                <th class="text-end">Amount</th>
-                <th class="text-end">Rates</th>
-                <th class="text-end">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer d-flex justify-content-between justify-content-md-end">
-        <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
-        <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- modal hapus -->
-<div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Transaction</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusTransaksi">
-        <input type="hidden" id="idHapus">
-        <h4>Continue to delete transaction <span id="refHapus"></span>?</h4>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal fade animate__animated animate__fadeInUp" id="modalProgress" data-bs-backdrop="static" tabindex="-1">
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
@@ -333,4 +231,4 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.3.3/dist/html2canvas-pro.min.js"></script>
-<script src="js/reports/other-reports/transactions-summary.js" type="text/javascript"></script>
+<script src="js/reports/other-reports/transactions-detail.js" type="text/javascript"></script>
