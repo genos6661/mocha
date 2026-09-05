@@ -466,8 +466,8 @@ $('#tabelData tbody').on('input blur', '.rateTengah', function () {
   item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * rate : 0;
   item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
 
-  $row.find('.pembelianRupiah').text(formatNumber(item.pembelian_rupiah));
-  $row.find('.penjualanRupiah').text(formatNumber(item.penjualan_rupiah));
+  // $row.find('.pembelianRupiah').text(formatNumber(item.pembelian_rupiah));
+  // $row.find('.penjualanRupiah').text(formatNumber(item.penjualan_rupiah));
   $row.find('.saldoAkhirRupiah').text(formatNumber(item.saldo_akhir_rupiah));
 });
 
