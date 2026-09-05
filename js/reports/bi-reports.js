@@ -1,3 +1,64 @@
+// Same fixed list LKUB's own page uses for "Only Show Forexs with Rate
+// Tengah" and as the default Custom Forex selection — duplicated here
+// since this hub page and lkub.js don't share scope. Keep in sync with
+// allowedCurrencies in js/reports/bi-reports/lkub.js.
+const allowedCurrenciesLKUB = new Set([
+  "USD", "THB", "SGD", "SEK", "PHP", "PGK", "NZD", "NOK", "MYR", "KRW",
+  "JPY", "HKD", "GBP", "EUR", "DKK", "CNY", "CHF", "CAD", "BND", "AUD"
+]);
+
+// Every forex code the backend knows about — fetched fresh each time
+// Custom Forex is selected (see fetchAllForexLKUB), so the picker offers
+// every currency rather than just the fixed allowedCurrenciesLKUB list.
+let allForexCodesLKUB = [];
+
+let customForexSelectionLKUB = new Set(allowedCurrenciesLKUB);
+
+// The hub has no live LKUB report data of its own (it only launches the
+// LKUB page), so it asks the forex master list endpoint for every code
+// that exists, and pre-checks whichever of those are in allowedCurrenciesLKUB.
+function fetchAllForexLKUB() {
+  $.ajax({
+    url: url_api + '/forex/select2',
+    type: 'GET',
+    dataType: 'json',
+    headers: {
+      "X-Client-Domain": myDomain,
+      "Authorization": `Bearer ${window.token}`
+    },
+    success: function (data) {
+      allForexCodesLKUB = (data.results || []).map(item => item.kode);
+      renderCustomForexOptionsLKUB();
+    }
+  });
+}
+
+function renderCustomForexOptionsLKUB() {
+  const $container = $('#customForexListLKUB');
+  $container.empty();
+
+  allForexCodesLKUB.forEach(function (kode) {
+    const isChecked = customForexSelectionLKUB.has(kode);
+    const badgeClass = isChecked ? 'badge bg-primary' : 'badge badge-outline-primary';
+    $container.append(
+      `<span class="${badgeClass} customForexBadgeLKUB" data-kode="${kode}" style="cursor:pointer;">${kode}</span>`
+    );
+  });
+}
+
+$(document).on('click', '.customForexBadgeLKUB', function () {
+  const $badge = $(this);
+  const kode = $badge.data('kode');
+
+  if (customForexSelectionLKUB.has(kode)) {
+    customForexSelectionLKUB.delete(kode);
+    $badge.removeClass('bg-primary').addClass('badge-outline-primary');
+  } else {
+    customForexSelectionLKUB.add(kode);
+    $badge.removeClass('badge-outline-primary').addClass('bg-primary');
+  }
+});
+
 $(document).ready(function () {
 	$('#cabang').select2({
 	    dropdownParent: '#filter',
@@ -50,6 +111,14 @@ $(document).ready(function () {
 
   $('#showOption').select2({ dropdownParent: $('#filter') });
   $('#showOptionLKUB').select2({ dropdownParent: $('#filter') });
+  $('#showOptionLKUB').on('change', function () {
+    if (this.value === '3') {
+      $('#boxCustomForexLKUB').removeClass('d-none');
+      fetchAllForexLKUB();
+    } else {
+      $('#boxCustomForexLKUB').addClass('d-none');
+    }
+  });
 
   $('#rangeLKUB').select2({dropdownParent: $('#filter')});
   $('#rangeLKUB').on('change', function () {
@@ -317,6 +386,9 @@ $('#sbmFilter').click(function (e) {
   if (cabang) params.append('cabang', cabang);
   if (userInput) params.append('user', userInput);
   if (showOption) params.append('show', showOption);
+  if (showOption == '3' && !$('#boxShowingLKUB').hasClass('d-none')) {
+    params.append('forex', Array.from(customForexSelectionLKUB).join(','));
+  }
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

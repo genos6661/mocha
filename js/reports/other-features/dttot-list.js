@@ -336,7 +336,7 @@ function loadData(reset = false) {
       } else {
         details.forEach(function (item) {
           const jk = item.jk == 'M' ? 'Male' : 'Female';
-          const status = item.dttot == 2 ? 'Reported' : '';
+          const status = item.dttot == 2 ? '<span class="badge bg-primary">Reported</span>' : '';
           const row = `
               <tr data-noindex="${item.noindex}" title="Click to select">
                 <td class="text-center">${count}</td>

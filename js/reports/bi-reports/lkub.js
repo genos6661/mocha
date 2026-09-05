@@ -5,12 +5,23 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December"
 ];
 
-// Currencies BI requires a Middle Rate for on the LKUB report — used both
-// for the "Only Show Forexs with Rate Tengah" filter and the TXT export.
+// Currencies BI requires a Middle Rate for on the LKUB report — used for
+// the "Only Show Forexs with Rate Tengah" filter, and as the default
+// selection when the "Custom Forex" filter's checkboxes are first shown.
 const allowedCurrencies = new Set([
   "USD", "THB", "SGD", "SEK", "PHP", "PGK", "NZD", "NOK", "MYR", "KRW",
   "JPY", "HKD", "GBP", "EUR", "DKK", "CNY", "CHF", "CAD", "BND", "AUD"
 ]);
+
+// Every kodeValas seen in the last unfiltered response — the universe of
+// checkboxes offered under "Custom Forex", independent of whichever
+// "Displayed Option" is currently narrowing the visible table.
+let allValasCodes = [];
+
+// User's Custom Forex picks. Persists across filter modal opens within the
+// session (and is restored from the URL's "forex" param on load) rather
+// than resetting every time the box is shown.
+let customForexSelection = new Set(allowedCurrencies);
 
 const headers = [
   "NO",
@@ -71,6 +82,19 @@ $(document).ready(function() {
     });
 
     $('#showOptionFilter').select2({ dropdownParent: $('#modalFilter') });
+    $('#showOptionFilter').on('change', function () {
+      if (this.value === '3') {
+        $('#boxCustomForex').removeClass('d-none');
+        // allValasCodes may still be whatever the previously-active
+        // Displayed Option narrowed it to (e.g. just the Rate Tengah
+        // subset) — fetch the true "all forex" list for the period/branch
+        // currently selected in the modal so the checkboxes reflect every
+        // available currency, not a stale, already-filtered one.
+        fetchAllValasCodes();
+      } else {
+        $('#boxCustomForex').addClass('d-none');
+      }
+    });
     $('#showOptionFilter').val("2").trigger('change');
 
     const currentYear = new Date().getFullYear();
@@ -125,7 +149,8 @@ function getUrlParams() {
         tahun: params.get("tahun"),
         cabang: params.get("cabang"),
         user: params.get("user"),
-        show: params.get("show")
+        show: params.get("show"),
+        forex: params.get("forex")
     };
 }
 
@@ -182,9 +207,14 @@ function loadHeader() {
     user = params.user;
     show = params.show || '2';
 
+    if (show === '3' && params.forex) {
+        customForexSelection = new Set(params.forex.split(',').filter(Boolean));
+    }
+
     $('#range').text(monthNames[bulan - 1] + ' ' + tahun);
     $('#bulanFilter').val(bulan).trigger('change');
     $('#tahunFilter').val(tahun).trigger('change');
+    $('#showOptionFilter').val(show).trigger('change');
 
     if (cabang && cabang !== '') {
         getCabang(cabang, function (namaCabang) {
@@ -227,7 +257,10 @@ function loadData() {
     if (bulan) params.append("bulan", bulan);
     if (tahun) params.append("tahun", tahun);
     if (cabang) params.append("cabang", cabang);
-    if (show) params.append("tampilkan", show);
+    // Custom Forex is a purely client-side filter — the backend only knows
+    // "show all" (1) or "rate tengah only" (2), so ask it for everything
+    // and let renderCustomForexOptions/the filter below narrow it down.
+    if (show) params.append("tampilkan", show === '3' ? '1' : show);
 
     $.ajax({
         url: url_api + `/bi-report/lkub?${params.toString()}`,
@@ -241,6 +274,14 @@ function loadData() {
         success: function (response) {
             let details = response.data || [];
 
+            // Universe of checkboxes offered under "Custom Forex" always
+            // reflects everything the backend returned this period, not
+            // whatever the currently-active Displayed Option narrowed it to.
+            allValasCodes = details.map(item => item.kodeValas);
+            if (show === '3') {
+                renderCustomForexOptions();
+            }
+
             // "Only Show Forexs with Rate Tengah" keeps only the currencies
             // BI actually requires a Middle Rate for on this report — this
             // is a fixed list, not "rate_tengah > 0 this month", so it's
@@ -248,22 +289,21 @@ function loadData() {
             // what the backend did with the tampilkan param.
             if (show == '2') {
                 details = details.filter(item => allowedCurrencies.has(item.kodeValas));
+            } else if (show == '3') {
+                details = details.filter(item => customForexSelection.has(item.kodeValas));
             }
 
-            // Buy/Sell/Ending balance rupiah are derived on the frontend from
-            // this period's rate_tengah: qty * rate_tengah when a rate has
-            // been saved for this period, otherwise 0.
-            //
-            // saldo_awal_rupiah is different: the backend computes it from
-            // *last* month's saved rate_tengah, which isn't a value this
-            // period's response exposes separately — so it's displayed
-            // exactly as the backend returns it, never recomputed here.
+            // Bg. Balance / Buy / Sell rupiah are displayed exactly as the
+            // backend returns them. Only saldo_akhir_rupiah (Balance Rp) is
+            // derived on the frontend from this period's rate_tengah — it's
+            // the figure that live-updates as the user edits the Middle
+            // Rate cell below, before saving.
             details.forEach(function (item) {
                 const rate = Number(item.rate_tengah) || 0;
                 item.rate_tengah = rate;
                 item.saldo_awal_rupiah = Number(item.saldo_awal_rupiah) || 0;
-                item.pembelian_rupiah = rate > 0 ? Number(item.pembelian || 0) * rate : 0;
-                item.penjualan_rupiah = rate > 0 ? Number(item.penjualan || 0) * rate : 0;
+                item.pembelian_rupiah = Number(item.pembelian_rupiah) || 0;
+                item.penjualan_rupiah = Number(item.penjualan_rupiah) || 0;
                 item.saldo_akhir_rupiah = rate > 0 ? Number(item.saldo_akhir || 0) * rate : 0;
             });
 
@@ -367,17 +407,58 @@ function loadData() {
     });
 }
 
-// Recompute a row's Buy/Sell/Ending balance rupiah columns live as the
-// user edits its Middle Rate cell, using the same rate>0 ? qty*rate : 0
-// formula used on load. Bg. Balance (Rp) is intentionally left alone here:
-// it reflects *last* month's saved rate, not the one being typed now.
+// Keeps the caret at the end after reformatting a contenteditable cell —
+// resetting .text() otherwise drops the caret to position 0, which would
+// make typing insert backwards.
+function moveCaretToEnd(el) {
+  if (!el) return;
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+// Live-formats the Middle Rate cell as id-ID Rupiah (thousands separator,
+// up to 2 decimals) as the user types, same approach as the .jumlah amount
+// fields in cash-transaction.js — then recomputes the row's Buy/Sell/Ending
+// balance rupiah columns from the parsed rate, using the same
+// rate>0 ? qty*rate : 0 formula used on load. Bg. Balance (Rp) is
+// intentionally left alone here: it reflects *last* month's saved rate,
+// not the one being typed now.
 $('#tabelData tbody').on('input blur', '.rateTengah', function () {
-  const $row = $(this).closest('tr');
+  const $cell = $(this);
+  let val = $cell.text();
+
+  val = val.replace(/[^0-9,]/g, '');
+
+  const parts = val.split(',');
+  if (parts.length > 2) {
+    val = parts[0] + ',' + parts.slice(1).join('');
+  }
+
+  if (val !== '' && !val.endsWith(',')) {
+    const numericVal = parseFloat(val.replace(',', '.'));
+    if (!isNaN(numericVal)) {
+      val = new Intl.NumberFormat('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).format(numericVal);
+    }
+  }
+
+  if (val !== $cell.text()) {
+    $cell.text(val);
+    moveCaretToEnd(this);
+  }
+
+  const $row = $cell.closest('tr');
   const item = dataReport.find(d => d.kodeValas === $row.data('kode'));
   if (!item) return;
 
   const rate = parseFloat(
-    ($(this).text() || '0').replace(/\./g, '').replace(/,/g, '.')
+    (val || '0').replace(/\./g, '').replace(/,/g, '.')
   ) || 0;
 
   item.rate_tengah = rate;
@@ -388,6 +469,15 @@ $('#tabelData tbody').on('input blur', '.rateTengah', function () {
   $row.find('.pembelianRupiah').text(formatNumber(item.pembelian_rupiah));
   $row.find('.penjualanRupiah').text(formatNumber(item.penjualan_rupiah));
   $row.find('.saldoAkhirRupiah').text(formatNumber(item.saldo_akhir_rupiah));
+});
+
+$('#tabelData tbody').on('focus', '.rateTengah', function () {
+  const $cell = $(this);
+  const val = $cell.text().replace(/\./g, '');
+  if (val !== $cell.text()) {
+    $cell.text(val);
+    moveCaretToEnd(this);
+  }
 });
 
 $('#sbmFilter').click(function (e) {
@@ -405,6 +495,7 @@ $('#sbmFilter').click(function (e) {
   if (tahunFilter) params.append('tahun', tahunFilter);
   if (cabang) params.append('cabang', cabang);
   if (show) params.append('show', show);
+  if (show === '3') params.append('forex', Array.from(customForexSelection).join(','));
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
@@ -413,6 +504,68 @@ $('#sbmFilter').click(function (e) {
   loadHeader();
   loadData();
   $('#modalFilter').modal('hide');
+});
+
+// Fetches the complete, unfiltered ("tampilkan=1") currency list for
+// whatever bulan/tahun/cabang are currently selected in the filter modal
+// (falling back to the page's active values), so the Custom Forex
+// checkboxes always offer every available valas rather than whatever the
+// previously-active Displayed Option happened to leave in allValasCodes.
+function fetchAllValasCodes() {
+  const params = new URLSearchParams();
+  const bulanVal = $('#bulanFilter').val() || bulan;
+  const tahunVal = $('#tahunFilter').val() || tahun;
+  const cabangVal = $('#cabangFilter').val() || cabang;
+
+  if (bulanVal) params.append('bulan', bulanVal);
+  if (tahunVal) params.append('tahun', tahunVal);
+  if (cabangVal) params.append('cabang', cabangVal);
+  params.append('tampilkan', '1');
+
+  $.ajax({
+    url: url_api + `/bi-report/lkub?${params.toString()}`,
+    type: 'GET',
+    contentType: 'application/json',
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${window.token}`,
+      "X-Client-Domain": myDomain
+    },
+    success: function (response) {
+      allValasCodes = (response.data || []).map(item => item.kodeValas);
+      renderCustomForexOptions();
+    }
+  });
+}
+
+// Builds the "Custom Forex" pill checkboxes from allValasCodes, reflecting
+// whatever is currently in customForexSelection — re-rendering never
+// resets a user's picks since the checked state lives in that Set, not
+// the DOM.
+function renderCustomForexOptions() {
+  const $container = $('#customForexList');
+  $container.empty();
+
+  allValasCodes.forEach(function (kode) {
+    const isChecked = customForexSelection.has(kode);
+    const badgeClass = isChecked ? 'badge bg-primary' : 'badge badge-outline-primary';
+    $container.append(
+      `<span class="${badgeClass} customForexBadge" data-kode="${kode}" style="cursor:pointer;">${kode}</span>`
+    );
+  });
+}
+
+$(document).on('click', '.customForexBadge', function () {
+  const $badge = $(this);
+  const kode = $badge.data('kode');
+
+  if (customForexSelection.has(kode)) {
+    customForexSelection.delete(kode);
+    $badge.removeClass('bg-primary').addClass('badge-outline-primary');
+  } else {
+    customForexSelection.add(kode);
+    $badge.removeClass('badge-outline-primary').addClass('bg-primary');
+  }
 });
 
 function formatNumber(value) {
@@ -464,10 +617,6 @@ $('#eksporTXT').click(function (e) {
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
     const tds = tr.querySelectorAll("td");
     const kodeValas = tds[1].innerText.trim();
-
-    if (!allowedCurrencies.has(kodeValas)) {
-      return;
-    }
 
     const kursTengah = parseFloat(
       (tds[10].innerText || "0").toString()

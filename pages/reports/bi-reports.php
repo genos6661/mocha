@@ -197,7 +197,12 @@
           <select id="showOptionLKUB" class="form-select">
             <option value="1">Show All Forexs</option>
             <option value="2" selected>Only Show Forexs with Rate Tengah</option>
+            <option value="3">Custom Forex</option>
           </select>
+        </div>
+        <div class="mb-3 d-none" id="boxCustomForexLKUB">
+          <label class="form-label">Select Forex</label>
+          <div id="customForexListLKUB" class="d-flex flex-wrap gap-2"></div>
         </div>
       </div>
       <div class="modal-footer">

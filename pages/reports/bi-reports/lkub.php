@@ -194,7 +194,12 @@
           <select id="showOptionFilter" class="form-select">
             <option value="1">Show All Forexs</option>
             <option value="2" selected>Only Show Forexs with Rate Tengah</option>
+            <option value="3">Custom Forex</option>
           </select>
+        </div>
+        <div class="mb-3 d-none" id="boxCustomForex">
+          <label class="form-label">Select Forex</label>
+          <div id="customForexList" class="d-flex flex-wrap gap-2"></div>
         </div>
         <!-- <div class="d-flex justify-content-end mb-0">
           <div class="form-check form-switch mb-0">

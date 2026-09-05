@@ -123,6 +123,13 @@
           </tr>
         </thead>
         <tbody></tbody>
+        <tfoot>
+          <tr>
+            <th colspan="4" class="text-end">Total (Rp) :</th>
+            <th class="text-end" id="totalRupiahValas"></th>
+            <th></th>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>

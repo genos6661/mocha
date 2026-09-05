@@ -1,7 +1,10 @@
 let currentFilters = {};
 let table;
 let offset = 0;
-let limit = 50;
+// High enough that a single fetch reliably returns every forex beginning
+// balance row, so the Total (Rp) below is computed across the complete
+// dataset rather than whatever page has loaded so far.
+let limit = 1000;
 let isLoading = false;
 let lastSearch = "";
 let orderColumn = "kode";
@@ -315,15 +318,7 @@ function loadMoreData(reset = false) {
             } else {
                 table.rows.add(response.data).draw(false);
             }
-            let arrDisplay = valasDisplayed.split(",").map(Number);
-            if (arrDisplay.length == 0 || valasDisplayed == '') {
-                $('#displayAllValas').removeAttribute('checked');
-            } if (arrDisplay.length >= response.recordsTotal) {
-                $('#displayAllValas').prop('checked', true);
-                console.log('full');
-            } else {
-                $('#displayAllValas').prop('indeterminate', true);
-            }
+            updateTotalValasRupiah();
         }
         isLoading = false;
         // document.querySelector("#totalValas").textContent = response.recordsTotal;
@@ -331,6 +326,26 @@ function loadMoreData(reset = false) {
     .catch(() => {
         isLoading = false;
     });
+}
+
+// Sums rate * stock across every forex beginning balance row currently
+// loaded in the table. Relies on limit being high enough (see above) that
+// a single fetch already holds the complete dataset, so this reflects the
+// true total rather than just whatever page has loaded so far.
+function updateTotalValasRupiah() {
+    let total = 0;
+
+    table.rows().every(function () {
+        const rowData = this.data();
+        const rate = Number(rowData.rate) || 0;
+        const stok = Number(rowData.saldo_awal) || 0;
+        total += rate * stok;
+    });
+
+    $('#totalRupiahValas').text('Rp ' + total.toLocaleString('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    }));
 }
 
 function initEvents() {
