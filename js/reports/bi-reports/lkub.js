@@ -443,7 +443,7 @@ $('#tabelData tbody').on('input blur', '.rateTengah', function () {
     if (!isNaN(numericVal)) {
       val = new Intl.NumberFormat('id-ID', {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 4
       }).format(numericVal);
     }
   }
