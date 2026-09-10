@@ -368,7 +368,7 @@ function loadData() {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0
                             })}</td>
-                          <td class="text-end px-1 rateTengah" contenteditable="true">${item.rate_tengah ? formatNumber(item.rate_tengah) : ''}</td>
+                          <td class="text-end px-1 rateTengah" contenteditable="true">${item.rate_tengah ? formatRate(item.rate_tengah) : ''}</td>
                           <td class="text-end saldoAkhirRupiah">${Number(item.saldo_akhir_rupiah).toLocaleString('id-ID', {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 2
@@ -611,6 +611,18 @@ function formatNumber(value) {
   }).format(value);
 }
 
+// Rate Tengah needs up to 4 decimal digits (5 integer + 4 decimal = the
+// 9-digit convention this report saves/exports) — formatNumber's 2-decimal
+// cap is for Rupiah amounts and would visibly round a rate like
+// 15000.9050 down to 15000.91 if used here instead.
+function formatRate(value) {
+  if (typeof value !== "number") return value || "";
+  return new Intl.NumberFormat("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  }).format(value);
+}
+
 function padNumber(num) {
   let clean = String(num).replace(/[^\d.-]/g, '');
   let value = Number(clean) || 0;
@@ -650,15 +662,12 @@ $('#eksporTXT').click(function (e) {
   let lines = [];
 
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
-    const tds = tr.querySelectorAll("td");
-    const kodeValas = tds[1].innerText.trim();
-
-    const kursTengah = parseFloat(
-      (tds[10].innerText || "0").toString()
-      .replace(/\./g, '')  
-      .replace(/,/g, '.')) || 0;
-
     const item = dataReport[idx];
+    const kodeValas = item.kodeValas;
+    // Read straight from dataReport rather than re-parsing the displayed
+    // cell text, same reasoning as the Save and PDF export fixes above.
+    const kursTengah = Number(item.rate_tengah) || 0;
+
     const saldoAkhirRupiah = Number(item.saldo_akhir || 0) * effectiveRate(kodeValas, kursTengah);
 
     const line =
@@ -698,12 +707,14 @@ $("#export-pdf").click(function () {
   let dataFixed = [];
 
   document.querySelectorAll("#tabelData tbody tr").forEach((tr, idx) => {
-    const tds = tr.querySelectorAll("td");
-    const kursTengah = tds[10].innerText.trim() || "0";
-
     let item = { ...dataReport[idx] };
 
-    item.kurs_tengah = parseFloat(kursTengah.replace(/,/g, "")) || 0;
+    // Read straight from dataReport, not the displayed cell text — that
+    // text is id-ID formatted ("15.000,905"), and stripping only commas
+    // (as this used to do) leaves the "." thousands separator in place,
+    // so parseFloat misreads it as a decimal point (15.000905 instead of
+    // 15000.905) for any rate 1000 or above.
+    item.kurs_tengah = Number(item.rate_tengah) || 0;
 
     dataFixed.push(item);
   });
@@ -732,7 +743,7 @@ $("#export-pdf").click(function () {
         formatNumber(item.penjualan),
         formatNumber(item.penjualan_rupiah),
         formatNumber(item.saldo_akhir),
-        formatNumber(item.kurs_tengah),
+        formatRate(item.kurs_tengah),
         formatNumber(item.saldo_akhir_rupiah)
       ]);
     },
@@ -784,18 +795,19 @@ $('#sbmSave').click(function (e) {
     const item = dataReport[idx];
     if (!item) return;
 
-    const tds = tr.querySelectorAll("td");
-    const rateTengah = parseFloat(
-      (tds[10].innerText || "0").toString().replace(/\./g, '').replace(/,/g, '.')
-    ) || 0;
-
+    // Read the precise rate straight from dataReport (kept in sync by
+    // commitRateTengah on every edit) rather than re-parsing the cell's
+    // *displayed* text — the display is formatted for readability and can
+    // legitimately show fewer digits than what's actually stored (e.g. a
+    // trailing zero dropped), so re-parsing it here would silently save a
+    // truncated value instead of the real one.
     valas.push({
       kode_valas: item.kodeValas,
       stok_awal: Number(item.saldo_awal) || 0,
       buy: Number(item.pembelian) || 0,
       sell: Number(item.penjualan) || 0,
       stok_akhir: Number(item.saldo_akhir) || 0,
-      rate_tengah: rateTengah,
+      rate_tengah: Number(item.rate_tengah) || 0,
     });
   });
 
