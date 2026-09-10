@@ -40,6 +40,19 @@
       </div>
     </div>
   </div>
+  <div class="col mb-6">
+    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Threshold Transaction Report" data-range="month" data-url="/threshold-report">
+      <div class="avatar">
+        <div class="avatar-initial bg-primary rounded">
+          <i class="icon-base ti tabler-alert-triangle icon-xl"></i>
+        </div>
+      </div>
+      <div>
+        <h5 class="mb-0">Threshold Transaction Report</h5>
+        <span>Laporan transaksi yang melewati batas threshold</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- filter -->
@@ -115,6 +128,10 @@
         <div class="mb-3 d-none" id="boxNegara">
           <label for="negara" class="form-label">Country</label>
           <select id="negara" class="form-select"></select>
+        </div>
+        <div class="mb-3 d-none" id="boxContact">
+          <label for="pelanggan" class="form-label">Contact</label>
+          <select id="pelanggan" class="form-select"></select>
         </div>
         <div class="mb-3 d-none" id="boxTipeLog">
           <label for="tipeLog" class="form-label">Type</label>

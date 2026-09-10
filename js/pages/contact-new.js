@@ -29,6 +29,7 @@ $('#sbmTambah').click(async function (e) {
 
     const nama = $('#nama').val();
     const negara = $('#negara').val();
+    const idNumber = $('#idNumber').val();
 
     const formData = {
         // kode: $('#kode').val(),
@@ -37,7 +38,7 @@ $('#sbmTambah').click(async function (e) {
         telepon: $('#telepon').val(),
         email: $('#email').val(),
         negara: negara,
-        id: $('#idNumber').val(),
+        id: idNumber,
         pekerjaan: $('#pekerjaan').val(),
         tipe: $('#tipe').val(),
         id_type: $('#id_type').val(),
@@ -87,7 +88,7 @@ $('#sbmTambah').click(async function (e) {
                 offset = 0;
                 table.clear().draw();
                 loadMoreData();
-                checkDTTOT(nama);
+                checkDTTOT(nama, response.noindex, idNumber);
             });
             selectNewContact(response, nama, negara);
         },
@@ -230,6 +231,7 @@ function submitForce() {
 
     const nama = $('#nama').val();
     const negara = $('#negara').val();
+    const idNumber = $('#idNumber').val();
 
     const formData = {
         nama: nama,
@@ -237,7 +239,7 @@ function submitForce() {
         telepon: $('#telepon').val(),
         email: $('#email').val(),
         negara: negara,
-        id: $('#idNumber').val(),
+        id: idNumber,
         pekerjaan: $('#pekerjaan').val(),
         tipe: $('#tipe').val(),
         id_type: $('#id_type').val(),
@@ -289,7 +291,7 @@ function submitForce() {
                 offset = 0;
                 table.clear().draw();
                 loadMoreData();
-                checkDTTOT(nama);
+                checkDTTOT(nama, response.noindex, idNumber);
             });
             selectNewContact(response, nama, negara);
             if (document.querySelector(`.notiflix-loading`)) {
@@ -311,9 +313,38 @@ function submitForce() {
 
 }
 
-async function checkDTTOT(name) {
+function addProfileToDttotList(profileId) {
+    return $.ajax({
+        url: url_api + '/other-features/dttot-status',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        },
+        data: JSON.stringify({ id: [profileId], status: 1 })
+    });
+}
+
+// Nomor ID dianggap tidak berarti (tidak dikirim ke pengecekan DTTOT) kalau
+// kosong, "-", atau "0" — nilai-nilai placeholder yang sering dipakai kontak
+// tanpa dokumen identitas asli.
+function isValidIdNumber(value) {
+    if (value === null || value === undefined) return false;
+    const trimmed = String(value).trim();
+    return !['-', '0', ''].includes(trimmed);
+}
+
+async function checkDTTOT(name, profileId, idNumber) {
 
     try {
+
+        const payload = { name: name };
+
+        if (isValidIdNumber(idNumber)) {
+            payload.id_number = idNumber;
+        }
 
         const response = await $.ajax({
             url: "https://apiprovider.thebrotherhoodlaw.com/dttot/check",
@@ -324,9 +355,7 @@ async function checkDTTOT(name) {
                 "Authorization": `Bearer ${window.token}`,
                 "X-Client-Domain": myDomain
             },
-            data: JSON.stringify({
-                name: name
-            })
+            data: JSON.stringify(payload)
         });
 
         if (!response.matched || response.results.length === 0) {
@@ -410,6 +439,13 @@ async function checkDTTOT(name) {
                             ${item.dttot.nationality ?? "-"}
                         </div>
 
+                        <div class="col-md-6">
+                            <b>Exact ID Number</b><br>
+                            ${item.exact_id_number
+                                ? '<i class="icon-base ti tabler-alert-triangle-filled text-danger" style="font-size:1.1rem;"></i> <span class="text-danger fw-bold">Yes</span>'
+                                : 'No'}
+                        </div>
+
                     </div>
 
                     <hr class="my-2">
@@ -439,7 +475,7 @@ async function checkDTTOT(name) {
 
         html += "</div>";
 
-        await Swal.fire({
+        const result = await Swal.fire({
 
             icon: "warning",
 
@@ -451,6 +487,15 @@ async function checkDTTOT(name) {
 
             confirmButtonText: "Tutup",
 
+            showDenyButton: !!profileId,
+
+            denyButtonText: "Tambahkan ke DTTOT List",
+
+            customClass: {
+                confirmButton: 'btn btn-secondary',
+                denyButton: 'btn btn-danger'
+            },
+
             allowOutsideClick: false,
 
             allowEscapeKey: false,
@@ -458,6 +503,21 @@ async function checkDTTOT(name) {
             focusConfirm: true
 
         });
+
+        if (result.isDenied && profileId) {
+            try {
+                const addResponse = await addProfileToDttotList(profileId);
+                notif.fire({
+                    icon: 'success',
+                    text: addResponse.message || 'Contact added to DTTOT List'
+                });
+            } catch (err) {
+                notif.fire({
+                    icon: 'error',
+                    text: err.responseJSON?.message || 'Gagal menambahkan ke DTTOT List'
+                });
+            }
+        }
 
         return true;
 

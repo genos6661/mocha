@@ -1103,9 +1103,34 @@ $(document).ready(function () {
     submitOrder(idExist, tipeTransaksi, details);
   });
 
-  function submitSign(idPelanggan, nomor, cabang) {
+  // Isi ulang data diri dari dokumen KYC terakhir profil (kalau ada), supaya
+  // tidak perlu diketik ulang tiap kali threshold terpicu. Field tujuan,
+  // hubungan (relasi), dan sumber dana sengaja TIDAK diisi — selalu kosong.
+  function prefillSignForm(dokumen) {
+    if (!dokumen) return;
+
+    $('#npwp').val(dokumen.npwp || '');
+    $('#domisili').val(dokumen.domisili || '');
+    $('#perusahaan').val(dokumen.perusahaan || '');
+    $('#jabatan').val(dokumen.jabatan || '');
+    $('#bidang_usaha').val(dokumen.bidang_usaha || '');
+
+    setSelect2Value($('#pekerjaan'), dokumen.pekerjaan, dokumen.label_pekerjaan);
+    setSelect2Value($('#penghasilan'), dokumen.penghasilan, dokumen.label_penghasilan);
+    setSelect2Value($('#bentuk_pt'), dokumen.bentuk_pt, dokumen.label_bentuk_pt);
+  }
+
+  function setSelect2Value($el, value, label) {
+    if (!value) return;
+    $el.find('option').remove();
+    const option = new Option(label || value, value, true, true);
+    $el.append(option).trigger('change');
+  }
+
+  function submitSign(idPelanggan, nomor, cabang, idTransaction) {
     const formData = {
       id_pelanggan: idPelanggan,
+      id_transaction: idTransaction || null,
       npwp: $('#npwp').val(),
       domisili: $('#domisili').val(),
       penghasilan: $('#penghasilan').val(),
@@ -1197,9 +1222,10 @@ $(document).ready(function () {
             signaturePad.clear();
           });
           $("#btnSignSubmit").click(function () {
-            submitSign(idPelanggan, response.nomor, cabang);
+            submitSign(idPelanggan, response.nomor, cabang, response.noindex);
           });
           initSelect2();
+          prefillSignForm(response.dokumen);
           $('#modalSign').modal('show');
           if (document.querySelector(`.notiflix-loading`)) {
             Loading.remove();

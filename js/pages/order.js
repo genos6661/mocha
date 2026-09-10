@@ -780,6 +780,10 @@ async function checkDTTOT(name) {
 
             confirmButtonText: "Tutup",
 
+            customClass: {
+                confirmButton: 'btn btn-secondary'
+            },
+
             allowOutsideClick: false,
 
             allowEscapeKey: false,

@@ -516,77 +516,78 @@ session_start();
         <div class="modal-content">
           <div class="modal-body">
             <div class="text-center mb-6">
-              <h4 class="mb-4">Transaction exceeded threshold limit</h4>
-              <p class="h5">Please fill in and sign the following form for transactions that exceed the monthly limit</p>
+              <h4 class="mb-1">Transaction Exceeded Threshold Limit</h4>
+              <p class="text-body mb-0">Please fill in and sign the following form for transactions that exceed the monthly limit</p>
             </div>
-            <div class="row">
-              <div class="col-md mb-3">
+
+            <h6 class="fw-semibold mb-3">Personal / Business Data</h6>
+            <div class="row g-3 mb-5">
+              <div class="col-md-6">
                 <label for="npwp" class="form-label">NPWP</label>
                 <input type="text" id="npwp" class="form-control">
               </div>
-              <div class="col-md mb-3">
+              <div class="col-md-6">
                 <label for="domisili" class="form-label">Domicile</label>
                 <input type="text" id="domisili" class="form-control">
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md mb-3">
-                <label for="penghasilan" class="form-label">Penghasilan</label>
+              <div class="col-md-6">
+                <label for="penghasilan" class="form-label">Income</label>
                 <select id="penghasilan" class="form-select"></select>
               </div>
-              <div class="col-md mb-3">
-                <label for="bentuk_pt" class="form-label">Bentuk PT</label>
+              <div class="col-md-6">
+                <label for="bentuk_pt" class="form-label">Company Form</label>
                 <select id="bentuk_pt" class="form-select"></select>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md mb-3">
-                <label for="bidang_usaha" class="form-label">Bidang Usaha</label>
-                <input type="text" class="form-control" id="bidang_usaha">
-              </div>
-              <div class="col-md mb-3">
+              <div class="col-md-6">
                 <label for="perusahaan" class="form-label">Company Name</label>
                 <input type="text" class="form-control" id="perusahaan">
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md mb-3">
-                <label for="pekerjaan" class="form-label">Pekerjaan</label>
+              <div class="col-md-6">
+                <label for="bidang_usaha" class="form-label">Business Field</label>
+                <input type="text" class="form-control" id="bidang_usaha">
+              </div>
+              <div class="col-md-6">
+                <label for="pekerjaan" class="form-label">Occupation</label>
                 <select id="pekerjaan" class="form-select"></select>
               </div>
-              <div class="col-md mb-3">
+              <div class="col-md-6">
                 <label for="jabatan" class="form-label">Position</label>
                 <input type="text" id="jabatan" class="form-control">
               </div>
             </div>
-            <div class="row">
-              <div class="col-md mb-3">
-                <label for="tujuan" class="form-label">Transaction Purpose</label>
-                <select id="tujuan" class="form-select"></select>
-              </div>
-              <div class="col-md mb-3">
-                <label for="hubungan" class="form-label">Relation (if represented)</label>
-                <input type="text" id="hubungan" class="form-control">
+
+            <div class="bg-label-warning rounded p-4 mb-4">
+              <h6 class="fw-semibold mb-1">
+                <i class="icon-base ti tabler-alert-triangle me-1"></i>
+                Transaction-Specific Details
+              </h6>
+              <p class="mb-3 small">These fields describe this specific transaction and must be filled in every time — they are never pre-filled from a previous submission.</p>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label for="tujuan" class="form-label">Transaction Purpose</label>
+                  <select id="tujuan" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                  <label for="hubungan" class="form-label">Relation (if represented)</label>
+                  <input type="text" id="hubungan" class="form-control">
+                </div>
+                <div class="col-md-4">
+                  <label for="sumber" class="form-label">Source of Funds</label>
+                  <select id="sumber" class="form-select"></select>
+                </div>
               </div>
             </div>
+
             <div class="row">
-              <div class="col-md mb-3">
-                <label for="sumber" class="form-label">Source of Funds</label>
-                <select id="sumber" class="form-select"></select>
-                <div class="d-flex justify-content-end mt-5">
-                  <button class="btn btn-outline-danger mt-5 align-self-right" id="btnSignClear">Clear</button>
-                </div>
-              </div>
-              <div class="col-md mb-3">
+              <div class="col-md-6">
                 <label for="signature-pad" class="form-label">Signature</label>
-                <canvas id="signature-pad" class="w-100 border rounded" height="300"></canvas>
+                <canvas id="signature-pad" class="w-100 border rounded" height="200"></canvas>
               </div>
-            </div>            
-            <div class="row mt-3">
-                <div class="col-md d-grid px-4">
-                  <button class="btn btn-primary" id="btnSignSubmit">Submit</button>
-                </div>
+              <div class="col-md-6 d-flex flex-column justify-content-end align-items-end gap-2">
+                <button class="btn btn-outline-danger" id="btnSignClear">Clear</button>
+                <button class="btn btn-primary w-100" id="btnSignSubmit">Submit</button>
               </div>
+            </div>
           </div>
         </div>
       </div>

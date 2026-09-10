@@ -135,12 +135,15 @@ modalFilter.addEventListener('shown.bs.modal', event => {
       $('#simpleDate').val(range).trigger('change');
     }
 
+    const allBoxes = '#boxSimpleDate, #boxSingleDate, #boxSimpleRange, #boxRange, #boxNegara, #boxContact, #boxTipeKontak, #boxShowDTTOT, #boxTipeLog, #boxAktivitasLog, #boxEmailLog';
+    $(allBoxes).addClass('d-none');
+
     if (nama === "DTTOT List") {
-      $('#boxSimpleDate, #boxSingleDate, #boxSimpleRange, #boxRange').addClass('d-none');
       $('#boxNegara, #boxTipeKontak, #boxShowDTTOT').removeClass('d-none');
+    } else if (nama === "Threshold Transaction Report") {
+      $('#boxSimpleRange, #boxRange, #boxNegara, #boxContact').removeClass('d-none');
     } else {
       $('#boxSimpleRange, #boxRange').removeClass('d-none');
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').addClass('d-none');
     }
 
     if(url) {
@@ -487,6 +490,7 @@ $('#sbmFilter').click(function (e) {
   const endDate = $('#endDate').val();
   const cabang = $('#cabang').val();
   const negara = $('#negara').val();
+  const pelanggan = $('#pelanggan').val();
   const baseUrl = $('#urlToGo').val();
   const params = new URLSearchParams();
 
@@ -494,6 +498,7 @@ $('#sbmFilter').click(function (e) {
   if (endDate) params.append('end', endDate);
   if (cabang) params.append('cabang', cabang);
   if (negara) params.append('negara', negara);
+  if (pelanggan) params.append('contact', pelanggan);
 
   const show = [];
 
