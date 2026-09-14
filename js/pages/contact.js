@@ -460,7 +460,9 @@ function initEvents() {
                 const params = new URLSearchParams({
                     pelanggan: id,
                     start: startDate,
-                    end: endDate
+                    end: endDate,
+                    buy: 1,
+                    sell: 1
                 });
 
                 $('#goTrans').attr(
