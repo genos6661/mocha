@@ -358,33 +358,34 @@ async function checkDTTOT(name, profileId, idNumber) {
             data: JSON.stringify(payload)
         });
 
-        if (!response.matched || response.results.length === 0) {
+        if (!response.matched || !response.result) {
             return false;
+        }
+
+        // API sekarang mengembalikan 1 hasil terbaik saja lewat "result"
+        // (objek tunggal), bukan array "results" seperti sebelumnya.
+        // "exact_id_number" juga sekarang di level atas response, berlaku
+        // untuk keseluruhan pengecekan — bukan per-hasil.
+        const match = response.result;
+
+        let badge = "secondary";
+
+        switch (match.level) {
+            case "VERY_HIGH":
+                badge = "danger";
+                break;
+
+            case "HIGH":
+                badge = "warning";
+                break;
+
+            case "MEDIUM":
+                badge = "info";
+                break;
         }
 
         let html = `
             <div style="max-height:500px;overflow-y:auto;padding-right:8px">
-        `;
-
-        response.results.forEach(item => {
-
-            let badge = "secondary";
-
-            switch (item.level) {
-                case "VERY_HIGH":
-                    badge = "danger";
-                    break;
-
-                case "HIGH":
-                    badge = "warning";
-                    break;
-
-                case "MEDIUM":
-                    badge = "info";
-                    break;
-            }
-
-            html += `
             <div class="card mb-3 shadow-sm border-start border-4 border-${badge}">
 
                 <div class="card-body py-3">
@@ -394,11 +395,11 @@ async function checkDTTOT(name, profileId, idNumber) {
                         <div>
 
                             <div class="fw-bold fs-6">
-                                ${item.dttot.name}
+                                ${match.dttot.name}
                             </div>
 
                             <small class="text-muted">
-                                Alias cocok : <b>${item.matchedAlias}</b>
+                                Alias cocok : <b>${match.matchedAlias}</b>
                             </small>
 
                         </div>
@@ -406,11 +407,11 @@ async function checkDTTOT(name, profileId, idNumber) {
                         <div class="text-end">
 
                             <span class="badge bg-${badge}">
-                                ${item.level}
+                                ${match.level}
                             </span>
 
                             <div class="fw-bold mt-1">
-                                ${item.score}%
+                                ${match.score}%
                             </div>
 
                         </div>
@@ -421,27 +422,27 @@ async function checkDTTOT(name, profileId, idNumber) {
 
                         <div class="col-md-6">
                             <b>Kode Densus</b><br>
-                            ${item.dttot.code}
+                            ${match.dttot.code}
                         </div>
 
                         <div class="col-md-6">
                             <b>Tipe</b><br>
-                            ${item.dttot.suspectType}
+                            ${match.dttot.suspectType}
                         </div>
 
                         <div class="col-md-6">
                             <b>Tanggal Lahir</b><br>
-                            ${item.dttot.birthDate ?? "-"}
+                            ${match.dttot.birthDate ?? "-"}
                         </div>
 
                         <div class="col-md-6">
                             <b>Negara</b><br>
-                            ${item.dttot.nationality ?? "-"}
+                            ${match.dttot.nationality ?? "-"}
                         </div>
 
                         <div class="col-md-6">
                             <b>Exact ID Number</b><br>
-                            ${item.exact_id_number
+                            ${response.exact_id_number
                                 ? '<i class="icon-base ti tabler-alert-triangle-filled text-danger" style="font-size:1.1rem;"></i> <span class="text-danger fw-bold">Yes</span>'
                                 : 'No'}
                         </div>
@@ -455,13 +456,13 @@ async function checkDTTOT(name, profileId, idNumber) {
                         <b>Alamat</b>
 
                         <div class="text-muted mb-2">
-                            ${(item.dttot.address || "-").replace(/\n/g,"<br>")}
+                            ${(match.dttot.address || "-").replace(/\n/g,"<br>")}
                         </div>
 
                         <b>Deskripsi</b>
 
                         <div class="text-muted">
-                            ${(item.dttot.description || "-").replace(/\n/g,"<br>")}
+                            ${(match.dttot.description || "-").replace(/\n/g,"<br>")}
                         </div>
 
                     </div>
@@ -469,11 +470,8 @@ async function checkDTTOT(name, profileId, idNumber) {
                 </div>
 
             </div>
-            `;
-
-        });
-
-        html += "</div>";
+            </div>
+        `;
 
         const result = await Swal.fire({
 
