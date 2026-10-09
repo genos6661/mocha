@@ -129,9 +129,30 @@ function loadData(fileDesain) {
       if (xhr.status === 200) {
           const imgBlob = xhr.response;
           const imgURL = URL.createObjectURL(imgBlob);
-          $('.boxLogo').html(`
-              <img src="${imgURL}" alt="Logo" style="height: 45px;">
-          `);
+
+          const renderRectangle = function () {
+              $('.boxLogo').html(`
+                  <img src="${imgURL}" alt="Logo" style="height: 45px;">
+              `);
+          };
+
+          // Logo persegi (rasio ~1:1) pakai lebar 45% dari wadahnya;
+          // logo persegi panjang tetap tinggi 45px seperti sebelumnya.
+          const probe = new Image();
+          probe.onload = function () {
+              const ratio = probe.naturalWidth / probe.naturalHeight;
+              const isSquare = ratio >= 0.95 && ratio <= 1.05;
+
+              if (isSquare) {
+                  $('.boxLogo').css('width', '100%').html(`
+                      <img src="${imgURL}" alt="Logo" style="width: 32%; height: auto;">
+                  `);
+              } else {
+                  renderRectangle();
+              }
+          };
+          probe.onerror = renderRectangle;
+          probe.src = imgURL;
       }
   };
 
