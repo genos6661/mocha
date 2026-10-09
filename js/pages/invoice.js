@@ -145,7 +145,7 @@ function loadData(fileDesain) {
 
               if (isSquare) {
                   $('.boxLogo').css('width', '100%').html(`
-                      <img src="${imgURL}" alt="Logo" style="width: 32%; height: auto;">
+                      <img src="${imgURL}" alt="Logo" style="width: 40%; height: auto;">
                   `);
               } else {
                   renderRectangle();
