@@ -5,6 +5,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <link rel="stylesheet" href="/assets/vendor/css/pages/page-misc.css" />
+    <link rel="icon" type="image/svg+xml" href="/assets/img/favicon/logo.svg" />
   </head>
 
   <body>

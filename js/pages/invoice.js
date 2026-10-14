@@ -1,4 +1,6 @@
-let urlParams, transaction, design, fileDesain;
+// Daftar desain (INVOICE_DESIGNS) ada di js/pages/invoice-designs.js.
+// File ini hanya berisi alur: pilih desain -> muat template -> isi data -> cetak.
+let urlParams, transaction;
 $(document).ready(function () {
   urlParams = new URLSearchParams(window.location.search);
   transaction = urlParams.get('transaction');
@@ -14,9 +16,8 @@ $(document).ready(function () {
     if (window.token) {
       chooseDesign();
     } else {
-      fileDesain = 'regular';
-      $("body").load(`../../pages/transaction/desain/${fileDesain}.html`);
-      loadData(fileDesain);
+      // Tanpa token tidak bisa membaca setting -> pakai desain default, tanpa auto print.
+      renderInvoice(getInvoiceDesign(INVOICE_DEFAULT_DESIGN), { autoPrint: false });
     }
   }
   window.onafterprint = function () {
@@ -46,8 +47,30 @@ function setDateTime() {
     $(".timePrint").text(formattedTime);
 }
 
+// Data transaksi hanya di-fetch sekali; dipakai untuk menentukan desain
+// (desain cabang) sekaligus untuk mengisi isi invoice.
+let transactionRequest = null;
+function fetchTransaction() {
+  if (!transactionRequest) {
+    transactionRequest = $.ajax({
+      url: url_api + '/transaction/nomor/' + transaction,
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.token}`,
+        "X-Client-Domain": myDomain
+      }
+    });
+  }
+  return transactionRequest;
+}
+
+// Urutan prioritas desain:
+//   1. desain khusus cabang transaksi (kolom cabang.desain, opsional)
+//   2. desain utama di Settings (InvoiceDesain)
+//   3. desain default registry (lihat getInvoiceDesign)
 function chooseDesign() {
-  $.ajax({
+  const settingRequest = $.ajax({
     url: url_api + '/setting',
     type: 'GET',
     contentType: 'application/json',
@@ -55,69 +78,57 @@ function chooseDesign() {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${window.token}`,
         "X-Client-Domain": myDomain
-    },
-    success: function (response) {
-      if(response.InvoiceDesain.strval) {
-          design = response.InvoiceDesain.strval;
+    }
+  });
+
+  $.when(settingRequest, fetchTransaction())
+    .done(function (settingRes, transactionRes) {
+      const setting = settingRes[0];
+      const trx = transactionRes[0];
+
+      const designId = trx.desain_cabang || setting.InvoiceDesain?.strval;
+      renderInvoice(getInvoiceDesign(designId), { autoPrint: true });
+    })
+    .fail(function (xhr) {
+      if (xhr.status === 404) {
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON.message
+        });
       } else {
-        design = 'A4';
+        notif.fire({
+          icon: 'error',
+          text: 'Terjadi Kesalahan pada server'
+        });
       }
+    });
+}
 
-      if (design == 'A4') {
-        fileDesain = 'regular';
-      } else if (design == 'small') {
-        fileDesain = 'small-con';
-      } else if (design == 'small-2') {
-        fileDesain = 'small-con2';
-      } else if (design == 'small-sign') {
-        fileDesain = 'small-sign';
-      } else if (design == 'a4_continous') {
-        fileDesain = 'a4-half';
-      } else if (design == 'small-escpos') {
-        fileDesain = 'small-escpos';
-      } else if (design == 'small-escpos-long') {
-        fileDesain = 'small-escpos-long';
-      } else if (design == 'A4-double') {
-        fileDesain = 'a4-double';
-      }
+// Merender invoice sesuai definisi desain dari registry.
+function renderInvoice(design, { autoPrint }) {
+  if (design.type === 'escpos') {
+    loadDataEscPos(design);
+    return;
+  }
 
-      $("body").load(`../../pages/transaction/desain/${fileDesain}.html`, function () {
+  $("body").load(`../../pages/transaction/desain/${design.template}.html`, function () {
+    loadData(design);
 
-          if (fileDesain === 'small-escpos' || fileDesain === 'small-escpos-long') {
-              loadDataEscPos(fileDesain);
-              return;
-          }
+    if (autoPrint) {
+      setDateTime();
 
-          loadData(fileDesain);
+      window.onafterprint = function () {
+        window.close();
+      };
 
-          setDateTime();
-
-          window.onafterprint = function () {
-              window.close();
-          };
-
-          setTimeout(() => {
-            window.print();
-          }, 500);
-      });
-    },
-    error: function (xhr) {
-        if (xhr.status === 404) {
-            notif.fire({
-              icon: 'error',
-              text: xhr.responseJSON.message
-            });
-        } else {
-            notif.fire({
-              icon: 'error',
-              text: 'Terjadi Kesalahan pada server'
-            });
-        }
-    },
+      setTimeout(() => {
+        window.print();
+      }, 500);
+    }
   });
 }
 
-function loadData(fileDesain) {
+function loadData(design) {
   const logoUrl = url_api + '/setting/logo/';
 
   const xhr = new XMLHttpRequest();
@@ -158,15 +169,8 @@ function loadData(fileDesain) {
 
   xhr.send();
       
-  $.ajax({
-    url: url_api + '/transaction/nomor/' + transaction,  
-    method: 'GET',
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${window.token}`,
-        "X-Client-Domain": myDomain
-    },
-    success: function (response) {
+  fetchTransaction()
+    .done(function (response) {
       $('.namaCabang').text(response.nama_cabang);
       $('.judulNota').text(response.judul_nota);
       $('.alamatCabang').text(response.alamat_cabang);
@@ -191,7 +195,7 @@ function loadData(fileDesain) {
         $('.footer3').removeClass('d-none').text(response.footer3);
       }
       $('.ttdPelanggan').text(response.nama_pelanggan || "Customer");
-      $('.ttdPerusahaan').text(response.user || judul_nota);
+      $('.ttdPerusahaan').text(response.user || response.judul_nota);
 
       if (response.footer1 && response.footer1 !== '') {
         $('.footer1').text(response.footer1);
@@ -232,96 +236,25 @@ function loadData(fileDesain) {
           }
           const totalPerItem = qty * item.rate;
           subtotal += totalPerItem;
-          let row;
-          if (fileDesain == 'small-con' || fileDesain == 'small-sign') {
-            row = `
-                <tr>
-                  <td style="padding: 3px;">${item.kode}</td>
-                  <td style="text-align: right; padding: 3px;">${Number(qty).toLocaleString('id-ID')}</td>
-                  <td style="text-align: right; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 4
-                })}</td>
-                  <td colspan="2" style="text-align: right; padding: 3px;">${Number(totalPerItem).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}</td>
-                </tr>
-            `;
-          } else if (fileDesain == 'small-con2') {
-            row = `
-                <tr>
-                  <td colspan="2" style="padding: 3px;">${item.kode}</td>
-                  <td colspan="2" style="padding: 3px; text-align: center;">${Number(qty).toLocaleString('id-ID')}</td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="text-align: center; padding: 3px;">${Number(item.rate).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}</td>
-                  <td colspan="2" style="text-align: right; padding: 3px;">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}</td>
-                </tr>
-            `;
-          } else {
-            row = `
-                <tr>
-                  <td class="nowrap">${item.kode}</td>
-                  <td class="text-end nowrap">${Number(qty).toLocaleString('id-ID')}</td>
-                  <td class="text-end nowrap">Rp. ${Number(item.rate).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}</td>
-                  <td class="text-end nowrap">Rp. ${Number(totalPerItem).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}</td>
-                </tr>
-            `;
-          }
+          const row = design.renderRow({ item, qty, total: totalPerItem });
           tbody.append(row);
         });
 
         // ~~~~~~~~~~ footer ~~~~~~~~~~
-        if(fileDesain == 'regular') {
-          $('.subtotal, .total').text(Number(subtotal).toLocaleString('id-ID', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }));
-        } else if (fileDesain == 'small-con' || fileDesain == 'small-con2' || fileDesain == 'small-sign') {
-          tbody.append(`
-            <tr>
-              <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700;">Total : </td>
-              <td colspan="2" style="border-top: 1px solid; padding: 8px 3px; font-weight: 700; text-align: right;">Rp. ${Number(subtotal).toLocaleString('id-ID', {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0
-                })}</td>
-            </tr>
-          `);
-        } else if (fileDesain == 'a4-half' || fileDesain == 'a4-double') {
-          tbody.append(`
-            <tr>
-              <td colspan="3" class="fw-bold">Total : </td>
-              <td class="text-end fw-bold">Rp. ${Number(subtotal).toLocaleString('id-ID', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                })}</td>
-            </tr>
-          `);
+        const footerHtml = design.renderFooter({ subtotal, $tbody: tbody });
+        if (footerHtml) {
+          tbody.append(footerHtml);
         }
 
       }
-    },
-    error: function (xhr) {
+    })
+    .fail(function (xhr) {
       Swal.fire({
         icon: 'error',
         title: 'Gagal',
         text: 'Gagal mengambil data transaksi.'
       });
-    }
-  });
+    });
 }
 
 function maskIdNumber(id) {
@@ -331,25 +264,11 @@ function maskIdNumber(id) {
 }
 
 // ESC / POS
-async function loadDataEscPos(fileDesain) {
+async function loadDataEscPos(design) {
+  fetchTransaction().done(function (response) {
+    const escData = mapInvoiceToEscPos(response);
 
-  $.ajax({
-    url: url_api + '/transaction/nomor/' + transaction,
-    method: 'GET',
-    headers: {
-      "Authorization": `Bearer ${window.token}`,
-      "X-Client-Domain": myDomain
-    },
-    success: async function (response) {
-
-      const escData = mapInvoiceToEscPos(response);
-
-      let cmd = esc(27, 64); 
-
-      cmd += generateEscPosInvoice(escData, fileDesain);
-
-      downloadEscPos(cmd);
-    }
+    downloadEscPos(buildEscPos(design, escData));
   });
 }
 
@@ -397,107 +316,6 @@ function mapInvoiceToEscPos(res) {
     items,
     subtotal
   };
-}
-
-function esc(...bytes) {
-  return String.fromCharCode(...bytes);
-}
-
-function line(left, right, width = 32) {
-  const space = width - left.length - right.length;
-  return left + " ".repeat(Math.max(space, 1)) + right + "\n";
-}
-
-function generateEscPosInvoice(data, fileDesain) {
-
-  if (fileDesain === 'small-escpos') {
-    let cmd = "";
-
-    cmd += esc(27, 97, 1);
-    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n`;
-    cmd += esc(27, 97, 0);
-
-    cmd += "--------------------------------\n";
-    cmd += `Number : ${data.nomor}\n`;
-    cmd += `Date : ${data.tanggal}\n`;
-    cmd += `Name : ${data.customer}\n\n`;
-    cmd += `Cashier : ${data.user}\n`
-    cmd += "--------------------------------\n";
-
-    data.items.forEach(i => {
-
-      cmd += i.kode + " - " + i.nama + "\n";
-
-      cmd += line(
-        `${i.qty} x ${formatNumber(i.rate)}`,
-        formatNumber(i.total)
-      );
-    });
-
-    cmd += "--------------------------------\n";
-    cmd += esc(27, 69, 1);
-    cmd += line("TOTAL", formatNumber(data.subtotal));
-    
-    cmd += esc(27, 97, 1);
-    cmd += `\n${data.footer1}\n${data.footer2}\n${data.footer3}\n`;
-
-    cmd += esc(29, 86, 0); 
-
-    return cmd;
-  }
-  // desain esc pos long
-  else if (fileDesain === 'small-escpos-long') {
-    let cmd = "";
-
-    cmd += esc(27, 97, 1);
-    cmd += `${data.judul_nota}\n${data.alamat_cabang}\n${data.telepon_cabang}\n${data.footer1}\n`;
-    cmd += esc(27, 97, 0);
-
-    cmd += "--------------------------------\n";
-    cmd += esc(27, 97, 2);
-    cmd += `No. ${data.nomor}\n`;
-    cmd += esc(27, 97, 0);
-    cmd += `Date : ${data.tanggal}\n`;
-    cmd += `Customer : ${data.customer}\n`;
-    cmd += `Passport/ID : ${data.id_number}\n`;
-    cmd += `Nationality : ${data.nationality}\n`;
-    cmd += `Phone : ${data.telepon_pelanggan}\n`;
-    cmd += esc(27, 97, 2);
-    cmd += `Cashier : ${data.user}\n`;
-    cmd += esc(27, 97, 0);
-    cmd += "--------------------------------\n";
-    cmd += `Forex    Amount    Rate    Total\n`;
-    cmd += "--------------------------------\n";
-
-    data.items.forEach(i => {
-
-      cmd += i.kode + " - " + i.nama + "\n";
-
-      cmd += line(
-        `${i.qty} x ${formatNumber(i.rate)}`,
-        formatNumber(i.total)
-      );
-    });
-
-    cmd += "--------------------------------\n";
-    cmd += esc(27, 69, 1);
-    cmd += line("TOTAL", formatNumber(data.subtotal));
-
-    cmd += esc(27, 97, 1);
-    cmd += `\n${data.footer2}\n${data.footer3}\n\n`;
-
-    cmd += esc(27, 97, 2);
-    cmd += `${data.customer}\n\n\n`;
-    cmd += `.........................`;
-
-    cmd += esc(29, 86, 0); 
-
-    return cmd;
-  }
-}
-
-function formatNumber(num) {
-  return Number(num).toLocaleString('id-ID');
 }
 
 function downloadEscPos(cmd) {

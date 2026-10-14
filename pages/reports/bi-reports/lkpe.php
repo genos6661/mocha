@@ -68,7 +68,7 @@
     <p class="h5 text-center mb-1 text-secondary national-park" id="range"></p>
     <p class="h5 text-center mb-1 text-secondary national-park d-none" id="cabang"></p>
   </div>
-  <div class="card-body">
+  <div class="card-body table-responsive">
     <table class="table table-bordered border-collapse">
       <thead class="table-dark">
         <tr>
@@ -238,7 +238,7 @@
   </div>
 </div>
 
-<div class="btn-group mt-6" role="group" aria-label="First group">
+<div class="btn-group mt-6 export-actions" role="group" aria-label="First group">
   <button type="button" class="btn btn-outline-primary waves-effect" id="exportPDF"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" class="btn btn-outline-primary waves-effect" id="exportExcel"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect disabled"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>

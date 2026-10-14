@@ -95,9 +95,9 @@
       <tbody></tbody>
     </table>
   </div>
-  <div class="card-footer d-flex justify-content-between pt-4">
+  <div class="card-footer d-flex flex-wrap justify-content-between gap-2 pt-4">
     <p class="h5 px-3">Total Records : <span id="totalData"></span></p>
-    <div class="d-flex justify-content-end gap-2">
+    <div class="d-flex flex-wrap justify-content-end gap-2">
       <p class="h6 pe-4" id="selectedCount"></p>
       <button type="button" id="unlistBtn" class="btn btn-outline-success waves-effect">Unlist</button>
       <button type="button" id="unreportedBtn" class="btn btn-outline-dark waves-effect">Set as Not Reported</button>
@@ -106,7 +106,7 @@
   </div>
 </div>
 
-<div class="btn-group mt-6" role="group" aria-label="First group">
+<div class="btn-group mt-6 export-actions" role="group" aria-label="First group">
   <button type="button" id="export-pdf" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" id="export-excel" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect" disabled><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>

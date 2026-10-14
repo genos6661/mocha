@@ -231,7 +231,7 @@
             </div>
           </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-2 row-cols-sm-4">
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="pelanggan" value="1" />
@@ -396,7 +396,7 @@
             </div>
           </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-2 row-cols-sm-4">
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="pelangganEdit" value="1" />

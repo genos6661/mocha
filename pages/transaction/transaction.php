@@ -175,6 +175,7 @@ if ($nowHour >= 15) {
       <div class="modal-footer d-flex justify-content-between justify-content-md-end">
         <button class="btn-primary btn mx-1 mb-2 mb-md-0" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
         <a class="btn-outline-primary btn mx-1 mb-2 mb-md-0" target="_blank" id="reprintDetail">Reprint</a>
+        <button class="btn-outline-success btn mx-1 mb-2 mb-md-0 btnSendWa" id="waDetail"><i class="icon-base ti tabler-brand-whatsapp me-1"></i>WhatsApp</button>
         <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
         <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
         <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
@@ -369,7 +370,7 @@ if ($nowHour >= 15) {
             </div>
           </div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-2 row-cols-sm-4">
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="pelanggan" value="1" checked />
@@ -474,7 +475,7 @@ if ($nowHour >= 15) {
         </div>
         <div class="row">
           <div class="col table-responsive">
-            <table class="table table-borderless" id="tabelDetail">
+            <table class="table table-borderless table-stack" id="tabelDetail">
               <thead class="border-bottom border-top">
                 <tr>
                   <th class="py-3" style="width: 25%; min-width: 200px;">Currency</th>
@@ -592,6 +593,8 @@ if ($nowHour >= 15) {
   </div>
 </div>
 
+<script src="js/pages/country-dial-codes.js?v=<?= filemtime(__DIR__ . '/../../js/pages/country-dial-codes.js') ?>" type="text/javascript"></script>
+<script src="js/pages/invoice-wa.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-wa.js') ?>" type="text/javascript"></script>
 <script src="js/pages/transaction.js" type="text/javascript"></script>
 <script src="js/pages/contact-new.js" type="text/javascript"></script>
-<script src="js/pages/direct-transaction.js" type="text/javascript"></script>
+<script src="js/pages/direct-transaction.js?v=<?= filemtime(__DIR__ . '/../../js/pages/direct-transaction.js') ?>" type="text/javascript"></script>

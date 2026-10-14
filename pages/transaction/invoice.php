@@ -22,7 +22,7 @@ require '../../config/config.php';
 
     <meta name="description" content="" />
 
-    <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="../../assets/img/favicon/logo.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -84,6 +84,7 @@ require '../../config/config.php';
     <script src="../../assets/vendor/js/menu.js"></script>
     <script src="../../assets/js/main.js"></script>
 
-    <script src="../../js/pages/invoice.js"></script>
+    <script src="../../js/pages/invoice-designs.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-designs.js') ?>"></script>
+    <script src="../../js/pages/invoice.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice.js') ?>"></script>
   </body>
 </html>

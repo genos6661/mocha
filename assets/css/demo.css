@@ -107,3 +107,197 @@
 .nowrap {
   white-space: nowrap;
 }
+
+/*
+* Responsive (smartphone)
+******************************************************************************/
+
+/* Tombol export laporan (PDF/Excel/CSV/TXT/Print): turun baris di layar kecil */
+@media (max-width: 575.98px) {
+  .export-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .export-actions > .btn {
+    flex: 1 1 auto;
+    margin-left: 0;
+    border-radius: var(--bs-btn-border-radius) !important;
+  }
+}
+
+/* Tabel input detail (class "table-stack", lihat js/responsive-tables.js):
+   di layar kecil tiap baris menjadi kartu bersusun, bukan tabel selebar 750px. */
+@media (max-width: 767.98px) {
+  .table-stack,
+  .table-stack tbody,
+  .table-stack tfoot,
+  .table-stack tr,
+  .table-stack td,
+  .table-stack th {
+    display: block;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+  .table-stack thead {
+    display: none;
+  }
+  .table-stack tbody tr {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+  }
+  .table-stack td,
+  .table-stack th {
+    padding: 0.25rem 0 !important;
+    border: 0;
+  }
+  .table-stack [data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+  }
+  .table-stack tbody td:last-child {
+    text-align: end;
+  }
+  .table-stack tfoot th.text-end {
+    text-align: start !important;
+  }
+}
+
+/* Logo di preview invoice: tinggi tetap 40px di PC (di HP memakai lebar 30%, lihat di bawah) */
+img.invoice-logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Preview invoice / order publik (dibuka pelanggan lewat link di smartphone):
+   padding lebih rapat, logo di tengah, dan item valas tampil sebagai kartu (bukan tabel lebar). */
+@media (max-width: 575.98px) {
+  .invoice-preview-card {
+    padding: 1rem !important;
+  }
+  .invoice-preview-card .invoice-preview-header {
+    padding: 1rem !important;
+  }
+  .invoice-preview-card h4 {
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+  }
+  /* logo di tengah, 30% lebar */
+  .invoice-preview-card #boxLogo {
+    align-self: center;
+  }
+  .invoice-preview-card #boxLogo img.invoice-logo {
+    display: block;
+    width: 30%;
+    min-width: 72px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* item valas: tiap baris menjadi kartu
+       USD  US Dollar                 Rp 15.800.000
+       AMOUNT 1.000                   RATE Rp 15.800   */
+  .invoice-preview-card #tabelDetail thead {
+    display: none;
+  }
+  .invoice-preview-card #tabelDetail,
+  .invoice-preview-card #tabelDetail tbody {
+    display: block;
+  }
+  .invoice-preview-card #tabelDetail tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 0.75rem;
+    padding: 0.75rem 0.25rem;
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+  .invoice-preview-card #tabelDetail tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .invoice-preview-card #tabelDetail td {
+    padding: 0 !important;
+    border: 0;
+  }
+  .invoice-preview-card #tabelDetail td:nth-child(1) {
+    grid-area: 1 / 1;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .invoice-preview-card #tabelDetail td:nth-child(2) {
+    grid-area: 2 / 1;
+    font-size: 0.8125rem;
+    color: var(--bs-secondary-color);
+  }
+  .invoice-preview-card #tabelDetail td:nth-child(5) {
+    grid-area: 1 / 2 / 3 / 3;
+    align-self: center;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+  .invoice-preview-card #tabelDetail td:nth-child(3) {
+    text-align: start !important;
+    grid-area: 3 / 1;
+    margin-top: 0.5rem;
+  }
+  .invoice-preview-card #tabelDetail td:nth-child(4) {
+    grid-area: 3 / 2;
+    margin-top: 0.5rem;
+    white-space: nowrap;
+  }
+  .invoice-preview-card #tabelDetail td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+  }
+}
+
+/* Dropdown kode negara (modal kirim WhatsApp): kolomnya sempit, daftarnya tidak boleh ikut sempit */
+.wa-country-dropdown {
+  min-width: 15rem;
+}
+
+/* Grup switch/radio di dalam modal (Male/Female, Buy/Sell, Cash In/Out, ...):
+   di layar kecil boleh turun baris dan rata kiri, tidak melebar keluar modal. */
+@media (max-width: 575.98px) {
+  .modal :has(> .form-check-inline) {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-start !important;
+    gap: 0.5rem 1.5rem;
+  }
+  .modal .form-check-inline {
+    margin-right: 0;
+    padding-left: 0;
+  }
+  /* kolom switch di header memakai g-2 (gutter 0.5rem) sehingga tidak sejajar dengan judul */
+  .modal-header .row > .d-flex.g-2 {
+    --bs-gutter-x: 1.5rem;
+    margin-top: 0.5rem;
+  }
+  .modal .switch {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+/* Tombol close modal: tema menggesernya keluar sudut modal (translate 23px, -25px).
+   Di layar kecil bagian itu keluar dari body modal dan memicu geser horizontal. */
+@media (max-width: 575.98px) {
+  .modal .btn-close,
+  .modal .btn-close:hover,
+  .modal .btn-close:focus,
+  .modal .btn-close:active {
+    transform: none;
+  }
+}

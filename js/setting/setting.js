@@ -24,6 +24,8 @@ $(document).ready(function() {
         placeholder: 'Choose Cash/Bank Account'
     });
 
+    // Opsi dropdown dibangun dari registry desain (js/pages/invoice-designs.js)
+    fillInvoiceDesignSelect($('#desain'), { selected: INVOICE_DEFAULT_DESIGN });
     $('#desain').select2();
 
     loadSettings();

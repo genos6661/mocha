@@ -93,7 +93,7 @@
   </div>
 </div>
 
-<!-- <div class="btn-group mt-6" role="group" aria-label="First group">
+<!-- <div class="btn-group mt-6 export-actions" role="group" aria-label="First group">
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-pdf"></i>PDF</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-spreadsheet"></i>Excel</button>
   <button type="button" class="btn btn-outline-primary waves-effect"><i class="icon-base ti tabler-file-type-csv"></i>CSV</button>

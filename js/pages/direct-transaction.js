@@ -391,16 +391,21 @@ $('#btnSubmit').click(function (e) {
           showDenyButton: true,
           confirmButtonText: 'Print Invoice',
           denyButtonText: 'Okay',
+          showCancelButton: true,
+          cancelButtonText: 'Send via WhatsApp',
           customClass: {
             denyButton: 'btn btn-secondary',
-            confirmButton: 'btn btn-primary'
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-success'
           },
           reverseButtons: true,
-          allowOutsideClick: false, 
+          allowOutsideClick: false,
           allowEscapeKey: false
         }).then((result) => {
           if (result.isConfirmed) {
               window.open('/pages/transaction/invoice.php?transaction=' + response.nomor, '_blank');
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+              sendInvoiceViaWhatsApp(response.nomor);
           }
         });
 
@@ -485,12 +490,15 @@ function submitSign(idPelanggan, nomor, cabang, idTransaction) {
         showDenyButton: true,
         confirmButtonText: 'Print Receipt',
         denyButtonText: 'Close',
+        showCancelButton: true,
+        cancelButtonText: 'Send via WhatsApp',
         customClass: {
           denyButton: 'btn btn-secondary',
-          confirmButton: 'btn btn-primary'
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-success'
         },
         reverseButtons: true,
-        allowOutsideClick: false, 
+        allowOutsideClick: false,
         allowEscapeKey: false
       }).then((result) => {
         offset = 0;
@@ -498,6 +506,8 @@ function submitSign(idPelanggan, nomor, cabang, idTransaction) {
         loadMoreData(true);
         if (result.isConfirmed) {
           window.open('/pages/transaction/invoice.php?transaction=' + nomor, '_blank');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          sendInvoiceViaWhatsApp(nomor);
         }
       });
       if (document.querySelector(`.notiflix-loading`)) {

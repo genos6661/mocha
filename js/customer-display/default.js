@@ -33,7 +33,7 @@ $(document).ready(function() {
           `);
       } else {
           $('.boxLogo').html(`
-              <img src="/assets/img/favicon/beres.svg" alt="Logo" style="height:80px;">
+              <img src="/assets/img/favicon/logo.svg" alt="Logo" style="height:80px;">
           `);
       }
   };

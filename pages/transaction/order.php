@@ -228,4 +228,6 @@
   </div>
 </div>
 
-<script src="js/pages/order.js" type="text/javascript"></script>
+<script src="js/pages/country-dial-codes.js?v=<?= filemtime(__DIR__ . '/../../js/pages/country-dial-codes.js') ?>" type="text/javascript"></script>
+<script src="js/pages/invoice-wa.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-wa.js') ?>" type="text/javascript"></script>
+<script src="js/pages/order.js?v=<?= filemtime(__DIR__ . '/../../js/pages/order.js') ?>" type="text/javascript"></script>

@@ -9,6 +9,7 @@ RewriteEngine On
 RewriteRule ^order-form/?$ order-form.php [L]
 RewriteRule ^customer-display/?$ pages/customer-display.php [L]
 RewriteRule ^order-preview/?$ order-preview.php [L]
+RewriteRule ^transaction-preview/?$ transaction-preview.php [L]
 RewriteRule ^login/?$ login.php [L]
 RewriteRule ^clear/?$ clear.html [L]
 

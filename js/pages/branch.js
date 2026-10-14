@@ -273,6 +273,15 @@ function initEvents() {
 }
 
 //modal
+// Opsi desain dibangun dari registry (js/pages/invoice-designs.js);
+// opsi kosong = ikut desain utama di Settings.
+// Harus di dalam document.ready: select2.js baru dimuat di index.php SETELAH
+// script halaman ini, jadi $.fn.select2 belum ada saat file ini pertama dieksekusi.
+$(document).ready(function () {
+    fillInvoiceDesignSelect($('#desainEdit'), { emptyLabel: 'Use default design (Settings)', selected: '' });
+    $('#desainEdit').select2({ dropdownParent: $('#modalEdit'), minimumResultsForSearch: Infinity });
+});
+
 const modalEdit = document.getElementById('modalEdit')
 modalEdit.addEventListener('shown.bs.modal', event => {
     const button = event.relatedTarget
@@ -300,6 +309,7 @@ modalEdit.addEventListener('shown.bs.modal', event => {
             $('#footer3Edit').val(response.footer3);
             $('#cdHeadEdit').val(response.cd_header);
             $('#cdFootEdit').val(response.cd_footer);
+            $('#desainEdit').val(response.desain || '').trigger('change');
             $('#aktif').prop('checked', response.aktif == 1);
 
             populateNomorNota(response);
@@ -432,6 +442,7 @@ $('#sbmEdit').click(function (e) {
     footer3: $('#footer3Edit').val(),
     cd_header: $('#cdHeadEdit').val(),
     cd_footer: $('#cdFootEdit').val(),
+    desain: $('#desainEdit').val() || null,
     aktif: $('#aktif').is(':checked') ? 1 : 0,
     order_num: parseInt($('#orderNumEdit').val()) || 0,
     trans_num: parseInt($('#transNumEdit').val()) || 0,

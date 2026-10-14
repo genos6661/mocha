@@ -354,6 +354,7 @@ function initTable() {
                     </a>
                     <div class="dropdown-menu dropdown-menu-end">
                     <a href="/pages/transaction/invoice.php?transaction=${data.nomor}" class="dropdown-item" target="_blank">Reprint</a>
+                    <a href="javascript:;" class="dropdown-item btnSendWa" data-nomor="${data.nomor}">Send via WhatsApp</a>
               `;
 
               if(userPermissions.includes('edit_transaction') || userPermissions.includes('delete_transaction')) {
@@ -562,6 +563,7 @@ function initEvents() {
             }
             $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
             $('#reprintDetail').attr('href', '/pages/transaction/invoice.php?transaction=' + nomor);
+            $('#waDetail').attr('data-nomor', nomor);
             $('#editBtn').attr('href', '/transaction/edit?nomor=' + data.nomor);
             $('#deleteBtn').attr('data-id', id).attr('data-ref', nomor);
             $('#modalDetail').modal('show');

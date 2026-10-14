@@ -100,16 +100,7 @@
         </div>
         <div class="col-md mb-3">
           <label for="desain" class="form-label">Invoice Design</label>
-          <select id="desain" class="form-select">
-            <option value="A4" selected>Regular A4 Invoice</option>
-            <option value="A4-double">A4 Double Invoice</option>
-            <option value="small">Small Continous Paper</option>
-            <option value="small-2">Small Continous 2 rows</option>
-            <option value="small-sign">Small With Signature</option>
-            <option value="small-escpos">Small ESC/POS</option>
-            <option value="small-escpos-long">Small ESC/POS Long</option>
-            <option value="a4_continous">Half A4 Continous Paper</option>
-          </select>
+          <select id="desain" class="form-select"></select>
         </div>
       </div>
       <div class="row">
@@ -343,4 +334,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="js/setting/setting.js" type="text/javascript"></script>
+<script src="js/pages/invoice-designs.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-designs.js') ?>" type="text/javascript"></script>
+<script src="js/setting/setting.js?v=<?= filemtime(__DIR__ . '/../../js/setting/setting.js') ?>" type="text/javascript"></script>

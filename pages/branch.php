@@ -139,7 +139,7 @@
         <p class="h4 text-center mb-4">Edit Branch Data</p>
         <input type="hidden" id="idEdit">
 
-        <ul class="nav nav-tabs mb-4" role="tablist">
+        <ul class="nav nav-tabs flex-nowrap overflow-x-auto text-nowrap mb-4" role="tablist">
           <li class="nav-item">
             <button type="button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabEditGeneral" role="tab" aria-selected="true">General</button>
           </li>
@@ -208,9 +208,15 @@
                 <input type="text" id="cdFootEdit" class="form-control" placeholder="Text for branch's Customer Display" />
               </div>
             </div>
-            <div class="row">
-              <div class="col">
-                <div class="form-check form-switch">
+            <div class="row align-items-end">
+              <div class="col-md mb-3 mb-md-0">
+                <label for="desainEdit" class="form-label">Invoice Design <span class="text-body-secondary">(optional)</span></label>
+                <select id="desainEdit" class="form-select">
+                  <option value="">Use default design (Settings)</option>
+                </select>
+              </div>
+              <div class="col-md">
+                <div class="form-check form-switch mb-md-2">
                   <input class="form-check-input" type="checkbox" id="aktif">
                   <label class="form-check-label" for="aktif">Aktif</label>
                 </div>
@@ -360,4 +366,5 @@
   </div>
 </div>
 
-<script src="js/pages/branch.js" type="text/javascript"></script>
+<script src="js/pages/invoice-designs.js?v=<?= filemtime(__DIR__ . '/../js/pages/invoice-designs.js') ?>" type="text/javascript"></script>
+<script src="js/pages/branch.js?v=<?= filemtime(__DIR__ . '/../js/pages/branch.js') ?>" type="text/javascript"></script>

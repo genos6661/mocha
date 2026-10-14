@@ -275,7 +275,7 @@
           </div>
         </div>
         <div class="table-responsive nowrap" id="boxTabelDetail">
-          <table class="table table-borderless" id="detailBaru">
+          <table class="table table-borderless table-stack" id="detailBaru">
             <thead>
               <tr class="border-top border-bottom">
                 <th style="width: 30%; min-width: 200px;">Forex</th>
@@ -406,7 +406,7 @@
           </div>
         </div>
         <div class="table-responsive nowrap" id="boxDetailEdit">
-          <table class="table table-borderless" id="detailEdit">
+          <table class="table table-borderless table-stack" id="detailEdit">
             <thead>
               <tr class="border-top border-bottom">
                 <th style="width: 30%; min-width: 200px;">Forex</th>

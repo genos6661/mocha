@@ -96,8 +96,8 @@ $(document).ready(function() {
 									    <tr>
 									      <td>${item.kode}</td>
 									      <td>${item.nama}</td>
-									      <td class="text-end">${Number(item.jumlah).toLocaleString('en-US')}</td>
-									      <td class="text-end">Rp. ${Number(item.rate).toLocaleString('en-US', {
+									      <td class="text-end" data-label="Amount">${Number(item.jumlah).toLocaleString('en-US')}</td>
+									      <td class="text-end" data-label="Rate">Rp. ${Number(item.rate).toLocaleString('en-US', {
 											  minimumFractionDigits: 0,
 											  maximumFractionDigits: 4
 											})}</td>

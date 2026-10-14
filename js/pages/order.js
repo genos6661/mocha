@@ -561,19 +561,22 @@ $('#sbmProses').click(async function (e) {
                 showDenyButton: true,
                 confirmButtonText: 'Print Invoice',
                 denyButtonText: 'Okay',
+                showCancelButton: true,
+                cancelButtonText: 'Send via WhatsApp',
                 customClass: {
                   denyButton: 'btn btn-secondary',
-                  confirmButton: 'btn btn-primary'
+                  confirmButton: 'btn btn-primary',
+                  cancelButton: 'btn btn-success'
                 },
                 reverseButtons: true,
-                allowOutsideClick: false, 
+                allowOutsideClick: false,
                 allowEscapeKey: false
             }).then((result) => {
+                $('#modalProses').modal('hide');
                 if (result.isConfirmed) {
-                    $('#modalProses').modal('hide');
                     window.open('/pages/transaction/invoice.php?transaction=' + response.nomor, '_blank');
-                } else if (result.isDenied) {
-                    $('#modalProses').modal('hide');
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    sendInvoiceViaWhatsApp(response.nomor);
                 }
             });
         },
