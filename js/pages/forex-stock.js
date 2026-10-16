@@ -4,7 +4,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "valas";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "asc";
 let resetOffset = false;
 let isPermit;
@@ -127,35 +127,22 @@ function initTable() {
       scrollY: "60vh",
       scrollCollapse: true,
       deferRender: true,
-      ordering: true,
+      ordering: false,
       paging: false,
       lengthChange: false,
       info: false,
       autoWidth: false,
       columns: [
+          { data: "valas", className: "dt-main nowrap", render: TR.titleSub('nama_valas') },
+          { data: "nama_cabang", className: "dt-branch nowrap" },
           {
-              data: "valas",
-              orderable: true,
-              className: "nowrap",
-              render: function (data, type, row) {
-                if (!data) return "";
-                return `<div class="d-flex flex-column"><a class="text-heading text-truncate"><span class="fw-medium">${data}</span></a><small>${row.nama_valas}</small></div>`;
-              }
-          },
-          { data: "nama_cabang", orderable: true, className: "nowrap" },
-          { 
-              data: "stok_akhir", 
-              orderable: true, 
-              className: "text-end nowrap",
-              render: function(data, type, row) {
-                  if (!data) return ""; 
-                  
-                  return parseFloat(data).toLocaleString("id-ID");
-              },
+              data: "stok_akhir",
+              className: "dt-amount text-end nowrap",
+              render: TR.number(v => parseFloat(v).toLocaleString("id-ID"), '', 'Stock')
           },
           { 
               data: null,
-              className: "text-end",
+              className: "dt-actions text-end",
               render: function(data) {
                   return `
                       <div class="dropdown">
@@ -174,18 +161,16 @@ function initTable() {
       // }
   });
 
-  table.on("order.dt", function () {
-      let order = table.order();
-      let columnIndex = order[0][0]; 
-      let direction = order[0][1];
-
-      let columnMapping = ["valas", "cabang", "stok_akhir", ""];
-      orderColumn = columnMapping[columnIndex] || "valas";
-      orderDir = direction;
-
-      resetOffset = true;
+  // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+  TR.sortBar('#tabelStok', [
+        { key: 'valas', label: 'Forex', dir: 'asc' },
+        { key: 'nama_cabang', label: 'Branch', dir: 'asc' },
+        { key: 'stok_akhir', label: 'Stock', dir: 'desc' }
+  ], (column, dir) => {
+      orderColumn = column;
+      orderDir = dir;
       loadMoreData(true);
-  });
+  }, { host: '#sortHost' });
 }
 
 function loadMoreData(reset = false) {
@@ -207,9 +192,6 @@ function loadMoreData(reset = false) {
   if (isLoading) return;
   isLoading = true;
 
-  if (reset) {
-    orderDir = "asc";
-  }
 
   const searchInput = document.querySelector(".filtertabel input");
   const searchValue = searchInput ? searchInput.value : "";

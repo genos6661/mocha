@@ -52,15 +52,7 @@ $(document).ready(function() {
   if (header) { $('.header').text(header); }
   loadTabel();
 
-  if (footer && footer != '') {
-    if (footer.length >= 40) {
-      $('#footerScroll').text(footer).removeClass('d-none');
-      $('#footer').addClass('d-none');
-    } else {
-      $('#footer').text(footer).removeClass('d-none');
-      $('#footerScroll').addClass('d-none');
-    }
-  }
+  showDisplayFooter(footer, 40);
 
   function setCurrentDateTime() {
     const now = new Date();
@@ -90,12 +82,12 @@ let baseBoxSize = 30;
 
 function generateTabelHTML(dataArray) {
     let html = `
-      <table class="table mb-0 national-park">
+      <table class="table mb-0 national-park cd-table">
         <thead class="">
           <tr>
-            <th class="text-center text-black" colspan="2"><strong>Forex</strong></th>
-            <th class="text-end text-black"><strong>Buy</strong></th>
-            <th class="text-end text-black"><strong>Sell</strong></th>
+            <th class="text-center" colspan="2"><strong>Forex</strong></th>
+            <th class="text-end"><strong>Buy</strong></th>
+            <th class="text-end"><strong>Sell</strong></th>
           </tr>
         </thead>
         <tbody>
@@ -118,9 +110,9 @@ function generateTabelHTML(dataArray) {
                     <img src="${urlFlag}">
                 </div>
               </td>
-              <td class="p-2 text-black"><strong>${item.kode}</strong></td>
-              <td class="text-end text-black p-2"><strong>${beliFormatted}</strong></td>
-              <td class="text-end text-black p-2"><strong>${jualFormatted}</strong></td>
+              <td class="p-2 cd-code"><strong>${item.kode}</strong></td>
+              <td class="text-end p-2 cd-buy"><strong>${beliFormatted}</strong></td>
+              <td class="text-end p-2 cd-sell"><strong>${jualFormatted}</strong></td>
             </tr>
         `;
     });

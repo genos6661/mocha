@@ -4,7 +4,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "nomor";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "desc";
 let resetOffset = false;
 let userPermissions = [];
@@ -149,45 +149,27 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            {
-                data: "tanggal",
-                orderable: true,
-                className: "nowrap",
-                render: function (data, type, row) {
-                  if (!data) return "";
-                  const tanggal = new Date(data);
-                  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                  return tanggal.toLocaleDateString('en-ID', options);
-                }
-            },
-            { data: "nomor", orderable: true },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "tanggal", className: "dt-main nowrap", render: TR.dateNumber },
             {
                 data: "tipe",
                 orderable: true,
-                render: function (data) {
-                  return data ? data.toUpperCase() : "";
-                }
+                className: "dt-badge",
+                render: TR.badgeBy({ buy: ['BUY', 'success'], sell: ['SELL', 'danger'] })
             },
-            { data: "nama_cabang", orderable: true },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { data: "closed", orderable: true, className: "text-center", render: function (data, type, row) {
-                    if (data == 1) {
-                        return `<span class="badge rounded-pill bg-label-secondary">Closed</span>`;
-                    } else {
-                        return `<span class="badge rounded-pill bg-label-primary">Open</span>`;
-                    }
-                } 
-            },
+            { data: "nama_cabang", orderable: true, className: "dt-branch" },
+            { data: "nama", orderable: true, className: "dt-party nowrap", render: TR.name },
+            { data: "total", orderable: false, className: "dt-amount text-end nowrap", render: TR.money() },
+            { data: "closed", orderable: true, className: "dt-extra text-center", render: TR.badgeBy({ 0: ['Open', 'primary'], null: ['Open', 'primary'], 1: ['Closed', 'secondary'] }) },
             { 
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                     if((userPermissions.includes('edit_order') || userPermissions.includes('delete_order') || userPermissions.includes('posting_transaction')) && data.closed == 0) {
                         let menuHtml = `
@@ -236,16 +218,17 @@ function initTable() {
         }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "tanggal", "nomor", "tipe", "nama_cabang", "nama", "closed", ""];
-        orderColumn = columnMapping[columnIndex] || "nomor";
-        orderDir = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih di atas tabel (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelOrder', [
+        { key: 'tanggal', label: 'Date', dir: 'desc' },
+        { key: 'nomor', label: 'Number', dir: 'asc' },
+        { key: 'tipe', label: 'Type', dir: 'asc' },
+        { key: 'nama_cabang', label: 'Branch', dir: 'asc' },
+        { key: 'nama', label: 'Name', dir: 'asc' },
+        { key: 'closed', label: 'Status', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
     });
 }
@@ -253,10 +236,6 @@ function initTable() {
 function loadMoreData(reset = false) {
     if (isLoading) return;
     isLoading = true;
-
-    if (reset) {
-        orderDir = "desc";
-    }
 
     const searchInput = document.querySelector(".filtertabel input");
     const searchValue = searchInput ? searchInput.value : "";

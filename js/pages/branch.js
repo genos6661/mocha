@@ -3,7 +3,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "nama";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "asc";
 let resetOffset = false;
 let userPermissions = [];
@@ -85,27 +85,19 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            { data: "kode", orderable: true },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { data: "alamat", orderable: true },
-            { data: "aktif", orderable: true, className: "text-center", render: function (data, type, row) {
-                    if (row.aktif == 1) {
-                        return `<span class="badge rounded-pill bg-label-primary">Active</span>`;
-                    } else {
-                        return `<span class="badge rounded-pill bg-label-danger">Inactive</span>`;
-                    }
-                } 
-            },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "nama", className: "dt-main nowrap", render: TR.titleSub('kode') },
+            { data: "alamat", className: "dt-desc", render: TR.description },
+            { data: "aktif", className: "dt-badge", render: TR.badgeBy({ 1: ['Active', 'primary'], 0: ['Inactive', 'danger'] }) },
             { 
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                     if(userPermissions.includes('edit_branch') || userPermissions.includes('delete_branch')) {
                         let menuHtml = `
@@ -150,16 +142,15 @@ function initTable() {
         }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "kode", "nama", "alamat", "aktif", ""];
-        orderColumn = columnMapping[columnIndex] || "nama";
-        orderDir = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelBranch', [
+        { key: 'nama', label: 'Name', dir: 'asc' },
+        { key: 'kode', label: 'Code', dir: 'asc' },
+        { key: 'alamat', label: 'Address', dir: 'asc' },
+        { key: 'aktif', label: 'Status', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
     });
 }

@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/assets/css/dashboard.css?v=<?= filemtime(__DIR__ . '/../assets/css/dashboard.css') ?>" />
+
 <div class="text-center d-none" id="boxMisc">
   <div class="misc-wrapper">
     <!-- <h1 class="mb-2 mx-2" style="line-height: 6rem;font-size: 6rem;">401</h1> -->
@@ -10,8 +12,17 @@
   </div>
 </div>
 
-<div class="card mb-4" id="boxFilter">
-  <div class="card-body">
+<!-- Hero + filter -->
+<div class="dash-hero mb-6" id="boxFilter">
+  <div class="dash-hero-top">
+    <div>
+      <div class="dash-hello">Welcome back,</div>
+      <h3 class="dash-name" id="dashName">Dashboard</h3>
+      <div class="dash-sub"><i class="icon-base ti tabler-calendar"></i><span id="dashDate"></span></div>
+    </div>
+    <span class="dash-hero-icon"><i class="icon-base ti tabler-chart-line"></i></span>
+  </div>
+  <div class="dash-filter">
     <div class="row">
       <div class="col-md mb-3">
         <label for="cabang" class="form-label">Branch</label>
@@ -27,7 +38,7 @@
       </div>
     </div>
     <div class="row justify-content-md-between">
-      <div class="col-md-4 mb-0">
+      <div class="col-md-4 mb-3">
         <label for="range" class="form-label">Simple Range</label>
         <select id="range" class="form-select">
           <option value="today">Today</option>
@@ -41,72 +52,69 @@
           <option value="lastYear">Last Year</option>
         </select>
       </div>
-      <div class="col-md-4 mb-0">
+      <div class="col-md-4 mb-3">
         <label for="submit" class="form-label">&nbsp;</label>
-        <button class="btn btn-primary w-100" id="goFilter">Submit Filter</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row mb-4" id="boxStatistic">
-  <!-- Statistics -->
-  <div class="col-md">
-    <div class="card h-100">
-      <div class="card-header d-flex justify-content-between">
-        <h5 class="card-title mb-0">Statistics</h5> <small class="text-body-secondary">Updated Just Now</small>
-      </div>
-      <div class="card-body d-flex align-items-end">
-        <div class="w-100">
-          <div class="row gy-3">
-            <div class="col-md-3 col-6">
-              <div class="d-flex align-items-center">
-                <div class="badge rounded bg-label-primary me-4 p-2"> <i
-                    class="icon-base ti tabler-chart-pie-2 icon-lg"></i> </div>
-                <div class="card-info">
-                  <h5 class="mb-0" id="statOrder"></h5> <small>Orders</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="d-flex align-items-center">
-                <div class="badge rounded bg-label-info me-4 p-2"> <i class="icon-base ti tabler-users icon-lg"></i>
-                </div>
-                <div class="card-info">
-                  <h5 class="mb-0" id="statCustomer"></h5> <small>Customers</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="d-flex align-items-center">
-                <div class="badge rounded bg-label-danger me-4 p-2"> <i
-                    class="icon-base ti tabler-cash icon-lg"></i> </div>
-                <div class="card-info">
-                  <h5 class="mb-0" id="statForex"></h5> <small>Buying Transactions</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="d-flex align-items-center">
-                <div class="badge rounded bg-label-success me-4 p-2"> <i
-                    class="icon-base ti tabler-currency-dollar icon-lg"></i> </div>
-                <div class="card-info">
-                  <h5 class="mb-0" id="statTransaction"></h5> <small>Selling Transactions</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <button class="btn btn-primary w-100" id="goFilter"><i class="icon-base ti tabler-filter me-2"></i>Submit Filter</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="card mb-4" id="boxBTR">
+<!-- Statistics -->
+<div class="row g-4 mb-6" id="boxStatistic">
+  <div class="col-12">
+    <div class="dash-section-head">
+      <h5>Statistics</h5> <small class="text-body-secondary">Updated Just Now</small>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="dash-kpi dash-kpi-primary">
+      <span class="dash-kpi-icon"><i class="icon-base ti tabler-chart-pie-2"></i></span>
+      <div>
+        <div class="dash-kpi-value" id="statOrder"></div>
+        <div class="dash-kpi-label">Orders</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="dash-kpi dash-kpi-info">
+      <span class="dash-kpi-icon"><i class="icon-base ti tabler-users"></i></span>
+      <div>
+        <div class="dash-kpi-value" id="statCustomer"></div>
+        <div class="dash-kpi-label">Customers</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="dash-kpi dash-kpi-danger">
+      <span class="dash-kpi-icon"><i class="icon-base ti tabler-cash"></i></span>
+      <div>
+        <div class="dash-kpi-value" id="statForex"></div>
+        <div class="dash-kpi-label">Buying Transactions</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-xl-3">
+    <div class="dash-kpi dash-kpi-success">
+      <span class="dash-kpi-icon"><i class="icon-base ti tabler-currency-dollar"></i></span>
+      <div>
+        <div class="dash-kpi-value" id="statTransaction"></div>
+        <div class="dash-kpi-label">Selling Transactions</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Branchs Transaction Report -->
+<div class="card dash-card mb-6" id="boxBTR">
   <div class="card-body p-0">
     <div class="row row-bordered g-0">
       <div class="col position-relative p-6">
         <div class="card-header d-inline-block p-0 text-wrap position-absolute">
-          <h5 class="m-0 card-title">Branchs Transaction Report</h5>
+          <div class="dash-card-head">
+            <span class="dash-card-icon"><i class="icon-base ti tabler-building-store"></i></span>
+            <h5 class="m-0 card-title">Branchs Transaction Report</h5>
+          </div>
         </div>
         <div id="totalRevenueChart" class="mt-n1"></div>
       </div>
@@ -117,11 +125,14 @@
 <!-- Forex Trend -->
 <div class="row" id="boxForexTrend">
   <div class="col-md mb-4 mb-md-0">
-    <div class="card">
+    <div class="card dash-card">
       <div class="card-header d-flex justify-content-between">
-        <div class="card-title mb-0">
-          <h5 class="mb-1">Forex Trend</h5>
-          <p class="card-subtitle">Most Trending Forex Buying or Selling</p>
+        <div class="dash-card-head">
+          <span class="dash-card-icon"><i class="icon-base ti tabler-trending-up"></i></span>
+          <div class="card-title mb-0">
+            <h5 class="mb-1">Forex Trend</h5>
+            <p class="card-subtitle">Most Trending Forex Buying or Selling</p>
+          </div>
         </div>
         <div class="dropdown">
           <button
@@ -141,127 +152,19 @@
         </div>
       </div>
       <div class="card-body">
-        <ul class="p-0 m-0" id="boxTrend">
-          <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <img src="/assets/img/flags/us.png" class="rounded-circle fs-2" alt="">
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">USD - US Dollar</h6>
-                </div>
-                <small class="text-body">2 Transactions</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-success fw-medium mb-0 d-flex align-items-center gap-1">
-                  Rp. 181K
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <i class="fis fi fi-eu rounded-circle fs-2"></i>
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">EUR</h6>
-                </div>
-                <small class="text-body">Euro</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-success fw-medium mb-0 d-flex align-items-center gap-1">
-                  1.200
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <i class="fis fi fi-in rounded-circle fs-2"></i>
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">$865k</h6>
-                </div>
-                <small class="text-body">India</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-success fw-medium mb-0 d-flex align-items-center gap-1">
-                  <i class="icon-base ti tabler-chevron-up"></i>
-                  12.4%
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <i class="fis fi fi-au rounded-circle fs-2"></i>
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">$745k</h6>
-                </div>
-                <small class="text-body">Australia</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-danger fw-medium mb-0 d-flex align-items-center gap-1">
-                  <i class="icon-base ti tabler-chevron-down"></i>
-                  11.9%
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="d-flex align-items-center mb-4">
-            <div class="avatar flex-shrink-0 me-4">
-              <i class="fis fi fi-sg rounded-circle fs-2"></i>
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">SGD - Singapore Dollar</h6>
-                </div>
-                <small class="text-body">995k Transactions</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-danger fw-medium mb-0 d-flex align-items-center gap-1">
-                  150 in stock
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="d-flex align-items-center">
-            <div class="avatar flex-shrink-0 me-4">
-              <i class="fis fi fi-cn rounded-circle fs-2"></i>
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">CNY - China Yuan</h6>
-                </div>
-                <small class="text-body">1.2M Transactions</small>
-              </div>
-              <div class="user-progress">
-                <p class="text-success fw-medium mb-0 d-flex align-items-center gap-1">
-                  1.400 in stock
-                </p>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <ul class="p-0 m-0" id="boxTrend"></ul>
       </div>
     </div>
   </div>
   <div class="col-md">
-    <div class="card h-100">
+    <div class="card dash-card h-100">
       <div class="card-header d-flex justify-content-between">
-        <div class="card-title m-0">
-          <h5 class="mb-1">Transactions Reports</h5>
-          <p class="card-subtitle">Annually Transactions Overview</p>
+        <div class="dash-card-head">
+          <span class="dash-card-icon"><i class="icon-base ti tabler-chart-bar"></i></span>
+          <div class="card-title m-0">
+            <h5 class="mb-1">Transactions Reports</h5>
+            <p class="card-subtitle">Annually Transactions Overview</p>
+          </div>
         </div>
         <div class="dropdown">
           <button

@@ -3,7 +3,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "nama";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "asc";
 let resetOffset = false;
 let filter;
@@ -208,30 +208,30 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            { data: "kode", orderable: true },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { data: "email", orderable: true },
-            { data: "telepon", orderable: false },
-            { data: "nama_int_negara", orderable: true },
-            { data: null, orderable: false, render: function (data, type, row) {
-                    let types = [];
-                    if (row.pelanggan == 1) types.push("Pelanggan");
-                    if (row.vendor == 1) types.push("Vendor");
-                    if (row.karyawan == 1) types.push("Karyawan");
-                    if (row.member == 1) types.push("Member");
-                    return types.join(", ");
-                } 
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "nama", className: "dt-main nowrap", render: TR.titleSub('kode') },
+            { data: "email", className: "dt-party", render: TR.withIcon('mail') },
+            { data: "telepon", className: "dt-branch nowrap", render: TR.withIcon('phone') },
+            { data: "nama_int_negara", className: "dt-extra", render: TR.withIcon('world') },
+            {
+                data: null,
+                className: "dt-badge",
+                render: TR.flagBadges([
+                    { key: 'pelanggan', label: 'Pelanggan', color: 'primary' },
+                    { key: 'vendor', label: 'Vendor', color: 'info' },
+                    { key: 'karyawan', label: 'Karyawan', color: 'warning' },
+                    { key: 'member', label: 'Member', color: 'success' }
+                ])
             },
             { 
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                     if(userPermissions.includes('edit_contact') || userPermissions.includes('delete_contact')) {
                         let menuHtml = `
@@ -274,16 +274,15 @@ function initTable() {
         }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "kode", "nama", "email", "", "negara", "", ""];
-        orderColumn = columnMapping[columnIndex] || "nama";
-        orderDir = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelContact', [
+        { key: 'nama', label: 'Name', dir: 'asc' },
+        { key: 'kode', label: 'Code', dir: 'asc' },
+        { key: 'email', label: 'Email', dir: 'asc' },
+        { key: 'negara', label: 'Country', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
     });
 }

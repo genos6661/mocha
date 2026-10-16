@@ -13,7 +13,7 @@
 
 <h5 class="mb-3">Forex Data</h5>
 <div class="card">
-  <div class="row p-3">
+  <div class="row p-3 align-items-start">
     <div class="col-md-2 d-grid mb-2">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
         <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i>New Forex
@@ -24,9 +24,10 @@
         Update Rates
       </button>
     </div>
-    <div class="col-md d-grid mb-2">
+    <div class="col-md-3 d-grid mb-2">
       <select id="filterCabang" class="form-select"></select>
     </div>
+    <div class="col-md-3 d-flex align-items-start mb-2 dt-sort-host" id="sortHost"></div>
     <div class="col-md filtertabel">
         <input
           type="text"
@@ -36,12 +37,11 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelForex">
+    <table class="table table-bordered table-hover table-cards" id="tabelForex">
       <thead>
         <tr>
           <th></th>
-          <th>Code</th>
-          <th>Name</th>
+          <th>Name / Code</th>
           <th>Buy Rate</th>
           <th>Sell Rate</th>
           <th>Status</th>
@@ -320,4 +320,5 @@
   </div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/forex.js" type="text/javascript"></script>

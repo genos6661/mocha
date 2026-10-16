@@ -3,7 +3,7 @@ let offset = 0;
 let limit = 50;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "nomor";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "desc";
 let userPermissions = [];
 
@@ -387,31 +387,20 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            {
-                data: "tanggal",
-                orderable: true,
-                className: "nowrap",
-                render: function (data, type, row) {
-                  if (!data) return "";
-                  const tanggal = new Date(data);
-                  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                  return tanggal.toLocaleDateString('en-ID', options);
-                }
-            },
-            { data: "nomor", orderable: true, className: "nowrap" },
-            { data: "user", orderable: true, className: "nowrap" },
-            { data: "nama_cabang", orderable: true, className: "nowrap" },
-            { data: "deskripsi", orderable: false, className: "nowrap" },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "tanggal", className: "dt-main nowrap", render: TR.dateNumber },
+            { data: "user", orderable: true, className: "dt-party nowrap", render: TR.withIcon('user') },
+            { data: "nama_cabang", orderable: true, className: "dt-branch nowrap" },
+            { data: "deskripsi", orderable: false, className: "dt-desc", render: TR.description },
             { 
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                   if(userPermissions.includes('edit_adjustment') || userPermissions.includes('delete_adjustment')) {
                     let menuHtml = `
@@ -456,15 +445,15 @@ function initTable() {
     });
 
     // Order event
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "tanggal", "nomor", "user", "nama_cabang", "", ""];
-        orderColumn = columnMapping[columnIndex] || "nomor";
-        orderDir = direction || "desc";
-
+    // Pengurutan lewat kotak pilih di atas tabel (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelAdjust', [
+        { key: 'tanggal', label: 'Date', dir: 'desc' },
+        { key: 'nomor', label: 'Number', dir: 'asc' },
+        { key: 'user', label: 'User', dir: 'asc' },
+        { key: 'nama_cabang', label: 'Branch', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
     });
 }
@@ -1060,7 +1049,6 @@ $('#sbmTambah').click(function (e) {
       }).then((result) => {
           offset = 0;
           table.clear().draw();
-          orderDir = "desc";
           loadMoreData(true);
           $btn.removeAttr('disabled');
       });
@@ -1157,7 +1145,6 @@ $('#sbmEdit').click(function (e) {
       }).then((result) => {
           offset = 0;
           table.clear().draw();
-          orderDir = "desc";
           loadMoreData(true);
           $btn.removeAttr('disabled');
       });

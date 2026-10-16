@@ -1,23 +1,23 @@
 <div class="full media">
   <div class="kiri">
-    <div class="kiriatas bg-white rounded d-flex flex-column justify-content-center shadow">
+    <div class="kiriatas cd-card cd-brand d-flex flex-column justify-content-center">
       <div class="text-center boxLogo m-0"></div>
       <div>
         <!-- <h4 class="text-center dm-serif-text-regular m-0 namaPT"></h4> -->
-        <p class="text-center dm-serif-text-regular header m-0 namaPT text-black">Mocha Display</p>
-        <p class="text-center national-park m-0 text-black" id="slogan">More Than Trusted</p>
+        <p class="text-center dm-serif-text-regular header m-0 namaPT cd-name">Mocha Display</p>
+        <p class="text-center national-park m-0 cd-slogan" id="slogan">More Than Trusted</p>
       </div>
     </div>
-    <div class="kiritengah bg-white rounded shadow" id="boxCarousel">
+    <div class="kiritengah cd-media" id="boxCarousel">
     </div>
-    <div class="kiribawah bg-white rounded shadow d-flex justify-content-center align-items-center">
-      <p class="h4 national-park m-0 text-center text-black d-none" id="footer"></p>
-      <marquee id="footerScroll" class="h4 m-0 national-park text-center d-none text-black" behavior="scroll" direction="left">Here is some scrolling text... right to left!</marquee>
+    <div class="kiribawah cd-footer d-flex justify-content-center align-items-center">
+      <p class="h4 national-park m-0 text-center d-none" id="footer"></p>
+      <div id="footerScroll" class="cd-ticker h4 m-0 national-park d-none"><span class="cd-ticker-inner"></span></div>
     </div>
   </div>
-  <div class="kanan rounded shadow bg-white">
-    <div class="card-header d-flex justify-content-between pb-2">
-      <h5 class="national-park text-black nowrap">Today's Rate</h5>
+  <div class="kanan cd-card cd-board">
+    <div class="card-header d-flex justify-content-between cd-board-head">
+      <h5 class="national-park nowrap cd-board-title">Today's Rate</h5>
       <div class="d-flex p-0 gap-2 boxSetup">
         <div class="input-group input-group-sm p-0">
           <span class="input-group-text">Max Rows</span>
@@ -28,7 +28,7 @@
           <button id="fontPlus" class="btn btn-sm btn-outline-primary">A+</button>
         </div>
       </div>
-      <h5 class="national-park text-black nowrap" id="nowDate"></h5>
+      <h5 class="national-park nowrap cd-clock" id="nowDate"></h5>
     </div>
     <div class="card-body overflow-auto">
       <div id="tabelContainer" class="d-flex flex-wrap gap-3"></div>
@@ -36,4 +36,5 @@
   </div>
 </div>
 
+<script src="/js/customer-display/footer.js"></script>
 <script src="/js/customer-display/default.js"></script>

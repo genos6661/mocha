@@ -24,12 +24,11 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelAdjust">
+    <table class="table table-bordered table-hover table-cards" id="tabelAdjust">
       <thead>
         <tr>
           <th>No</th>
-          <th>Date</th>
-          <th>Number</th>
+          <th>Date / Number</th>
           <th>User</th>
           <th>Branch</th>
           <th>Description</th>
@@ -366,4 +365,5 @@
   </div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/adjustment.js" type="text/javascript"></script>

@@ -3,7 +3,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "nomor";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "desc";
 let resetOffset = false;
 let userPermissions = [];
@@ -429,30 +429,39 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "tanggal", className: "dt-main nowrap", render: TR.dateNumber },
             {
-                data: "tanggal",
-                orderable: true,
+                data: "tipe_kas",
+                orderable: false,
+                className: "dt-badge",
+                // Dividen ditandai lewat flag pada detail kas (tipenya tetap OUT).
                 render: function (data, type, row) {
-                  if (!data) return "";
-                  const tanggal = new Date(data);
-                  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                  return tanggal.toLocaleDateString('en-ID', options);
+                    if (type !== 'display') return data;
+                    if (Number(row.is_dividen) === 1) return TR.badge('Dividen', 'info');
+                    return TR.badgeBy({ IN: ['Cash In', 'success'], OUT: ['Cash Out', 'danger'] })(data, type, row);
                 }
             },
-            { data: "nomor", orderable: true, className: "nowrap" },
-            { data: "nama_kontak", orderable: false },
-            { data: "nama_cabang", orderable: true },
-            { data: "deskripsi", orderable: false },
+            { data: "nama_kontak", orderable: false, className: "dt-party nowrap", render: TR.name },
+            { data: "nama_cabang", orderable: true, className: "dt-branch" },
+            { data: "deskripsi", orderable: false, className: "dt-desc", render: TR.description },
+            {
+                data: "total",
+                orderable: false,
+                className: "dt-amount text-end nowrap",
+                render: function (data, type, row) {
+                    return TR.money(row.tipe_kas === 'IN' ? 'text-success' : 'text-danger')(data, type, row);
+                }
+            },
             { 
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                     let menuHtml = `
                         <div class="dropdown">
@@ -494,16 +503,15 @@ function initTable() {
         }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "tanggal", "nomor", "", "cabang", "", ""];
-        orderColumn = columnMapping[columnIndex] || "nomor";
-        orderDir = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih di atas tabel (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelCash', [
+        { key: 'tanggal', label: 'Date', dir: 'desc' },
+        { key: 'nomor', label: 'Number', dir: 'asc' },
+        { key: 'nama_kontak', label: 'Name', dir: 'asc' },
+        { key: 'nama_cabang', label: 'Branch', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
     });
 }
@@ -1193,7 +1201,6 @@ $('#sbmEdit').click(function (e) {
 	      }).then((result) => {
 	          offset = 0;
 	          table.clear().draw();
-	          orderDir = "desc";
 	          loadMoreData(true);
 	      });
 	      $('#modalEdit').modal('hide');

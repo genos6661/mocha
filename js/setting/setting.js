@@ -162,8 +162,11 @@ function loadSettings() {
             const imgBlob = xhr.response;
             const imgURL = URL.createObjectURL(imgBlob);
             $('#boxLogo').html(`
-                <h5>Logo : </h5>
-                <img src="${imgURL}" alt="Logo" style="height:80px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalHapusLogo">
+                <img src="${imgURL}" alt="Logo" class="settings-logo-img" title="Click to view or remove the logo" data-bs-toggle="modal" data-bs-target="#modalHapusLogo">
+                <div class="settings-logo-text">
+                    <div class="fw-semibold">Current logo</div>
+                    <small class="text-body-secondary">Click the image to view or remove it.</small>
+                </div>
             `);
         } else {
             // Tidak ditemukan atau error lain
@@ -764,7 +767,7 @@ function loadMediaGrid() {
         },
         success: function (fileNames) {
           if (!Array.isArray(fileNames) || fileNames.length === 0) {
-            $('#mediaGrid').html('<div class="text-muted">Tidak ada media</div>');
+            $('#mediaGrid').html('<div class="settings-media-empty"><i class="icon-base ti tabler-photo-off"></i>Tidak ada media</div>');
             return;
           }
 
@@ -789,11 +792,13 @@ function loadMediaGrid() {
                 const canDelete = userPermissions.includes('customer_display');
 
                 const $media = $(`
-                  <div class="col-auto text-center d-flex flex-column">
-                    ${isVideo
-                      ? `<video src="${blobUrl}" controls style="max-height: 100px;" class="img-fluid mb-1"></video>`
-                      : `<img src="${blobUrl}" style="max-height:100px;" class="img-fluid mb-1">`}
-                    ${canDelete ? `<button class="btn btn-sm btn-danger btnDeleteMedia" data-filename="${fileName}">Delete</button>` : ''}
+                  <div class="col-auto">
+                    <div class="settings-media-tile">
+                      ${isVideo
+                        ? `<video src="${blobUrl}" controls class="settings-media-item"></video>`
+                        : `<img src="${blobUrl}" class="settings-media-item">`}
+                      ${canDelete ? `<button class="btn btn-sm btn-danger btnDeleteMedia" data-filename="${fileName}"><i class="icon-base ti tabler-trash me-1"></i>Delete</button>` : ''}
+                    </div>
                   </div>
                 `);
                 $('#mediaGrid .row').append($media);

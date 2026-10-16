@@ -170,98 +170,6 @@
   }
 }
 
-/* Logo di preview invoice: tinggi tetap 40px di PC (di HP memakai lebar 30%, lihat di bawah) */
-img.invoice-logo {
-  height: 40px;
-  width: auto;
-}
-
-/* Preview invoice / order publik (dibuka pelanggan lewat link di smartphone):
-   padding lebih rapat, logo di tengah, dan item valas tampil sebagai kartu (bukan tabel lebar). */
-@media (max-width: 575.98px) {
-  .invoice-preview-card {
-    padding: 1rem !important;
-  }
-  .invoice-preview-card .invoice-preview-header {
-    padding: 1rem !important;
-  }
-  .invoice-preview-card h4 {
-    font-size: 1.125rem;
-    overflow-wrap: anywhere;
-  }
-  /* logo di tengah, 30% lebar */
-  .invoice-preview-card #boxLogo {
-    align-self: center;
-  }
-  .invoice-preview-card #boxLogo img.invoice-logo {
-    display: block;
-    width: 30%;
-    min-width: 72px;
-    height: auto;
-    margin: 0 auto;
-  }
-
-  /* item valas: tiap baris menjadi kartu
-       USD  US Dollar                 Rp 15.800.000
-       AMOUNT 1.000                   RATE Rp 15.800   */
-  .invoice-preview-card #tabelDetail thead {
-    display: none;
-  }
-  .invoice-preview-card #tabelDetail,
-  .invoice-preview-card #tabelDetail tbody {
-    display: block;
-  }
-  .invoice-preview-card #tabelDetail tbody tr {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: 0.75rem;
-    padding: 0.75rem 0.25rem;
-    border-bottom: 1px solid var(--bs-border-color);
-  }
-  .invoice-preview-card #tabelDetail tbody tr:last-child {
-    border-bottom: 0;
-  }
-  .invoice-preview-card #tabelDetail td {
-    padding: 0 !important;
-    border: 0;
-  }
-  .invoice-preview-card #tabelDetail td:nth-child(1) {
-    grid-area: 1 / 1;
-    font-weight: 600;
-    font-size: 1rem;
-  }
-  .invoice-preview-card #tabelDetail td:nth-child(2) {
-    grid-area: 2 / 1;
-    font-size: 0.8125rem;
-    color: var(--bs-secondary-color);
-  }
-  .invoice-preview-card #tabelDetail td:nth-child(5) {
-    grid-area: 1 / 2 / 3 / 3;
-    align-self: center;
-    font-weight: 600;
-    font-size: 1rem;
-    white-space: nowrap;
-  }
-  .invoice-preview-card #tabelDetail td:nth-child(3) {
-    text-align: start !important;
-    grid-area: 3 / 1;
-    margin-top: 0.5rem;
-  }
-  .invoice-preview-card #tabelDetail td:nth-child(4) {
-    grid-area: 3 / 2;
-    margin-top: 0.5rem;
-    white-space: nowrap;
-  }
-  .invoice-preview-card #tabelDetail td[data-label]::before {
-    content: attr(data-label);
-    display: block;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--bs-secondary-color);
-  }
-}
-
 /* Dropdown kode negara (modal kirim WhatsApp): kolomnya sempit, daftarnya tidak boleh ikut sempit */
 .wa-country-dropdown {
   min-width: 15rem;
@@ -299,5 +207,509 @@ img.invoice-logo {
   .modal .btn-close:focus,
   .modal .btn-close:active {
     transform: none;
+  }
+}
+
+/* Teks panjang di tabel daftar: satu baris + titik-titik di PC (lihat js/table-render.js) */
+.dt-ellipsis {
+  display: inline-block;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+/* Tabel daftar transaksi (class "table-cards") menjadi kartu di HP.
+   Penempatan sel memakai class kolom dt-* yang diberi di definisi DataTables:
+     [tanggal + nomor kecil]  ....  [⋮]
+     [badge]                       [total]
+     pihak terkait / user / rute
+     cabang
+     rujukan / status
+     deskripsi                                                                  */
+@media (max-width: 767.98px) {
+  .dt-scroll:has(.table-cards) .dt-scroll-head,
+  .dt-scroll:has(.table-cards) thead {
+    display: none;
+  }
+  .table-cards,
+  .table-cards tbody {
+    display: block;
+    width: 100% !important;
+  }
+  .table-cards tbody tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "main main actions"
+      "badge badge amount"
+      "party party party"
+      "branch branch branch"
+      "extra extra extra"
+      "desc desc desc";
+    column-gap: 0;
+    align-items: center;
+    margin-bottom: 0.625rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    background: var(--bs-paper-bg, transparent);
+  }
+  .table-cards td {
+    padding: 0.125rem 0 !important;
+    border: 0 !important;
+    white-space: normal !important;
+    text-align: start;
+  }
+  .table-cards .dt-no { display: none; }
+  .table-cards .dt-main { grid-area: main; }
+  .table-cards .dt-actions { grid-area: actions; text-align: end; }
+  .table-cards .dt-badge { grid-area: badge; margin-right: 0.5rem; white-space: nowrap !important; }
+  .table-cards .dt-amount { grid-area: amount; margin-left: 0.5rem; text-align: end; font-size: 1rem; white-space: nowrap !important; }
+  .table-cards .dt-party { grid-area: party; margin-top: 0.25rem; text-align: start !important; }
+  .table-cards .dt-branch { grid-area: branch; color: var(--bs-secondary-color); text-align: start !important; }
+  .table-cards .dt-extra { grid-area: extra; text-align: start !important; }
+  .table-cards .dt-desc { grid-area: desc; margin-top: 0.25rem; color: var(--bs-secondary-color); }
+  .table-cards .dt-desc:empty { display: none; }
+  .table-cards .dt-ellipsis {
+    display: block;
+    max-width: none;
+    white-space: normal;
+  }
+  /* "No data available" (satu sel colspan) tetap sebagai satu baris biasa */
+  .table-cards td.dt-empty {
+    display: block;
+    grid-area: auto;
+  }
+}
+
+/* Urutan di toolbar tabel daftar (js/table-render.js: TR.sortBar): select2 yang sama dengan
+   select lain di aplikasi + tombol arah, satu baris dengan kotak Search */
+.dt-sort-label {
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0 0.5rem 0 0;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--bs-heading-color);
+}
+.dt-sort {
+  flex: 0 0 12.5rem;
+  margin-right: 0.5rem;
+}
+.dt-sort ~ .filtertabel {
+  flex: 1 1 10rem;
+  width: auto;
+  min-width: 0;
+}
+.dt-sort-host .dt-sort {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.dt-sort-dir {
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+}
+@media (max-width: 767.98px) {
+  /* di HP urutan + tombol arah satu baris, Search di baris berikutnya */
+  .dt-sort-label {
+    margin-bottom: 0.5rem;
+  }
+  .dt-sort {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 0.5rem;
+  }
+  .dt-sort-dir {
+    margin: 0 0 0.5rem;
+  }
+  .dt-sort ~ .filtertabel {
+    flex-basis: 100%;
+  }
+}
+
+/* Form booking order online: halaman data diri pelanggan (order-form.php, #cardProfile) */
+body:has(.order-form-card) {
+  background:
+    radial-gradient(60rem 30rem at 50% -10rem, rgba(var(--bs-primary-rgb), 0.16), transparent 70%),
+    var(--bs-body-bg);
+}
+.order-form-card {
+  width: 100%;
+  max-width: 780px;
+  border: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 1.5rem 3rem -1rem rgba(var(--bs-primary-rgb), 0.25), 0 0.25rem 1rem rgba(0, 0, 0, 0.06);
+}
+.order-form-hero {
+  padding: 2.25rem 1.5rem 1.5rem;
+  background: linear-gradient(180deg, rgba(var(--bs-primary-rgb), 0.12), rgba(var(--bs-primary-rgb), 0));
+}
+.order-form-hero .app-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.order-form-hero .app-brand-logo svg {
+  width: 56px;
+  height: 42px;
+}
+.order-form-hero .app-brand-logo img {
+  max-height: 56px;
+  width: auto;
+}
+.order-form-body {
+  padding: 1rem 2rem 2rem;
+}
+.order-form-section {
+  margin-bottom: 0.75rem;
+}
+.order-form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.order-form-section-title .icon-base {
+  font-size: 1.125rem;
+}
+.order-form-gender {
+  display: inline-flex;
+}
+.order-form-gender .btn {
+  min-width: 7.5rem;
+}
+.order-form-card .input-group-text {
+  color: var(--bs-primary);
+}
+@media (max-width: 575.98px) {
+  .order-form-hero {
+    padding: 1.75rem 1rem 1rem;
+  }
+  .order-form-body {
+    padding: 0.75rem 1.25rem 1.5rem;
+  }
+  .order-form-gender,
+  .order-form-gender .btn {
+    width: 100%;
+  }
+}
+
+/* Form booking order online: modal (pilih cabang, pelanggan baru/existing, cari data) */
+.order-modal .modal-body {
+  padding: 2rem;
+}
+.order-modal {
+  padding: 0 !important;   /* tema memberi padding pada .modal-simple; hero harus rata ke tepi kartu */
+  border: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+.order-modal-head {
+  margin: -2rem -2rem 1.5rem;
+  padding: 2rem 2rem 1.25rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(var(--bs-primary-rgb), 0.12), rgba(var(--bs-primary-rgb), 0));
+}
+.order-modal-head .app-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.order-modal-head .app-brand-logo svg {
+  width: 56px;
+  height: 42px;
+}
+.order-modal-head .app-brand-logo img {
+  max-height: 56px;
+  width: auto;
+}
+.order-modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  font-size: 1.75rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+
+/* daftar pilihan cabang (select2): nama + alamat */
+.select2-results__option .branch-address {
+  color: var(--bs-secondary-color);
+  white-space: normal;
+}
+.select2-results__option--highlighted .branch-address {
+  color: inherit;
+  opacity: 0.85;
+}
+.order-branch-selected {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--bs-border-radius);
+  background: rgba(var(--bs-primary-rgb), 0.08);
+}
+.order-branch-selected.d-none {
+  display: none;
+}
+.order-branch-selected > .icon-base {
+  margin-top: 0.125rem;
+  font-size: 1.25rem;
+  color: var(--bs-primary);
+}
+
+/* pilihan pelanggan baru / existing */
+.order-choice {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.order-choice:last-child {
+  margin-bottom: 0;
+}
+.order-choice:hover,
+.order-choice:focus-visible {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0.5rem 1.25rem -0.5rem rgba(var(--bs-primary-rgb), 0.45);
+  transform: translateY(-1px);
+  outline: 0;
+}
+.order-choice-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+.order-choice-text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.order-choice-title {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+.order-choice-desc {
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.order-choice-arrow {
+  flex: 0 0 auto;
+  color: var(--bs-secondary-color);
+}
+.order-choice:hover .order-choice-arrow {
+  color: var(--bs-primary);
+}
+
+/* ringkasan profil (konfirmasi & hasil pencarian) */
+.profile-summary {
+  margin: 0 0 1.5rem;
+  padding: 0.25rem 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+}
+.profile-summary li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0;
+  border-bottom: 1px dashed var(--bs-border-color);
+}
+.profile-summary li:last-child {
+  border-bottom: 0;
+}
+.profile-summary .icon-base {
+  flex: 0 0 auto;
+  margin-top: 0.125rem;
+  font-size: 1.125rem;
+  color: var(--bs-primary);
+}
+.profile-label {
+  flex: 0 0 7.5rem;
+  color: var(--bs-secondary-color);
+}
+.profile-value {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500;
+  color: var(--bs-heading-color);
+  overflow-wrap: anywhere;
+}
+
+/* "or" pemisah */
+.order-or {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  color: var(--bs-secondary-color);
+}
+.order-or::before,
+.order-or::after {
+  content: "";
+  flex: 1 1 auto;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+/* detail order */
+.order-customer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.08);
+}
+.order-customer-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  color: #fff;
+  background: var(--bs-primary);
+}
+.order-items-head {
+  padding: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.order-item {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 0.5rem 0.75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+}
+.order-item-label {
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.order-secret {
+  min-width: 2rem;
+}
+.order-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.08);
+}
+.order-total-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.order-total-field {
+  max-width: 16rem;
+}
+.order-total-field .form-control {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+@media (max-width: 575.98px) {
+  .order-modal .modal-body {
+    padding: 1.25rem;
+  }
+  .order-modal-head {
+    margin: -1.25rem -1.25rem 1.25rem;
+    padding: 1.5rem 1.25rem 1rem;
+  }
+  .profile-label {
+    flex-basis: 5.5rem;
+  }
+  .order-total {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .order-total-field {
+    max-width: none;
+  }
+}
+
+/* Kartu detail order dibuat lebih lebar di PC supaya pilihan currency tidak sempit */
+@media (min-width: 768px) {
+  .order-form-card.order-form-card-wide {
+    max-width: 1080px;
+  }
+}
+
+/* Varian kartu dengan deretan angka (forex mutation): "table-cards table-cards-stats"
+     [forex]  [tanggal + nomor]
+     cabang
+     Buy   Sell   /   Rate   Stock Balance   /   Valuation */
+@media (max-width: 767.98px) {
+  .table-cards-stats tbody tr {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "main badge"
+      "branch branch"
+      "buy sell"
+      "rate bal"
+      "val val";
+    row-gap: 0.125rem;
+  }
+  .table-cards-stats .dt-badge { justify-self: end; margin-right: 0; }
+  .table-cards-stats .dt-buy { grid-area: buy; }
+  .table-cards-stats .dt-sell { grid-area: sell; }
+  .table-cards-stats .dt-rate { grid-area: rate; }
+  .table-cards-stats .dt-bal { grid-area: bal; }
+  .table-cards-stats .dt-val { grid-area: val; }
+  .table-cards-stats td[data-label] {
+    margin-top: 0.5rem;
+    text-align: start !important;
+  }
+  .table-cards-stats td[data-label]:empty {
+    display: none;
+  }
+  .table-cards td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
   }
 }

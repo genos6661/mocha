@@ -3,10 +3,12 @@
  * Dibuka dari link yang dikirim ke pelanggan: /transaction-preview?transaction=<nomor>
  * Tidak butuh login — hanya memakai endpoint publik /transaction/nomor/:nomor.
  * Data sensitif (nomor ID & telepon pelanggan) ditampilkan tersamar.
+ * Desain: assets/css/invoice-preview.css. PDF: js/invoice-pdf.js.
  */
 let transactionNomor;
 let invoiceData = null;   // respons transaksi, dipakai membuat PDF
 let logoPng = null;       // { dataUrl, width, height } logo dalam PNG, untuk PDF
+const fmt = InvoicePdf.fmt;
 
 $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
@@ -38,17 +40,7 @@ function loadLogo() {
 
     const imgURL = URL.createObjectURL(xhr.response);
     $('#boxLogo').html(`<img class="invoice-logo" src="${imgURL}" alt="Logo">`);
-
-    // Salinan PNG untuk PDF (jsPDF hanya menerima PNG/JPEG, bukan SVG/WebP).
-    const img = new Image();
-    img.onload = function () {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      canvas.getContext('2d').drawImage(img, 0, 0);
-      logoPng = { dataUrl: canvas.toDataURL('image/png'), width: canvas.width, height: canvas.height };
-    };
-    img.src = imgURL;
+    InvoicePdf.loadLogoPng(imgURL, png => { logoPng = png; });
   };
 
   xhr.send();
@@ -93,13 +85,7 @@ function loadTransaction() {
         response.tipe == 4 ? 'Selling Transaction' : ''
       );
 
-      $('#tanggalTransaksi').text(
-        new Date(response.tanggal).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })
-      );
+      $('#tanggalTransaksi').text(formatDate(response.tanggal));
 
       renderDetails(response);
     },
@@ -112,11 +98,8 @@ function loadTransaction() {
   });
 }
 
-function fmt(value, max = 4) {
-  return Number(value).toLocaleString('id-ID', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: max
-  });
+function formatDate(value) {
+  return new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 function renderDetails(response) {
@@ -124,7 +107,7 @@ function renderDetails(response) {
   const tbody = $('#tabelDetail tbody').empty();
 
   if (details.length === 0) {
-    tbody.append('<tr><td colspan="5" class="text-center">Detail Data Not Found</td></tr>');
+    tbody.append('<tr><td colspan="4" class="text-center">Detail Data Not Found</td></tr>');
     return;
   }
 
@@ -138,8 +121,7 @@ function renderDetails(response) {
 
     tbody.append(`
       <tr>
-        <td>${item.kode}</td>
-        <td>${item.nama}</td>
+        <td><div class="ip-cur-code">${item.kode}</div><div class="ip-cur-name">${item.nama}</div></td>
         <td class="text-end" data-label="Amount">${fmt(qty, 2)}</td>
         <td class="text-end" data-label="Rate">Rp. ${fmt(item.rate)}</td>
         <td class="text-end">Rp. ${fmt(totalPerItem)}</td>
@@ -150,20 +132,39 @@ function renderDetails(response) {
   $('#subtotal, #total').text(fmt(subtotal));
 }
 
+function copyLink() {
+  const done = () => notif.fire({ icon: 'success', text: 'Link copied' });
+  const fail = () => notif.fire({ icon: 'error', text: 'Could not copy the link' });
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(window.location.href).then(done, fail);
+    return;
+  }
+
+  // Cadangan untuk halaman non-HTTPS.
+  const input = document.createElement('input');
+  input.value = window.location.href;
+  document.body.appendChild(input);
+  input.select();
+  try { document.execCommand('copy') ? done() : fail(); } catch (e) { fail(); }
+  input.remove();
+}
+
 function printDiv(divId) {
   const content = document.getElementById(divId).innerHTML;
+  const origin = window.location.origin;
   const printWindow = window.open('', '', 'width=800,height=1000');
 
   printWindow.document.write('<html><head><title>Print</title>');
   printWindow.document.write(`
-    <link rel="stylesheet" href="${window.location.origin}/assets/vendor/fonts/iconify-icons.css" />
-    <link rel="stylesheet" href="${window.location.origin}/assets/vendor/css/core.css" />
-    <link rel="stylesheet" href="${window.location.origin}/assets/css/demo.css" />
-    <link rel="stylesheet" href="${window.location.origin}/assets/vendor/css/pages/app-invoice.css" />
+    <link rel="stylesheet" href="${origin}/assets/vendor/fonts/iconify-icons.css" />
+    <link rel="stylesheet" href="${origin}/assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="${origin}/assets/css/demo.css" />
+    <link rel="stylesheet" href="${origin}/assets/css/invoice-preview.css" />
   `);
-  printWindow.document.write('</head><body>');
+  printWindow.document.write('</head><body class="ip-body"><div class="ip-card">');
   printWindow.document.write(content);
-  printWindow.document.write('</body></html>');
+  printWindow.document.write('</div></body></html>');
 
   printWindow.document.close();
   printWindow.focus();
@@ -171,107 +172,32 @@ function printDiv(divId) {
   printWindow.close();
 }
 
-// PDF dibuat langsung dengan jsPDF (bukan memotret halaman), jadi hasilnya sama
-// di desktop maupun smartphone: ada logo, semua baris valas, dan teks bisa dipilih.
 function downloadPDF() {
   if (!invoiceData) return;
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const trx = invoiceData;
-  const margin = 15;
-  const pageW = doc.internal.pageSize.getWidth();
-  const right = pageW - margin;
-  const dark = [37, 40, 58];
-  const muted = [110, 110, 120];
+  const sell = trx.tipe != 3;
 
-  // --- header: logo + identitas cabang (kiri), nomor & tanggal (kanan)
-  let y = margin;
-  let textX = margin;
-
-  if (logoPng) {
-    const logoH = 16;
-    const logoW = Math.min(40, logoH * logoPng.width / logoPng.height);
-    doc.addImage(logoPng.dataUrl, 'PNG', margin, y, logoW, logoH);
-    y += logoH + 4;
-  }
-
-  doc.setTextColor(...dark);
-  doc.setFont('helvetica', 'bold').setFontSize(14);
-  doc.text(trx.judul_nota || '', textX, y);
-  y += 6;
-
-  doc.setFont('helvetica', 'normal').setFontSize(10);
-  const branchLines = [trx.nama_cabang, ...doc.splitTextToSize(trx.alamat_cabang || '', 95), trx.telepon_cabang].filter(Boolean);
-  branchLines.forEach(line => { doc.text(line, textX, y); y += 5; });
-
-  doc.setFont('helvetica', 'bold').setFontSize(13);
-  doc.text('Invoice ' + trx.nomor, right, margin + 5, { align: 'right' });
-  doc.setFont('helvetica', 'normal').setFontSize(10);
-  doc.text('Date: ' + new Date(trx.tanggal).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }), right, margin + 12, { align: 'right' });
-  doc.text(trx.tipe == 3 ? 'Buying Transaction' : trx.tipe == 4 ? 'Selling Transaction' : '', right, margin + 18, { align: 'right' });
-
-  // --- pelanggan (ID & telepon tersamar, sama seperti di layar)
-  y += 4;
-  doc.setDrawColor(210).line(margin, y, right, y);
-  y += 7;
-  doc.setFont('helvetica', 'bold').text('Invoice To :', margin, y);
-  doc.text('Customer Info :', pageW / 2 + 5, y);
-  doc.setFont('helvetica', 'normal');
-
-  const left = [trx.nama_pelanggan, maskIdNumber(trx.telepon)];
-  const info = [
-    ['Cust. Code', trx.kode_pelanggan],
-    ['ID Number', maskIdNumber(trx.idNumber)],
-    ['Nationality', trx.nationality]
-  ];
-  left.forEach((line, i) => doc.text(String(line || ''), margin, y + 6 + i * 5));
-  info.forEach(([label, value], i) => {
-    doc.text(label + ' :', pageW / 2 + 5, y + 6 + i * 5);
-    doc.text(String(value || ''), pageW / 2 + 35, y + 6 + i * 5);
+  InvoicePdf.save({
+    filename: transactionNomor + '.pdf',
+    logo: logoPng,
+    fallbackLogoSelector: '#boxLogo svg',
+    company: trx.judul_nota || '',
+    branchLines: [trx.nama_cabang, trx.alamat_cabang, trx.telepon_cabang],
+    title: 'Invoice ' + trx.nomor,
+    dateText: formatDate(trx.tanggal),
+    typeText: trx.tipe == 3 ? 'Buying Transaction' : trx.tipe == 4 ? 'Selling Transaction' : '',
+    billToTitle: 'Invoice To :',
+    billTo: [trx.nama_pelanggan, maskIdNumber(trx.telepon)],
+    info: [
+      ['Cust. Code', trx.kode_pelanggan],
+      ['ID Number', maskIdNumber(trx.idNumber)],
+      ['Nationality', trx.nationality]
+    ],
+    items: (trx.details || []).map(item => {
+      const qty = sell ? item.jual : item.beli;
+      return { code: item.kode, name: item.nama, qty, rate: item.rate, total: qty * item.rate };
+    }),
+    note: $('#noteInvoice').text().trim()   // sama dengan yang tampil di layar
   });
-  y += 6 + info.length * 5 + 3;
-
-  // --- tabel valas
-  let subtotal = 0;
-  const body = (trx.details || []).map(item => {
-    const qty = trx.tipe == 3 ? item.beli : item.jual;
-    const total = qty * item.rate;
-    subtotal += total;
-    return [item.kode, item.nama, fmt(qty, 2), 'Rp. ' + fmt(item.rate), 'Rp. ' + fmt(total)];
-  });
-
-  doc.autoTable({
-    startY: y,
-    head: [['Currency', 'Name', 'Amount', 'Rate', 'Subtotal']],
-    body,
-    margin: { left: margin, right: margin },
-    theme: 'striped',
-    styles: { fontSize: 10, cellPadding: 2.5, textColor: dark },
-    headStyles: { fillColor: dark, textColor: 255, fontStyle: 'bold' },
-    columnStyles: {
-      2: { halign: 'right' },
-      3: { halign: 'right' },
-      4: { halign: 'right' }
-    }
-  });
-
-  // --- total & catatan
-  y = doc.lastAutoTable.finalY + 8;
-  doc.setFontSize(10);
-  [['Subtotal:', 'Rp. ' + fmt(subtotal)], ['Tax:', '0'], ['Total:', 'Rp. ' + fmt(subtotal)]].forEach(([label, value], i) => {
-    doc.setFont('helvetica', i === 2 ? 'bold' : 'normal');
-    doc.text(label, right - 55, y + i * 6);
-    doc.text(value, right, y + i * 6, { align: 'right' });
-  });
-  y += 24;
-
-  const footers = $('#noteInvoice').text().trim();   // sama dengan yang tampil di layar
-  if (footers) {
-    doc.setFont('helvetica', 'bold').text('Note :', margin, y);
-    doc.setFont('helvetica', 'normal').setTextColor(...muted);
-    doc.text(doc.splitTextToSize(footers, pageW - margin * 2 - 14), margin + 14, y);
-  }
-
-  doc.save(transactionNomor + '.pdf');
 }

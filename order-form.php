@@ -93,212 +93,227 @@ session_start();
           <div class="content-wrapper">
             <div class="container-xxl flex-grow-1 container-p-y d-flex justify-content-center align-items-center min-vh-100">
 
-              <div class="card w-100 w-md-50 mx-auto d-none p-4" id="cardProfile">
-                <div class="card-body">
-                  <div class="app-brand justify-content-center mb-6 boxLogo">
+              <div class="card order-form-card mx-auto d-none" id="cardProfile">
+                <div class="order-form-hero text-center">
+                  <div class="app-brand justify-content-center mb-3 boxLogo">
                     <span class="app-brand-logo demo logoForm">
                       <span class="text-primary">
                         <?php include __DIR__ . '/partials/logo.php'; ?>
                       </span>
                     </span>
                     <span class="app-brand-text demo text-heading fw-bold namaPT">BERES Mocha</span>
-                    <span class="h5 namaCabang">BERES Mocha</span>
                   </div>
-                  <div class="row">
-                    <div class="col-md">
-                      <p class="h5 fw-bold mt-4">Fill out your profile data</p>
-                    </div>
-                    <div class="col-md d-flex justify-content-end align-items-end">
-                      <div class="form-check form-check-inline">
-                        <label class="switch">
-                          <input type="radio" name="jk" id="male" class="switch-input" checked>
-                          <span class="switch-toggle-slider">
-                            <span class="switch-on"></span>
-                            <span class="switch-off"></span>
-                          </span>
-                          <span class="switch-label">Male</span>
-                        </label>
+                  <span class="badge bg-label-primary rounded-pill px-3 py-2 mb-3">
+                    <i class="icon-base ti tabler-map-pin icon-14px me-1"></i><span class="namaCabang">BERES Mocha</span>
+                  </span>
+                  <h4 class="fw-bold mb-1">Fill out your profile data</h4>
+                  <p class="text-body-secondary mb-0">Tell us a little about yourself so we can prepare your currency exchange order.</p>
+                </div>
+
+                <div class="card-body order-form-body">
+
+                  <!-- Personal -->
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-user"></i>Personal information</div>
+                    <div class="row">
+                      <div class="col-12 mb-4">
+                        <label class="form-label d-block">Gender</label>
+                        <div class="btn-group order-form-gender" role="group" aria-label="Gender">
+                          <input type="radio" class="btn-check" name="jk" id="male" checked>
+                          <label class="btn btn-outline-primary" for="male"><i class="icon-base ti tabler-gender-male me-1"></i>Male</label>
+                          <input type="radio" class="btn-check" name="jk" id="female">
+                          <label class="btn btn-outline-primary" for="female"><i class="icon-base ti tabler-gender-female me-1"></i>Female</label>
+                        </div>
                       </div>
-                      <div class="form-check form-check-inline">
-                        <label class="switch">
-                          <input type="radio" name="jk" id="female" class="switch-input">
-                          <span class="switch-toggle-slider">
-                            <span class="switch-on"></span>
-                            <span class="switch-off"></span>
-                          </span>
-                          <span class="switch-label">Female</span>
-                        </label>
+                      <div class="col-md-6 mb-4">
+                        <label for="fullname" class="form-label">Full Name<sup class="text-danger"> *required</sup></label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-user"></i></span>
+                          <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Your Full Name" autofocus />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label for="tipe" class="form-label">Contact Type<sup class="text-danger"> *required</sup></label>
+                        <select id="tipe" class="form-select">
+                          <option value="101" selected>Personal</option>
+                          <option value="201">Money Changer (Company)</option>
+                          <option value="202">Bank (Company)</option>
+                          <option value="203">Payment Service Provider (PJP)</option>
+                          <option value="204">Company (Others)</option>
+                        </select>
                       </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md mb-4">
-                      <label for="fullname" class="form-label">
-                      Full Name
-                      <sup class="text-danger">*required</sup>
-                      </label>
-                      <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Enter Your Full Name" autofocus />
-                    </div>
-                    <div class="col-md mb-4">
-                      <label for="tipe" class="form-label">Contact Type<sup class="text-danger"> *required</sup></label>
-                      <select id="tipe" class="form-select">
-                        <option value="101" selected>Personal</option>
-                        <option value="201">Money Changer (Company)</option>
-                        <option value="202">Bank (Company)</option>
-                        <option value="203">Payment Service Provider (PJP)</option>
-                        <option value="204">Company (Others)</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md mb-4">
-                      <label for="id_type" class="form-label">ID Type<sup class="text-danger"> *required</sup></label>
-                      <select  id="id_type" class="form-select">
-                        <option value="PSP" selected>Passport</option>
-                        <option value="KTP">KTP</option>
-                        <option value="SIM">SIM (Driving License)</option>
-                        <option value="OTH">Other</option>
-                        <option value="SIU">Surat Izin Usaha</option>
-                        <option value="SAP">Akta Pendirian</option>
-                        <option value="ADR">Anggaran Dasar</option>
-                      </select>
-                    </div>
-                    <div class="col-md mb-4">
-                      <label class="form-label" for="idNumber">Passport/NIK Number<sup class="text-danger"> *mandatory</sup></label>
-                      <input type="text" id="idNumber" class="form-control" name="idNumber" placeholder="Enter Your ID Number" />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md mb-4 form-control-validation">
-                      <label for="tempat_lahir" class="form-label">Place of birth</label>
-                      <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Enter Your Place of Birth" />
-                    </div>
-                    <div class="col-md mb-4">
-                      <label class="form-label" for="tanggal_lahir">Date of birth</label>
-                       <input type="date" id="tanggal_lahir" class="form-control" name="tanggal_lahir" placeholder="Enter Your Birth of Date" />
+
+                  <!-- Identity -->
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-id"></i>Identity</div>
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <label for="id_type" class="form-label">ID Type<sup class="text-danger"> *required</sup></label>
+                        <select id="id_type" class="form-select">
+                          <option value="PSP" selected>Passport</option>
+                          <option value="KTP">KTP</option>
+                          <option value="SIM">SIM (Driving License)</option>
+                          <option value="OTH">Other</option>
+                          <option value="SIU">Surat Izin Usaha</option>
+                          <option value="SAP">Akta Pendirian</option>
+                          <option value="ADR">Anggaran Dasar</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label class="form-label" for="idNumber">Passport/NIK Number<sup class="text-danger"> *mandatory</sup></label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-hash"></i></span>
+                          <input type="text" id="idNumber" class="form-control" name="idNumber" placeholder="Enter Your ID Number" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4 form-control-validation">
+                        <label for="tempat_lahir" class="form-label">Place of birth</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-map-pin"></i></span>
+                          <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Enter Your Place of Birth" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label class="form-label" for="tanggal_lahir">Date of birth</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-calendar"></i></span>
+                          <input type="date" id="tanggal_lahir" class="form-control" name="tanggal_lahir" placeholder="Enter Your Birth of Date" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col-md mb-4 form-control-validation">
-                      <label for="email" class="form-label">Email</label>
-                      <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email (Optional)" />
-                    </div>
-                    <div class="col-md mb-4">
-                      <label class="form-label" for="waNumber">Whatsapp Number</label>
-                       <input type="text" id="waNumber" class="form-control" name="waNumber" placeholder="Enter Your Whatsapp Number (Optional)" pattern="[0-9]*" />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md mb-4 form-control-validation">
-                      <label for="nationality" class="form-label">Nationality<sup class="text-danger"> *required</sup></label>
-                      <select name="" id="nationality" class="form-select"></select>
-                    </div>
-                    <div class="col-md mb-4">
-                      <label for="address" class="form-label">Local Address<sup class="text-danger"> *required</sup></label>
-                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Local Address" required />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md mb-4">
-                      <label for="occupation" class="form-label">Occupation<sup class="text-danger"> *required</sup></label>
-                      <select class="form-select" id="occupation"></select>
-                    </div>
-                    <div class="col-md mb-4">
-                      <label for="paspor" class="form-label">Passport Photo</label>
-                      <input type="file" class="form-control" id="paspor">
-                    </div>
-                  </div>
-                  <div class="row justify-content-center mt-3">
-                    <div class="col-md-4 d-grid">
-                      <button class="btn btn-primary px-6" id="sbmProfil">Submit</button>
+
+                  <!-- Contact -->
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-address-book"></i>Contact</div>
+                    <div class="row">
+                      <div class="col-md-6 mb-4 form-control-validation">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-mail"></i></span>
+                          <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email (Optional)" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label class="form-label" for="waNumber">Whatsapp Number</label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-brand-whatsapp"></i></span>
+                          <input type="text" id="waNumber" class="form-control" name="waNumber" placeholder="Enter Your Whatsapp Number (Optional)" pattern="[0-9]*" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4 form-control-validation">
+                        <label for="nationality" class="form-label">Nationality<sup class="text-danger"> *required</sup></label>
+                        <select name="" id="nationality" class="form-select"></select>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label for="address" class="form-label">Local Address<sup class="text-danger"> *required</sup></label>
+                        <div class="input-group input-group-merge">
+                          <span class="input-group-text"><i class="icon-base ti tabler-home"></i></span>
+                          <input type="text" class="form-control" id="address" name="address" placeholder="Enter Your Local Address" required />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="row justify-content-center mt-2">
-                    <div class="col-md-4 text-center">
-                      <p class="h6">Or <u class="btnCari cursor-pointer">Search Existing Data</u> Instead</p>
+
+                  <!-- Occupation & document -->
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-briefcase"></i>Occupation &amp; document</div>
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <label for="occupation" class="form-label">Occupation<sup class="text-danger"> *required</sup></label>
+                        <select class="form-select" id="occupation"></select>
+                      </div>
+                      <div class="col-md-6 mb-4">
+                        <label for="paspor" class="form-label">Passport Photo</label>
+                        <input type="file" class="form-control" id="paspor">
+                      </div>
                     </div>
+                  </div>
+
+                  <div class="d-grid mt-2">
+                    <button class="btn btn-primary btn-lg" id="sbmProfil">Submit<i class="icon-base ti tabler-arrow-right ms-2"></i></button>
+                  </div>
+                  <div class="text-center mt-4">
+                    <span class="text-body-secondary">Already registered?</span>
+                    <a href="javascript:void(0);" class="btnCari fw-medium ms-1">Search existing data</a>
                   </div>
                 </div>
               </div>
 
               <!-- order details -->
-              <div class="card w-100 w-md-50 mx-auto d-none" id="cardOrder">
-                <div class="card-body">
-                  <!-- <div class="text-center mb-3"> -->
-                    <div class="app-brand justify-content-center mb-0 boxLogo">
-                      <span class="app-brand-logo demo logoForm">
-                        <span class="text-primary">
-                          <?php include __DIR__ . '/partials/logo.php'; ?>
-                        </span>
+              <div class="card order-form-card order-form-card-wide mx-auto d-none" id="cardOrder">
+                <div class="order-form-hero text-center">
+                  <div class="app-brand justify-content-center mb-3 boxLogo">
+                    <span class="app-brand-logo demo logoForm">
+                      <span class="text-primary">
+                        <?php include __DIR__ . '/partials/logo.php'; ?>
                       </span>
-                      <span class="app-brand-text demo text-heading fw-bold namaPT">BERES Mocha</span>
-                      <span class="h5 mb-0 namaCabang">BERES Mocha</span>
-                      <p class="h6 mb-2 mt-0">Order Details</p>
-                    </div>
-                  <!-- </div> -->
-                  <div class="row">
-                    <div class="col-md px-5">
-                      <p class="h6">Make an order for : <span id="namaProfil">John Doe</span></p>
-                      <input type="hidden" id="idBranch">
-                      <input type="hidden" id="indexExisting">
-                      <input type="hidden" id="requestUser">
-                    </div>
-                    <div class="col-md d-flex justify-content-end g-2">
-                      <div class="form-check form-check-inline">
-                        <label class="switch">
-                          <input type="radio" name="tipeTrans" id="buy" class="switch-input" checked>
-                          <span class="switch-toggle-slider">
-                            <span class="switch-on"></span>
-                            <span class="switch-off"></span>
-                          </span>
-                          <span class="switch-label">Buy Rupiah</span>
-                        </label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <label class="switch">
-                          <input type="radio" name="tipeTrans" id="sell" class="switch-input">
-                          <span class="switch-toggle-slider">
-                            <span class="switch-on"></span>
-                            <span class="switch-off"></span>
-                          </span>
-                          <span class="switch-label">Sell Rupiah</span>
-                        </label>
-                      </div>
-                    </div>
+                    </span>
+                    <span class="app-brand-text demo text-heading fw-bold namaPT">BERES Mocha</span>
                   </div>
-                  <div class="container-fluid mt-3">
-                    <div class="row fw-bold border-bottom py-2 d-none d-md-flex">
-                      <div class="col-12 col-md-3">Currency</div>
-                      <div class="col-6 col-md-2 text-end">Amount</div>
-                      <div class="col-6 col-md-3 text-end">Rate</div>
-                      <div class="col-6 col-md-3 text-end">Subtotal</div>
-                      <div class="col-6 col-md-1"></div>
-                    </div>
-                    <div id="tabelDetail"></div>
-                    <div class="row border-top mt-2 pt-2 align-items-center">
-                      <div class="col-12 col-md-9 text-start mb-2 mb-md-0 text-md-end fw-bold">Total :</div>
-                      <div class="col-12 col-md-3">
-                        <input type="text" class="form-control text-end total" readonly>
-                      </div>
+                  <span class="badge bg-label-primary rounded-pill px-3 py-2 mb-3">
+                    <i class="icon-base ti tabler-map-pin icon-14px me-1"></i><span class="namaCabang">BERES Mocha</span>
+                  </span>
+                  <h4 class="fw-bold mb-1">Order details</h4>
+                  <p class="text-body-secondary mb-0">Choose the currencies and amounts you would like to exchange.</p>
+                </div>
+
+                <div class="card-body order-form-body">
+                  <input type="hidden" id="idBranch">
+                  <input type="hidden" id="indexExisting">
+                  <input type="hidden" id="requestUser">
+
+                  <div class="order-customer">
+                    <span class="order-customer-avatar"><i class="icon-base ti tabler-user"></i></span>
+                    <div>
+                      <div class="small text-body-secondary">Make an order for</div>
+                      <div class="fw-semibold" id="namaProfil">John Doe</div>
                     </div>
                   </div>
 
-                  <div class="row mt-3">
-                    <div class="col-md d-grid">
-                      <button class="btn btn-outline-primary border-none" data-bs-toggle="modal" data-bs-target="#modalRequest" type="button">
-                        &nbsp;
-                      </button>
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-arrows-exchange"></i>Transaction type</div>
+                    <div class="btn-group order-form-gender mb-2" role="group" aria-label="Transaction type">
+                      <input type="radio" class="btn-check" name="tipeTrans" id="buy" checked>
+                      <label class="btn btn-outline-primary" for="buy"><i class="icon-base ti tabler-arrow-down-left me-1"></i>Buy Rupiah</label>
+                      <input type="radio" class="btn-check" name="tipeTrans" id="sell">
+                      <label class="btn btn-outline-primary" for="sell"><i class="icon-base ti tabler-arrow-up-right me-1"></i>Sell Rupiah</label>
                     </div>
-                    <div class="col-md d-grid">
+                  </div>
+
+                  <div class="order-form-section">
+                    <div class="order-form-section-title"><i class="icon-base ti tabler-coin"></i>Items</div>
+                    <div class="order-items-head row g-2 d-none d-md-flex">
+                      <div class="col-md-4">Currency</div>
+                      <div class="col-md-2 text-end">Amount</div>
+                      <div class="col-md-2 text-end">Rate</div>
+                      <div class="col-md-3 text-end">Subtotal</div>
+                      <div class="col-md-1"></div>
+                    </div>
+                    <div id="tabelDetail"></div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
+                      <button class="btn btn-outline-primary border-none order-secret" data-bs-toggle="modal" data-bs-target="#modalRequest" type="button">&nbsp;</button>
                       <button class="btn btn-outline-primary" type="button" id="tambahBaris">
-                        Add New Row
+                        <i class="icon-base ti tabler-plus me-1"></i>Add New Row
                       </button>
                     </div>
                   </div>
-                  <div class="my-4">
-                    <button class="btn btn-primary d-grid w-100" type="button" id="btnSubmit">Submit the order</button>
+
+                  <div class="order-total">
+                    <span class="order-total-label">Total</span>
+                    <div class="input-group input-group-merge order-total-field">
+                      <span class="input-group-text">Rp</span>
+                      <input type="text" class="form-control text-end total" readonly>
+                    </div>
                   </div>
-                  <div class="row justify-content-center d-none" id="boxResetProfile">
+
+                  <div class="d-grid mt-4">
+                    <button class="btn btn-primary btn-lg" type="button" id="btnSubmit">Submit the order<i class="icon-base ti tabler-arrow-right ms-2"></i></button>
+                  </div>
+                  <div class="row justify-content-center d-none mt-3" id="boxResetProfile">
                     <div class="col-md-4 d-grid">
                       <button class="btn btn-outline-primary" id="resetProfile">Reset Profile</button>
                     </div>
@@ -315,152 +330,134 @@ session_start();
     <!-- modal pilih branch -->
     <div class="modal fade animate__animated animate__fadeInUp" id="modalBranch" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content">
-          <div class="modal-body d-flex flex-column gap-4">
-            <div class="app-brand justify-content-center mb-6 boxLogo">
-              <span class="app-brand-logo demo logoForm">
-                <span class="text-primary">
-                  <?php include __DIR__ . '/partials/logo.php'; ?>
+        <div class="modal-content order-modal">
+          <div class="modal-body">
+            <div class="order-modal-head">
+              <div class="app-brand justify-content-center boxLogo mb-3">
+                <span class="app-brand-logo demo logoForm">
+                  <span class="text-primary">
+                    <?php include __DIR__ . '/partials/logo.php'; ?>
+                  </span>
                 </span>
-              </span>
-              <span class="app-brand-text demo text-heading fw-bold namaPT">BERES Mocha</span>
+                <span class="app-brand-text demo text-heading fw-bold namaPT">BERES Mocha</span>
+              </div>
+              <h4 class="fw-bold mb-1">Select your branch</h4>
+              <p class="text-body-secondary mb-0">Choose the branch you are visiting. Each branch's address is shown in the list.</p>
             </div>
-            <h5 class="modal-title text-center mt-4">Select Which Branch You Are In</h5>
+            <label for="selectBranch" class="form-label">Branch</label>
             <select id="selectBranch" class="form-select"></select>
-            <button type="button" id="sbmBranch" class="btn btn-primary text-center">Submit</button>
+            <div id="branchSelected" class="order-branch-selected d-none">
+              <i class="icon-base ti tabler-map-pin"></i>
+              <div>
+                <div class="fw-semibold" id="branchSelectedName"></div>
+                <div class="small text-body-secondary" id="branchSelectedAddress"></div>
+              </div>
+            </div>
+            <button type="button" id="sbmBranch" class="btn btn-primary btn-lg w-100 mt-4">Continue<i class="icon-base ti tabler-arrow-right ms-2"></i></button>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- modal pelanggan baru / existing -->
     <div class="modal fade" id="modalPilihan" tabindex="-1" aria-hidden="true" data-bs-keyboard="false" data-bs-backdrop="static">
       <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content">
+        <div class="modal-content order-modal">
           <div class="modal-body">
-            <div class="text-center mb-6">
-              <h4 class="mb-0">Seems like this is your first visit</h4>
-              <h4 class="mb-2">How Would You Like to proceed?</h4>
-              <p>Please choose one of the following options</p>
+            <div class="order-modal-head">
+              <span class="order-modal-icon"><i class="icon-base ti tabler-hand-stop"></i></span>
+              <h4 class="fw-bold mb-1">Seems like this is your first visit</h4>
+              <p class="text-body-secondary mb-0">How would you like to proceed? Please choose one of the following options.</p>
             </div>
-            <div class="row">
-              <div class="col-12 mb-6">
-                <div class="rounded border py-4 px-6 border-primary pilihan cursor-pointer btnDaftar">
-                 <p class="h5 mb-0 text-body">I'm a new customer</p>
-                 <small>Register your profile to make an order</small>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="rounded border py-4 px-6 border-primary pilihan cursor-pointer btnCari">
-                 <p class="h5 mb-0 text-body">I've been here before</p>
-                 <small>Search your profile by entering your passport ID or other ID</small>
-                </div>
-              </div>
+            <div class="order-choice btnDaftar" role="button" tabindex="0">
+              <span class="order-choice-icon"><i class="icon-base ti tabler-user-plus"></i></span>
+              <span class="order-choice-text">
+                <span class="order-choice-title">I'm a new customer</span>
+                <span class="order-choice-desc">Register your profile to make an order</span>
+              </span>
+              <i class="icon-base ti tabler-chevron-right order-choice-arrow"></i>
+            </div>
+            <div class="order-choice btnCari" role="button" tabindex="0">
+              <span class="order-choice-icon"><i class="icon-base ti tabler-search"></i></span>
+              <span class="order-choice-text">
+                <span class="order-choice-title">I've been here before</span>
+                <span class="order-choice-desc">Search your profile by entering your passport ID or other ID</span>
+              </span>
+              <i class="icon-base ti tabler-chevron-right order-choice-arrow"></i>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- konfirmasi profil (pelanggan dari cookie) -->
     <div class="modal fade animate__animated animate__fadeInUp" id="modalKonfirmasi" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content">
+        <div class="modal-content order-modal">
           <div class="modal-body">
-            <div class="mb-3 text-center">
-              <p class="h4">Confirm Your Profile</p>
+            <div class="order-modal-head">
+              <span class="order-modal-icon"><i class="icon-base ti tabler-user-check"></i></span>
+              <h4 class="fw-bold mb-1">Confirm your profile</h4>
+              <p class="text-body-secondary mb-0">We found a profile saved on this device.</p>
             </div>
-            <ul class="list-unstyled mb-6">
-               <li class="mb-2">
-                <span class="h6 me-1">Name :</span>
-                <span class="dataDetail" id="namaDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">ID Number :</span>
-                <span class="dataDetail" id="idDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Email :</span>
-                <span class="dataDetail" id="emailDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Phone :</span>
-                <span class="dataDetail" id="teleponDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Address :</span>
-                <span class="dataDetail" id="alamatDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Nationality :</span>
-                <span class="dataDetail" id="negaraDetail"></span>
-              </li>
+            <ul class="profile-summary list-unstyled">
+              <li><i class="icon-base ti tabler-user"></i><span class="profile-label">Name</span><span class="dataDetail profile-value" id="namaDetail"></span></li>
+              <li><i class="icon-base ti tabler-id"></i><span class="profile-label">ID Number</span><span class="dataDetail profile-value" id="idDetail"></span></li>
+              <li><i class="icon-base ti tabler-mail"></i><span class="profile-label">Email</span><span class="dataDetail profile-value" id="emailDetail"></span></li>
+              <li><i class="icon-base ti tabler-phone"></i><span class="profile-label">Phone</span><span class="dataDetail profile-value" id="teleponDetail"></span></li>
+              <li><i class="icon-base ti tabler-home"></i><span class="profile-label">Address</span><span class="dataDetail profile-value" id="alamatDetail"></span></li>
+              <li><i class="icon-base ti tabler-world"></i><span class="profile-label">Nationality</span><span class="dataDetail profile-value" id="negaraDetail"></span></li>
             </ul>
-          </div>
-          <div class="modal-footer d-flex justify-content-between">
-            <p class="h6 nowrap">Is this your profile?</p>
-            <div class="d-flex gap-2">
-              <button id="btnTidak" class="btn btn-danger">No, it's not me</button>
-              <button type="button" id="btnYa" class="btn btn-primary">Yes, it's me</button>
+            <p class="fw-medium text-center mb-3">Is this your profile?</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-center">
+              <button id="btnTidak" class="btn btn-outline-danger px-4">No, it's not me</button>
+              <button type="button" id="btnYa" class="btn btn-primary px-4">Yes, it's me</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- cari data existing -->
     <div class="modal fade animate__animated animate__fadeInUp" id="modalPelanggan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered modal-simple">
-        <div class="modal-content">
-          <div class="modal-body text-center">
+        <div class="modal-content order-modal">
+          <div class="modal-body">
             <div class="searchBox">
-              <p class="h6">Insert Your Full Name, ID Number, Customer Code, Email or Phone Number</p>
-              <input type="text" class="form-control mb-3" id="inputCari">
-              <button class="btn btn-primary mb-5" id="goSearch">Find My Data</button>
-              <p class="h6">Or <span class="text-primary cursor-pointer btnDaftar"><u>Register your profile</u></span> instead</p>
+              <div class="order-modal-head">
+                <span class="order-modal-icon"><i class="icon-base ti tabler-user-search"></i></span>
+                <h4 class="fw-bold mb-1">Find your profile</h4>
+                <p class="text-body-secondary mb-0">Enter your full name, ID number, customer code, email or phone number.</p>
+              </div>
+              <div class="input-group input-group-merge mb-3">
+                <span class="input-group-text"><i class="icon-base ti tabler-search"></i></span>
+                <input type="text" class="form-control form-control-lg" id="inputCari" placeholder="Type here to search" autocomplete="off">
+              </div>
+              <button class="btn btn-primary btn-lg w-100" id="goSearch">Find my data</button>
+              <div class="order-or"><span>or</span></div>
+              <button type="button" class="btn btn-outline-primary w-100 btnDaftar"><i class="icon-base ti tabler-user-plus me-2"></i>Register your profile</button>
             </div>
             <div class="d-none findBox">
-              <table class="table table-sm table-bordered">
-                <tbody>
-                  <tr>
-                    <td class="border">Customer Code</td>
-                    <td class="border" id="findKode">7118565151</td>
-                  </tr>
-                  <tr>
-                    <td class="border">Full Name</td>
-                    <td class="border" id="findNama">John Doe</td>
-                  </tr>
-                  <tr>
-                    <td class="border">ID Number</td>
-                    <td class="border" id="findID">123456789</td>
-                  </tr>
-                  <tr>
-                    <td class="border">Email</td>
-                    <td class="border" id="findEmail">john.doe@gmail.com</td>
-                  </tr>
-                  <tr>
-                    <td class="border">Phone</td>
-                    <td class="border" id="findTelepon">08123456789</td>
-                  </tr>
-                  <tr>
-                    <td class="border">Address</td>
-                    <td class="border" id="findAlamat">Denpasar, Bali</td>
-                  </tr>
-                  <tr>
-                    <td class="border">Nationality</td>
-                    <td class="border" id="findNegara">Indonesia</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="mt-3 d-none findBox">
-              <div class="row">
-                <div class="col-md">
-                  <p class="h6"><i>Is This Your Profile?</i></p>
-                </div>
+              <div class="order-modal-head">
+                <span class="order-modal-icon"><i class="icon-base ti tabler-user-check"></i></span>
+                <h4 class="fw-bold mb-1">We found a match</h4>
+                <p class="text-body-secondary mb-0">Please check that the details below are yours.</p>
               </div>
-              <div class="row">
-                <div class="col-md d-flex justify-content-center gap-4">
-                  <button class="btn btn-outline-danger" id="btnFindTidak">It's not me</button>
-                  <button class="btn btn-primary" id="btnFindYa">Yes, It's me</button>
-                </div>
+              <ul class="profile-summary list-unstyled">
+                <li><i class="icon-base ti tabler-barcode"></i><span class="profile-label">Customer Code</span><span class="profile-value" id="findKode">7118565151</span></li>
+                <li><i class="icon-base ti tabler-user"></i><span class="profile-label">Full Name</span><span class="profile-value" id="findNama">John Doe</span></li>
+                <li><i class="icon-base ti tabler-id"></i><span class="profile-label">ID Number</span><span class="profile-value" id="findID">123456789</span></li>
+                <li><i class="icon-base ti tabler-mail"></i><span class="profile-label">Email</span><span class="profile-value" id="findEmail">john.doe@gmail.com</span></li>
+                <li><i class="icon-base ti tabler-phone"></i><span class="profile-label">Phone</span><span class="profile-value" id="findTelepon">08123456789</span></li>
+                <li><i class="icon-base ti tabler-home"></i><span class="profile-label">Address</span><span class="profile-value" id="findAlamat">Denpasar, Bali</span></li>
+                <li><i class="icon-base ti tabler-world"></i><span class="profile-label">Nationality</span><span class="profile-value" id="findNegara">Indonesia</span></li>
+              </ul>
+            </div>
+            <div class="d-none findBox">
+              <p class="fw-medium text-center mb-3">Is this your profile?</p>
+              <div class="d-grid gap-2 d-sm-flex justify-content-center">
+                <button class="btn btn-outline-danger px-4" id="btnFindTidak">It's not me</button>
+                <button class="btn btn-primary px-4" id="btnFindYa">Yes, it's me</button>
               </div>
             </div>
           </div>

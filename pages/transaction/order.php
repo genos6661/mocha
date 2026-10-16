@@ -27,15 +27,15 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="dt-responsive table table-bordered table-hover" id="tabelOrder">
+    <table class="dt-responsive table table-bordered table-hover table-cards" id="tabelOrder">
       <thead>
         <tr>
           <th></th>
-          <th>Date</th>
-          <th>Number</th>
+          <th>Date / Number</th>
           <th>Type</th>
           <th>Branch</th>
           <th>Name</th>
+          <th class="text-end">Total</th>
           <th>Status</th>
           <th></th>
         </tr>
@@ -230,4 +230,5 @@
 
 <script src="js/pages/country-dial-codes.js?v=<?= filemtime(__DIR__ . '/../../js/pages/country-dial-codes.js') ?>" type="text/javascript"></script>
 <script src="js/pages/invoice-wa.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-wa.js') ?>" type="text/javascript"></script>
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/order.js?v=<?= filemtime(__DIR__ . '/../../js/pages/order.js') ?>" type="text/javascript"></script>

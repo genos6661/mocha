@@ -1,0 +1,514 @@
+/**
+ * PREVIEW INVOICE / ORDER PUBLIK (transaction-preview.php, order-preview.php)
+ * ------------------------------------------------------------------
+ * Satu desain untuk keduanya. Warna mengikuti warna utama tema
+ * (--bs-primary / --bs-primary-rgb). Prefix kelas: ip-.
+ */
+
+body.ip-body {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 100% -5%, rgba(var(--bs-primary-rgb), 0.18), transparent 60%),
+    radial-gradient(700px 500px at -5% 105%, rgba(var(--bs-primary-rgb), 0.12), transparent 60%),
+    var(--bs-body-bg);
+}
+
+.ip-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 1.5rem;
+  align-items: start;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* ---------- dokumen ---------- */
+.ip-card {
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 1.75rem 3.5rem -1.5rem rgba(var(--bs-primary-rgb), 0.35), 0 0.25rem 1rem rgba(0, 0, 0, 0.06);
+}
+
+.ip-hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2rem 2.25rem 1.75rem;
+  color: #fff;
+  background:
+    radial-gradient(420px 220px at 95% 0%, rgba(255, 255, 255, 0.22), transparent 70%),
+    linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #1a0b0e));
+}
+.ip-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+.ip-logo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 1.1rem;
+  background: #fff;
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.2);
+  color: var(--bs-primary);
+  overflow: hidden;
+}
+.ip-logo svg {
+  width: 2.6rem;
+  height: 2rem;
+}
+.ip-logo img {
+  display: block;
+  width: auto;
+  max-width: 85%;
+  height: 40px;           /* logo perusahaan: tinggi tetap 40px di PC */
+}
+.ip-company {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.ip-branch {
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.ip-docmeta {
+  text-align: right;
+}
+.ip-doc-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+.ip-pill {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+  background: #fff;
+}
+.ip-pill:empty {
+  display: none;
+}
+.ip-date {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.ip-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  padding: 1rem 2.25rem;
+  font-size: 0.9rem;
+  color: var(--bs-secondary-color);
+  background: rgba(var(--bs-primary-rgb), 0.06);
+}
+.ip-contact .icon-base {
+  margin-right: 0.35rem;
+  color: var(--bs-primary);
+}
+
+.ip-body-pad {
+  padding: 1.75rem 2.25rem 2rem;
+}
+
+.ip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.ip-panel {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1.1rem;
+}
+.ip-panel-title {
+  margin-bottom: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.ip-customer {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+.ip-avatar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 60%, #1a0b0e));
+}
+.ip-customer-lines p {
+  margin: 0 0 0.2rem;
+  overflow-wrap: anywhere;
+}
+.ip-customer-lines .ip-customer-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.ip-dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+.ip-dl dt {
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+.ip-dl dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--bs-heading-color);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- item valas ---------- */
+.ip-items {
+  overflow: hidden;       /* tanpa scroll: isi sel boleh turun baris, bukan melebar */
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1.1rem;
+}
+.ip-table {
+  width: 100%;
+  margin: 0;
+  table-layout: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.ip-table thead th {
+  padding: 0.85rem 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.07);
+  border: 0;
+}
+.ip-table tbody td {
+  padding: 0.85rem 1.1rem;
+  border: 0;
+  border-top: 1px solid var(--bs-border-color);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.ip-table th.text-end,
+.ip-table td.text-end {
+  white-space: nowrap;   /* angka tetap satu baris; kolom Currency / Name yang menyesuaikan */
+}
+.ip-cur-code {
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.ip-cur-name {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+.ip-table tbody tr:first-child td {
+  border-top: 0;
+}
+
+
+/* ---------- ringkasan & total ---------- */
+.ip-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+.ip-note {
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--bs-primary);
+  border-radius: 0.5rem 1rem 1rem 0.5rem;
+  color: var(--bs-secondary-color);
+  background: rgba(var(--bs-primary-rgb), 0.05);
+}
+.ip-note .ip-note-title {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.ip-totals {
+  padding: 1.1rem 1.25rem;
+  border-radius: 1.1rem;
+  background: rgba(var(--bs-primary-rgb), 0.07);
+}
+.ip-total-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 0;
+  color: var(--bs-secondary-color);
+}
+.ip-total-row strong {
+  color: var(--bs-heading-color);
+  white-space: nowrap;
+}
+.ip-total-row.ip-grand {
+  margin-top: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 2px dashed rgba(var(--bs-primary-rgb), 0.35);
+  font-size: 1.2rem;
+  color: var(--bs-heading-color);
+}
+.ip-total-row.ip-grand strong {
+  color: var(--bs-primary);
+}
+
+.ip-thanks {
+  padding: 1rem 2.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--bs-secondary-color);
+  border-top: 1px dashed var(--bs-border-color);
+}
+
+/* ---------- aksi ---------- */
+.ip-actions {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 1.25rem 2.5rem -1.25rem rgba(var(--bs-primary-rgb), 0.3), 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+}
+.ip-actions .ip-actions-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.ip-actions .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  border-radius: 0.85rem;
+}
+.ip-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* PC berjendela sempit (kartu dokumen berdampingan dengan kolom aksi): rapatkan agar tabel tidak meluber */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .ip-body-pad {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .ip-table thead th,
+  .ip-table tbody td {
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+  }
+  .ip-table thead th {
+    letter-spacing: 0.05em;
+  }
+}
+
+/* ---------- tablet & HP ---------- */
+@media (max-width: 991.98px) {
+  .ip-wrap {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1rem 0.75rem 9rem;
+  }
+  .ip-actions {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 100;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow: 0 -0.5rem 1.5rem rgba(0, 0, 0, 0.12);
+  }
+  .ip-actions .ip-actions-title {
+    display: none;
+  }
+  .ip-actions .btn {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.85rem;
+    border-radius: 0.7rem;
+  }
+  .ip-actions-row {
+    display: contents;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ip-hero {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 1.25rem 1.25rem;
+    text-align: center;
+  }
+  .ip-brand {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  /* di HP: logo di tengah, lebar 30% */
+  .ip-logo {
+    width: 30%;
+    min-width: 72px;
+    height: auto;
+    padding: 0.6rem;
+  }
+  .ip-logo svg {
+    width: 100%;
+    height: auto;
+  }
+  .ip-logo img {
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+  .ip-docmeta {
+    text-align: center;
+  }
+  .ip-contact {
+    flex-direction: column;
+    padding: 0.85rem 1.25rem;
+  }
+  .ip-body-pad {
+    padding: 1.25rem;
+  }
+  .ip-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ip-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ip-thanks {
+    padding: 1rem 1.25rem;
+  }
+
+}
+
+/* item valas menjadi kartu di HP (<= 575px) */
+@media (max-width: 575.98px) {
+  /* item valas: tiap baris menjadi kartu
+       USD / US Dollar               Rp 15.800.000
+       AMOUNT 1.000                  RATE Rp 15.800   */
+  .ip-items {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+  .ip-table thead {
+    display: none;
+  }
+  .ip-table,
+  .ip-table tbody {
+    display: block;
+  }
+  .ip-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 1rem;
+  }
+  .ip-table tbody td {
+    padding: 0;
+    border: 0;
+  }
+  .ip-table tbody tr:first-child td {
+    border-top: 0;
+  }
+  .ip-table td:nth-child(1) { grid-area: 1 / 1; font-size: 1.05rem; }
+  .ip-table td:nth-child(4) { grid-area: 1 / 2; align-self: center; font-weight: 700; font-size: 1.05rem; color: var(--bs-primary); }
+  .ip-table td:nth-child(2) { grid-area: 2 / 1; margin-top: 0.6rem; text-align: start !important; }
+  .ip-table td:nth-child(3) { grid-area: 2 / 2; margin-top: 0.6rem; }
+  .ip-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+  }
+  .ip-table td[colspan] {
+    grid-area: auto;
+    text-align: center;
+  }
+}
+
+/* tablet kecil (576-767px): rapatkan isi agar tabel muat tanpa geser */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .ip-body-pad {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  .ip-table thead th,
+  .ip-table tbody td {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+@media print {
+  body.ip-body {
+    background: #fff;
+  }
+  .ip-wrap {
+    display: block;
+    padding: 0;
+  }
+  .ip-actions {
+    display: none !important;
+  }
+  .ip-card {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .ip-hero {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

@@ -236,46 +236,37 @@ function initTable() {
         info: false,
         autoWidth: false,
         columns: [
-            { data: "kode_valas"},
-            {
-                data: "tanggal",
-                render: function (data, type, row) {
-                  if (!data) return "";
-                  const tanggal = new Date(data);
-                  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                  return tanggal.toLocaleDateString('en-ID', options);
-                }
-            },
-            { data: "nomor", orderable: true, className: "nowrap" },
-            { data: "nama_cabang", orderable: true, className: "nowrap" },
+            { data: "kode_valas", className: "dt-badge", render: TR.pill('primary') },
+            { data: "tanggal", className: "dt-main nowrap", render: TR.dateNumber },
+            { data: "nama_cabang", className: "dt-branch nowrap" },
             { 
                 data: "beli", 
-                orderable: true, 
-                className: "text-end nowrap",
+                className: "dt-buy text-end nowrap",
+                createdCell: TR.cellLabel('Buy'),
                 render: function(data, type, row) {
                     if (row.is_saldo_awal) return "";
                     if (row.is_saldo_akhir) return "<strong>" + parseFloat(data).toLocaleString("id-ID") + "</strong>";
                     if (!data) return "0"; 
                     
-                    return parseFloat(data).toLocaleString("id-ID");
+                    return `<span class="text-success fw-medium">${parseFloat(data).toLocaleString("id-ID")}</span>`;
                 },
             },
             { 
                 data: "jual", 
-                orderable: true, 
-                className: "text-end nowrap",
+                className: "dt-sell text-end nowrap",
+                createdCell: TR.cellLabel('Sell'),
                 render: function(data, type, row) {
                     if (row.is_saldo_awal) return "";
                     if (row.is_saldo_akhir) return "<strong>" + parseFloat(data).toLocaleString("id-ID") + "</strong>";
                     if (!data) return "0"; 
                     
-                    return parseFloat(data).toLocaleString("id-ID");
+                    return `<span class="text-danger fw-medium">${parseFloat(data).toLocaleString("id-ID")}</span>`;
                 },
             },
             { 
                 data: "rate", 
-                orderable: true, 
-                className: "text-end nowrap",
+                className: "dt-rate text-end nowrap",
+                createdCell: TR.cellLabel('Rate'),
                 render: function(data, type, row) {
                     if (!data) return ""; 
                     
@@ -284,8 +275,8 @@ function initTable() {
             },
             { 
               data: null, 
-              orderable: false, 
-              className: "text-end nowrap",
+              className: "dt-bal text-end nowrap",
+              createdCell: TR.cellLabel('Stock Balance'),
               render: function(data, type, row) {
                   if (row.is_saldo_awal || row.is_saldo_akhir) {
                       return `<strong>${row.saldo_berjalan.toLocaleString("id-ID")}</strong>`;
@@ -298,7 +289,8 @@ function initTable() {
             },
             {
                 data: null,
-                className: "text-end nowrap",
+                className: "dt-val text-end nowrap",
+                createdCell: TR.cellLabel('Valuation'),
                 render: function(data, type, row) {
                     if(row.is_saldo_awal || row.is_saldo_akhir) return "<strong>Rp " + parseFloat(row.nilai).toLocaleString("id-ID") + "</strong>";
                     if (!data) return "Rp 0";

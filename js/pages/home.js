@@ -90,7 +90,25 @@ $(document).ready(function () {
   $('#tahunTR, #cabangTR').on('change', function() {
     getAnnualTransaction();
   });
+
+  initGreeting();
 });
+
+// Sapaan di hero dashboard: nama user dibaca dari navbar (diisi main.js setelah profil termuat).
+function initGreeting() {
+  $('#dashDate').text(new Date().toLocaleDateString('en-US', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  }));
+
+  const nameEl = document.getElementById('navbarNama');
+  const paintName = () => {
+    const name = nameEl && nameEl.textContent.trim();
+    if (name) $('#dashName').text(name);
+  };
+
+  paintName();
+  if (nameEl) new MutationObserver(paintName).observe(nameEl, { childList: true, characterData: true, subtree: true });
+}
 
 function updateDateRangeSelector(selectedValue) {
   const today = new Date();
@@ -192,13 +210,6 @@ borderColor = config.colors.borderColor;
 headingColor = config.colors.headingColor;
 
 // annual Transaction Report
-function getRandomPastelColor() {
-  const hue = Math.floor(Math.random() * 360); // 0 - 360
-  const saturation = 70 + Math.random() * 20; // 70 - 90%
-  const lightness = 70 + Math.random() * 10;  // 70 - 80%
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
 function getAnnualTransaction() {
   const year = $('#tahunTR').val();
   const branch = $('#cabangTR').val();
@@ -253,9 +264,26 @@ function prepareChartData(apiResponse) {
   return { arrayTransaksi, arrayNilai };
 }
 
+// Warna utama tema sebagai hex "#rrggbb" (config.colors.primary hanya berisi "var(--bs-primary)").
+function primaryHex() {
+  return getComputedStyle(document.documentElement).getPropertyValue('--bs-primary').trim() || '#7367f0';
+}
+
+// Warna utama tema dipucatkan (dicampur putih), hasilnya hex "#rrggbb" agar diterima ApexCharts.
+// strength 0 = putih, 1 = warna utama penuh.
+function themeTint(strength) {
+  const hex = primaryHex().replace('#', '');
+  const full = hex.length === 3 ? hex.split('').map(c => c + c).join('') : hex;
+  const channels = [0, 2, 4].map(i => parseInt(full.slice(i, i + 2), 16));
+  return '#' + channels
+    .map(c => Math.round(255 - (255 - c) * strength).toString(16).padStart(2, '0'))
+    .join('');
+}
+
 function AnnualBarChart(arrayTransaksi, arrayNilai, highlightData) {
-  const basicColor = getRandomPastelColor(),
-        highlightColor = getRandomPastelColor();
+  // Batang bulan lain berwarna utama pucat, bulan berjalan berwarna utama penuh.
+  const basicColor = themeTint(0.3),
+        highlightColor = primaryHex();
   var colorArr = [];
 
   for (let i = 0; i < arrayTransaksi.length; i++) {
@@ -505,20 +533,39 @@ function renderBranchTransaction() {
   });
 }
 
-// Warna pastel untuk Buy (cool)
-function getRandomCoolPastel() {
-  const hue = 120 + Math.random() * 130; // hijau-biru-ungu
-  const saturation = 60 + Math.random() * 20;
-  const lightness = 65 + Math.random() * 15;
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+// Palet warna mewah untuk grafik cabang (burgundy, emerald, plum, navy, dll).
+const LUXURY_COLORS = [
+  '#800020',  // burgundy
+  '#0B6E4F',  // emerald
+  '#5E2750',  // plum
+  '#14213D',  // navy
+  '#9B111E',  // ruby
+  '#1F3A93',  // royal blue
+  '#0F4C5C',  // deep teal
+  '#6A3D9A',  // amethyst
+  '#9A6B1E',  // antique gold
+  '#2E4D3A',  // forest
+  '#4A1C1C',  // mahogany
+  '#0F52BA'   // sapphire
+];
+
+// Tiap cabang mendapat satu warna acak dari palet (tanpa kembar selama jumlah cabang <= palet),
+// diacak ulang setiap grafik dimuat.
+function pickBranchColors(count) {
+  const pool = [...LUXURY_COLORS];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return Array.from({ length: count }, (_, i) => pool[i % pool.length]);
 }
 
-// Warna pastel untuk Sell (warm)
-function getRandomWarmPastel() {
-  const hue = Math.random() * 60; // merah-oranye-kuning
-  const saturation = 60 + Math.random() * 20;
-  const lightness = 65 + Math.random() * 15;
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+// Campur hex "#rrggbb" dengan putih (0 = asli, 1 = putih); dipakai untuk batang Sell yang lebih terang.
+function lightenHex(hex, amount) {
+  const channels = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  return '#' + channels
+    .map(c => Math.round(c + (255 - c) * amount).toString(16).padStart(2, '0'))
+    .join('');
 }
 
 function updateBranchTransaction() {
@@ -541,8 +588,10 @@ function updateBranchTransaction() {
       const buyData  = labels.map(b => Number(branchTransactionData[b]?.Buy.count  ?? 0));
       const sellData = labels.map(b => Number(branchTransactionData[b]?.Sell.count ?? 0) * -1);
 
-      const buyColor  = getRandomCoolPastel();
-      const sellColor = getRandomWarmPastel();
+      // Satu warna mewah acak per cabang: Buy memakai warna penuh, Sell versi lebih terang.
+      const branchColors = pickBranchColors(labels.length);
+      const buyColor  = ({ dataPointIndex }) => branchColors[dataPointIndex];
+      const sellColor = ({ dataPointIndex }) => lightenHex(branchColors[dataPointIndex], 0.45);
 
       totalRevenueChart.updateOptions({
         xaxis: { categories: labels },
@@ -560,6 +609,8 @@ function updateBranchTransaction() {
           }
         },
         colors: [buyColor, sellColor],
+        // Legenda Buy/Sell memakai warna netral (warna batang ditentukan cabangnya).
+        legend: { markers: { fillColors: ['#4b465c', '#b9b6c4'] } },
         chart: { animations: { enabled: true } }
       });
 
@@ -618,26 +669,24 @@ function getForexTrend() {
       const $box = $("#boxTrend");
       $box.empty();
 
-      res.data.forEach(item => {
+      // Bar menunjukkan nilai tiap valas dibanding yang tertinggi.
+      const maxNilai = Math.max(1, ...res.data.map(item => Math.abs(Number(item.total_nilai) || 0)));
+
+      res.data.forEach((item, index) => {
         let totalTransaksi = formatNumberID(item.total_transaksi);
         let totalNilai = formatNumberID(item.total_nilai);
+        const share = Math.max(3, Math.round(Math.abs(Number(item.total_nilai) || 0) / maxNilai * 100));
         const li = `
-          <li class="d-flex align-items-center mb-4">
-            <div class="flex-shrink-0 me-4">
-              <img src="/assets/img/flags/${item.flag}" class="rounded" alt="" style="width: 2.5rem; height: 1.75rem; object-fit: cover;">
-            </div>
-            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-              <div class="me-2">
-                <div class="d-flex align-items-center">
-                  <h6 class="mb-0 me-1">${item.kode} - ${item.nama}</h6>
-                </div>
-                <small class="text-body">${totalTransaksi} Transactions</small>
+          <li class="dash-trend-item">
+            <span class="dash-trend-rank">${index + 1}</span>
+            <img src="/assets/img/flags/${item.flag}" class="dash-trend-flag" alt="">
+            <div class="dash-trend-body">
+              <div class="dash-trend-top">
+                <h6 class="dash-trend-name">${item.kode} - ${item.nama}</h6>
+                <span class="dash-trend-value">Rp. ${totalNilai}</span>
               </div>
-              <div class="user-progress">
-                <p class="text-success fw-medium mb-0 d-flex align-items-center gap-1">
-                  Rp. ${totalNilai}
-                </p>
-              </div>
+              <div class="dash-trend-bar"><span style="width: ${share}%"></span></div>
+              <small class="text-body">${totalTransaksi} Transactions</small>
             </div>
           </li>
         `;

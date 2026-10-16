@@ -19,7 +19,21 @@ $(document).ready(function () {
         };
       }
     },
-    placeholder: 'Choose Branch'
+    placeholder: 'Choose Branch',
+    // Pilihan cabang menampilkan alamatnya di bawah nama (teks dipasang lewat .text(): aman dari HTML).
+    templateResult: function (item) {
+      if (!item.id) return item.text;
+
+      const $option = $('<div class="branch-option"><div class="fw-semibold branch-name"></div><div class="branch-address small"></div></div>');
+      $option.find('.branch-name').text(item.text);
+      $option.find('.branch-address').text(item.alamat || '');
+      return $option;
+    }
+  }).on('select2:select', function (e) {
+    const branch = e.params.data;
+    $('#branchSelectedName').text(branch.text);
+    $('#branchSelectedAddress').text(branch.alamat || '');
+    $('#branchSelected').removeClass('d-none');
   });
 
   $('#nationality').select2({
@@ -266,24 +280,28 @@ $(document).ready(function () {
     const allowEdit = authRequest || (isSelling && SellBlank === true);
     // console.log(isSelling + ' ' + SellBlank)
     let baris = $(`
-      <div class="row g-2 align-items-center border-top py-md-2 py-3 mb-3 mb-md-0">
-        <div class="col-12 col-md-3">
+      <div class="row g-2 align-items-end order-item">
+        <div class="col-12 col-md-4">
+          <label class="order-item-label d-md-none">Currency</label>
           <select class="form-select forex"></select>
         </div>
 
         <div class="col-6 col-md-2">
+          <label class="order-item-label d-md-none">Amount</label>
           <input type="text" class="form-control amount text-end" placeholder="Amount" onclick="this.select()">
         </div>
 
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-2">
+          <label class="order-item-label d-md-none">Rate</label>
           <input type="text" class="form-control rate text-end" ${allowEdit ? '' : 'readonly'} min="0" placeholder="Rate" onclick="this.select()">
         </div>
 
-        <div class="col-6 col-md-3">
+        <div class="col-8 col-md-3">
+          <label class="order-item-label d-md-none">Subtotal</label>
           <input type="text" class="form-control subtotal text-end" placeholder="Subtotal" readonly>
         </div>
 
-        <div class="col-6 col-md-1 text-center">
+        <div class="col-4 col-md-1 text-end text-md-center">
           <button class="btn btn-outline-danger btnHapusBaris" type="button" title="Hapus Baris">
             <i class="icon-base ti tabler-trash"></i>
           </button>

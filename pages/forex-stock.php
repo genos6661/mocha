@@ -45,7 +45,8 @@
 		</div>
 	</div>
 	<div class="card-body table-responsive">
-		<table class="table table-hover table-bordered dt-responsive" id="tabelStok">
+		<div id="sortHost" class="d-flex align-items-center mb-3"></div>
+		<table class="table table-hover table-bordered dt-responsive table-cards" id="tabelStok">
 			<thead>
 				<tr>
 					<th>Forex</th>
@@ -59,4 +60,5 @@
 	</div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/forex-stock.js" type="text/javascript"></script>

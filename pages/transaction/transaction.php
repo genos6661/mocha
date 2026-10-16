@@ -32,16 +32,16 @@ if ($nowHour >= 15) {
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelTrans">
+    <table class="table table-bordered table-hover table-cards" id="tabelTrans">
       <thead>
         <tr>
           <th></th>
-          <th>Date</th>
-          <th>Number</th>
+          <th>Date / Number</th>
           <th>Type</th>
           <th>Order Number</th>
           <th>Branch</th>
           <th>Name</th>
+          <th class="text-end">Total</th>
           <th></th>
         </tr>
       </thead>
@@ -595,6 +595,7 @@ if ($nowHour >= 15) {
 
 <script src="js/pages/country-dial-codes.js?v=<?= filemtime(__DIR__ . '/../../js/pages/country-dial-codes.js') ?>" type="text/javascript"></script>
 <script src="js/pages/invoice-wa.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-wa.js') ?>" type="text/javascript"></script>
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/transaction.js" type="text/javascript"></script>
 <script src="js/pages/contact-new.js" type="text/javascript"></script>
 <script src="js/pages/direct-transaction.js?v=<?= filemtime(__DIR__ . '/../../js/pages/direct-transaction.js') ?>" type="text/javascript"></script>

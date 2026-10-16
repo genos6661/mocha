@@ -21,12 +21,11 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelBranch">
+    <table class="table table-bordered table-hover table-cards" id="tabelBranch">
       <thead>
         <tr>
           <th></th>
-          <th>Code</th>
-          <th>Name</th>
+          <th>Name / Code</th>
           <th>Address</th>
           <th>Status</th>
           <th></th>
@@ -367,4 +366,5 @@
 </div>
 
 <script src="js/pages/invoice-designs.js?v=<?= filemtime(__DIR__ . '/../js/pages/invoice-designs.js') ?>" type="text/javascript"></script>
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/branch.js?v=<?= filemtime(__DIR__ . '/../js/pages/branch.js') ?>" type="text/javascript"></script>

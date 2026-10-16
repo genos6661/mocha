@@ -62,15 +62,14 @@
 		</div>
 	</div>
 	<div class="card-body table-responsive">
-		<table class="table table-hover table-bordered dt-responsive" id="tabelMutasi">
+		<table class="table table-hover table-bordered dt-responsive table-cards table-cards-stats" id="tabelMutasi">
 			<thead>
 				<tr>
 					<th>Forex</th>
-					<th>Date</th>
-					<th>Number</th>
+					<th>Date / Number</th>
 					<th>Branch</th>
-					<th>Buy</th>
-					<th>Sell</th>
+					<th class="text-end">Buy</th>
+					<th class="text-end">Sell</th>
 					<th class="text-end">Rate</th>
 					<th class="text-end">Stock Balance</th>
 					<th class="text-end">Valuation</th>
@@ -84,4 +83,5 @@
 	</div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/forex-mutation.js" type="text/javascript"></script>

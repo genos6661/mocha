@@ -1,0 +1,243 @@
+/**
+ * HALAMAN PROFILE (/profile) — pages/setting/profile.php
+ * Warna mengikuti warna utama tema. Prefix kelas: profile-.
+ * Mode lihat: isian tampil seperti teks biasa. Mode edit (.is-editing): isian berbingkai.
+ */
+
+.profile-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---------- header ---------- */
+.profile-hero {
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 0;
+  border-radius: 1.5rem;
+  box-shadow: 0 1.25rem 2.5rem -1.25rem rgba(var(--bs-primary-rgb), 0.45);
+}
+.profile-banner {
+  height: 8.5rem;
+  background:
+    radial-gradient(360px 200px at 90% -20%, rgba(255, 255, 255, 0.28), transparent 70%),
+    radial-gradient(260px 200px at 5% 130%, rgba(255, 255, 255, 0.16), transparent 70%),
+    linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 50%, #170a0d));
+}
+.profile-hero-body {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1.25rem 1.5rem;
+  padding: 0 2rem 1.5rem;
+}
+.profile-avatar-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: -3.5rem;
+}
+.profile-avatar {
+  display: block;
+  width: 7rem;
+  height: 7rem;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 0.3rem solid var(--bs-paper-bg, #fff);
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.75rem 1.5rem -0.5rem rgba(0, 0, 0, 0.35);
+}
+.profile-avatar-edit {
+  position: absolute;
+  right: 0.1rem;
+  bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: var(--bs-primary);
+  border: 0.18rem solid var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.35rem 0.75rem -0.25rem rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s;
+}
+.profile-avatar-edit:hover {
+  transform: scale(1.1);
+}
+.profile-identity {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding-top: 0.75rem;
+}
+.profile-name {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.profile-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.1);
+}
+.profile-chip-code {
+  color: var(--bs-body-color);
+  background: var(--bs-gray-100, rgba(0, 0, 0, 0.06));
+}
+.profile-photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---------- kartu bagian ---------- */
+.profile-card {
+  border: 0;
+  border-radius: 1.5rem;
+  box-shadow: 0 0.75rem 2rem -1.25rem rgba(0, 0, 0, 0.3);
+}
+.profile-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.profile-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.85rem;
+  font-size: 1.3rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+.profile-card .form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.profile-card .form-label .icon-base {
+  font-size: 1rem;
+  color: var(--bs-primary);
+}
+
+/* ---------- mode lihat: isian tampil seperti teks ---------- */
+.profile-page:not(.is-editing) .profile-card .form-control[readonly] {
+  padding-left: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+.profile-page:not(.is-editing) .profile-card .form-control[readonly]::placeholder {
+  color: var(--bs-secondary-color);
+  font-weight: 400;
+}
+.profile-page:not(.is-editing) .profile-card .select2-container {
+  pointer-events: none;
+}
+.profile-page:not(.is-editing) .profile-card .select2-selection {
+  padding-left: 0;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.profile-page:not(.is-editing) .profile-card .select2-selection__arrow {
+  display: none;
+}
+.profile-page:not(.is-editing) .profile-card .select2-selection__rendered {
+  padding-left: 0 !important;
+  font-weight: 600;
+  color: var(--bs-heading-color) !important;
+}
+
+/* ---------- mode edit ---------- */
+.profile-edit-hint {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 1rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.08);
+  border: 1px dashed rgba(var(--bs-primary-rgb), 0.45);
+}
+.profile-page.is-editing .profile-edit-hint {
+  display: flex;
+}
+.profile-page.is-editing .profile-card {
+  box-shadow: 0 1rem 2.25rem -1.25rem rgba(var(--bs-primary-rgb), 0.55);
+}
+
+/* ---------- aksi ---------- */
+.profile-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 1.1rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.5rem 1.75rem -0.5rem rgba(0, 0, 0, 0.25);
+}
+.profile-actions .btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 575.98px) {
+  .profile-hero-body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.25rem 1.25rem;
+  }
+  .profile-identity {
+    flex: 0 0 auto;
+    width: 100%;
+    padding-top: 0;
+  }
+  .profile-meta {
+    justify-content: center;
+  }
+  .profile-photo-actions {
+    justify-content: center;
+  }
+  .profile-actions {
+    flex-direction: column-reverse;
+  }
+  .profile-actions .btn {
+    justify-content: center;
+    width: 100%;
+  }
+}

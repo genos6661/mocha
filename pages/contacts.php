@@ -24,12 +24,11 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelContact">
+    <table class="table table-bordered table-hover table-cards" id="tabelContact">
       <thead>
         <tr>
           <th></th>
-          <th>Code</th>
-          <th>Name</th>
+          <th>Name / Code</th>
           <th>Email</th>
           <th>Phone</th>
           <th>Country</th>
@@ -624,5 +623,6 @@
   </div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/contact.js" type="text/javascript"></script>
 <script src="js/pages/contact-new.js" type="text/javascript"></script>

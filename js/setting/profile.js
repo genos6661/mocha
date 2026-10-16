@@ -37,6 +37,7 @@ function loadProfile() {
         },
         success: function (response) {
             oldData = response.data;
+            $('#heroName').text(response.data.nama);
             $('#headerInfo').text(response.data.username + ' - ' + response.data.nama_role);
             $('#kode').text('#' + response.data.kode);
             $('#nama').val(response.data.nama);
@@ -131,8 +132,15 @@ $('#password, #username, #email').keyup(function (e) {
     }
 });
 
+// Mode edit: kelas pada halaman mengubah isian dari tampilan teks menjadi isian berbingkai (profile.css).
+function setEditing(on) {
+    $('#profilePage').toggleClass('is-editing', on);
+}
+
 $('#editBtn').click(function (e) {
     e.preventDefault();
+
+    setEditing(true);
 
     $(this).hide();
     $('#submitBtn').show();
@@ -146,7 +154,7 @@ $('#cancelBtn').click(function (e) {
 
     $(this).hide();
     $('#submitBtn').hide();
-    $('#editBtn').show();
+    $('#editBtn').show(); setEditing(false);
     loadProfile();
     $('input').prop('readonly', true);
 });
@@ -203,7 +211,7 @@ $('#submitBtn').click(function (e) {
                     $('#boxOldPassword').val('').hide();
                     $('#cancelBtn').hide();
                     $('#submitBtn').hide();
-                    $('#editBtn').show();
+                    $('#editBtn').show(); setEditing(false);
                     loadProfile();
                     $('input').prop('readonly', true);
                 });
@@ -256,7 +264,7 @@ function submitUser(idUser, nama, email, password, oldPassword) {
             $('#boxOldPassword').val('').hide();
             $('#cancelBtn').hide();
             $('#submitBtn').hide();
-            $('#editBtn').show();
+            $('#editBtn').show(); setEditing(false);
             loadProfile();
             $('input').prop('readonly', true);
         });

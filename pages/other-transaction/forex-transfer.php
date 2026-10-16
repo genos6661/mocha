@@ -24,15 +24,13 @@
     </div>
   </div>
   <div class="card-datatable table-responsive px-3">
-    <table class="table table-bordered table-hover" id="tabelTransfer">
+    <table class="table table-bordered table-hover table-cards" id="tabelTransfer">
       <thead>
         <tr>
           <th>No</th>
-          <th>Date</th>
-          <th>Number</th>
+          <th>Date / Number</th>
           <th>User</th>
-          <th>From</th>
-          <th>To</th>
+          <th>From &rarr; To</th>
           <th>Description</th>
           <th></th>
         </tr>
@@ -503,4 +501,5 @@
   </div>
 </div>
 
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/forex-transfer.js" type="text/javascript"></script>

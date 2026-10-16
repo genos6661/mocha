@@ -50,6 +50,7 @@
       <link rel="stylesheet" href="/assets/vendor/libs/sweetalert2/sweetalert2.css" />
 
       <link rel="stylesheet" href="/assets/css/demo.css" />
+      <link rel="stylesheet" href="/assets/css/customer-display.css?v=<?= filemtime(__DIR__ . '/../assets/css/customer-display.css') ?>" />
 
       <!-- endbuild -->
 
