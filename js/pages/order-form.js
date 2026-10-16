@@ -1215,6 +1215,14 @@ $(document).ready(function () {
       },
       data: JSON.stringify(formData),
       success: function (response) {
+        // Order sudah tersimpan (juga yang masih lanjut ke form KYC) -> hitung untuk GTM.
+        trackOrderSuccess({
+          orderNumber: response.nomor,
+          orderType: tipeTransaksi,
+          branchName: $('.namaCabang').first().text(),
+          customerName: $('#namaProfil').text()
+        });
+
         if (response.isExceed) {
           const canvas = document.getElementById('signature-pad');
           const signaturePad = new SignaturePad(canvas);

@@ -82,6 +82,9 @@ session_start();
         color: #fff;
       }
     </style>
+
+    <!-- Google Tag Manager + Consent Mode v2 (aktif hanya di host yang terdaftar di js/gtm.js) -->
+    <script src="js/gtm.js?v=<?= filemtime(__DIR__ . '/js/gtm.js') ?>"></script>
   </head>
   <body>
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
