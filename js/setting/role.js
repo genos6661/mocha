@@ -3,7 +3,7 @@ let offset = 0;
 let limit = 20;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "level";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "asc";
 let resetOffset = false;
 
@@ -63,27 +63,19 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            { data: "kode_role", orderable: true },
-            { data: "nama_role", orderable: true, className: "nowrap" },
-            { data: "level", orderable: true, className: "nowrap" },
-            { data: "aktif", orderable: true, className: "text-center", render: function (data, type, row) {
-                    if (row.aktif == 1) {
-                        return `<span class="badge rounded-pill bg-label-primary">Active</span>`;
-                    } else {
-                        return `<span class="badge rounded-pill bg-label-danger">Inactive</span>`;
-                    }
-                } 
-            },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "nama_role", className: "dt-main nowrap", render: TR.titleSub('kode_role') },
+            { data: "level", className: "dt-badge nowrap", render: (d, type) => (type === 'display' ? TR.badge('Level ' + d, 'info') : d) },
+            { data: "aktif", className: "dt-amount text-end", render: TR.badgeBy({ 1: ['Active', 'primary'], 0: ['Inactive', 'danger'] }) },
             { 
                 data: "noindex",
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data, type, row) {
                     if(((userPermissions.includes('edit_role') || userPermissions.includes('delete_role')) && row.level > window.level) || window.level == 1) {
                         let menuHtml = `
@@ -126,18 +118,17 @@ function initTable() {
         }
     });
 
-    tableRole.on("order.dt", function () {
-        let order = tableRole.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "kode_role", "nama_role", "level", "aktif", ""];
-        orderColumn = columnMapping[columnIndex] || "nama_role";
-        orderDir = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelRole', [
+        { key: 'nama_role', label: 'Name', dir: 'asc' },
+        { key: 'kode_role', label: 'Code', dir: 'asc' },
+        { key: 'level', label: 'Level', dir: 'asc' },
+        { key: 'aktif', label: 'Status', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
-    });
+    }, { host: '#sortHostRole' });
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
         tableRole.columns.adjust().draw();
@@ -296,9 +287,9 @@ function renderPermissionsCollapse(data, mode, selectedPermissions = []) {
     for (const category in data) {
       const catId = `cat_${slugify(category)}`;
       accordionHTML += `
-        <div class="card mb-1">
-          <div class="card-header d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#${catId}">
-            <span><strong>${category}</strong></span>
+        <div class="card perm-category mb-2">
+          <div class="card-header perm-header d-flex align-items-center">
+            <span class="perm-toggle d-flex align-items-center gap-2 flex-grow-1 collapsed" data-bs-toggle="collapse" data-bs-target="#${catId}"><i class="icon-base ti tabler-chevron-down perm-chevron"></i><strong>${category}</strong></span>
             <input type="checkbox" class="cat-check form-check-input" data-mode="${mode}" data-cat="${catId}">
           </div>
           <div id="${catId}" class="collapse">
@@ -308,9 +299,9 @@ function renderPermissionsCollapse(data, mode, selectedPermissions = []) {
       for (const sub in data[category]) {
         const subId = `${catId}_sub_${slugify(sub)}`;
         accordionHTML += `
-          <div class="mb-2 border p-2">
-            <div class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#${subId}">
-              <span>${sub}</span>
+          <div class="perm-sub mb-2">
+            <div class="perm-sub-header d-flex align-items-center">
+              <span class="perm-toggle d-flex align-items-center gap-2 flex-grow-1 collapsed" data-bs-toggle="collapse" data-bs-target="#${subId}"><i class="icon-base ti tabler-chevron-down perm-chevron"></i>${sub}</span>
               <input type="checkbox" class="subcat-check form-check-input" data-mode="${mode}" data-sub="${subId}" data-cat="${catId}">
             </div>
             <div class="collapse mt-2 ml-3" id="${subId}">
@@ -333,6 +324,8 @@ function renderPermissionsCollapse(data, mode, selectedPermissions = []) {
     }
 
     container.append(accordionHTML);
+    // Pemicu collapse (data-bs-toggle) hanya pada .perm-toggle; checkbox kategori / sub-kategori
+    // berada di luarnya, jadi mengkliknya hanya mencentang, tidak membuka atau menutup accordion.
   }
 
 function initPermissionCheckboxLogic(mode = '') {

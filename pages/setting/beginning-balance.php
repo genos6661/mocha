@@ -1,102 +1,60 @@
-<div class="nav-align-top">
-  <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-md-0 gap-2">
-    <li class="nav-item">
-      <button
-        id="btnTabGeneral"
-        type="button"
-        class="nav-link active"
-        data-bs-toggle="tab"
-        data-bs-target="#account-tab"
-        aria-controls="account-tab"
-        role="tab"
-        aria-selected="true">
-        <i class="icon-base ti tabler-receipt-dollar icon-sm me-1_5"></i> Accounts
-      </button>
-    </li>
-    <li class="nav-item">
-      <button
-        id="btnTabCD"
-        type="button"
-        class="nav-link"
-        data-bs-toggle="tab"
-        data-bs-target="#forex-tab"
-        aria-controls="forex-tab"
-        role="tab"
-        aria-selected="true">
-        <i class="icon-base ti tabler-cash icon-sm me-1_5"></i> Forexs
-      </button>
-    </li>
-  </ul>
-</div>
+<link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/beginning-balance.css?v=<?= filemtime(__DIR__ . '/../../assets/css/beginning-balance.css') ?>" />
 
-<div class="tab-content p-0">
-  <!-- ~~~~~~~~~~~~~~~~~~~~~ accounts ~~~~~~~~~~~~~~~~~~~~~ -->
-  <div class="card p-3 tab-pane fade active show" id="account-tab" role="tabpanel">
-    <div class="card-header p-2">
-      <div class="row px-3">
-        <div class="col-md">
-          <h5 class="card-title">Accounts Initial Balance</h5>
-        </div>
-        <div class="col-md mb-2 mb-md-0">
-          <select id="filterCabang" class="form-select"></select>
-        </div>
-        <div class="col-md">
-          <div class="input-group input-group-merge filtertabelAkun">
-            <span class="input-group-text" id="basic-addon-search31"
-              ><i class="icon-base ti tabler-search"></i
-            ></span>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Search..."
-              aria-label="Search..."
-              aria-describedby="basic-addon-search31" />
-          </div>
-        </div>
-      </div>      
-    </div>
-    <div class="card-body p-2 table-responsive">
-      <table class="table table-hover table-bordered dt-responsive" id="tabelAkun">
-        <thead>
-          <tr>
-            <!-- <th>Branch</th> -->
-            <th>Code</th>
-            <th>Name</th>
-            <th>Debit</th>
-            <th>Credit</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr>
-            <th>Total :</th>
-            <th id="footerNote"></th>
-            <th>
-              <input type="text" class="form-control text-end" id="totalDebit" readonly>
-            </th>
-            <th>
-              <input type="text" class="form-control text-end" id="totalKredit" readonly>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <div class="card-footer d-flex justify-content-end">
-      <button class="btn btn-primary" id="sbmAkun" disabled>Submit Changes</button>
+<div class="settings-page">
+  <div class="settings-head">
+    <span class="settings-head-icon"><i class="icon-base ti tabler-scale"></i></span>
+    <div>
+      <h4 class="mb-1">Beginning Balance</h4>
+      <p class="text-body-secondary mb-0">Set the opening balance of your accounts and foreign currency stock for each branch.</p>
     </div>
   </div>
-  <!-- ~~~~~~~~~~~~~~~~~~~~~ forex ~~~~~~~~~~~~~~~~~~~~~ -->
-  <div class="card p-3 tab-pane fade" id="forex-tab" role="tabpanel">
-    <div class="card-header p-2">
-      <div class="row px-3">
-        <div class="col-md-5 p-0">
-          <h5 class="card-title">Forexs Initial Balance</h5>
+
+  <div class="nav-align-top">
+    <ul class="nav nav-pills settings-tabs flex-column flex-sm-row mb-6 gap-md-0 gap-2">
+      <li class="nav-item">
+        <button
+          id="btnTabGeneral"
+          type="button"
+          class="nav-link active"
+          data-bs-toggle="tab"
+          data-bs-target="#account-tab"
+          aria-controls="account-tab"
+          role="tab"
+          aria-selected="true">
+          <i class="icon-base ti tabler-receipt-dollar icon-sm me-1_5"></i> Accounts
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          id="btnTabCD"
+          type="button"
+          class="nav-link"
+          data-bs-toggle="tab"
+          data-bs-target="#forex-tab"
+          aria-controls="forex-tab"
+          role="tab"
+          aria-selected="false">
+          <i class="icon-base ti tabler-cash icon-sm me-1_5"></i> Forexs
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="tab-content p-0">
+    <!-- ~~~~~~~~~~~~~~~~~~~~~ accounts ~~~~~~~~~~~~~~~~~~~~~ -->
+    <div class="card settings-card tab-pane fade active show" id="account-tab" role="tabpanel">
+      <div class="card-body pb-0">
+        <div class="settings-section-title mb-3 pb-3 flex-wrap gap-3">
+          <span class="d-flex align-items-center gap-3"><span class="settings-section-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>Accounts Initial Balance</span>
         </div>
-        <div class="col-md-7 d-flex  gap-2">
-          <button class="btn btn-primary nowrap" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
-            <i class="icon-base  ti tabler-plus icon-16px me-md-2"></i><span class="d-md-inline-block d-none">Add New</span>
-          </button>
-          <div class="input-group input-group-merge filtertabel">
+        <p class="settings-hint"><i class="icon-base ti tabler-info-circle"></i><span>Choose a branch to enter its balances. Total <strong>Debit</strong> and <strong>Credit</strong> must be equal before you submit.</span></p>
+        <div class="bb-toolbar">
+          <div class="bb-branch">
+            <select id="filterCabang" class="form-select"></select>
+          </div>
+          <div class="dt-sort-host bb-sort d-flex align-items-center" id="sortHostAkun"></div>
+          <div class="input-group input-group-merge filtertabelAkun bb-search">
             <span class="input-group-text" id="basic-addon-search31"
               ><i class="icon-base ti tabler-search"></i
             ></span>
@@ -108,29 +66,79 @@
               aria-describedby="basic-addon-search31" />
           </div>
         </div>
-      </div>      
+      </div>
+      <div class="card-datatable table-responsive px-3">
+        <table class="table table-bordered table-hover table-cards bb-acc" id="tabelAkun">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Debit</th>
+              <th>Credit</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="bb-summary">
+        <div class="bb-total">
+          <span class="bb-total-label">Total Debit</span>
+          <span class="bb-total-value" id="totalDebit">0</span>
+        </div>
+        <div class="bb-total">
+          <span class="bb-total-label">Total Credit</span>
+          <span class="bb-total-value" id="totalKredit">0</span>
+        </div>
+        <div class="bb-note" id="footerNote"></div>
+      </div>
+      <div class="settings-actions">
+        <button class="btn btn-primary" id="sbmAkun" disabled><i class="icon-base ti tabler-device-floppy me-2"></i>Submit Changes</button>
+      </div>
     </div>
-    <div class="card-body p-2 table-responsive">
-      <table class="table table-hover table-bordered dt-responsive" id="tabelValas">
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Branch</th>
-            <th>Rates</th>
-            <th>Stock</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr>
-            <th colspan="4" class="text-end">Total (Rp) :</th>
-            <th class="text-end" id="totalRupiahValas"></th>
-            <th></th>
-          </tr>
-        </tfoot>
-      </table>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~ forex ~~~~~~~~~~~~~~~~~~~~~ -->
+    <div class="card settings-card tab-pane fade" id="forex-tab" role="tabpanel">
+      <div class="card-body pb-0">
+        <div class="settings-section-title mb-3 pb-3 flex-wrap gap-3">
+          <span class="d-flex align-items-center gap-3"><span class="settings-section-icon"><i class="icon-base ti tabler-cash"></i></span>Forexs Initial Balance</span>
+          <button class="btn btn-primary nowrap" data-bs-toggle="modal" data-bs-target="#modalTambah" id="btnModalTambah">
+            <i class="icon-base ti tabler-plus icon-16px me-md-2"></i><span class="d-md-inline-block d-none">Add New</span>
+          </button>
+        </div>
+        <div class="bb-toolbar">
+          <div class="dt-sort-host bb-sort d-flex align-items-center" id="sortHostValas"></div>
+          <div class="input-group input-group-merge filtertabel bb-search">
+            <span class="input-group-text" id="basic-addon-search31"
+              ><i class="icon-base ti tabler-search"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search..."
+              aria-label="Search..."
+              aria-describedby="basic-addon-search31" />
+          </div>
+        </div>
+      </div>
+      <div class="card-datatable table-responsive px-3">
+        <table class="table table-bordered table-hover table-cards bb-fx" id="tabelValas">
+          <thead>
+            <tr>
+              <th>Forex</th>
+              <th>Branch</th>
+              <th>Rates</th>
+              <th>Stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="bb-summary">
+        <div class="bb-total">
+          <span class="bb-total-label">Total (Rp)</span>
+          <span class="bb-total-value" id="totalRupiahValas">Rp 0</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -314,4 +322,5 @@
   </div>
 </div>
 
-<script src="js/setting/beginning-balance.js" type="text/javascript"></script>
+<script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
+<script src="js/setting/beginning-balance.js?v=<?= filemtime(__DIR__ . '/../../js/setting/beginning-balance.js') ?>" type="text/javascript"></script>

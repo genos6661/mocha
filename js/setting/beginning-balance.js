@@ -7,7 +7,7 @@ let offset = 0;
 let limit = 1000;
 let isLoading = false;
 let lastSearch = "";
-let orderColumn = "kode";
+let orderColumn = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDir = "asc";
 let userPermissions = [];
 $(document).ready(function() {
@@ -140,17 +140,11 @@ $(document).ready(function() {
             currentFilters = {};
         }
         loadMoreDataAkun(true);
-        setTimeout(function () {
-            updateTotalDebitKredit();
-        }, 1000);
     });
 
     initTableAkun();
     initEventsAkun();
     loadMoreDataAkun(true);
-    setTimeout(function () {
-        updateTotalDebitKredit();
-    }, 1000);
 
     $.ajax({
         url: url_api + '/role/role-permissions',
@@ -209,38 +203,28 @@ function initTable() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: "kode", orderable: true },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { data: "nama_cabang", orderable: true, className: "nowrap" },
-            { 
-                data: "rate", 
-                orderable: true, 
-                className: "text-end nowrap",
-                render: function(data, type, row) {
-                    if (!data) return ""; 
-                    
-                    return "Rp " + parseFloat(data).toLocaleString("id-ID");
-                },
+            { data: "nama", className: "dt-main nowrap", render: TR.titleSub("kode") },
+            { data: "nama_cabang", className: "dt-branch nowrap", render: TR.withIcon("building-store") },
+            {
+                data: "rate",
+                className: "dt-extra text-end nowrap",
+                createdCell: TR.cellLabel("Rate"),
+                render: TR.number(v => parseFloat(v).toLocaleString("id-ID"), "Rp ")
             },
-            { 
-                data: "saldo_awal", 
-                orderable: true, 
-                className: "text-end nowrap",
-                render: function(data, type, row) {
-                    if (!data) return ""; 
-                    
-                    return parseFloat(data).toLocaleString("id-ID");
-                },
+            {
+                data: "saldo_awal",
+                className: "dt-amount text-end nowrap",
+                render: TR.number(v => parseFloat(v).toLocaleString("id-ID"), "", "Stock")
             },
-            { 
+            {
                 data: null,
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data) {
                     if(userPermissions.includes('edit_forex_bb') || userPermissions.includes('delete_forex_bb')) {
                         let menuHtml = `
@@ -273,21 +257,27 @@ function initTable() {
             },
             { data: "index_details", visible: false }
         ],
-        columnDefs: [{ orderable: false, targets: -1 }],
         dom: 'tp',
+        createdRow: function (row) {
+            $(row).addClass('cursor-pointer').attr('title', 'Double Click to show details');
+        }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
+    // Lebar kolom header menyesuaikan isi setiap data baru digambar.
+    table.on('draw', () => table.columns.adjust());
 
-        let columnMapping = ["kode", "nama", "nama_cabang", "rate", "saldo_awal"];
-        orderColumn = columnMapping[columnIndex] || "kode";
-        orderDir = direction;
-
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelValas', [
+        { key: 'nama', label: 'Name', dir: 'asc' },
+        { key: 'kode', label: 'Code', dir: 'asc' },
+        { key: 'nama_cabang', label: 'Branch', dir: 'asc' },
+        { key: 'rate', label: 'Rate', dir: 'desc' },
+        { key: 'saldo_awal', label: 'Stock', dir: 'desc' }
+    ], (column, dir) => {
+        orderColumn = column;
+        orderDir = dir;
         loadMoreData(true);
-    });
+    }, { host: '#sortHostValas' });
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function () {
         $('#tabelValas').DataTable().columns.adjust().draw();
@@ -603,7 +593,7 @@ let offsetAkun = 0;
 let limitAkun = 50;
 let isLoadingAkun = false;
 let lastSearchAkun = "";
-let orderColumnAkun = "a.kode";
+let orderColumnAkun = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDirAkun = "asc";
 
 $(document).on('focus', '.jumlah', function () {
@@ -619,47 +609,59 @@ function initTableAkun() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: "kode", orderable: true },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { 
-                data: "debit", 
-                orderable: true, 
-                className: "nowrap",
-                render: function(data, type, row, meta) {
+            { data: "nama", className: "dt-main nowrap", render: TR.titleSub("kode") },
+            {
+                data: "debit",
+                className: "dt-debit nowrap",
+                createdCell: TR.cellLabel("Debit"),
+                render: function(data, type, row) {
+                    if (type !== 'display') return data;
                     return `<input type="text" class="saldo-debit form-control text-end" data-kolom="debit" data-kode="${row.kode}" value="${formatter.format(data)}" readonly>`;
                 },
             },
-            { 
-                data: "kredit", 
-                orderable: true, 
-                className: "nowrap",
-                render: function(data, type, row, meta) {
-                     return `<input type="text" class="saldo-kredit form-control text-end" data-kolom="kredit" data-kode="${row.kode}" value="${formatter.format(data)}" readonly>`;
+            {
+                data: "kredit",
+                className: "dt-credit nowrap",
+                createdCell: TR.cellLabel("Credit"),
+                render: function(data, type, row) {
+                    if (type !== 'display') return data;
+                    return `<input type="text" class="saldo-kredit form-control text-end" data-kolom="kredit" data-kode="${row.kode}" value="${formatter.format(data)}" readonly>`;
                 },
             },
             { data: "index_jurnal", visible: false }
         ],
-        columnDefs: [{ orderable: false, targets: -1 }],
         dom: 'tp',
     });
 
-    // Order event
-    tableAkun.on("order.dt", function () {
-        let order = tableAkun.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["a.kode", "a.nama", "j.debit", "j.kredit"];
-        orderColumnAkun = columnMapping[columnIndex] || "a.kode";
-        orderDirAkun = direction;
-
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelAkun', [
+        { key: 'nama', label: 'Name', dir: 'asc' },
+        { key: 'kode', label: 'Code', dir: 'asc' },
+        { key: 'debit', label: 'Debit', dir: 'desc' },
+        { key: 'kredit', label: 'Credit', dir: 'desc' }
+    ], (column, dir) => {
+        orderColumnAkun = column;
+        orderDirAkun = dir;
         loadMoreDataAkun(true);
+    }, { host: '#sortHostAkun' });
+
+    // Kolom saldo hanya bisa diisi bila cabang dipilih dan user berhak; total dihitung ulang setiap digambar.
+    tableAkun.on('draw', function () {
+        if (currentFilters.cabang && userPermissions.includes('account_bb')) {
+            $('input.saldo-debit, input.saldo-kredit').removeAttr('readonly');
+            $('#sbmAkun').removeAttr('disabled');
+        } else {
+            $('input.saldo-debit, input.saldo-kredit').attr('readonly', true);
+            $('#sbmAkun').attr('disabled', true);
+        }
+        updateTotalDebitKredit();
+        tableAkun.columns.adjust();
     });
 }
 
@@ -667,11 +669,7 @@ function loadMoreDataAkun(reset = false) {
     if (isLoadingAkun) return;
     isLoadingAkun = true;
 
-    if (reset) {
-      orderDirAkun = "asc";
-    }
-
-    const searchInput = document.querySelector(".filtertabel input");
+    const searchInput = document.querySelector(".filtertabelAkun input");
     const searchValue = searchInput ? searchInput.value : "";
 
     const params = new URLSearchParams();
@@ -707,16 +705,6 @@ function loadMoreDataAkun(reset = false) {
     })
     .catch(() => {
         isLoadingAkun = false;
-    });
-
-    tableAkun.on('draw', function () {
-        if (currentFilters.cabang && userPermissions.includes('account_bb')) {
-            $('input.saldo-debit, input.saldo-kredit').removeAttr('readonly');
-            $('#sbmAkun').removeAttr('disabled');
-        } else {
-            $('input.saldo-debit, input.saldo-kredit').attr('readonly', true);
-            $('#sbmAkun').attr('disabled', true);
-        }
     });
 }
 
@@ -842,11 +830,13 @@ function updateTotalDebitKredit() {
         totalKredit += parseFloat($(this).val().replace(/\./g, '').replace(/,/g, '.')) || 0;
     });
 
-    if(totalDebit != totalKredit) {
-        $('#footerNote').html(`<span class="text-danger fst-italic">Debit & Credit Do Not Balance</span>`);
+    if (totalDebit.toFixed(2) !== totalKredit.toFixed(2)) {
+        $('#footerNote').html(`<span class="badge rounded-pill bg-label-danger">Debit & Credit Do Not Balance</span>`);
+    } else if (totalDebit > 0) {
+        $('#footerNote').html(`<span class="badge rounded-pill bg-label-success">Balanced</span>`);
     } else {
         $('#footerNote').html('');
     }
-    $('#totalDebit').val(formatter.format(totalDebit.toFixed(2)));
-    $('#totalKredit').val(formatter.format(totalKredit.toFixed(2)));
+    $('#totalDebit').text(formatter.format(totalDebit.toFixed(2)));
+    $('#totalKredit').text(formatter.format(totalKredit.toFixed(2)));
 }

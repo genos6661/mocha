@@ -1,0 +1,136 @@
+/**
+ * BEGINNING BALANCE (/beginning-balance) — pages/setting/beginning-balance.php
+ * Memakai gaya halaman Settings (settings.css) + tambahan khusus di bawah ini.
+ */
+
+/* ---------- toolbar tabel: [cabang] [Sort By] [Search] ---------- */
+.bb-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.bb-branch {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.bb-sort {
+  flex: 0 1 19rem;
+  min-width: 0;
+}
+.bb-search {
+  flex: 1 1 12rem;
+  width: auto;
+  min-width: 0;
+}
+.bb-sort .dt-sort-dir {
+  margin-right: 0;
+}
+
+/* ---------- kolom saldo (tabel akun): input tampil rapi, bukan kotak form besar ---------- */
+.bb-acc .saldo-debit,
+.bb-acc .saldo-kredit {
+  min-width: 9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.bb-acc .saldo-debit[readonly],
+.bb-acc .saldo-kredit[readonly] {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ---------- ringkasan total di bawah tabel ---------- */
+.bb-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 2rem;
+  margin: 1rem 1.5rem 1.5rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.07);
+}
+.bb-total {
+  display: flex;
+  flex-direction: column;
+}
+.bb-total-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.bb-total-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--bs-heading-color);
+}
+.bb-note {
+  margin-left: auto;
+}
+.bb-note:empty {
+  display: none;
+}
+
+/* ---------- HP: tabel akun jadi kartu [nama + kode] / [debit] [kredit] ---------- */
+@media (max-width: 767.98px) {
+  .table-cards.bb-acc tbody tr {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "main main"
+      "debit credit";
+    column-gap: 0.5rem;
+  }
+  .table-cards.bb-fx tbody tr {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "main actions"
+      "branch branch"
+      "extra amount";
+    row-gap: 0.25rem;
+  }
+  .bb-fx .dt-extra {
+    margin-top: 0.25rem;
+  }
+  .bb-fx .dt-amount {
+    align-self: end;
+  }
+  .bb-acc .dt-debit {
+    grid-area: debit;
+  }
+  .bb-acc .dt-credit {
+    grid-area: credit;
+  }
+  .bb-acc td[data-label] {
+    margin-top: 0.5rem;
+  }
+  .bb-acc td[data-label] input {
+    width: 100%;
+    min-width: 0;
+  }
+  .bb-acc .saldo-debit[readonly],
+  .bb-acc .saldo-kredit[readonly] {
+    padding-left: 0;
+  }
+  .bb-note {
+    margin-left: 0;
+    flex: 1 1 100%;
+  }
+  .bb-summary {
+    margin: 0.75rem 1rem 1rem;
+  }
+}
+
+/* judul kolom angka rata kanan, sejajar dengan isinya (di HP judul kolom disembunyikan) */
+@media (min-width: 768px) {
+  .bb-acc thead th:nth-child(n + 2),
+  #tabelValas thead th:nth-child(3),
+  #tabelValas thead th:nth-child(4) {
+    text-align: end !important;
+  }
+}

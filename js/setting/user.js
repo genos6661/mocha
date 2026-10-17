@@ -3,7 +3,7 @@ let offsetUser = 0;
 let limitUser = 20;
 let isLoadingUser = false;
 let lastSearchUser = "";
-let orderColumnUser = "nama";
+let orderColumnUser = "";   // kosong = urutan bawaan server (pilihan "Default")
 let orderDirUser = "asc";
 let resetOffsetUser = false;
 let userPermissions = [];
@@ -104,31 +104,21 @@ function initTableUser() {
         scrollY: "60vh",
         scrollCollapse: true,
         deferRender: true,
-        ordering: true,
+        ordering: false,
         paging: false,
         lengthChange: false,
         info: false,
         autoWidth: false,
         columns: [
-            { data: null, title: "No", orderable: false },
-            { data: "username", orderable: true, className: "nowrap", render: function (data, type, row) {
-                    return `<div class="d-flex flex-column"><a class="text-heading text-truncate"><span class="fw-medium">${data}</span></a><small>${row.email_user}</small></div>`;
-                } 
-            },
-            { data: "nama", orderable: true, className: "nowrap" },
-            { data: "telepon", orderable: false },
-            { data: "nama_role", orderable: true },
-            { data: "aktif", orderable: true, className: "text-center", render: function (data, type, row) {
-                    if (row.aktif == 1) {
-                        return `<span class="badge rounded-pill bg-label-primary">Active</span>`;
-                    } else {
-                        return `<span class="badge rounded-pill bg-label-danger">Inactive</span>`;
-                    }
-                } 
-            },
+            { data: null, title: "No", orderable: false, className: "dt-no" },
+            { data: "username", className: "dt-main nowrap", render: TR.titleSub('email_user') },
+            { data: "nama", className: "dt-party nowrap", render: TR.name },
+            { data: "telepon", className: "dt-branch nowrap", render: TR.withIcon('phone') },
+            { data: "nama_role", className: "dt-badge", render: TR.pill('info') },
+            { data: "aktif", className: "dt-amount text-end", render: TR.badgeBy({ 1: ['Active', 'primary'], 0: ['Inactive', 'danger'] }) },
             { 
                 data: "id_user",
-                className: "text-end",
+                className: "dt-actions text-end",
                 render: function(data, type, row) {
                     if((userPermissions.includes('edit_user') || userPermissions.includes('delete_user')) && row.level > window.level) {
                         let menuHtml = `
@@ -170,16 +160,15 @@ function initTableUser() {
         }
     });
 
-    table.on("order.dt", function () {
-        let order = table.order();
-        let columnIndex = order[0][0]; 
-        let direction = order[0][1];
-
-        let columnMapping = ["", "username", "nama", "","nama_role", "aktif", ""];
-        orderColumnUser = columnMapping[columnIndex] || "nama";
-        orderDirUser = direction;
-
-        resetOffset = true;
+    // Pengurutan lewat kotak pilih (default = urutan bawaan server); diminta ulang ke server.
+    TR.sortBar('#tabelUser', [
+        { key: 'nama', label: 'Full Name', dir: 'asc' },
+        { key: 'username', label: 'User', dir: 'asc' },
+        { key: 'nama_role', label: 'Role', dir: 'asc' },
+        { key: 'aktif', label: 'Status', dir: 'asc' }
+    ], (column, dir) => {
+        orderColumnUser = column;
+        orderDirUser = dir;
         loadMoreDataUser(true);
     });
 }

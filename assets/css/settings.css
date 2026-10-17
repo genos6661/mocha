@@ -112,6 +112,7 @@
   background: rgba(var(--bs-primary-rgb), 0.06);
 }
 .settings-hint .icon-base {
+  flex: 0 0 auto;
   margin-top: 0.1rem;
   font-size: 1.15rem;
   color: var(--bs-primary);

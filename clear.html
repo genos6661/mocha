@@ -2,31 +2,211 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Beres Mocha</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clear Cache</title>
   <link rel="icon" type="image/svg+xml" href="/assets/img/favicon/logo.svg" />
-  <script src="/assets/vendor/js/jquery-3.7.1.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/fonts/iconify-icons.css" />
+  <link rel="stylesheet" href="/assets/vendor/css/core.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: radial-gradient(60rem 30rem at 50% -10rem, rgba(var(--bs-primary-rgb), 0.16), transparent 70%), var(--bs-body-bg);
+    }
+    .cc-card {
+      width: 100%;
+      max-width: 26rem;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      background: var(--bs-paper-bg, #fff);
+      box-shadow: 0 0.75rem 2rem -1.25rem rgba(0, 0, 0, 0.35);
+    }
+    .cc-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin: 0 auto 1rem;
+      border-radius: 1.1rem;
+      font-size: 1.8rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #170a0d));
+      box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--bs-primary-rgb), 0.7);
+    }
+    .cc-steps {
+      margin: 1.5rem 0 1.25rem;
+      padding: 0;
+      list-style: none;
+    }
+    .cc-steps li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.45rem 0;
+      color: var(--bs-secondary-color);
+    }
+    .cc-steps li i {
+      font-size: 1.25rem;
+    }
+    .cc-steps li.run { color: var(--bs-heading-color); font-weight: 600; }
+    .cc-steps li.run i { color: var(--bs-primary); animation: cc-spin 0.9s linear infinite; }
+    .cc-steps li.ok i { color: var(--bs-success); }
+    .cc-steps li.skip i { color: var(--bs-warning); }
+    .cc-steps .cc-detail { margin-left: auto; font-size: 0.8125rem; font-weight: 400; color: var(--bs-secondary-color); }
+    @keyframes cc-spin { to { transform: rotate(360deg); } }
+    .cc-bar {
+      height: 0.4rem;
+      overflow: hidden;
+      border-radius: 1rem;
+      background: rgba(var(--bs-primary-rgb), 0.12);
+    }
+    .cc-bar > div {
+      width: 0;
+      height: 100%;
+      border-radius: 1rem;
+      background: var(--bs-primary);
+      transition: width 0.2s;
+    }
+  </style>
 </head>
 <body>
+  <main class="cc-card text-center">
+    <div class="cc-icon"><i class="icon-base ti tabler-refresh"></i></div>
+    <h4 class="mb-1" id="title">Clearing cache…</h4>
+    <p class="text-body-secondary mb-0" id="subtitle">Removing all app data stored in this browser. You will be signed out.</p>
+
+    <ul class="cc-steps text-start" id="steps"></ul>
+    <div class="cc-bar"><div id="bar"></div></div>
+  </main>
+
   <script>
-    $(document).ready(function () {
-      // hapus localStorage
-      localStorage.clear();
+    (function () {
+      const STEPS = [
+        { id: 'web',   label: 'Local & session storage', run: clearWebStorage },
+        { id: 'cook',  label: 'Cookies',                 run: clearCookies },
+        { id: 'idb',   label: 'IndexedDB',               run: clearIndexedDb },
+        { id: 'cache', label: 'Cache storage',           run: clearCacheStorage },
+        { id: 'sw',    label: 'Service workers',         run: clearServiceWorkers },
+        { id: 'files', label: 'CSS & JS files',          run: refreshFiles }
+      ];
 
-      // hapus sessionStorage
-      sessionStorage.clear();
+      const $steps = document.getElementById('steps');
+      const $bar = document.getElementById('bar');
+      const rows = {};
 
-      // hapus semua cookies
-      document.cookie.split(";").forEach(function(c) { 
-        document.cookie = c
-          .replace(/^ +/, "")
-          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      STEPS.forEach(step => {
+        const li = document.createElement('li');
+        li.innerHTML = '<i class="icon-base ti tabler-circle"></i><span></span><span class="cc-detail"></span>';
+        li.children[1].textContent = step.label;
+        $steps.appendChild(li);
+        rows[step.id] = li;
       });
 
-      // redirect ke halaman utama setelah 1 detik
-      setTimeout(function() {
-        window.location.href = "/";
-      }, 1000);
-    });
+      function mark(id, state, detail) {
+        const li = rows[id];
+        li.className = state;
+        li.querySelector('i').className = 'icon-base ti tabler-' + ({ run: 'loader-2', ok: 'circle-check', skip: 'alert-circle' }[state]);
+        if (detail !== undefined) li.querySelector('.cc-detail').textContent = detail;
+      }
+
+      function progress(fraction) {
+        $bar.style.width = Math.round(fraction * 100) + '%';
+      }
+
+      // ---- langkah-langkah (mengembalikan keterangan singkat atau melempar error) ----
+
+      function clearWebStorage() {
+        localStorage.clear();
+        sessionStorage.clear();
+      }
+
+      // Cookie dihapus untuk semua path (/, /a, /a/b) dan domain (host, .host, induknya).
+      function clearCookies() {
+        const names = document.cookie.split(';').map(c => c.split('=')[0].trim()).filter(Boolean);
+        const parts = location.hostname.split('.');
+        const domains = [''];
+        for (let i = 0; i < parts.length - 1; i++) {
+          const domain = parts.slice(i).join('.');
+          domains.push(domain, '.' + domain);
+        }
+        const segments = location.pathname.split('/').filter(Boolean);
+        const paths = ['/'];
+        segments.reduce((path, segment) => { paths.push(path += '/' + segment); return path; }, '');
+
+        names.forEach(name => domains.forEach(domain => paths.forEach(path => {
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=' + path + (domain ? ';domain=' + domain : '');
+        })));
+        return names.length + ' removed';
+      }
+
+      async function clearIndexedDb() {
+        if (!window.indexedDB || !indexedDB.databases) throw new Error('unsupported');
+        const dbs = await indexedDB.databases();
+        await Promise.all(dbs.map(db => new Promise(resolve => {
+          const request = indexedDB.deleteDatabase(db.name);
+          request.onsuccess = request.onerror = request.onblocked = resolve;
+        })));
+        return dbs.length + ' removed';
+      }
+
+      async function clearCacheStorage() {
+        if (!window.caches) throw new Error('unsupported');
+        const keys = await caches.keys();
+        await Promise.all(keys.map(key => caches.delete(key)));
+        return keys.length + ' removed';
+      }
+
+      async function clearServiceWorkers() {
+        if (!navigator.serviceWorker) throw new Error('unsupported');
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(r => r.unregister()));
+        return registrations.length + ' removed';
+      }
+
+      // Unduh ulang semua CSS/JS/font (cache: 'reload') supaya entri cache HTTP-nya diganti file
+      // terbaru. Cadangan untuk browser tanpa Clear-Site-Data (mis. Safari); di Chrome/Firefox
+      // cache HTTP sekalian dihapus penuh oleh header di langkah penutup.
+      async function refreshFiles() {
+        const list = await (await fetch('/clear-cache.php?list=1', { cache: 'no-store' })).json();
+        let done = 0;
+        const queue = list.slice();
+
+        const worker = async () => {
+          while (queue.length) {
+            const url = queue.shift();
+            try { await (await fetch(url, { cache: 'reload' })).arrayBuffer(); } catch (e) { /* lewati file yang gagal */ }
+            mark('files', 'run', ++done + ' / ' + list.length);
+            progress((STEPS.length - 1 + done / list.length) / STEPS.length);
+          }
+        };
+        await Promise.all(Array.from({ length: 6 }, worker));
+        return list.length + ' files';
+      }
+
+      async function main() {
+        for (let i = 0; i < STEPS.length; i++) {
+          const step = STEPS[i];
+          mark(step.id, 'run');
+          try {
+            mark(step.id, 'ok', (await step.run()) || '');
+          } catch (e) {
+            mark(step.id, 'skip', e.message === 'unsupported' ? 'not supported' : 'skipped');
+          }
+          progress((i + 1) / STEPS.length);
+        }
+
+        document.getElementById('title').textContent = 'Cache cleared';
+        document.getElementById('subtitle').textContent = 'Redirecting…';
+        // Langkah penutup: respons dengan Clear-Site-Data menghapus cache HTTP, storage, dan cookie.
+        setTimeout(() => { location.replace('/clear-cache.php'); }, 600);
+      }
+
+      main();
+    })();
   </script>
 </body>
 </html>
