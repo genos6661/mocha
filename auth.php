@@ -49,8 +49,9 @@ if ($currentFile !== 'login.php' && checkToken() === false && isset($_SESSION['t
             </script>";
     exit();
 } else if(!isset($_SESSION['token'])) {
+    // Tanpa sesi: ke halaman login, yang memulihkan sesi dari cookie "Remember Me" bila ada
     echo "<script>
-                window.location.href = 'logout.php';
+                window.location.href = 'login.php';
             </script>";
     exit();
 }

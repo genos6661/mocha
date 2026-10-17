@@ -280,68 +280,162 @@ function loadAvatarProfile(idProfile) {
 
 // });
 
-function backupData() {
-  Loading.standard({
-      backgroundColor: 'rgba(' + window.Helpers.getCssVar('black-rgb') + ', 0.5)',
-      svgSize: '0px'
-  });
-  let customSpinnerHTML = `
-        <div class="sk-wave mx-auto">
-            <div class="sk-rect sk-wave-rect"></div>
-            <div class="sk-rect sk-wave-rect"></div>
-            <div class="sk-rect sk-wave-rect"></div>
-            <div class="sk-rect sk-wave-rect"></div>
-            <div class="sk-rect sk-wave-rect"></div>
-        </div>
-  `;
-  let notiflixBlock = document.querySelector('.notiflix-loading');
-  notiflixBlock.innerHTML = customSpinnerHTML;
+/**
+ * BACKUP DATA (menu profil -> Backup Data)
+ * Modal #modalBackup (index.php) menampilkan prosesnya: server membuat & mengenkripsi dump
+ * (lama, tanpa progres) -> file diunduh (dengan progres) -> disimpan ke perangkat.
+ */
+let backupXhr = null;
+let backupCancelled = false;
 
-  $.ajax({
+function backupFormatSize(bytes) {
+  if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+  if (bytes >= 1024) return Math.round(bytes / 1024) + ' KB';
+  return bytes + ' B';
+}
+
+// state: run | ok | err; detail: keterangan kecil di kanan langkah
+function backupSetStep(step, state, detail) {
+  const $li = $('#backupSteps li[data-step="' + step + '"]');
+  $li.removeClass('run ok err').addClass(state === 'idle' ? '' : state);
+  $li.find('> i').attr('class', 'icon-base ti tabler-' + ({ idle: 'circle', run: 'loader-2', ok: 'circle-check', err: 'circle-x' }[state]));
+  if (detail !== undefined) $li.find('.proc-detail').text(detail);
+}
+
+function backupSetProgress(fraction) {
+  const $box = $('#backupBarBox');
+  if (fraction === null) {
+    $box.addClass('indeterminate');
+    $('#backupBar').css('width', '');
+  } else {
+    $box.removeClass('indeterminate');
+    $('#backupBar').css('width', Math.round(fraction * 100) + '%');
+  }
+}
+
+// state: run | ok | err
+function backupSetState(state, icon, title, subtitle) {
+  $('#backupIcon').removeClass('run ok err').addClass(state)
+    .find('i').attr('class', 'icon-base ti tabler-' + icon);
+  $('#backupTitle').text(title);
+  $('#backupSubtitle').text(subtitle);
+}
+
+function backupSaveFile(blob, filename) {
+  const downloadUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => window.URL.revokeObjectURL(downloadUrl), 1000);
+}
+
+// Respons galat berupa blob: baca isinya untuk mengambil pesan dari API.
+function backupErrorMessage(xhr, done) {
+  const fallback = xhr.status ? 'The server could not create the backup (' + xhr.status + ').' : 'Could not reach the server.';
+  if (!(xhr.response instanceof Blob)) return done(fallback);
+
+  xhr.response.text().then(text => {
+    try { done(JSON.parse(text).message || fallback); } catch (e) { done(fallback); }
+  }, () => done(fallback));
+}
+
+function backupFinishError(step, message) {
+  backupXhr = null;
+  backupSetStep(step, 'err', 'failed');
+  backupSetProgress(0);
+  backupSetState('err', 'alert-triangle', 'Backup failed', message);
+  $('#btnBackupCancel').addClass('d-none');
+  $('#btnBackupClose').removeClass('d-none');
+  $('#btnBackupAgain').removeClass('d-none').html('<i class="icon-base ti tabler-refresh me-2"></i>Try again').off('click').on('click', backupData);
+}
+
+function backupFinishSuccess(blob, filename) {
+  backupXhr = null;
+  backupSetStep('save', 'run');
+  backupSaveFile(blob, filename);
+  backupSetStep('save', 'ok', '');
+  backupSetProgress(1);
+  backupSetState('ok', 'circle-check', 'Backup complete', filename + ' (' + backupFormatSize(blob.size) + ') has been downloaded.');
+  $('#btnBackupCancel').addClass('d-none');
+  $('#btnBackupClose').removeClass('d-none');
+  $('#btnBackupAgain').removeClass('d-none').html('<i class="icon-base ti tabler-download me-2"></i>Download again')
+    .off('click').on('click', () => backupSaveFile(blob, filename));
+}
+
+function backupData() {
+  const $modal = $('#modalBackup');
+  if (backupXhr) { $modal.modal('show'); return; }   // sudah berjalan: tampilkan saja modalnya
+
+  backupCancelled = false;
+  ['dump', 'download', 'save'].forEach(step => backupSetStep(step, 'idle', ''));
+  backupSetProgress(null);
+  backupSetState('run', 'database-export', 'Backing up data…', 'Please keep this window open until the backup file is downloaded.');
+  $('#btnBackupCancel').removeClass('d-none');
+  $('#btnBackupClose, #btnBackupAgain').addClass('d-none');
+  $modal.modal('show');
+
+  backupSetStep('dump', 'run');
+
+  let nativeXhr = null;   // XHR asli: respons galat (blob) hanya terbaca darinya
+  backupXhr = $.ajax({
     url: url_api + '/backup',
     method: 'GET',
     headers: {
       'X-Client-Domain': myDomain,
       "Authorization": `Bearer ${window.token}`
     },
-    xhrFields: {
-      responseType: 'blob'
+    xhrFields: { responseType: 'blob' },
+    xhr: function () {
+      const xhr = new XMLHttpRequest();
+      let receiving = false;
+      nativeXhr = xhr;
+
+      // Header diterima = server selesai membuat file; mulai mengunduh.
+      xhr.addEventListener('readystatechange', function () {
+        if (xhr.readyState !== 2 || xhr.status !== 200) return;
+        receiving = true;
+        backupSetStep('dump', 'ok', '');
+        backupSetStep('download', 'run', '');
+      });
+      xhr.addEventListener('progress', function (e) {
+        if (!receiving) return;   // isi respons galat bukan file backup
+        if (e.lengthComputable && e.total) {
+          backupSetProgress(e.loaded / e.total);
+          backupSetStep('download', 'run', backupFormatSize(e.loaded) + ' / ' + backupFormatSize(e.total));
+        } else {
+          backupSetStep('download', 'run', backupFormatSize(e.loaded));
+        }
+      });
+      return xhr;
     },
     success: function (data, status, xhr) {
-
       let filename = "database.backup";
 
       const disposition = xhr.getResponseHeader('Content-Disposition');
-
       if (disposition) {
         const matches = disposition.match(/filename="?([^"]+)"?/);
-        if (matches && matches[1]) {
-          filename = matches[1];
-        }
+        if (matches && matches[1]) filename = matches[1];
       }
 
       const blob = new Blob([data]);
-      const downloadUrl = window.URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-
-      window.URL.revokeObjectURL(downloadUrl);
-      document.body.removeChild(a);
-
-      Loading.remove();
+      backupSetStep('download', 'ok', backupFormatSize(blob.size));
+      backupFinishSuccess(blob, filename);
     },
     error: function (xhr) {
-        notif.fire({
-            icon: 'error',
-            text: xhr.responseJSON?.message || 'Terjadi kesalahan'
-          });
-      if (document.querySelector(`.notiflix-loading`)) {
-          Loading.remove();
-      }
+      if (backupCancelled) return;
+      const step = $('#backupSteps li[data-step="download"]').hasClass('run') ? 'download' : 'dump';
+      backupErrorMessage(nativeXhr || xhr, message => backupFinishError(step, message));
     }
   });
 }
+
+$(document).on('click', '#btnBackupCancel', function () {
+  backupCancelled = true;
+  if (backupXhr) backupXhr.abort();
+  backupXhr = null;
+  $('#modalBackup').modal('hide');
+  notif.fire({ icon: 'info', text: 'Backup cancelled' });
+});

@@ -1,0 +1,236 @@
+/**
+ * HALAMAN LOGIN (/login) — login.php
+ * Warna mengikuti warna utama tema. Prefix kelas: login-.
+ */
+
+body.login-page {
+  min-height: 100vh;
+  background: #fdf8f1 url('/assets/img/background/mc-bali.webp') center / cover no-repeat fixed;
+}
+/* HP / layar tegak: gambar versi smartphone (tegak) */
+@media (max-aspect-ratio: 1/1) {
+  body.login-page {
+    background-image: url('/assets/img/background/mc-bali-smartphone.webp');
+    background-attachment: scroll;
+  }
+}
+/* Cahaya warna utama di balik kartu: bagian tengah gambar latar kosong, jadi tanpa ini efek kaca
+   tidak punya apa-apa untuk diburamkan. */
+body.login-page::before,
+body.login-page::after {
+  content: '';
+  position: fixed;
+  z-index: 0;
+  width: 26rem;
+  height: 26rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--bs-primary-rgb), 0.45), rgba(var(--bs-primary-rgb), 0) 68%);
+  pointer-events: none;
+}
+body.login-page::before {
+  top: 6%;
+  right: 12%;
+}
+body.login-page::after {
+  bottom: 4%;
+  left: 14%;
+  width: 22rem;
+  height: 22rem;
+}
+.login-page .container-xxl {
+  position: relative;
+  z-index: 1;
+}
+
+/* halaman login tidak perlu padding atas-bawah besar: kartu harus muat satu layar */
+.login-page .container-p-y {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+.login-page .authentication-inner {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* bentuk hiasan bawaan tema (page-auth.css) diganti latar gradient halaman ini */
+.login-page .authentication-inner::before,
+.login-page .authentication-inner::after {
+  display: none;
+}
+.authentication-wrapper .authentication-inner .login-card {
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1.5rem;
+  /* kaca buram secukupnya: gambar latar tetap terlihat samar di balik kartu */
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: 0 1.5rem 3.5rem -1.5rem rgba(60, 20, 20, 0.45);
+}
+/* field ikut sedikit transparan, tetap jelas terbaca */
+.login-card .form-control,
+.login-card .input-group-text {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+.login-card .btn-outline-primary {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+.login-card .btn-outline-primary:hover {
+  background-color: var(--bs-primary);
+}
+.authentication-wrapper.authentication-basic .authentication-inner {
+  max-width: 26rem;
+}
+
+/* ---------- kepala kartu ---------- */
+.login-hero {
+  padding: 2.25rem 2rem 1.5rem;
+  background: linear-gradient(180deg, rgba(var(--bs-primary-rgb), 0.1), transparent);
+}
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 1.1rem;
+  border-radius: 1.4rem;
+  background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #170a0d));
+  box-shadow: 0 0.9rem 1.75rem -0.7rem rgba(var(--bs-primary-rgb), 0.75);
+}
+.login-logo svg {
+  width: 2.6rem;
+  height: auto;
+}
+
+/* ---------- form ---------- */
+.login-body {
+  padding: 0.5rem 2rem 2rem;
+}
+.login-body .form-label {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+.login-toggle {
+  border: 1px solid var(--bs-border-color);
+  border-left: 0;
+}
+.login-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  font-weight: 600;
+}
+.login-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.9rem;
+  color: var(--bs-danger);
+  background: rgba(var(--bs-danger-rgb), 0.1);
+}
+.login-error.d-none {
+  display: none !important;
+}
+.login-error .icon-base {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  font-size: 1.15rem;
+}
+
+/* ---------- pelanggan ---------- */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0 1.25rem;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bs-secondary-color);
+}
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--bs-border-color);
+}
+.login-customer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- PC: kartu lebar dua kolom (panel sambutan + form), muat satu layar tanpa scroll ---------- */
+@media (min-width: 992px) {
+  .authentication-wrapper.authentication-basic .authentication-inner {
+    max-width: 62rem;
+  }
+  .authentication-wrapper .authentication-inner .login-card {
+    flex-direction: row;
+    min-height: 32rem;
+  }
+  .login-hero {
+    flex: 0 0 42%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2.5rem;
+    color: #fff;
+    background:
+      radial-gradient(24rem 16rem at 0% 0%, rgba(255, 255, 255, 0.18), transparent 70%),
+      linear-gradient(150deg, rgba(var(--bs-primary-rgb), 0.82), color-mix(in srgb, var(--bs-primary) 55%, #170a0d 45%) 100%);
+  }
+  .login-hero h4,
+  .login-hero p,
+  .login-hero p strong {
+    color: #fff !important;
+  }
+  .login-hero h4 {
+    font-size: 1.9rem;
+  }
+  .login-hero p {
+    opacity: 0.85;
+  }
+  .login-logo {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 1.8rem;
+    margin-bottom: 1.5rem;
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  }
+  .login-logo svg {
+    width: 3.6rem;
+  }
+  .login-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2.5rem 3.5rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.login-page::before {
+    top: 4%;
+    right: -4rem;
+  }
+  body.login-page::after {
+    left: -4rem;
+  }
+  .login-hero {
+    padding: 1.75rem 1.25rem 1rem;
+  }
+  .login-body {
+    padding: 0.5rem 1.25rem 1.5rem;
+  }
+}

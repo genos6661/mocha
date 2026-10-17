@@ -1,12 +1,18 @@
+<?php ob_start(); // tahan keluaran HTML di bawah supaya cookie (remember me) masih bisa dikirim ?>
 <script>
+  // Data booking pelanggan di perangkat ini (js/pages/order-form.js) bukan data sesi staf: dipertahankan.
+  const keepCustomer = localStorage.getItem('mocha.customer');
+
   // hapus localStorage
   localStorage.clear();
+  if (keepCustomer) localStorage.setItem('mocha.customer', keepCustomer);
 
   // hapus sessionStorage
   sessionStorage.clear();
 
-  // hapus semua cookies
-  document.cookie.split(";").forEach(function(c) { 
+  // hapus semua cookies (kecuali cookie data pelanggan booking)
+  document.cookie.split(";").forEach(function(c) {
+    if (/^\s*(userID|userData)=/.test(c)) return;
     document.cookie = c
       .replace(/^ +/, "")
       .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
@@ -15,6 +21,10 @@
 <?php
 session_start();
 require 'config/config.php';
+require 'remember.php';
+
+// Logout selalu mencabut "Remember Me" di perangkat ini
+remember_clear();
 // echo "DEBUG: Masuk ke logout.php<br>";
 if (isset($_SESSION['token'])) {
     $token = $_SESSION['token'];

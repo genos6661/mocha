@@ -100,11 +100,63 @@ $(document).ready(function () {
   const cookieConfirm = "confirm";
   const cookieSetting = "setting";
   const logoKey = "cachedLogo";
-  let savedUser = getCookie(cookieUser);
   let savedConfirm = getCookie(cookieConfirm);
   let savedSetting = getCookie(cookieSetting);
   let cachedLogo = sessionStorage.getItem(logoKey);
   let parsedSetting = null;
+
+  /**
+   * Data pelanggan yang tersimpan di perangkat ini (id + kode profil), supaya booking berikutnya
+   * tidak perlu memilih "I'm a new customer" / "I've been here before" lagi.
+   * Disimpan di dua tempat: localStorage (utama) dan cookie 400 hari (cadangan; juga cara data lama
+   * disimpan). Jika salah satunya hilang, dipulihkan dari yang lain. Browser juga diminta menandai
+   * penyimpanan ini permanen (tidak dibersihkan otomatis saat ruang penuh).
+   */
+  const CustomerStore = (function () {
+    const KEY = 'mocha.customer';
+    const COOKIE_DAYS = 400; // batas umur cookie di browser modern
+
+    function readStorage() {
+      try {
+        const data = JSON.parse(localStorage.getItem(KEY));
+        return data && data.id ? data : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function readCookies() {
+      const id = getCookie(cookieUserID);
+      const kode = getCookie(cookieUser);
+      return id ? { id: decodeURIComponent(id), kode: decodeURIComponent(kode || '') } : null;
+    }
+
+    function save(id, kode) {
+      try { localStorage.setItem(KEY, JSON.stringify({ id: String(id), kode: kode || '' })); } catch (e) { /* mode privat */ }
+      setCookie(cookieUserID, encodeURIComponent(id), COOKIE_DAYS);
+      setCookie(cookieUser, encodeURIComponent(kode || ''), COOKIE_DAYS);
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+    }
+
+    return {
+      save: save,
+
+      // Data tersimpan atau null; menyelaraskan localStorage & cookie bila salah satunya hilang.
+      read: function () {
+        const data = readStorage() || readCookies();
+        if (data) save(data.id, data.kode);
+        return data;
+      },
+
+      clear: function () {
+        try { localStorage.removeItem(KEY); } catch (e) { /* mode privat */ }
+        eraseCookie(cookieUserID);
+        eraseCookie(cookieUser);
+      }
+    };
+  })();
+
+  let savedUser = CustomerStore.read();
 
   if (!branchId) {
     $('#modalBranch').modal('show');
@@ -117,7 +169,7 @@ $(document).ready(function () {
         } else {
           // tampilkan modal Konfirmasi
           $('.dataDetail').text('');
-          $('#kodeDetail').text(getCookie(cookieUser));
+          $('#kodeDetail').text(savedUser.kode);
           $('#namaDetail').text(profile.nama);
           $('#teleponDetail').text(profile.telepon);
           $('#alamatDetail').text(profile.alamat);
@@ -131,8 +183,7 @@ $(document).ready(function () {
           });
 
           $("#btnTidak").click(function () {
-            eraseCookie(cookieUser);
-            eraseCookie(cookieUserID);
+            CustomerStore.clear();
             $("#modalKonfirmasi").modal("hide");
             $('#modalPilihan').modal('show');
           });
@@ -163,7 +214,7 @@ $(document).ready(function () {
     let notiflixBlock = document.querySelector('.notiflix-loading');
     notiflixBlock.innerHTML = customSpinnerHTML;
 
-    const idExist = getCookie(cookieUserID);
+    const idExist = savedUser.id;
     $.ajax({
       url: url_api + `/profile/id/${idExist}`,
       method: 'GET',
@@ -182,15 +233,20 @@ $(document).ready(function () {
       },
       error: function (xhr) {
           console.error('Gagal mengambil data detail:', xhr);
-          notif.fire({
-            icon: 'error',
-            text: xhr.responseJSON.message
-          });
-          eraseCookie(cookieUserID);
-          eraseCookie(cookieUser);
           if (document.querySelector(`.notiflix-loading`)) {
               Loading.remove();
           }
+
+          // Hanya profil yang memang sudah tidak ada yang dilupakan. Gangguan jaringan / server
+          // tidak boleh menghapus data tersimpan: kunjungan berikutnya tetap dikenali.
+          if (xhr.status === 404) {
+            CustomerStore.clear();
+          }
+          notif.fire({
+            icon: 'error',
+            text: xhr.responseJSON?.message || 'Could not load your saved profile. Please choose an option below.'
+          });
+          $('#modalPilihan').modal('show');
       }
     });
   }
@@ -241,7 +297,7 @@ $(document).ready(function () {
   }
 
   function eraseCookie(name) {
-    document.cookie = name + "=; Max-Age=-99999999;";
+    document.cookie = name + "=; Max-Age=-99999999; path=/";
   }
 
   function showTransaksi(index, nama) {
@@ -689,8 +745,7 @@ $(document).ready(function () {
 
   $('#resetProfile').click(function () {
     const branch = $('#idBranch').val();
-    eraseCookie(cookieUser);
-    eraseCookie(cookieUserID);
+    CustomerStore.clear();
     window.location.href = '/order-form?branch=' + branch;
   });
 
@@ -811,8 +866,7 @@ $(document).ready(function () {
       },
       data: JSON.stringify(dataProfil),
       success: function (response) {
-        setCookie(cookieUser, response.kode, 30); 
-        setCookie(cookieUserID, response.noindex, 30); 
+        CustomerStore.save(response.noindex, response.kode);
         setSessionCookie(cookieConfirm, "true"); 
         notif.fire({
           icon: 'success',
@@ -950,8 +1004,7 @@ $(document).ready(function () {
         data: JSON.stringify(dataProfil),
 
         success: function (response) {
-            setCookie(cookieUser, response.kode, 30);
-            setCookie(cookieUserID, response.noindex, 30);
+            CustomerStore.save(response.noindex, response.kode);
             setSessionCookie(cookieConfirm, "true");
 
             notif.fire({
@@ -1043,8 +1096,7 @@ $(document).ready(function () {
 
         $("#btnFindYa").off('click').on('click', function () {
           setSessionCookie(cookieConfirm, "true");
-          setCookie(cookieUser, response.kode, 30);
-          setCookie(cookieUserID, response.noindex, 30);
+          CustomerStore.save(response.noindex, response.kode);
           $("#modalPelanggan").modal("hide");
           showTransaksi(response.noindex, response.nama);
         }).trigger('focus');

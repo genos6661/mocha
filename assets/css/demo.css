@@ -713,3 +713,115 @@ body:has(.order-form-card) {
     color: var(--bs-secondary-color);
   }
 }
+
+/* Modal proses (Backup Data, js/main.js: backupData): ikon, daftar langkah, bar progres.
+   Gaya yang sama dengan halaman clear.html. */
+.proc-modal .modal-body {
+  padding: 2rem;
+}
+.proc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+  border-radius: 1.1rem;
+  font-size: 1.8rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #170a0d));
+  box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--bs-primary-rgb), 0.7);
+}
+.proc-icon.ok {
+  background: linear-gradient(135deg, var(--bs-success), color-mix(in srgb, var(--bs-success) 55%, #06140c));
+  box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--bs-success-rgb), 0.7);
+}
+.proc-icon.err {
+  background: linear-gradient(135deg, var(--bs-danger), color-mix(in srgb, var(--bs-danger) 55%, #170a0d));
+  box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--bs-danger-rgb), 0.7);
+}
+.proc-icon.run i {
+  animation: proc-pulse 1.4s ease-in-out infinite;
+}
+.proc-steps {
+  margin: 1.5rem 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+.proc-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  color: var(--bs-secondary-color);
+}
+.proc-steps li > i {
+  font-size: 1.25rem;
+}
+.proc-steps li.run {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+.proc-steps li.run > i {
+  color: var(--bs-primary);
+  animation: proc-spin 0.9s linear infinite;
+}
+.proc-steps li.ok > i {
+  color: var(--bs-success);
+}
+.proc-steps li.err {
+  color: var(--bs-danger);
+}
+.proc-steps .proc-detail {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+.proc-bar {
+  position: relative;
+  height: 0.4rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+.proc-bar > div {
+  width: 0;
+  height: 100%;
+  border-radius: 1rem;
+  background: var(--bs-primary);
+  transition: width 0.2s;
+}
+/* belum ada angka progres (server masih membuat file): batang bergerak bolak-balik */
+.proc-bar.indeterminate > div {
+  width: 35%;
+  animation: proc-slide 1.3s ease-in-out infinite;
+}
+.proc-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+.proc-actions .btn {
+  display: inline-flex;
+  align-items: center;
+}
+@keyframes proc-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes proc-pulse {
+  50% { transform: scale(1.18); }
+}
+@keyframes proc-slide {
+  0% { margin-left: -35%; }
+  100% { margin-left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .proc-icon.run i,
+  .proc-steps li.run > i,
+  .proc-bar.indeterminate > div {
+    animation-duration: 3s;
+  }
+}

@@ -473,6 +473,32 @@ switch ($routeInfo[0]) {
 
     <!--/ Layout wrapper -->
 
+    <!-- Modal proses Backup Data (js/main.js: backupData) -->
+    <div class="modal fade" id="modalBackup" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered modal-simple">
+        <div class="modal-content proc-modal">
+          <div class="modal-body text-center">
+            <div class="proc-icon" id="backupIcon"><i class="icon-base ti tabler-database-export"></i></div>
+            <h4 class="mb-1" id="backupTitle">Backing up data…</h4>
+            <p class="text-body-secondary mb-0" id="backupSubtitle">Please keep this window open until the backup file is downloaded.</p>
+
+            <ul class="proc-steps text-start" id="backupSteps">
+              <li data-step="dump"><i class="icon-base ti tabler-circle"></i><span>Creating &amp; encrypting backup</span><span class="proc-detail"></span></li>
+              <li data-step="download"><i class="icon-base ti tabler-circle"></i><span>Downloading file</span><span class="proc-detail"></span></li>
+              <li data-step="save"><i class="icon-base ti tabler-circle"></i><span>Saving to your device</span><span class="proc-detail"></span></li>
+            </ul>
+            <div class="proc-bar indeterminate" id="backupBarBox"><div id="backupBar"></div></div>
+
+            <div class="proc-actions">
+              <button type="button" class="btn btn-label-secondary" id="btnBackupCancel">Cancel</button>
+              <button type="button" class="btn btn-label-secondary d-none" id="btnBackupClose" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary d-none" id="btnBackupAgain"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/theme.js -->
 
