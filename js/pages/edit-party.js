@@ -27,6 +27,7 @@ const EditParty = (function () {
   let profileId = null;
   let initial = null;
   let ready = false;
+  let canEdit = true;   // data pelanggan hanya boleh diubah pengguna dengan izin edit_contact
 
   const headers = () => ({
     'Content-Type': 'application/json',
@@ -57,7 +58,7 @@ const EditParty = (function () {
   function setMode(editing) {
     $('#partyView').toggleClass('d-none', editing);
     $('#partyForm, #partyHint, #partyKodeBadge, #btnCancelParty, #btnDoneParty').toggleClass('d-none', !editing);
-    $('#btnEditParty').toggleClass('d-none', editing);
+    $('#btnEditParty').toggleClass('d-none', editing || !canEdit);
   }
 
   function restoreInitial() {
@@ -107,6 +108,13 @@ const EditParty = (function () {
     });
     ajaxSelect('#negara', '/profile/negara/select2', 'Choose Country');
     bindToggle();
+
+    // tanpa izin edit_contact tombol "Edit details" disembunyikan (backend juga menolak)
+    $.ajax({ url: url_api + '/role/role-permissions', data: { kode: 'edit_contact' }, headers: headers() })
+      .done(permissions => {
+        canEdit = Array.isArray(permissions) && permissions.includes('edit_contact');
+        $('#btnEditParty').toggleClass('d-none', !canEdit);
+      });
   }
 
   function setSelect(selector, id, text) {

@@ -14,7 +14,7 @@ if ($nowHour >= 15) {
       <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalFilter">
         <i class="icon-base  ti tabler-filter icon-20px"></i><span class="d-md-inline-block d-none"></span>
       </button>
-      <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalTransaksiBaru">
+      <button class="btn btn-primary" type="button" id="btnNewTransaction" data-bs-toggle="modal" data-bs-target="#modalTransaksiBaru">
         New Transaction
       </button>
     </div>
@@ -143,6 +143,7 @@ if ($nowHour >= 15) {
             <div class="dl-item"><span class="dl-label">Date</span><span class="dl-value dataDetail" id="tanggalDetail"></span></div>
             <div class="dl-item"><span class="dl-label">Customer</span><span class="dl-value dataDetail" id="pelangganDetail"></span></div>
             <div class="dl-item"><span class="dl-label">Nationality</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
+            <div class="dl-item d-none" id="guideDetailItem"><span class="dl-label">Guide</span><span class="dl-value dataDetail" id="guideDetail"></span></div>
           </div>
         </div>
         <div class="mf-section">
@@ -376,7 +377,7 @@ if ($nowHour >= 15) {
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="member" value="1" />
-              <label class="form-check-label" for="member">Member</label>
+              <label class="form-check-label" for="member">Guide</label>
             </div>
           </div>
         </div>
@@ -435,6 +436,13 @@ if ($nowHour >= 15) {
             <div class="col-md mb-3">
               <label for="cabangTrans" class="form-label">Branch</label>
               <select id="cabangTrans" class="form-select"></select>
+            </div>
+          </div>
+          <div class="row d-none" id="guideField">
+            <div class="col-12 mb-3">
+              <label for="guideTrans" class="form-label">Guide <span class="text-body-secondary">(optional)</span></label>
+              <select id="guideTrans" class="form-select"></select>
+              <div class="form-text guide-mode-hint"></div>
             </div>
           </div>
         </div>
@@ -570,4 +578,5 @@ if ($nowHour >= 15) {
 <script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
 <script src="js/pages/transaction.js" type="text/javascript"></script>
 <script src="js/pages/contact-new.js" type="text/javascript"></script>
+<script src="js/pages/guide-rate.js?v=<?= filemtime(__DIR__ . '/../../js/pages/guide-rate.js') ?>" type="text/javascript"></script>
 <script src="js/pages/direct-transaction.js?v=<?= filemtime(__DIR__ . '/../../js/pages/direct-transaction.js') ?>" type="text/javascript"></script>

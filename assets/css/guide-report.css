@@ -1,0 +1,114 @@
+/**
+ * LAPORAN KOMISI GUIDE (/guide-report) — pages/reports/guide-report.php
+ * Memakai settings.css (kartu, tabel) dan reports.css (judul, tombol kembali). Prefix kelas: gr-.
+ */
+
+.gr-filter,
+.gr-stats {
+  margin-bottom: 1.5rem;
+}
+.gr-stats {
+  margin-top: 0;
+}
+
+.gr-stat {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1.25rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.6rem 1.6rem -1.2rem rgba(0, 0, 0, 0.3);
+  --gr-rgb: var(--bs-primary-rgb);
+}
+.gr-stat.gr-paid { --gr-rgb: var(--bs-success-rgb); }
+.gr-stat.gr-unpaid { --gr-rgb: var(--bs-warning-rgb); }
+.gr-stat-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  color: rgb(var(--gr-rgb));
+  background: rgba(var(--gr-rgb), 0.12);
+}
+.gr-stat-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+.gr-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--bs-heading-color);
+}
+.gr-stat-sub {
+  font-size: 0.75rem;
+  color: var(--bs-secondary-color);
+}
+
+#tabelGuideRows td:nth-child(2),
+#tabelGuideRows td:nth-child(3) {
+  white-space: nowrap;
+}
+#tabelGuideRows tr.gr-selected > td {
+  background: rgba(var(--bs-primary-rgb), 0.07);
+}
+#tabelGuideRows tr.gr-muted > td {
+  opacity: 0.45;
+}
+#tabelGuideRows .gr-check {
+  cursor: pointer;
+}
+
+.settings-card + .settings-card,
+.gr-filter + .gr-stats + .settings-card {
+  margin-top: 1.5rem;
+}
+
+/* bilah bayar menempel di bawah layar saat ada komisi terpilih */
+.gr-pay-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.85rem 1.5rem;
+  border-top: 1px solid var(--bs-border-color);
+  border-radius: 0 0 1.5rem 1.5rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 -0.75rem 1.5rem -1.25rem rgba(0, 0, 0, 0.35);
+}
+.gr-pay-sep {
+  margin: 0 0.5rem;
+  color: var(--bs-secondary-color);
+}
+.gr-pay-total {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bs-primary);
+}
+
+@media (max-width: 575.98px) {
+  .gr-pay-bar {
+    padding: 0.75rem 1.25rem;
+  }
+  .gr-pay-bar .d-flex,
+  .gr-pay-bar .btn {
+    width: 100%;
+  }
+  .gr-stat {
+    padding: 1rem;
+  }
+  .gr-stat-value {
+    font-size: 1.1rem;
+  }
+}

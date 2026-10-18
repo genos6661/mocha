@@ -78,7 +78,7 @@
           <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
         </li>
         <li class="breadcrumb-item">
-          <a href="/other-reports">Other Reports</a>
+          <a href="/accounting-reports">Accounting Reports</a>
           <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
         </li>
         <li class="breadcrumb-item active">Transactions Detail Report</li>

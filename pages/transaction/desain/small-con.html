@@ -1,36 +1,164 @@
-<div class="invoice-print" style="width: 100%; max-width: 100%;">
-	<div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-		<div class="d-flex justify-content-center align-items-center boxLogo"></div>
-		<p style="font-size: 1.5em; margin-bottom: 0; text-align: center;" class="judulNota">Mocha</p>
-		<p style="font-size: 1em; margin-bottom: 0; text-align: center;" class="namaCabang"></p>
-		<p style="font-size: 1em; margin-bottom: 0; text-align: center;"><span class="alamatCabang"></span></p>
-		<p style="font-size: 1em; margin-bottom: 15px; text-align: center;"><span class="teleponCabang"></span></p>
-	</div>
-	<div style="width: 100%; display: flex; flex-direction: column;">
-		<p style="font-size: 1em; margin-bottom: 0; text-align: right;">No. #<span class="nomorTrans"></span></p>
-		<p style="font-size: 1em; margin-bottom: 0;">Date Issues : <span class="tanggalTransaksi"></span></p>
-		<p style="font-size: 1em; margin-bottom: 0;">Name : <span class="namaPelanggan"></span></p>
-		<p style="font-size: 1em; margin-bottom: 0;">Nationality : <span class="negara"></span></p>
-		<p style="font-size: 1em; margin-bottom: 15px; text-align: right;">Cashier : <span class="ttdPerusahaan"></span></p>
-	</div>
-	<div style="width: 100%; border-bottom: 1px solid;">
-	    <table style="width: 100%; border: none; table-layout: auto;" class="tabelDetail">
-	      <thead>
-	        <tr>
-	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; width: 15%;">Currency</th>
-	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Amount</th>
-	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Rate</th>
-	          <th style="border-top: 1px solid; border-bottom: 1px solid; padding: 8px 3px; text-align: right;">Subtotal</th>
-	        </tr>
-	      </thead>
-	      <tbody></tbody>
-	    </table>
-	</div>
-	<div class="row mt-4">
-		<div class="col">
-			<p class="d-none text-center mb-0 footer1"></p>
-			<p class="d-none text-center mb-0 footer2"></p>
-			<p class="d-none text-center mb-0 footer3"></p>
-		</div>
-	</div>
+<style>
+  /* Small Paper New (kertas menerus kecil): hitam-putih, garis putus-putus, lengkap dengan tanda tangan. */
+  .inv-small {
+    width: 100%;
+    max-width: 100%;
+    color: #000;
+    font-size: 0.95em;
+    line-height: 1.35;
+  }
+  .inv-small p {
+    margin: 0;
+  }
+  .inv-small .inv-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .inv-small .inv-head .judulNota {
+    margin-bottom: 0.15rem;
+    font-size: 1.45em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .inv-small .boxLogo img {
+    max-width: 55%;
+    max-height: 3.5rem;
+    width: auto !important;
+    height: auto !important;
+    margin-bottom: 0.25rem;
+  }
+  .inv-small .inv-sep {
+    margin: 0.6rem 0;
+    border: 0;
+    border-top: 1px dashed #000;
+    opacity: 1;
+  }
+  .inv-small .inv-title {
+    margin: 0.5rem 0 0.1rem;
+    font-size: 0.95em;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-align: center;
+  }
+  .inv-small .inv-no {
+    text-align: center;
+    font-weight: 600;
+  }
+  .inv-small .inv-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .inv-small .inv-row > span:first-child {
+    flex: 0 0 auto;
+  }
+  .inv-small .inv-row > span:last-child {
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+  .inv-small .tabelDetail {
+    width: 100%;
+    border: none;
+    table-layout: auto;
+    font-size: 0.88em;
+  }
+  .inv-small .tabelDetail thead th {
+    padding: 5px 3px;
+    color: #000;
+    border-top: 1px dashed #000;
+    border-bottom: 1px dashed #000;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .inv-small .tabelDetail tbody td {
+    color: #000;
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-small .inv-foot {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.9em;
+  }
+  .inv-small .inv-sign {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.9rem;
+    text-align: center;
+  }
+  .inv-small .inv-sign > div {
+    width: 44%;
+  }
+  .inv-small .inv-sign .inv-sign-space {
+    height: 3rem;
+    border-bottom: 1px solid #000;
+  }
+  .inv-small .inv-sign .inv-sign-role {
+    margin-top: 0.15rem;
+    font-size: 0.85em;
+  }
+  .inv-small .inv-thanks {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.85em;
+  }
+</style>
+
+<div class="invoice-print inv-small">
+  <div class="inv-head">
+    <div class="d-flex justify-content-center align-items-center boxLogo"></div>
+    <p class="judulNota">Mocha</p>
+    <p class="namaCabang"></p>
+    <p><span class="alamatCabang"></span></p>
+    <p><span class="teleponCabang"></span></p>
+  </div>
+
+  <hr class="inv-sep" />
+  <p class="inv-title">INVOICE</p>
+  <p class="inv-no">#<span class="nomorTrans"></span></p>
+  <hr class="inv-sep" />
+
+  <div>
+    <p class="inv-row"><span>Issued Date</span><span><span class="tanggalTransaksi"></span> <span class="timePrint"></span></span></p>
+    <p class="inv-row"><span>Name</span><span class="namaPelanggan"></span></p>
+    <p class="inv-row"><span>ID Number</span><span class="idNumber"></span></p>
+    <p class="inv-row"><span>Phone</span><span class="teleponPelanggan"></span></p>
+    <p class="inv-row"><span>Address</span><span class="alamatPelanggan"></span></p>
+    <p class="inv-row"><span>Nationality</span><span class="negara"></span></p>
+    <p class="inv-row"><span>Cashier</span><span class="ttdPerusahaan"></span></p>
+  </div>
+
+  <table class="tabelDetail mt-3">
+    <thead>
+      <tr>
+        <th style="width: 15%; text-align: left;">Currency</th>
+        <th style="text-align: right;">Amount</th>
+        <th style="text-align: right;">Rate</th>
+        <th style="text-align: right;">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="inv-foot">
+    <p class="d-none footer1"></p>
+    <p class="d-none footer2"></p>
+    <p class="d-none footer3"></p>
+  </div>
+
+  <div class="inv-sign">
+    <div>
+      <div class="inv-sign-space"></div>
+      <p class="inv-sign-role ttdPerusahaan"></p>
+    </div>
+    <div>
+      <div class="inv-sign-space"></div>
+      <p class="inv-sign-role namaPelanggan"></p>
+    </div>
+  </div>
+
+  <p class="inv-thanks">Thank you for choosing us.</p>
 </div>

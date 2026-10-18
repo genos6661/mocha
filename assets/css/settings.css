@@ -273,3 +273,35 @@
     height: 6.5rem;
   }
 }
+
+/* Aturan komisi guide: baris menjadi kartu bertumpuk di layar kecil */
+@media (max-width: 575.98px) {
+  #tabelGuideRule thead {
+    display: none;
+  }
+  #tabelGuideRule,
+  #tabelGuideRule tbody,
+  #tabelGuideRule tr,
+  #tabelGuideRule td {
+    display: block;
+    width: 100%;
+  }
+  #tabelGuideRule tr {
+    position: relative;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+  #tabelGuideRule td {
+    padding: 0.35rem 0;
+    border: 0;
+  }
+  #tabelGuideRule td:first-child {
+    padding-right: 2.75rem;
+  }
+  #tabelGuideRule td:nth-child(4) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    width: auto;
+  }
+}

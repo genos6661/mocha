@@ -28,24 +28,11 @@
       <a href="/accounting-reports" class="rp-card rp-info">
         <div class="rp-top">
           <span class="rp-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>
-          <span class="rp-count">1 report</span>
+          <span class="rp-count">3 reports</span>
         </div>
         <h5 class="rp-title">Accounting Reports</h5>
         <div class="rp-chips">
-          <span>Ledger</span>
-        </div>
-        <span class="rp-open">Open<i class="icon-base ti tabler-arrow-right"></i></span>
-      </a>
-    </div>
-    <div class="col-xl-4 col-md-6 col-12">
-      <a href="/master-data-reports" class="rp-card rp-danger">
-        <div class="rp-top">
-          <span class="rp-icon"><i class="icon-base ti tabler-layout-dashboard"></i></span>
-          <span class="rp-count">3 reports</span>
-        </div>
-        <h5 class="rp-title">Data Master Reports</h5>
-        <div class="rp-chips">
-          <span>Customer Data</span><span>Employee Data</span><span>Partner Data</span>
+          <span>Ledger</span><span>Transactions Summary</span><span>Transactions Detail</span>
         </div>
         <span class="rp-open">Open<i class="icon-base ti tabler-arrow-right"></i></span>
       </a>
@@ -58,7 +45,20 @@
         </div>
         <h5 class="rp-title">Other Reports</h5>
         <div class="rp-chips">
-          <span>Transactions Summary</span><span>Transactions Detail</span><span>Logs Report</span>
+          <span>Logs Report</span><span>Customer Data</span><span>Employee Data</span>
+        </div>
+        <span class="rp-open">Open<i class="icon-base ti tabler-arrow-right"></i></span>
+      </a>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <a href="/guide-reports" class="rp-card rp-danger">
+        <div class="rp-top">
+          <span class="rp-icon"><i class="icon-base ti tabler-id-badge-2"></i></span>
+          <span class="rp-count">2 reports</span>
+        </div>
+        <h5 class="rp-title">Guide Reports</h5>
+        <div class="rp-chips">
+          <span>Guide Commission</span><span>Partner Data</span>
         </div>
         <span class="rp-open">Open<i class="icon-base ti tabler-arrow-right"></i></span>
       </a>

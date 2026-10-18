@@ -129,7 +129,7 @@ const INVOICE_DESIGNS = {
   },
 
   'small': {
-    label: 'Small Continous Paper',
+    label: 'Small Paper New',
     type: 'html',
     template: 'small-con',
     renderRow: InvoiceRows.compact,

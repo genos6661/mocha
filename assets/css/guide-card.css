@@ -1,0 +1,217 @@
+/**
+ * KARTU GUIDE PUBLIK (/guide?c=...) — guide.php
+ * Kartu digambar di <canvas> oleh js/pages/guide-card.js (ukuran kartu CR80, 85,6 x 54 mm).
+ * Prefix kelas: guide-.
+ */
+
+body.guide-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(60rem 30rem at 50% -10rem, rgba(var(--bs-primary-rgb), 0.16), transparent 70%),
+    #fdf8f1;
+}
+
+.guide-wrap {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 30rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 1rem;
+}
+
+.guide-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+.guide-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.guide-status {
+  padding: 0.25rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.guide-status.ok {
+  color: var(--bs-success);
+  background: rgba(var(--bs-success-rgb), 0.14);
+}
+.guide-status.off {
+  color: var(--bs-danger);
+  background: rgba(var(--bs-danger-rgb), 0.14);
+}
+
+/* ---------- kartu ---------- */
+.guide-card-box {
+  margin: 0 0 1.25rem;
+}
+.guide-card-stage {
+  position: relative;
+}
+/* area klik "powered by" di atas canvas; posisinya diatur guide-card.js sesuai koordinat gambar */
+.guide-wm {
+  position: absolute;
+  display: block;
+  cursor: pointer;
+}
+.guide-card-box canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1.1rem;
+  box-shadow: 0 1.25rem 2.25rem -1.25rem rgba(60, 20, 20, 0.6);
+}
+.guide-card-box figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+
+.guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.guide-actions .btn {
+  flex: 1 1 10rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.guide-hint {
+  margin: 0.9rem 0 0;
+  font-size: 0.8125rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+}
+
+/* ---------- komisi ---------- */
+.guide-commission {
+  margin-top: 1.5rem;
+  padding: 1.1rem 1.1rem 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1rem 2.25rem -1.5rem rgba(60, 20, 20, 0.45);
+}
+.guide-commission-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+.guide-commission-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.guide-commission-head .form-select {
+  width: auto;
+}
+.guide-commission-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+.guide-commission-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.9rem;
+  min-width: 0;
+}
+.guide-commission-item span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+.guide-commission-item strong {
+  font-size: 0.95rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  color: var(--bs-heading-color);
+}
+.guide-commission-item.guide-due {
+  border-color: rgba(var(--bs-primary-rgb), 0.45);
+}
+.guide-commission-item.guide-due strong {
+  color: var(--bs-primary);
+}
+.guide-commission-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--bs-danger);
+}
+@media (max-width: 400px) {
+  .guide-commission-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- memuat / tidak aktif ---------- */
+.guide-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 1rem 2.5rem -1.5rem rgba(60, 20, 20, 0.4);
+}
+.guide-state p {
+  margin-top: 1rem;
+  color: var(--bs-secondary-color);
+}
+.guide-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border-radius: 1.3rem;
+  font-size: 2rem;
+  color: var(--bs-danger);
+  background: rgba(var(--bs-danger-rgb), 0.12);
+}
+
+/* ---------- footer ---------- */
+.guide-footer {
+  flex-shrink: 0;
+  padding: 0.9rem 1rem 1.1rem;
+  font-size: 0.72rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+  opacity: 0.65;
+}
+.guide-footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+.guide-footer a:hover {
+  text-decoration-color: currentColor;
+}

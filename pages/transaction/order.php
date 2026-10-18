@@ -74,6 +74,7 @@
             <div class="dl-item"><span class="dl-label">Date</span><span class="dl-value dataDetail" id="tanggalDetail"></span></div>
             <div class="dl-item"><span class="dl-label">Customer</span><span class="dl-value dataDetail" id="pelangganDetail"></span></div>
             <div class="dl-item"><span class="dl-label">Nationality</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
+            <div class="dl-item d-none" id="guideDetailItem"><span class="dl-label">Guide</span><span class="dl-value dataDetail" id="guideDetail"></span></div>
           </div>
         </div>
         <div class="mf-section">

@@ -31,8 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
         url: url_api + '/role/role-permissions',
         method: 'GET',
         data: {
-            sub_kategori: 'Contact'
+            sub_kategori: ['Contact', 'Guide']
         },
+        traditional: true,
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${window.token}`,
@@ -226,7 +227,7 @@ function initTable() {
                     { key: 'pelanggan', label: 'Pelanggan', color: 'primary' },
                     { key: 'vendor', label: 'Vendor', color: 'info' },
                     { key: 'karyawan', label: 'Karyawan', color: 'warning' },
-                    { key: 'member', label: 'Member', color: 'success' }
+                    { key: 'member', label: 'Guide', color: 'success' }
                 ])
             },
             { 
@@ -413,7 +414,7 @@ function initEvents() {
                 if (data.pelanggan == 1) types.push("Pelanggan");
                 if (data.vendor == 1) types.push("Vendor");
                 if (data.karyawan == 1) types.push("Karyawan");
-                if (data.member == 1) types.push("member");
+                if (data.member == 1) types.push("Guide");
                 types.join(", ");
                 let sumTransaksi = data.total_transaksi || 0;
 
@@ -444,6 +445,7 @@ function initEvents() {
                 $('#tempat_lahirDetail').text(data.tempat_lahir);
                 $('#tanggal_lahirDetail').text(tanggal || null);
                 $('#tipeDetail').text(types);
+                renderGuideSection(data);
                 $('#transaksiDetail').text("Rp. " + sumTransaksi.toLocaleString('id-ID', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
@@ -883,4 +885,131 @@ $('#sbmHapus').click(function (e) {
             }
         },
     });
+});
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GUIDE CARD (detail kontak) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+let guideProfile = null;   // { id, kode_guide, token_guide } milik kontak yang sedang dibuka
+
+function guideLink(guide) {
+    return `${window.location.origin}/guide?c=${encodeURIComponent(guide.kode_guide + '-' + guide.token_guide)}`;
+}
+
+function renderGuideSection(data) {
+    const isGuide = data.member == 1;
+    $('#boxGuide').toggleClass('d-none', !isGuide);
+    guideProfile = isGuide ? { id: data.noindex, kode_guide: data.kode_guide, token_guide: data.token_guide } : null;
+    if (!isGuide) return;
+
+    const hasCode = !!(data.kode_guide && data.token_guide);
+    const canManage = userPermissions.includes('guide_manage');
+
+    $('#guideKodeDetail').text(data.kode_guide || '');
+    $('#guideLinkDetail').text(hasCode ? guideLink(data) : '');
+    $('#btnGuideOpen').toggleClass('d-none', !hasCode).attr('href', hasCode ? guideLink(data) : null);
+    $('#btnGuideCopy').toggleClass('d-none', !hasCode);
+    $('#btnGuideGenerate').toggleClass('d-none', hasCode);
+    $('#btnGuideEditCode, #btnGuideRegen').toggleClass('d-none', !hasCode);
+    $('#guideFotoPublik').prop('checked', data.guide_foto_publik == 1).prop('disabled', !canManage || !hasCode);
+    $('.guide-manage').prop('disabled', !canManage);
+}
+
+function guideRequest(method, url, payload, done) {
+    $.ajax({
+        url: url_api + url,
+        type: method,
+        contentType: 'application/json',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${window.token}`,
+            "X-Client-Domain": myDomain
+        },
+        data: JSON.stringify(payload || {}),
+        success: done,
+        error: function (xhr) {
+            notif.fire({ icon: 'error', text: xhr.responseJSON?.message || 'Terjadi kesalahan' });
+        }
+    });
+}
+
+function applyGuide(response) {
+    guideProfile.kode_guide = response.kode_guide ?? guideProfile.kode_guide;
+    guideProfile.token_guide = response.token_guide ?? guideProfile.token_guide;
+    renderGuideSection({
+        member: 1,
+        noindex: guideProfile.id,
+        kode_guide: guideProfile.kode_guide,
+        token_guide: guideProfile.token_guide,
+        guide_foto_publik: $('#guideFotoPublik').is(':checked') ? 1 : 0
+    });
+}
+
+$('#btnGuideGenerate').on('click', function () {
+    guideRequest('POST', `/guide/generate/${guideProfile.id}`, {}, function (response) {
+        notif.fire({ icon: 'success', text: response.message });
+        applyGuide(response);
+    });
+});
+
+$('#btnGuideRegen').on('click', function () {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Create a new link?',
+        text: 'The old link and any shared card will stop working.',
+        showCancelButton: true,
+        confirmButtonText: 'Create new link',
+        customClass: { confirmButton: 'btn btn-primary me-2', cancelButton: 'btn btn-label-secondary' },
+        buttonsStyling: false
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        guideRequest('POST', `/guide/generate/${guideProfile.id}`, { regenerate_token: true }, function (response) {
+            notif.fire({ icon: 'success', text: 'New link created' });
+            applyGuide(response);
+        });
+    });
+});
+
+$('#btnGuideEditCode').on('click', function () {
+    Swal.fire({
+        title: 'Guide code',
+        input: 'text',
+        inputValue: guideProfile.kode_guide || '',
+        inputAttributes: { maxlength: 30, autocapitalize: 'characters' },
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        customClass: { confirmButton: 'btn btn-primary me-2', cancelButton: 'btn btn-label-secondary' },
+        buttonsStyling: false,
+        inputValidator: value => (/^[A-Za-z0-9][A-Za-z0-9-]{1,29}$/.test((value || '').trim()) ? null : 'Use letters, numbers and "-" (2-30 characters)')
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        const kode = result.value.trim().toUpperCase();
+        guideRequest('PATCH', `/guide/${guideProfile.id}`, { kode_guide: kode }, function (response) {
+            notif.fire({ icon: 'success', text: response.message });
+            applyGuide({ kode_guide: kode });
+        });
+    });
+});
+
+$('#guideFotoPublik').on('change', function () {
+    const checkbox = this;
+    guideRequest('PATCH', `/guide/${guideProfile.id}`, { guide_foto_publik: checkbox.checked ? 1 : 0 }, function () {
+        notif.fire({ icon: 'success', text: checkbox.checked ? 'Photo will be shown on the public card' : 'Photo hidden from the public card' });
+    });
+});
+
+$('#btnGuideCopy').on('click', function () {
+    const link = $('#guideLinkDetail').text();
+    const done = () => notif.fire({ icon: 'success', text: 'Link copied' });
+    const fail = () => notif.fire({ icon: 'error', text: 'Could not copy the link' });
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(link).then(done, fail);
+        return;
+    }
+    const input = document.createElement('input');
+    input.value = link;
+    document.body.appendChild(input);
+    input.select();
+    try { document.execCommand('copy') ? done() : fail(); } catch (e) { fail(); }
+    input.remove();
 });

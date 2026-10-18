@@ -21,6 +21,10 @@ $(document).ready(function() {
 	    });
     } else {
         resetOrder();
+        // Guide (opsional): rate order tidak berubah; komisi dihitung saat order diproses
+        GuideRate.bind($('#guideTrans'), $('#guideField'), {
+            hint: 'The order rate stays as promised; the commission is calculated when the order is processed.'
+        });
     }
 });
 
@@ -71,6 +75,8 @@ function resetOrder() {
            	$('#tipeTrans').val(response.tipe);
            	$('#idOrder').val(response.noindex);
             $('#idCabang').val(response.cabang);
+            GuideRate.setValue($('#guideTrans'), response.guide,
+              response.guide ? `${response.kode_guide} - ${response.nama_guide}` : '');
 
            	const tanggal = new Date(response.tanggal);
            	const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -444,7 +450,7 @@ $('#btnSubmit').click(function (e) {
         "X-Client-Domain": myDomain,
         "Authorization": `Bearer ${window.token}`
       },
-      data: JSON.stringify({ details: details, cabang: $('#idCabang').val() }),
+      data: JSON.stringify({ details: details, cabang: $('#idCabang').val(), guide: $('#guideTrans').val() || null }),
       success: function (response) {
         notif.fire({
           icon: 'success',

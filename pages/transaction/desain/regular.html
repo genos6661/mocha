@@ -1,6 +1,200 @@
-<div class="invoice-print p-12">
-  <div class="d-flex justify-content-between flex-row">
-    <div class="mb-6">
+<style>
+  /* Regular A4: hemat tinta - tanpa blok warna, hanya garis tipis dan teks. Semua hook kelas (judulNota,
+     namaPelanggan, tabelDetail, subtotal, ...) diisi oleh js/pages/invoice.js. */
+  .inv-reg {
+    --inv-ink: #1f2430;
+    --inv-muted: #6b7280;
+    --inv-line: #d9dce3;
+    color: var(--inv-ink);
+    font-size: 0.9rem;
+  }
+  .inv-reg table {
+    font-size: inherit;
+  }
+  .inv-reg .inv-rule {
+    height: 0;
+    margin: 0 0 1.75rem;
+    border: 0;
+    border-top: 3px solid var(--bs-primary);
+  }
+  /* logo (persegi atau lebar) dibatasi tingginya agar kop tetap ringkas */
+  .inv-reg .boxLogo {
+    width: auto !important;
+  }
+  .inv-reg .boxLogo img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 10rem;
+    max-height: 3.75rem;
+  }
+  .inv-reg .boxLogo svg {
+    height: 2.5rem;
+    width: auto;
+  }
+  .inv-reg .judulNota {
+    margin-left: 0 !important;
+  }
+  .inv-reg .inv-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    line-height: 1;
+    text-align: right;
+    color: var(--bs-primary);
+  }
+  .inv-reg .inv-number {
+    margin: 0.5rem 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: right;
+  }
+  .inv-reg .inv-meta {
+    text-align: right;
+    color: var(--inv-muted);
+  }
+  .inv-reg .inv-meta strong {
+    color: var(--inv-ink);
+    font-weight: 600;
+  }
+  .inv-reg .inv-type {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.1rem 0.7rem;
+    border: 1px solid var(--bs-primary);
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bs-primary);
+  }
+  .inv-reg .inv-label {
+    margin: 0 0 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--inv-muted);
+  }
+  .inv-reg .inv-party p {
+    margin: 0 0 0.15rem;
+  }
+  .inv-reg .inv-info {
+    width: 100%;
+  }
+  .inv-reg .inv-info td {
+    padding: 0.12rem 0;
+    vertical-align: top;
+  }
+  .inv-reg .inv-info td:first-child {
+    width: 38%;
+    color: var(--inv-muted);
+  }
+  .inv-reg .inv-info td:last-child {
+    font-weight: 500;
+  }
+  .inv-reg .tabelDetail {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: transparent;
+  }
+  .inv-reg .tabelDetail thead th {
+    padding: 0.6rem 0.5rem;
+    border-top: 1.5px solid var(--inv-ink);
+    border-bottom: 1.5px solid var(--inv-ink);
+    background: transparent;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--inv-ink);
+  }
+  .inv-reg .tabelDetail tbody td {
+    padding: 0.65rem 0.5rem;
+    border: 0;
+    border-bottom: 1px solid var(--inv-line);
+    background: transparent;
+    color: var(--inv-ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-reg .tabelDetail tbody tr:last-child td {
+    border-bottom: 1.5px solid var(--inv-ink);
+  }
+  .inv-reg .inv-totals {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+  .inv-reg .inv-totals table {
+    width: 20rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-reg .inv-totals td {
+    padding: 0.25rem 0.5rem;
+  }
+  .inv-reg .inv-totals td:first-child {
+    color: var(--inv-muted);
+  }
+  .inv-reg .inv-totals td:last-child {
+    text-align: right;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .inv-reg .inv-totals .inv-grand td {
+    padding-top: 0.6rem;
+    border-top: 1.5px solid var(--inv-ink);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--inv-ink);
+  }
+  .inv-reg .inv-note {
+    margin-top: 1.75rem;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--bs-primary);
+    color: var(--inv-muted);
+    font-size: 0.82rem;
+  }
+  /* catatan hanya tampil bila cabang punya footer */
+  .inv-reg .inv-note:not(:has(.footer1:not(.d-none), .footer2:not(.d-none), .footer3:not(.d-none))) {
+    display: none;
+  }
+  .inv-reg .inv-note .inv-label {
+    margin-bottom: 0.2rem;
+  }
+  .inv-reg .inv-sign {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+  .inv-reg .inv-sign > div {
+    width: 30%;
+  }
+  .inv-reg .inv-sign .inv-sign-space {
+    height: 4rem;
+    border-bottom: 1px solid var(--inv-ink);
+  }
+  .inv-reg .inv-sign .inv-sign-name {
+    margin-top: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--inv-muted);
+  }
+  .inv-reg .inv-printed {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: var(--inv-muted);
+  }
+</style>
+
+<div class="invoice-print inv-reg p-12">
+  <hr class="inv-rule" />
+
+  <div class="d-flex justify-content-between flex-row mb-6">
+    <div>
       <div class="d-flex svg-illustration mb-2 gap-2 flex-column">
         <span class="app-brand-logo demo text-primary boxLogo">
           <span class="text-primary">
@@ -14,113 +208,96 @@
       <p class="mb-0"><span class="teleponCabang"></span></p>
     </div>
     <div>
-      <h4 class="mb-5">INVOICE #<span class="nomorTrans"></span></h4>
-      <div class="mb-1 text-heading text-end">
-        <span>Date Issues:</span>
-        <span class="fw-medium tanggalTransaksi"></span>
-      </div>
-      <div class="text-heading text-end">
-        <span class="jenisTransaksi"></span>
-      </div>
+      <h4 class="inv-title">INVOICE</h4>
+      <p class="inv-number">#<span class="nomorTrans"></span></p>
+      <p class="inv-meta mb-0">Date issued <strong class="tanggalTransaksi"></strong></p>
+      <div class="text-end"><span class="inv-type jenisTransaksi"></span></div>
     </div>
   </div>
 
-  <hr class="mb-6" />
-
-  <div class="card-body px-0">
-    <div class="row">
-      <div class="col-xl-6 col-md-12 col-sm-5 col-12 mb-xl-0 mb-md-6 mb-sm-0 mb-6">
-        <h5>Invoice To :</h5>
-        <p class="mb-1 fw-medium"><span class="namaPelanggan"></span></p>
-        <p class="mb-1 fw-medium"><span class="alamatPelanggan"></span></p>
-        <p class="mb-1 fw-medium"><span class="teleponPelanggan"></span></p>
-        <p class="mb-0 fw-medium"><span class="emailPelanggan"></span></p>
-        <!-- <p class="mb-0"></p> -->
-      </div>
-      <div class="col-xl-6 col-md-12 col-sm-7 col-12">
-        <h5> &nbsp; </h5>
-        <table>
-          <tbody>
-            <tr>
-              <td class="pe-4">Cust. Code :</td>
-              <td class="fw-medium"><span class="kodePelanggan"></span></td>
-            </tr>
-            <tr>
-              <td class="pe-4">ID Number :</td>
-              <td><span class="idNumber"></span></td>
-            </tr>
-            <tr>
-              <td class="pe-4">Nationality :</td>
-              <td><span class="negara"></span></td>
-            </tr>
-            <tr>
-              <td class="pe-4">Occupation :</td>
-              <td><span class="pekerjaan"></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="row mb-6">
+    <div class="col-6 inv-party">
+      <p class="inv-label">Invoice to</p>
+      <p class="fw-semibold fs-6"><span class="namaPelanggan"></span></p>
+      <p><span class="alamatPelanggan"></span></p>
+      <p><span class="teleponPelanggan"></span></p>
+      <p><span class="emailPelanggan"></span></p>
+    </div>
+    <div class="col-6">
+      <p class="inv-label">Customer details</p>
+      <table class="inv-info">
+        <tbody>
+          <tr>
+            <td>Cust. Code</td>
+            <td><span class="kodePelanggan"></span></td>
+          </tr>
+          <tr>
+            <td>ID Number</td>
+            <td><span class="idNumber"></span></td>
+          </tr>
+          <tr>
+            <td>Nationality</td>
+            <td><span class="negara"></span></td>
+          </tr>
+          <tr>
+            <td>Occupation</td>
+            <td><span class="pekerjaan"></span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="table-responsive border border-bottom-0 border-top-0 rounded mt-2">
-    <table class="table m-0 tabelDetail">
-      <thead>
+  <table class="table tabelDetail">
+    <thead>
+      <tr>
+        <th>Currency</th>
+        <th class="text-end">Amount</th>
+        <th class="text-end">Rate</th>
+        <th class="text-end">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="inv-totals">
+    <table>
+      <tbody>
         <tr>
-          <th>Currency</th>
-          <th class="text-end">Amount</th>
-          <th class="text-end">Rate</th>
-          <th class="text-end">Subtotal</th>
+          <td>Subtotal</td>
+          <td>Rp. <span class="subtotal"></span></td>
         </tr>
-      </thead>
-      <tbody></tbody>
+        <tr>
+          <td>Other cost</td>
+          <td>0</td>
+        </tr>
+        <tr class="inv-grand">
+          <td>Total</td>
+          <td>Rp. <span class="total"></span></td>
+        </tr>
+      </tbody>
     </table>
   </div>
-  <div class="row">
-    <div class="col-6 align-top pe-6 ps-0 py-6 text-body">
-        <!-- <p class="mb-1">
-          <span class="me-2 h6">Salesperson:</span>
-          <span>Alfie Solomons</span>
-        </p>
-        <span>Thanks for your business</span> -->
-        &nbsp;
-    </div>
-    <div class="col-3 px-0 py-6">
-      <p class="mb-2">Subtotal:</p>
-      <p class="mb-2">Other Cost:</p>
-      <p class="mb-0">Total:</p>
-    </div>
-    <div class="col-3 text-end px-3 py-6 fw-medium text-heading">
-      <p class="fw-medium mb-2 nowrap">Rp. <span class="subtotal"></span></p>
-      <p class="fw-medium mb-2 nowrap">0</p>
-      <p class="fw-medium mb-0 nowrap">Rp. <span class="total"></span></p>
-    </div>
+
+  <div class="inv-note">
+    <p class="inv-label">Note</p>
+    <span class="d-none footer1"></span>
+    <br>
+    <span class="d-none footer2"></span>
+    <br>
+    <span class="d-none footer3"></span>
   </div>
-  <hr class="mt-0 mb-6" />
-  <div class="row">
-    <div class="col-12">
-      <span class="fw-medium">Note:</span>
-      <span class="footer1" 
-        >It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance
-        projects. Thank You!</span
-      >
-      <br>
-      <span class="footer2"></span>
-      <br>
-      <span class="footer3"></span>
+
+  <div class="inv-sign">
+    <div>
+      <div class="inv-sign-space"></div>
+      <div class="inv-sign-name ttdPelanggan">Pelanggan</div>
+    </div>
+    <div>
+      <div class="inv-sign-space"></div>
+      <div class="inv-sign-name ttdPerusahaan">Mocha</div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-3 text-center ttdPelanggan">Pelanggan</div>
-    <div class="col"></div>
-    <div class="col-3 text-center ttdPerusahaan">Mocha</div>
-  </div>
-  <div class="row">
-    <div class="col mb-5">&nbsp;</div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-3 text-center border-bottom">&nbsp;</div>
-    <div class="col">&nbsp;</div>
-    <div class="col-3 text-center border-bottom">&nbsp;</div>
-  </div>
+
+  <p class="inv-printed">Printed on <span class="datetimePrint"></span></p>
 </div>

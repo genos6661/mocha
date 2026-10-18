@@ -49,43 +49,11 @@ $(document).ready(function () {
       allowClear: true
   });
 
-  $('#userInput').select2({
-      dropdownParent: '#filter',
-      ajax: {
-        url: url_api + '/users/select2',
-        dataType: 'json',
-        headers: {
-          "X-Client-Domain": myDomain
-        },
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data.results
-          };
-        }
-      },
-      placeholder: 'All Users',
-      allowClear: true
-  });
-
-  $('#showOption').select2({ dropdownParent: $('#filter') });
-  // $('#showOption').val("1").trigger('change');
-
 	$('#range').on('change', function () {
     updateDateRangeSelector(this.value);
   });
 
-  $('#simpleDate').on('change', function () {
-    updateDateSelector(this.value);
-  });
-
   $('#range').select2({dropdownParent: $('#filter')});
-  $('#simpleDate').select2({dropdownParent: $('#filter')}).val('today').trigger('change');
 
   $('#akun_start').on('change', function () {
     const val = $(this).val();
@@ -111,34 +79,23 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     const nama = button.getAttribute('data-nama')
     const range = button.getAttribute('data-range')
     const url = button.getAttribute('data-url')
-
-    $('#showOption').val("1").trigger('change');
+    const isTransactions = nama === 'Transactions Summary' || nama === 'Transactions Detail';
 
     $('#filter input, #filter select').val(null).trigger('change');
 
     $('#judulFilter').text(nama);
     $('#urlToGo').val(url);
 
+    // "All Time" hanya untuk laporan transaksi (Ledger selalu memakai rentang tanggal)
+    $('#range option[value="all"]').prop('disabled', !isTransactions);
+
     if(range) {
     	$('#range').val(range).trigger('change');
-      $('#simpleDate').val(range).trigger('change');
     }
 
-    if (nama === "Neraca" || nama === "LKPE") {
-      $('#boxSimpleRange, #boxRange').addClass('d-none');
-      $('#boxSimpleDate, #boxSingleDate').removeClass('d-none');
-    } else {
-      $('#boxSimpleRange, #boxRange').removeClass('d-none');
-      $('#boxSimpleDate, #boxSingleDate').addClass('d-none');
-    }
-
-    if(nama === "Summary Valas") {
-      $('#boxUser').removeClass('d-none');
-      $('#boxShowing').removeClass('d-none');
-    } else {
-      $('#boxUser').addClass('d-none');
-      $('#boxShowing').addClass('d-none');
-    }
+    // Ledger: rentang tanggal + cabang + akun; Transactions: rentang tanggal + cabang + Buy/Sell
+    $('#boxAkun').toggleClass('d-none', isTransactions);
+    $('#boxTipeTrans').toggleClass('d-none', !isTransactions);
 
     if(url) {
       $('#sbmFilter').attr('href', url);
@@ -223,71 +180,6 @@ function updateDateRangeSelector(selectedValue) {
   $('#endDate').val(endDate);
 }
 
-function updateDateSelector(selectedValue) {
-  const today = new Date();
-  let endDate = '';
-
-  function formatDate(d) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  switch (selectedValue) {
-    case 'today':
-      endDate = formatDate(today);
-      break;
-
-    case 'yesterday':
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      endDate = formatDate(yesterday);
-      break;
-
-    case 'tomorrrow':
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      endDate = formatDate(tomorrow);
-      break;
-
-    case 'lastWeek':
-      const lastWeekStart = new Date(today);
-      lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
-      const lastWeekEnd = new Date(lastWeekStart);
-      lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
-      endDate = formatDate(lastWeekEnd);
-      break;
-
-    case 'month':
-      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-      endDate = formatDate(endOfMonth);
-      break;
-
-    case 'lastMonth':
-      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-      endDate = formatDate(lastMonthEnd);
-      break;
-
-    case 'year':
-      const endOfYear = new Date(today.getFullYear(), 11, 31);
-      endDate = formatDate(endOfYear);
-      break;
-
-    case 'lastYear':
-      const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
-      endDate = formatDate(lastYearEnd);
-      break;
-
-    case 'all':
-    default:
-      startDate = '';
-      endDate = '';
-      break;
-  }
-  $('#singleDate').val(endDate);
-}
-
 $('#sbmFilter').click(function (e) {
   e.preventDefault();
 
@@ -296,7 +188,9 @@ $('#sbmFilter').click(function (e) {
   const cabang = $('#cabang').val();
   const akun_start = $('#akun_start').val();
   const akun_end = $('#akun_end').val();
-  // const showOption = $('#showOption').val() || 1;
+  const withTipe = !$('#boxTipeTrans').hasClass('d-none');
+  const buy = withTipe && $('#buy').is(':checked') ? 1 : 0;
+  const sell = withTipe && $('#sell').is(':checked') ? 1 : 0;
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
@@ -306,7 +200,8 @@ $('#sbmFilter').click(function (e) {
   if (cabang) params.append('cabang', cabang);
   if (akun_start) params.append('akun_start', akun_start);
   if (akun_end) params.append('akun_end', akun_end);
-  // if (showOption) params.append('show', showOption);
+  if (buy) params.append('buy', buy);
+  if (sell) params.append('sell', sell);
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

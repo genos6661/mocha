@@ -97,6 +97,12 @@
     </div>
   </div>
 
+  <div class="ep-card d-none" id="guideField">
+    <div class="mf-section-title"><i class="icon-base ti tabler-id-badge-2"></i>Guide <span class="text-body-secondary fw-normal ms-1">(optional)</span></div>
+    <select id="guideTrans" class="form-select"></select>
+    <div class="form-text guide-mode-hint"></div>
+  </div>
+
   <div class="ep-card">
     <div class="mf-section-title"><i class="icon-base ti tabler-list-details"></i>Order details
       <div class="mf-tools">
@@ -133,4 +139,5 @@
 </div>
 
 <script src="/js/pages/edit-party.js?v=<?= filemtime(__DIR__ . '/../../js/pages/edit-party.js') ?>" type="text/javascript"></script>
+<script src="/js/pages/guide-rate.js?v=<?= filemtime(__DIR__ . '/../../js/pages/guide-rate.js') ?>" type="text/javascript"></script>
 <script src="/js/pages/order-edit.js" type="text/javascript"></script>

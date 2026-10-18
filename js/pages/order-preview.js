@@ -75,10 +75,10 @@ function loadOrder() {
       $('#nomorOrder').text(response.nomor);
       $('#namaPelanggan').text(response.nama_pelanggan);
       $('#alamatPelanggan').text(response.alamat);
-      $('#teleponPelanggan').text(response.telepon);
-      $('#emailPelanggan').text(response.email);
+      $('#teleponPelanggan').text(InvoicePdf.maskId(response.telepon));
+      $('#emailPelanggan').text(InvoicePdf.maskEmail(response.email));
       $('#kodePelanggan').text(response.kode_pelanggan);
-      $('#idNumber').text(response.idNumber);
+      $('#idNumber').text(InvoicePdf.maskId(response.idNumber));
       $('#negara').text(response.nationality);
       $('#pekerjaan').text(response.pekerjaan);
       $('#namaPT').text(response.settings.NamaPT.strval);
@@ -180,10 +180,10 @@ function downloadPDF() {
     dateText: formatDate(order.tanggal),
     typeText: orderTypeLabel(order.tipe),
     billToTitle: 'Order From :',
-    billTo: [order.nama_pelanggan, order.alamat, order.telepon, order.email],
+    billTo: [order.nama_pelanggan, order.alamat, InvoicePdf.maskId(order.telepon), InvoicePdf.maskEmail(order.email)],
     info: [
       ['Cust. Code', order.kode_pelanggan],
-      ['ID Number', order.idNumber],
+      ['ID Number', InvoicePdf.maskId(order.idNumber)],
       ['Nationality', order.nationality],
       ['Occupation', order.pekerjaan]
     ],

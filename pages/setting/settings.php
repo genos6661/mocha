@@ -65,6 +65,19 @@
           <i class="icon-base ti tabler-list-numbers icon-sm me-1_5"></i> Reference Number
         </button>
       </li>
+      <li class="nav-item d-none" id="liTabGuide">
+        <button
+          id="btnTabGuide"
+          type="button"
+          class="nav-link"
+          data-bs-toggle="tab"
+          data-bs-target="#guide-tab"
+          aria-controls="guide-tab"
+          role="tab"
+          aria-selected="false">
+          <i class="icon-base ti tabler-id-badge-2 icon-sm me-1_5"></i> Guide
+        </button>
+      </li>
     </ul>
   </div>
 
@@ -246,6 +259,55 @@
       </div>
     </div>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~ Guide ~~~~~~~~~~~~~~~~~~~~~ -->
+    <div class="card settings-card tab-pane fade" id="guide-tab" role="tabpanel">
+      <div class="card-body">
+        <div class="settings-section">
+          <div class="settings-section-title"><span class="settings-section-icon"><i class="icon-base ti tabler-adjustments"></i></span>Guide Treatment</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="guideMode" class="form-label">Treatment</label>
+              <select id="guideMode" class="form-select">
+                <option value="off">Off - guides are not used on transactions</option>
+                <option value="commission">Commission - rate unchanged, company pays commission</option>
+                <option value="rate">Rate - rate is raised (Sell) or lowered (Buy)</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3" id="guideAkunBox">
+              <label for="guideAkunKomisi" class="form-label">Commission Expense Account</label>
+              <select id="guideAkunKomisi" class="form-select"></select>
+              <div class="form-text">Filled in automatically when a commission is paid from Reports &rarr; Guide Commission.</div>
+            </div>
+          </div>
+          <p class="settings-hint mb-0"><i class="icon-base ti tabler-info-circle"></i><span id="guideModeHint"></span></p>
+        </div>
+
+        <div class="settings-section mb-0" id="guideRulesBox">
+          <div class="settings-section-title justify-content-between flex-wrap gap-3">
+            <span class="d-flex align-items-center gap-3 fw-bold"><span class="settings-section-icon"><i class="icon-base ti tabler-percentage"></i></span>Commission Rules</span>
+            <button type="button" class="btn btn-outline-primary" id="btnAddGuideRule"><i class="icon-base ti tabler-plus icon-sm me-1"></i>Add Forex Rule</button>
+          </div>
+          <p class="settings-hint"><i class="icon-base ti tabler-info-circle"></i><span>The default rule applies to every forex without its own rule. It is the same for all guides.</span></p>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 settings-table" id="tabelGuideRule">
+              <thead>
+                <tr>
+                  <th>Forex</th>
+                  <th>Calculation</th>
+                  <th>Value</th>
+                  <th width="60"></th>
+                </tr>
+              </thead>
+              <tbody id="tbodyGuideRule"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="settings-actions">
+        <button class="btn btn-primary" id="sbmGuide"><i class="icon-base ti tabler-device-floppy me-2"></i>Submit</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -341,4 +403,5 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="js/pages/invoice-designs.js?v=<?= filemtime(__DIR__ . '/../../js/pages/invoice-designs.js') ?>" type="text/javascript"></script>
+<script src="js/setting/guide-setting.js?v=<?= filemtime(__DIR__ . '/../../js/setting/guide-setting.js') ?>" type="text/javascript"></script>
 <script src="js/setting/setting.js?v=<?= filemtime(__DIR__ . '/../../js/setting/setting.js') ?>" type="text/javascript"></script>

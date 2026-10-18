@@ -3,6 +3,12 @@ $(document).ready(function () {
     $('#modalTransaksiBaru #kontak').trigger('focus');
   });
 
+  // Guide (opsional): pada mode "rate", mengganti guide menyesuaikan ulang rate semua baris
+  GuideRate.bind($('#guideTrans'), $('#guideField'), {
+    parent: $('#modalTransaksiBaru'),
+    onChange: () => reapplyGuideRates()
+  }).then(treatment => { window.guideTreatment = treatment; });
+
   $("#cabangTrans").on("change", function () {
     const cabang = $(this).val();
     $('#tabelDetail tbody').empty();
@@ -217,6 +223,10 @@ function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
   let rate = tipe == 'buy' ? data.beli : data.jual;
   rate = parseFloat(rate) || 0;
 
+  // rate dasar disimpan per baris; rate yang tampil sudah disesuaikan bila ada guide (mode "rate")
+  $inputRate.data('base', rate);
+  rate = guideAdjusted(rate, data.id);
+
   const formattedRate = formatter.format(rate);
 
   $inputRate.val(formattedRate);
@@ -226,6 +236,22 @@ function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
   $inputSubtotal.val(formatter.format(subtotal));
 
   updateTotal();
+}
+
+function currentTipe() {
+  return $('#buyTrans').prop('checked') ? 'buy' : 'sell';
+}
+
+// Rate setelah penyesuaian guide (hanya berubah pada mode "rate" dan bila guide dipilih)
+function guideAdjusted(base, valas) {
+  if (!$('#guideTrans').val()) return base;
+  return GuideRate.adjust(window.guideTreatment, base, valas, currentTipe());
+}
+
+function reapplyGuideRates() {
+  GuideRate.reapplyRows($('#tabelDetail tbody'), {
+    tipe: currentTipe(), guide: $('#guideTrans').val(), formatter
+  }).then(changed => { if (changed) updateTotal(); });
 }
 
 $('#tabelDetail').on('click', '.btnHapusBaris', function () {
@@ -315,11 +341,11 @@ $('#btnSubmit').click(function (e) {
     const isValid = forex && amount !== 0 && rate !== 0;
 
     if (isValid) {
-      details.push({
-        forex: forex,
-        amount: amount,
-        rate: rate
-      });
+      const line = { forex: forex, amount: amount, rate: rate };
+      const base = $(this).find('.rate').data('base');
+      // rate dasar dikirim hanya bila rate disesuaikan untuk guide (mode "rate")
+      if ($('#guideTrans').val() && window.guideTreatment?.mode === 'rate' && base !== undefined) line.rate_dasar = base;
+      details.push(line);
     }
   });
 
@@ -359,6 +385,7 @@ $('#btnSubmit').click(function (e) {
       report_date: tanggal_laporan,
       branch: cabang,
       tipe: tipeTransaksi,
+      guide: $('#guideTrans').val() || null,
       items: details 
     }),
     success: function (response) {
@@ -377,6 +404,7 @@ $('#btnSubmit').click(function (e) {
       } else {
         // $('#modalTransaksiBaru .modal-body').find('input, select, textarea').val('').prop('checked', false);
         $('#kontak').val(null).trigger('change');
+        $('#guideTrans').val(null).trigger('change');
         $('#tabelDetail tbody').empty();
         $('#tambahBaris').trigger('click');
         updateTotal();

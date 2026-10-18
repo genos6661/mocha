@@ -12,6 +12,7 @@ RewriteRule ^order-preview/?$ order-preview.php [L]
 RewriteRule ^transaction-preview/?$ transaction-preview.php [L]
 RewriteRule ^login/?$ login.php [L]
 RewriteRule ^clear/?$ clear.html [L]
+RewriteRule ^guide/?$ guide.php [L]
 
 # Blokir akses langsung ke semua file fisik (PHP, JS, CSS, dsb)
 #RewriteCond %{REQUEST_URI} \.[a-zA-Z0-9]{2,4}$

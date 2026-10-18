@@ -8,37 +8,37 @@
     <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-chart-infographic"></i></span>
     <div>
       <h4 class="mb-1">Other Reports</h4>
-      <p class="text-body-secondary mb-0">Transaction summaries and activity logs. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
+      <p class="text-body-secondary mb-0">Logs, customer and employee data. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
     </div>
   </div>
 
   <div class="row g-4">
-    <div class="col-xl-4 col-md-6 col-12">
-      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Summary" data-range="month" data-url="/transactions-summary">
-        <span class="rl-icon"><i class="icon-base ti tabler-list-details"></i></span>
-        <div class="rl-text">
-          <h5 class="rl-title">Transactions Summary</h5>
-          <p class="rl-desc">Summary reports to transaction</p>
-        </div>
-        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
-      </div>
-    </div>
-    <div class="col-xl-4 col-md-6 col-12">
-      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Detail" data-range="month" data-url="/transactions-detail">
-        <span class="rl-icon"><i class="icon-base ti tabler-file-invoice"></i></span>
-        <div class="rl-text">
-          <h5 class="rl-title">Transactions Detail</h5>
-          <p class="rl-desc">Detail reports to transaction (per Valas)</p>
-        </div>
-        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
-      </div>
-    </div>
     <div class="col-xl-4 col-md-6 col-12">
       <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Logs Reports" data-range="all" data-url="/logs-report">
         <span class="rl-icon"><i class="icon-base ti tabler-report"></i></span>
         <div class="rl-text">
           <h5 class="rl-title">Logs Report</h5>
           <p class="rl-desc">Logging report for audit trail</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-users"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Customer Data</h5>
+          <p class="rl-desc">Customer Data Report in details</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-user"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Employee Data</h5>
+          <p class="rl-desc">Employee report details</p>
         </div>
         <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
@@ -68,7 +68,7 @@
       <div class="modal-body pb-2">
         <form id="formFilterOrder">
         <input type="hidden" id="urlToGo">
-        <div class="mb-3 d-none" id="boxSimpleRange">
+        <div class="mb-3" id="boxSimpleRange">
           <label for="range" class="form-label">Simple Range</label>
           <select id="range" class="form-select">
             <option value="all">All Time</option>
@@ -83,20 +83,7 @@
             <option value="lastYear">Last Year</option>
           </select>
         </div>
-        <div class="mb-3 d-none" id="boxSimpleDate">
-          <label for="simpleDate" class="form-label">Simple Date</label>
-          <select id="simpleDate" class="form-select">
-            <option value="today">Today</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="tomorrrow">Tomorrow</option>
-            <option value="lastWeek">Last Week</option>
-            <option value="lastMonth">Last Month</option>
-            <option value="lastYear">Last Year</option>
-          </select>
-        </div>
-        <div class="mb-3 d-none" id="boxRange">
+        <div class="mb-3" id="boxRange">
           <div class="row">
             <div class="col-md">
               <label for="startDate" class="form-label">Date From</label>
@@ -107,18 +94,6 @@
               <input type="date" class="form-control" id="endDate">
             </div>
           </div>
-        </div>
-        <div class="mb-3 d-none" id="boxSingleDate">
-          <label for="singleDate" class="form-label">Date</label>
-          <input type="date" class="form-control" id="singleDate">
-        </div>
-        <div class="mb-3 d-none" id="boxCabang">
-          <label for="cabang" class="form-label">Branch</label>
-          <select id="cabang" class="form-select"></select>
-        </div>
-        <div class="mb-3 d-none" id="boxCabang">
-          <label for="pelanggan" class="form-label">Customer</label>
-          <select id="pelanggan" class="form-select"></select>
         </div>
         <div class="mb-3 d-none" id="boxTipeLog">
           <label for="tipeLog" class="form-label">Type</label>
@@ -132,14 +107,34 @@
           <label for="emailLog" class="form-label">Email</label>
           <select id="emailLog" class="form-select"></select>
         </div>
-        <div class="d-flex justify-content-end mb-0 gap-4 d-none" id="boxTipeTrans">
-          <div class="form-check form-switch mb-0">
-            <input class="form-check-input" type="checkbox" id="buy" checked>
-            <label class="form-check-label" for="buy">Buy</label>
-          </div>
-          <div class="form-check form-switch mb-0">
-            <input class="form-check-input" type="checkbox" id="sell" checked>
-            <label class="form-check-label" for="sell">Sell</label>
+        <div class="mb-3 d-none" id="boxCabang">
+          <label for="cabang" class="form-label">Branch</label>
+          <select id="cabang" class="form-select"></select>
+        </div>
+        <div class="mb-3 d-none" id="boxNegara">
+          <label for="negara" class="form-label">Country</label>
+          <select id="negara" class="form-select"></select>
+        </div>
+        <div class="mb-3 d-none" id="boxSort">
+          <label for="sort_by" class="form-label">Sort By</label>
+          <select id="sort_by" class="form-select">
+            <option value="nama">Name</option>
+            <option value="nama_int_negara">Country</option>
+            <option value="total_transaksi">Transactions Count</option>
+            <option value="nilai_transaksi">Transactions Value</option>
+          </select>
+        </div>
+        <div class="mb-3 d-none" id="boxSortDir">
+          <label for="sort_dir" class="form-label">Sort Direction</label>
+          <select id="sort_dir" class="form-select">
+            <option value="asc">Ascending (ASC)</option>
+            <option value="desc">Descending (DESC)</option>
+          </select>
+        </div>
+        <div class="mb-1 d-flex d-none justify-content-end" id="boxShowThreshold">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="thresholdOnly">
+            <label class="form-check-label" for="thresholdOnly">Show Exceeded Threshold Only</label>
           </div>
         </div>
       </div>
@@ -153,4 +148,4 @@
   </div>
 </div>
 
-<script src="js/reports/other-reports.js" type="text/javascript"></script>
+<script src="js/reports/other-reports.js?v=<?= filemtime(__DIR__ . '/../../js/reports/other-reports.js') ?>" type="text/javascript"></script>

@@ -214,7 +214,7 @@ function loadReferenceNumber(data) {
                         <input
                             class="form-check-input percabang"
                             type="checkbox"
-                            ${item.percabang ? 'checked' : ''}>
+                            ${item.kode == 20 ? 'disabled title="Guide codes are numbered globally, not per branch"' : (item.percabang ? 'checked' : '')}>
                     </div>
                 </td>
             </tr>
@@ -828,6 +828,7 @@ $(document).on('click', '.btnDeleteMedia', function () {
         url: `${url_api}/setting/media/${fileName}`,
         type: 'DELETE',
         headers: {
+          "Authorization": `Bearer ${window.token}`,
           "X-Client-Domain": myDomain,
         },
         success: function (res) {
@@ -858,6 +859,7 @@ $('#removeLogo').click(function (e) {
         url: `${url_api}/setting/logo`,
         type: 'DELETE',
         headers: {
+          "Authorization": `Bearer ${window.token}`,
           "X-Client-Domain": myDomain,
         },
         success: function (res) {

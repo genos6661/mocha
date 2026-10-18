@@ -295,5 +295,18 @@
     doc.save(cfg.filename);
   }
 
-  window.InvoicePdf = { save, loadLogoPng, fmt: fmtDefault, makeFmt };
+  // Sensor data pribadi pada halaman preview publik: nomor ID/telepon "12xxxxxx89", email "a***@domain"
+  function maskId(value) {
+    const id = String(value || '');
+    if (id.length <= 4) return 'xxxx';
+    return id.slice(0, 2) + 'x'.repeat(id.length - 4) + id.slice(-2);
+  }
+
+  function maskEmail(value) {
+    const [name, domain] = String(value || '').split('@');
+    if (!name || !domain) return '';
+    return name.slice(0, 1) + '***@' + domain;
+  }
+
+  window.InvoicePdf = { save, loadLogoPng, fmt: fmtDefault, makeFmt, maskId, maskEmail };
 })(window);

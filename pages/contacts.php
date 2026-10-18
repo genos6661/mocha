@@ -94,7 +94,7 @@
           <div class="col mb-2">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="filMember" value="1" checked />
-              <label class="form-check-label" for="filMember">Member</label>
+              <label class="form-check-label" for="filMember">Guide</label>
             </div>
           </div>
         </div>
@@ -253,7 +253,7 @@
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="member" value="1" />
-              <label class="form-check-label" for="member">Member</label>
+              <label class="form-check-label" for="member">Guide</label>
             </div>
           </div>
         </div>
@@ -418,7 +418,7 @@
           <div class="col mb-0">
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="memberEdit" value="1" />
-              <label class="form-check-label" for="memberEdit">Member</label>
+              <label class="form-check-label" for="memberEdit">Guide</label>
             </div>
           </div>
         </div>
@@ -497,6 +497,27 @@
             <div class="dl-item"><span class="dl-label">Occupation/Position</span><span class="dl-value dataDetail" id="pekerjaanDetail"></span></div>
             <div class="dl-item"><span class="dl-label">Bank Account</span><span class="dl-value dataDetail" id="rekeningDetail"></span></div>
             <div class="dl-item"><span class="dl-label">All Time Transaction</span><span class="dl-value dataDetail" id="transaksiDetail"></span></div>
+          </div>
+        </div>
+        <div class="mf-section d-none" id="boxGuide">
+          <div class="mf-section-title"><i class="icon-base ti tabler-id-badge-2"></i>Guide Card</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Guide Code</span><span class="dl-value" id="guideKodeDetail"></span></div>
+            <div class="dl-item">
+              <span class="dl-label">Photo on public card</span>
+              <div class="form-check form-switch mb-0 mt-1">
+                <input class="form-check-input" type="checkbox" id="guideFotoPublik">
+                <label class="form-check-label" for="guideFotoPublik">Show the passport photo</label>
+              </div>
+            </div>
+            <div class="dl-item dl-wide"><span class="dl-label">Public link</span><span class="dl-value text-break" id="guideLinkDetail"></span></div>
+          </div>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <a class="btn btn-primary btn-sm" id="btnGuideOpen" target="_blank" rel="noopener"><i class="icon-base ti tabler-external-link icon-sm me-1"></i>Open Card</a>
+            <button type="button" class="btn btn-outline-primary btn-sm" id="btnGuideCopy"><i class="icon-base ti tabler-copy icon-sm me-1"></i>Copy Link</button>
+            <button type="button" class="btn btn-outline-primary btn-sm guide-manage" id="btnGuideGenerate"><i class="icon-base ti tabler-sparkles icon-sm me-1"></i>Generate Code</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm guide-manage" id="btnGuideEditCode"><i class="icon-base ti tabler-pencil icon-sm me-1"></i>Edit Code</button>
+            <button type="button" class="btn btn-outline-danger btn-sm guide-manage" id="btnGuideRegen"><i class="icon-base ti tabler-refresh icon-sm me-1"></i>New Link</button>
           </div>
         </div>
         <div class="mf-section" id="boxDokumen">

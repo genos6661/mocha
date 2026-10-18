@@ -8,7 +8,7 @@
     <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>
     <div>
       <h4 class="mb-1">Accounting Reports</h4>
-      <p class="text-body-secondary mb-0">Ledger and financial statements. Pick a report to set its filter and open it. <span class="rl-count">1 report</span></p>
+      <p class="text-body-secondary mb-0">Ledger and transaction reports. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
     </div>
   </div>
 
@@ -19,6 +19,26 @@
         <div class="rl-text">
           <h5 class="rl-title">Ledger</h5>
           <p class="rl-desc">Buku Besar</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Summary" data-range="month" data-url="/transactions-summary">
+        <span class="rl-icon"><i class="icon-base ti tabler-list-details"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Transactions Summary</h5>
+          <p class="rl-desc">Summary reports to transaction</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Transactions Detail" data-range="month" data-url="/transactions-detail">
+        <span class="rl-icon"><i class="icon-base ti tabler-file-invoice"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Transactions Detail</h5>
+          <p class="rl-desc">Detail reports to transaction (per Valas)</p>
         </div>
         <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
@@ -48,9 +68,10 @@
       <div class="modal-body pb-2">
         <form id="formFilterOrder">
         <input type="hidden" id="urlToGo">
-        <div class="mb-3 d-none" id="boxSimpleRange">
+        <div class="mb-3" id="boxSimpleRange">
           <label for="range" class="form-label">Simple Range</label>
           <select id="range" class="form-select">
+            <option value="all">All Time</option>
             <option value="today">Today</option>
             <option value="week">This Week</option>
             <option value="month">This Month (Default)</option>
@@ -62,20 +83,7 @@
             <option value="lastYear">Last Year</option>
           </select>
         </div>
-        <div class="mb-3 d-none" id="boxSimpleDate">
-          <label for="simpleDate" class="form-label">Simple Date</label>
-          <select id="simpleDate" class="form-select">
-            <option value="today">Today</option>
-            <option value="month">This Month</option>
-            <option value="year">This Year</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="tomorrrow">Tomorrow</option>
-            <option value="lastWeek">Last Week</option>
-            <option value="lastMonth">Last Month</option>
-            <option value="lastYear">Last Year</option>
-          </select>
-        </div>
-        <div class="mb-3 d-none" id="boxRange">
+        <div class="mb-3" id="boxRange">
           <div class="row">
             <div class="col-md">
               <label for="startDate" class="form-label">Date From</label>
@@ -87,11 +95,7 @@
             </div>
           </div>
         </div>
-        <div class="mb-3 d-none" id="boxSingleDate">
-          <label for="singleDate" class="form-label">Date</label>
-          <input type="date" class="form-control" id="singleDate">
-        </div>
-        <div class="mb-3">
+        <div class="mb-3" id="boxCabang">
           <label for="cabang" class="form-label">Branch</label>
           <select id="cabang" class="form-select"></select>
         </div>
@@ -107,17 +111,15 @@
             </div>
           </div>
         </div>
-        <div class="mb-3 d-none" id="boxUser">
-          <label for="userInput" class="form-label">User Input</label>
-          <select id="userInput" class="form-select"></select>
-        </div>
-        <div class="mb-3" id="boxShowing">
-          <label for="showOption" class="form-label">Displayed Option</label>
-          <select id="showOption" class="form-select">
-            <option value="1" selected>Show All Forexs</option>
-            <option value="2">Only Show Forexs with balance</option>
-            <option value="3">Only Show Forexs with mutation</option>
-          </select>
+        <div class="d-flex justify-content-end mb-0 gap-4 d-none" id="boxTipeTrans">
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="buy" checked>
+            <label class="form-check-label" for="buy">Buy</label>
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="sell" checked>
+            <label class="form-check-label" for="sell">Sell</label>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -130,4 +132,4 @@
   </div>
 </div>
 
-<script src="js/reports/accounting-reports.js" type="text/javascript"></script>
+<script src="js/reports/accounting-reports.js?v=<?= filemtime(__DIR__ . '/../../js/reports/accounting-reports.js') ?>" type="text/javascript"></script>

@@ -97,59 +97,31 @@ $(document).ready(function () {
       allowClear: true
   });
 
-  $('#pelanggan').select2({
-    dropdownParent: $('#filter'),
-    ajax: {
-      url: url_api + '/profile/select2',
-      dataType: 'json',
-      headers: {
-        "X-Client-Domain": myDomain,
-        "Authorization": `Bearer ${window.token}`
+  $('#negara').select2({
+      dropdownParent: $('#filter'),
+      ajax: {
+        url: url_api + '/profile/negara/select2',
+        dataType: 'json',
+        headers: {
+          "X-Client-Domain": myDomain
+        },
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term
+          };
+        },
+        processResults: function (data) {
+          return {
+            results: data.results
+          };
+        }
       },
-      delay: 1000, // ⏱ delay search 1 detik
-      data: function (params) {
-        return {
-          search: params.term || '',
-          page: params.page || 1
-        };
-      },
-      processResults: function (data, params) {
-        params.page = params.page || 1;
-
-        return {
-          results: data.results,
-          pagination: {
-            more: data.pagination.more
-          }
-        };
-      }
-    },
-    templateResult: function (data) {
-      if (!data.id) return data.nama;
-
-      return `
-        <div style="padding:6px 4px;">
-          <div style="font-weight:600;">${data.nama}</div>
-          <div style="font-size:12px;color:#666;">
-            📧 ${data.email || '-'}<br>
-            📱 ${data.telepon || '-'}<br>
-            🌍 ${data.nama_negara || '-'}
-          </div>
-        </div>
-      `;
-    },
-
-    templateSelection: function (data) {
-      return `${data.nama} - ${data.nama_negara}` || 'Choose Contact';
-    },
-
-    escapeMarkup: function (markup) {
-      return markup; 
-    },
-    placeholder: 'Choose Contact',
-    minimumInputLength: 0,
-    allowClear: true
+      placeholder: 'Choose Country'
   });
+
+  $('#sort_by').select2({dropdownParent: $('#filter'), placeholder: 'Select Column to Sort'});
+  $('#sort_dir').select2({dropdownParent: $('#filter'), placeholder: 'Sort Direction'});
 
   $('#tipeLog').on('change', function () {
     $('#aktivitasLog').val('').trigger('change');
@@ -159,12 +131,7 @@ $(document).ready(function () {
     updateDateRangeSelector(this.value);
   });
 
-  $('#simpleDate').on('change', function () {
-    updateDateSelector(this.value);
-  });
-
-  $('#range').select2({dropdownParent: $('#filter')});
-  $('#simpleDate').select2({dropdownParent: $('#filter')}).val('today').trigger('change');
+  $('#range').select2({dropdownParent: $('#filter'), placeholder: 'Select Range (Optional)'});
 
 });
 
@@ -174,27 +141,25 @@ modalFilter.addEventListener('shown.bs.modal', event => {
     const nama = button.getAttribute('data-nama')
     const range = button.getAttribute('data-range')
     const url = button.getAttribute('data-url')
+    const isLogs = nama === 'Logs Reports';
 
     $('#filter input, #filter select').val(null).trigger('change');
 
     $('#judulFilter').text(nama);
     $('#urlToGo').val(url);
 
+    // Logs: "All Time" tersedia & bawaan; Customer/Employee: rentang tanggal opsional (tanpa "All Time")
+    $('#range option[value="all"]').prop('disabled', !isLogs);
+    $('#range option[value="month"]').text(isLogs ? 'This Month (Default)' : 'This Month');
+
     if(range) {
     	$('#range').val(range).trigger('change');
-      $('#simpleDate').val(range).trigger('change');
     }
 
-    if (nama === "Logs Reports") {
-      $('#boxSimpleDate, #boxSingleDate, #boxCabang, #pelanggan, #boxTipeTrans').addClass('d-none');
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleRange, #boxRange').removeClass('d-none');
-    } else if (nama === "Transactions Summary" || nama === "Transactions Detail") {
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog, #boxSimpleDate, #boxSingleDate').addClass('d-none');
-      $('#boxSimpleRange, #boxRange, #boxCabang, #pelanggan, #boxTipeTrans').removeClass('d-none');
-    } else {
-      $('#boxSimpleRange, #boxRange').removeClass('d-none');
-      $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').addClass('d-none');
-    }
+    // Logs: tipe / aktivitas / email. Customer & Employee: cabang, negara, urutan (+ threshold khusus Customer)
+    $('#boxTipeLog, #boxAktivitasLog, #boxEmailLog').toggleClass('d-none', !isLogs);
+    $('#boxCabang, #boxNegara, #boxSort, #boxSortDir').toggleClass('d-none', isLogs);
+    $('#boxShowThreshold').toggleClass('d-none', nama !== 'Customer Data');
 
     if(url) {
       $('#sbmFilter').attr('href', url);
@@ -281,96 +246,37 @@ function updateDateRangeSelector(selectedValue) {
   $('#endDate').val(endDate);
 }
 
-function updateDateSelector(selectedValue) {
-  const today = new Date();
-  let endDate = '';
-
-  function formatDate(d) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  switch (selectedValue) {
-    case 'today':
-      endDate = formatDate(today);
-      break;
-
-    case 'yesterday':
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      endDate = formatDate(yesterday);
-      break;
-
-    case 'tomorrrow':
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
-      endDate = formatDate(tomorrow);
-      break;
-
-    case 'lastWeek':
-      const lastWeekStart = new Date(today);
-      lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
-      const lastWeekEnd = new Date(lastWeekStart);
-      lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
-      endDate = formatDate(lastWeekEnd);
-      break;
-
-    case 'month':
-      const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-      endDate = formatDate(endOfMonth);
-      break;
-
-    case 'lastMonth':
-      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-      endDate = formatDate(lastMonthEnd);
-      break;
-
-    case 'year':
-      const endOfYear = new Date(today.getFullYear(), 11, 31);
-      endDate = formatDate(endOfYear);
-      break;
-
-    case 'lastYear':
-      const lastYearEnd = new Date(today.getFullYear() - 1, 11, 31);
-      endDate = formatDate(lastYearEnd);
-      break;
-
-    case 'all':
-    default:
-      startDate = '';
-      endDate = '';
-      break;
-  }
-  $('#singleDate').val(endDate);
-}
-
 $('#sbmFilter').click(function (e) {
   e.preventDefault();
 
   const startDate = $('#startDate').val();
   const endDate = $('#endDate').val();
+  const isLogs = !$('#boxTipeLog').hasClass('d-none');
   const cabang = $('#cabang').val();
+  const negara = $('#negara').val();
+  const sort_by = $('#sort_by').val();
+  const sort_dir = $('#sort_dir').val();
+  const threshold = !$('#boxShowThreshold').hasClass('d-none') && $('#thresholdOnly').is(':checked') ? 1 : 0;
   const tipeLog = $('#tipeLog').val();
   const aktivitasLog = $('#aktivitasLog').val();
   const emailLog = $('#emailLog').val();
-  const pelanggan = $('#pelanggan').val();
-  const buy = $('#buy').is(':checked') ? 1 : 0;
-  const sell = $('#sell').is(':checked') ? 1 : 0;
   const baseUrl = $('#urlToGo').val();
 
   const params = new URLSearchParams();
 
   if (startDate) params.append('start', startDate);
   if (endDate) params.append('end', endDate);
-  if (cabang) params.append('cabang', cabang);
-  if (tipeLog) params.append('tipeLog', tipeLog);
-  if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
-  if (emailLog) params.append('emailLog', emailLog);
-  if (pelanggan) params.append('pelanggan', pelanggan);
-  if (buy) params.append('buy', buy);
-  if (sell) params.append('sell', sell);
+  if (!isLogs) {
+    if (cabang) params.append('cabang', cabang);
+    if (negara) params.append('negara', negara);
+    if (threshold) params.append('threshold_only', 1);
+    if (sort_by) params.append('sort_by', sort_by);
+    if (sort_dir) params.append('sort_dir', sort_dir);
+  } else {
+    if (tipeLog) params.append('tipeLog', tipeLog);
+    if (aktivitasLog) params.append('aktivitasLog', aktivitasLog);
+    if (emailLog) params.append('emailLog', emailLog);
+  }
 
   const finalUrl = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 

@@ -103,6 +103,10 @@ $(document).ready(function () {
     },
     success: function (permissions) {
         userPermissions = permissions;
+        // transaksi langsung mengikuti hak akses posting transaction
+        if(!permissions.includes('posting_transaction')) {
+          $('#btnNewTransaction').attr('disabled', true);
+        }
         if(permissions.includes('transaction')) {
           const contactValue = getUrlParameter('contact');
           if (contactValue) {
@@ -504,6 +508,8 @@ function initEvents() {
             $('#cabangDetail').text(data.nama_cabang);
             $('#pelangganDetail').text(data.nama_pelanggan);
             $('#negaraDetail').text(data.nationality);
+            $('#guideDetailItem').toggleClass('d-none', !data.guide);
+            $('#guideDetail').text(data.guide ? `${data.kode_guide} - ${data.nama_guide}` : '');
             $('#tanggalDetail').text(tanggal.toLocaleDateString('en-ID', options));
             const details = data.details || [];
 

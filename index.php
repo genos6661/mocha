@@ -126,7 +126,7 @@ switch ($routeInfo[0]) {
   </head>
 
   <body>
-    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', '/summary-valas-advance', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/master-data-reports', '/customer-report', '/employee-report', '/partner-report', '/other-features', '/dttot-list', '/transactions-summary', '/transactions-detail']; ?>
+    <?php $current_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH); $array_reports = ['/reports','/bi-reports', '/acc-reports', '/master-reports', '/other-reports', '/summary-valas', '/summary-valas-advance', '/lkub', '/neraca', '/laba-rugi', '/lkpe', '/accounting-reports', '/ledger', '/logs-report', '/guide-reports', '/guide-report', '/customer-report', '/employee-report', '/partner-report', '/other-features', '/dttot-list', '/transactions-summary', '/transactions-detail']; ?>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-navbar-full layout-horizontal layout-without-menu">
       <div class="layout-container">

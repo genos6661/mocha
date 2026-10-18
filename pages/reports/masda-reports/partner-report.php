@@ -50,7 +50,7 @@
           <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
         </li>
         <li class="breadcrumb-item">
-          <a href="/master-data-reports">Master Data Reports</a>
+          <a href="/guide-reports">Guide Reports</a>
           <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
         </li>
         <li class="breadcrumb-item active">Partner Report</li>

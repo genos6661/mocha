@@ -46,11 +46,7 @@ function loadLogo() {
   xhr.send();
 }
 
-function maskIdNumber(id) {
-  if (!id || id.length <= 4) return 'xxxx';
-
-  return id.slice(0, 2) + 'x'.repeat(id.length - 4) + id.slice(-2);
-}
+const maskIdNumber = InvoicePdf.maskId;
 
 function loadTransaction() {
   $.ajax({

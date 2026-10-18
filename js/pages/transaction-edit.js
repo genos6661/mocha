@@ -21,8 +21,21 @@ $(document).ready(function() {
 	    });
     } else {
         resetTrans();
+        // Guide (opsional): pada mode "rate", mengganti guide menyesuaikan ulang rate (kecuali transaksi dari order)
+        GuideRate.bind($('#guideTrans'), $('#guideField'), {
+            onChange: () => {
+                if (window.fromOrder) return;
+                GuideRate.reapplyRows($('#tabelDetail tbody'), {
+                    tipe: tipeNama(), guide: $('#guideTrans').val(), formatter
+                }).then(changed => { if (changed) updateTotal(); });
+            }
+        }).then(treatment => { window.guideTreatment = treatment; });
     }
 });
+
+function tipeNama() {
+  return $('#tipeTrans').val() == 3 ? 'buy' : 'sell';
+}
 
 function resetTrans() {
   const logoUrl = url_api + '/setting/logo/';
@@ -71,6 +84,11 @@ function resetTrans() {
            	$('#tipeTrans').val(response.tipe);
            	$('#idTransaksi').val(response.noindex);
             $('#idCabang').val(response.cabang);
+
+            // transaksi dari order: rate sudah dijanjikan, tidak disesuaikan lagi saat guide diganti
+            window.fromOrder = !!response.nomor_order;
+            GuideRate.setValue($('#guideTrans'), response.guide,
+              response.guide ? `${response.kode_guide} - ${response.nama_guide}` : '');
 
            	const tanggal = new Date(response.tanggal);
            	const formattedDate = tanggal.toLocaleDateString('en-US', {
@@ -163,6 +181,9 @@ function resetTrans() {
                 let $inputRate = row.find('.rate').first();
                 let $inputJumlah = row.find('.jumlah').first();
                 let $inputSubtotal = row.find('.subtotal').first();
+
+                // rate dasar (sebelum disesuaikan untuk guide); kosong berarti rate tersimpan = rate dasar
+                $inputRate.data('base', item.rate_dasar != null ? Number(item.rate_dasar) : Number(item.rate));
 
                 initSelect2Valas(selectForex);
                 tbody.append(row);
@@ -384,6 +405,12 @@ function updateRates($selectForex, $inputRate, $inputJumlah, $inputSubtotal) {
   let rate = tipe == 3 ? data.beli : data.jual;
   rate = parseFloat(rate) || 0;
 
+  // rate dasar disimpan per baris; rate yang tampil disesuaikan bila ada guide (mode "rate", bukan dari order)
+  $inputRate.data('base', rate);
+  if ($('#guideTrans').val() && !window.fromOrder) {
+    rate = GuideRate.adjust(window.guideTreatment, rate, data.id, tipeNama());
+  }
+
   const formattedRate = formatter.format(rate);
 
   $inputRate.val(formattedRate);
@@ -432,11 +459,13 @@ $('#btnSubmit').click(function (e) {
     const isValid = forex && amount !== 0 && rate !== 0;
 
     if (isValid) {
-      details.push({
-        forex: forex,
-        amount: amount,
-        rate: rate
-      });
+      const line = { forex: forex, amount: amount, rate: rate };
+      const base = $(this).find('.rate').data('base');
+      // rate dasar dikirim hanya bila rate disesuaikan untuk guide (mode "rate")
+      if ($('#guideTrans').val() && !window.fromOrder && window.guideTreatment?.mode === 'rate' && base !== undefined) {
+        line.rate_dasar = base;
+      }
+      details.push(line);
     }
   });
 
@@ -476,6 +505,7 @@ $('#btnSubmit').click(function (e) {
         tanggal_laporan: tanggal_laporan,
         cabang: $('#idCabang').val(),
         tipe: $('#tipeTrans').val(),
+        guide: $('#guideTrans').val() || null,
         details: details 
       }),
       success: function (response) {
