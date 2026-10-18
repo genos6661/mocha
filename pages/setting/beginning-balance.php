@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <link rel="stylesheet" href="/assets/css/beginning-balance.css?v=<?= filemtime(__DIR__ . '/../../assets/css/beginning-balance.css') ?>" />
 
 <div class="settings-page">
@@ -145,178 +146,155 @@
 
 <!-- modal tambah -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalTambah" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">New Initial Balance</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formIBBaru" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-cash"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">New Initial Balance</h4>
+          <p class="mf-sub">Set the opening stock and rate of a forex in a branch.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formIBBaru">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="cabang" class="form-label">Branch</label>
-            <select id="cabang" class="form-select"></select>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-cash"></i>Initial balance</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="cabang" class="form-label">Branch</label>
+              <select id="cabang" class="form-select"></select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="valas" class="form-label">Forex</label>
+              <select id="valas" class="form-select"></select>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="valas" class="form-label">Forex</label>
-            <select id="valas" class="form-select"></select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="stok" class="form-label">Balance</label>
-            <input type="text" id="stok" class="form-control" placeholder="Input Balance" min="0" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="rate" class="form-label">Rate</label>
-            <div class="input-group">
-              <input type="text" id="rate" class="form-control" placeholder="Input Rate" min="0" />
-              <span class="input-group-text">Rupiah</span>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="stok" class="form-label">Balance</label>
+              <input type="text" id="stok" class="form-control" placeholder="Input Balance" min="0" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="rate" class="form-label">Rate</label>
+              <div class="input-group">
+                <input type="text" id="rate" class="form-control" placeholder="Input Rate" min="0" />
+                <span class="input-group-text">Rupiah</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmTambahForex" class="btn btn-primary">Submit</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmTambahForex" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Submit</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal edit -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEdit" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Edit Initial Balance</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formEditIB" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-cash"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Edit Initial Balance</h4>
+          <p class="mf-sub">Change the opening stock and rate of a forex in a branch.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formEditIB">
         <input type="hidden" id="idEdit">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="cabangEdit" class="form-label">Branch</label>
-            <select id="cabangEdit" class="form-select"></select>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-cash"></i>Initial balance</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="cabangEdit" class="form-label">Branch</label>
+              <select id="cabangEdit" class="form-select"></select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="valasEdit" class="form-label">Forex</label>
+              <select id="valasEdit" class="form-select"></select>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="valasEdit" class="form-label">Forex</label>
-            <select id="valasEdit" class="form-select"></select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="stokEdit" class="form-label">Balance</label>
-            <input type="text" id="stokEdit" class="form-control" placeholder="Input Balance" min="0" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="rateEdit" class="form-label">Rate</label>
-            <div class="input-group">
-              <input type="text" id="rateEdit" class="form-control" placeholder="Input Rate" min="0" />
-              <span class="input-group-text">Rupiah</span>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="stokEdit" class="form-label">Balance</label>
+              <input type="text" id="stokEdit" class="form-control" placeholder="Input Balance" min="0" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="rateEdit" class="form-label">Rate</label>
+              <div class="input-group">
+                <input type="text" id="rateEdit" class="form-control" placeholder="Input Rate" min="0" />
+                <span class="input-group-text">Rupiah</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmEditForex" class="btn btn-primary">Submit</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmEditForex" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Submit</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal hapus forex -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Forex Beginning Balance</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapus">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapus" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Forex Beginning Balance</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete beginning balance <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete beginning balance <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Initial Balance Detail</h5>
-        <div id="statusDetail" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-scale"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Initial Balance Detail</h4>
+          <p class="mf-sub">Opening forex stock and rate in a branch.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Branch :</span>
-            <span class="dataDetail" id="cabangDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Code :</span>
-            <span class="dataDetail" id="kodeDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Name :</span>
-            <span class="dataDetail" id="namaDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Rate :</span>
-            <span class="dataDetail" id="rateDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Stock :</span>
-            <span class="dataDetail" id="stokDetail"></span>
-          </li>
-        </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Branch</span><span class="dl-value dataDetail" id="cabangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetail" id="kodeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Rate</span><span class="dl-value dataDetail" id="rateDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Stock</span><span class="dl-value dataDetail" id="stokDetail"></span></div>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
-        <button class="btn btn-danger mx-1" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer ">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

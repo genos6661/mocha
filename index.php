@@ -432,25 +432,15 @@ switch ($routeInfo[0]) {
             <!--/ Content -->
 
             <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
+            <footer class="content-footer footer bg-footer-theme app-footer">
               <div class="container-xxl">
-                <div
-                  class="footer-container d-flex align-items-center justify-content-between py-4 flex-md-row flex-column">
-                  <div class="text-body">
-                    ©
-                    <script>
-                      document.write(new Date().getFullYear());
-                    </script>
-                    , made with ❤️ by <a href="https://beresmocha.my.id" target="_blank" class="footer-link">The Brotherhood</a>
-                  </div>
-                  <!-- <div class="d-none d-lg-inline-block">
-                    <a
-                      href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-                      target="_blank"
-                      class="footer-link me-4"
-                      >Documentation</a
-                    >
-                  </div> -->
+                <div class="app-footer-inner">
+                  <span class="app-footer-copy">&copy; <?= date('Y') ?> <strong>BERES Mocha</strong> &middot; All rights reserved</span>
+                  <a href="https://thebrotherhoodlaw.com" target="_blank" rel="noopener" class="app-footer-credit">
+                    <span class="app-footer-label">Crafted by</span>
+                    <span class="app-footer-brand"><i class="icon-base ti tabler-heart-handshake"></i>The Brotherhood</span>
+                    <i class="icon-base ti tabler-arrow-up-right app-footer-arrow"></i>
+                  </a>
                 </div>
               </div>
             </footer>

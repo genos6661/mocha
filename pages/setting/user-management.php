@@ -1,28 +1,6 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
 <link rel="stylesheet" href="/assets/css/user-management.css?v=<?= filemtime(__DIR__ . '/../../assets/css/user-management.css') ?>" />
-<style>
-  .role-level {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
-    position: relative;
-    width: 100%;
-  }
-
-  .role-connector {
-    width: 2px;
-    background: #ccc;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 0;
-  }
-</style>
 
 <div class="settings-page">
   <div class="settings-head">
@@ -307,196 +285,173 @@
 
 <!-- modal role -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalTambahRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">New Role Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formRoleBaru" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-shield-lock"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">New Role Data</h4>
+          <p class="mf-sub">Create a role and choose its access rights.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formRoleBaru">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="kode" class="form-label">Code</label>
-            <input
-              type="text"
-              id="kode"
-              class="form-control"
-              placeholder="Input Role Code" />
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-shield-lock"></i>Role</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="kode" class="form-label">Code</label>
+              <input type="text" id="kode" class="form-control" placeholder="Input Role Code" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="nama" class="form-label">Name</label>
+              <input type="text" id="nama" class="form-control" placeholder="Input Role Name" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="level" class="form-label">Level</label>
+              <input type="number" id="level" class="form-control" min="2" value="2" />
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="nama" class="form-label">Name</label>
-            <input
-              type="text"
-              id="nama"
-              class="form-control"
-              placeholder="Input Role Name" />
-          </div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-lock-access"></i>Access rights</div>
+          <p class="mf-hint mb-3"><i class="icon-base ti tabler-info-circle"></i>Tick a category or sub-category to select everything inside it. Click its name to expand.</p>
+          <div id="permissionsContainer"></div>
         </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="level" class="form-label">Level</label>
-            <input type="number" class="form-control" id="level" min="2" value="2">
-          </div>
-        </div>
-        <div id="permissionsContainer" class="mt-3"></div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmTambahRole" class="btn btn-primary">Save</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmTambahRole" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Save</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEditRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Edit Role Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formEditRole" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-shield-lock"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Edit Role Data</h4>
+          <p class="mf-sub">Change the role and its access rights.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formEditRole">
         <input type="hidden" id="idEditRole">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="kodeEdit" class="form-label">Code</label>
-            <input
-              type="text"
-              id="kodeEdit"
-              class="form-control"
-              placeholder="Input Role Code" />
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-shield-lock"></i>Role</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="kodeEdit" class="form-label">Code</label>
+              <input type="text" id="kodeEdit" class="form-control" placeholder="Input Role Code" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="namaEdit" class="form-label">Name</label>
+              <input type="text" id="namaEdit" class="form-control" placeholder="Input Role Name" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="levelEdit" class="form-label">Level</label>
+              <input type="number" id="levelEdit" class="form-control" min="2" />
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="namaEdit" class="form-label">Name</label>
-            <input
-              type="text"
-              id="namaEdit"
-              class="form-control"
-              placeholder="Input Role Name" />
-          </div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-lock-access"></i>Access rights</div>
+          <p class="mf-hint mb-3"><i class="icon-base ti tabler-info-circle"></i>Tick a category or sub-category to select everything inside it. Click its name to expand.</p>
+          <div id="permissionsContainerEdit"></div>
         </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="levelEdit" class="form-label">Level</label>
-            <input type="number" class="form-control" id="levelEdit" min="2">
-          </div>
-        </div>
-        <div id="permissionsContainerEdit" class="mt-3"></div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmEditRole" class="btn btn-primary">Save</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmEditRole" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Save</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapusRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Role Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapus">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapus" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Role Data</h4>
         <input type="hidden" id="idHapusRole">
-        <h4>Continue to delete Role <span id="refHapusRole"></span>?</h4>
+        <p class="mb-1">Continue to delete Role <span class="fw-semibold text-heading" id="refHapusRole"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" id="sbmHapusRole" class="btn btn-danger">Hapus</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapusRole" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetailRole" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Role Detail</h5>
-        <div id="statusDetailRole" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-shield-lock"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Role Detail</h4>
+          <p class="mf-sub">Role, level and its access rights.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetailRole"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <div class="row">
-          <div class="col-md">
-            <ul class="list-unstyled mb-3">
-              <li class="mb-2">
-                <span class="h6 me-1">Code :</span>
-                <span class="dataDetail" id="kodeDetailRole"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Name :</span>
-                <span class="dataDetail" id="namaDetailRole"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Level :</span>
-                <span class="dataDetail" id="levelDetailRole"></span>
-              </li>
-            </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-shield-lock"></i>Role</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetail" id="kodeDetailRole"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetailRole"></span></div>
+            <div class="dl-item"><span class="dl-label">Level</span><span class="dl-value dataDetail" id="levelDetailRole"></span></div>
           </div>
         </div>
-        <div id="boxTreeDetail" class="d-flex flex-column align-items-center gap-4 position-relative"></div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-lock-access"></i>Access rights</div>
+          <div id="boxTreeDetail" class="d-flex flex-column align-items-center gap-4 position-relative"></div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mx-1" id="activateBtnRole">Activate</button>
-        <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtnRole">Deactivate</button>
-        <button class="btn btn-primary mx-1 d-none" data-bs-toggle="modal" data-bs-target="#modalEditRole" id="editBtnRole">Edit</button>
-        <button class="btn btn-danger mx-1 d-none" id="deleteBtnRole" data-bs-toggle="modal" data-bs-target="#modalHapusRole">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-outline-primary btn d-none" id="activateBtnRole">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtnRole">Deactivate</button>
+        <button class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#modalEditRole" id="editBtnRole">Edit</button>
+        <button class="btn btn-danger d-none" id="deleteBtnRole" data-bs-toggle="modal" data-bs-target="#modalHapusRole">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalLevel" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Level Tree</h5>
-        <div id="statusDetailRole" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-hierarchy-2"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Level Tree</h4>
+          <p class="mf-sub">Roles grouped by level. A lower level number has higher authority.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div id="boxTree" class="d-flex flex-column align-items-center gap-4 position-relative"></div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+      <div class="modal-footer">
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -504,188 +459,135 @@
 
 <!-- modal user -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetailUser" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">User Detail</h5>
-        <div id="statusDetail" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-user"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">User Detail</h4>
+          <p class="mf-sub">Profile and login account of this user.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <div class="row">
-          <div class="col-md">
-            <ul class="list-unstyled mb-3">
-              <li class="mb-2">
-                <span class="h6 me-1">Profile Code :</span>
-                <span class="dataDetail" id="kodeDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">NIK :</span>
-                <span class="dataDetail" id="nikDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Name :</span>
-                <span class="dataDetail" id="namaDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Username :</span>
-                <span class="dataDetail" id="usernameDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Email :</span>
-                <span class="dataDetail" id="emailDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Branchs :</span>
-                <span class="dataDetail" id="cabangDetail"></span>
-              </li>
-            </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-id"></i>Profile</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Profile Code</span><span class="dl-value dataDetail" id="kodeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">NIK</span><span class="dl-value dataDetail" id="nikDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Occupation/Position</span><span class="dl-value dataDetail" id="posisiDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Phone</span><span class="dl-value dataDetail" id="teleponDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Email</span><span class="dl-value dataDetail" id="emailDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Address</span><span class="dl-value dataDetail" id="alamatDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Country</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
           </div>
-          <div class="col-md">
-            <ul class="list-unstyled mb-3 text-end">
-              <li class="mb-2">
-                <span class="h6 me-1">Occupation/Position :</span>
-                <span class="dataDetail" id="posisiDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Role :</span>
-                <span class="dataDetail" id="roleDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Phone :</span>
-                <span class="dataDetail" id="teleponDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Address :</span>
-                <span class="dataDetail" id="alamatDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Country :</span>
-                <span class="dataDetail" id="negaraDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 me-1">Allow Request Rate :</span>
-                <span class="dataDetail" id="requestDetail"></span>
-              </li>
-            </ul>
+        </div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-user-cog"></i>Account</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Username</span><span class="dl-value dataDetail" id="usernameDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Role</span><span class="dl-value dataDetail" id="roleDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Branchs</span><span class="dl-value dataDetail" id="cabangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Allow Request Rate</span><span class="dl-value dataDetail" id="requestDetail"></span></div>
           </div>
         </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mx-1" id="activateBtn">Activate</button>
-        <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtn">Deactivate</button>
-        <button class="btn btn-primary mx-1 d-none" data-bs-toggle="modal" data-bs-target="#modalEditUser" id="editBtn">Edit</button>
-        <button class="btn btn-danger mx-1 d-none" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapusUser">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-outline-primary btn d-none" id="activateBtn">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtn">Deactivate</button>
+        <button class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#modalEditUser" id="editBtn">Edit</button>
+        <button class="btn btn-danger d-none" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapusUser">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEditUser" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Edit User Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formEditUser" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-user-edit"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Edit User Data</h4>
+          <p class="mf-sub">Change the login account, role and branch access of this user.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formEditUser">
         <input type="hidden" id="idEditUser">
-        <div class="row">
-          <div class="col mb-3">
-            <label for="namaEditUser" class="form-label">Username</label>
-            <input
-              type="text"
-              id="namaEditUser"
-              class="form-control"
-              placeholder="Input Role Code" />
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-user-cog"></i>Account</div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="namaEditUser" class="form-label">Username</label>
+              <input type="text" id="namaEditUser" class="form-control" placeholder="Input Username" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="emailEditUser" class="form-label">Email</label>
+              <input type="email" id="emailEditUser" class="form-control" placeholder="Input Email" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="roleEditUser" class="form-label">Role</label>
+              <select id="roleEditUser" class="form-select"></select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="passwordEditUser" class="form-label">Password</label>
+              <input type="password" id="passwordEditUser" class="form-control" placeholder="Keep blank unless update the password" />
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="emailEditUser" class="form-label">Email</label>
-            <input
-              type="email"
-              id="emailEditUser"
-              class="form-control"
-              placeholder="Input Role Name" />
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-building-store"></i>Access</div>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label for="cabangEditUser" class="form-label">Branchs Limitation</label>
+              <select id="cabangEditUser" class="form-select" multiple></select>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="roleEditUser" class="form-label">Role</label>
-            <select id="roleEditUser" class="form-select"></select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="passwordEditUser" class="form-label">Password</label>
-            <input type="password" class="form-control" id="passwordEditUser" placeholder="Keep blank unless update the password">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col mb-3">
-            <label for="cabangEditUser" class="form-label">Branchs Limitation</label>
-            <select id="cabangEditUser" class="form-select" multiple></select>
-          </div>
-        </div>
-        <div class="row row-cols-md-3 row-cols-2">
-          <div class="col">
-            <div class="form-check form-switch mb-2">
+          <div class="d-flex flex-wrap gap-4 mt-1">
+            <div class="form-check form-switch mb-0">
               <input class="form-check-input" type="checkbox" id="requestEdit" value="1" />
               <label class="form-check-label" for="requestEdit">Allow Request</label>
             </div>
-          </div>
-          <div class="col">
-            <div class="form-check form-switch mb-2">
+            <div class="form-check form-switch mb-0">
               <input class="form-check-input" type="checkbox" id="aktifEdit" value="1" />
               <label class="form-check-label" for="aktifEdit">Active</label>
             </div>
           </div>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmEditUser" class="btn btn-primary">Save</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmEditUser" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Save</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapusUser" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete User Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusUser">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusUser" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete User Data</h4>
         <input type="hidden" id="idHapusUser">
-        <h4>Continue to delete User <span id="refHapusUser"></span>?</h4>
+        <p class="mb-1">Continue to delete User <span class="fw-semibold text-heading" id="refHapusUser"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" id="sbmHapusUser" class="btn btn-danger">Hapus</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapusUser" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

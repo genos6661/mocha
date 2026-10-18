@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <h5 class="mb-3">Cash Transaction</h5>
 <div class="card">
   <div class="row p-3">
@@ -112,57 +113,34 @@
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Cash Transaction Detail</h5>
-        <div class="d-flex gap-2">
-          <div id="dividenDet"></div>
-          <p class="h5 dataDetail" id="nomorDetail"></p>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-cash-banknote"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Cash Transaction Detail</h4>
+          <p class="mf-sub">Cash or bank money in or out.</p>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <div class="mf-meta"><div id="dividenDet"></div><span class="mf-ref dataDetail" id="nomorDetail"></span></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <div class="row">
-          <div class="col-md">
-            <ul class="list-unstyled mb-6">
-              <li class="mb-2">
-                <span class="h6 ">Branch :</span>
-                <span class="dataDetail" id="cabangDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 ">Date :</span>
-                <span class="dataDetail" id="tanggalDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 ">From/To :</span>
-                <span class="dataDetail" id="kontakDetail"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md">
-            <ul class="list-unstyled mb-6 text-end">
-              <li class="mb-2">
-                <span class="h6 ">Description :</span>
-                <span class="dataDetail" id="deskripsiDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 ">Cash/Bank Account :</span>
-                <span class="dataDetail" id="kasDetail"></span>
-              </li>
-              <li class="mb-2">
-                <span class="h6 ">User Input :</span>
-                <span class="dataDetail" id="userDetail"></span>
-              </li>
-            </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Branch</span><span class="dl-value dataDetail" id="cabangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Date</span><span class="dl-value dataDetail" id="tanggalDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">From/To</span><span class="dl-value dataDetail" id="kontakDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Description</span><span class="dl-value dataDetail" id="deskripsiDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Cash/Bank Account</span><span class="dl-value dataDetail" id="kasDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">User Input</span><span class="dl-value dataDetail" id="userDetail"></span></div>
           </div>
         </div>
-        <div class="table-responsive" id="itemDetail">
-          <table class="table table-sm" id="tabelItemDetail">
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-list-details"></i>Items</div>
+<div class="table-responsive" id="itemDetail">
+          <table class="table table-borderless mf-table mf-detail-table" id="tabelItemDetail">
             <thead>
               <tr>
                 <th>Type</th>
@@ -175,13 +153,15 @@
             <tbody></tbody>
           </table>
         </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn mx-1" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
-        <!-- <a class="btn-outline-primary btn mx-1" target="_blank" id="reprintDetail">Reprint</a> -->
-        <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
-        <button class="btn btn-danger mx-1" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-outline-primary btn" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
+        <!-- <a class="btn-outline-primary btn" target="_blank" id="reprintDetail">Reprint</a> -->
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -189,229 +169,201 @@
 
 <!-- modal tambah -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalTambah" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="row w-100">
-          <div class="col-md-3">
-            <h5 class="modal-title" id="backDropModalTitle">New Cash Transaction</h5>
-          </div>
-          <div class="col-md-9 d-flex justify-content-end">
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="checkbox" name="isDividen" id="dividen" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Dividen</span>
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTrans" id="in" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Cash In</span>
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTrans" id="out" class="switch-input" checked>
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Cash Out</span>
-              </label>
-            </div>
-          </div>
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formCashBaru" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-cash-banknote"></i></span>
+        <div>
+          <h4 class="mf-title">New Cash Transaction</h4>
+          <p class="mf-sub">Record cash or bank money coming in or going out.</p>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formCashBaru">
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="kontak" class="form-label">Contact</label>
-            <select name="" id="kontak" class="form-select"></select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="tanggal" class="form-label">Date</label>
-            <input type="date" id="tanggal" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="cabang" class="form-label">Branch</label>
-            <select id="cabang" class="form-select"></select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="deskripsi" class="form-label">Description</label>
-            <input type="text" id="deskripsi" class="form-control" placeholder="Input Description" />
+        <div class="mf-section">
+          <div class="mf-section-title">
+            <i class="icon-base ti tabler-arrows-exchange"></i>Transaction type
+            <div class="mf-tools">
+              <div class="form-check form-switch mf-switch">
+                <input type="checkbox" name="isDividen" id="dividen" class="form-check-input">
+                <label class="form-check-label" for="dividen">Dividen</label>
+              </div>
+              <div class="btn-group mf-segment" role="group" aria-label="Cash direction">
+                <input type="radio" class="btn-check" name="tipeTrans" id="in">
+                <label class="btn btn-outline-success" for="in">Cash In</label>
+                <input type="radio" class="btn-check" name="tipeTrans" id="out" checked>
+                <label class="btn btn-outline-danger" for="out">Cash Out</label>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8 mb-3">
-            <label for="judul" class="form-label">Cash/Bank Account</label>
-            <select name="" id="akunKas" class="form-select"></select>
+
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-file-description"></i>General</div>
+          <div class="row">
+            <div class="col-md mb-3">
+              <label for="kontak" class="form-label">Contact</label>
+              <select name="" id="kontak" class="form-select"></select>
+            </div>
+            <div class="col-md mb-3">
+              <label for="tanggal" class="form-label">Date</label>
+              <input type="date" id="tanggal" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
+            </div>
           </div>
-          <div class="col-md-4 mb-3 align-items-end d-grid">
-            <button class="btn btn-outline-primary" type="button" id="tambahBaris">Add New Row</button>
+          <div class="row">
+            <div class="col-md mb-3">
+              <label for="cabang" class="form-label">Branch</label>
+              <select id="cabang" class="form-select"></select>
+            </div>
+            <div class="col-md mb-3">
+              <label for="deskripsi" class="form-label">Description</label>
+              <input type="text" id="deskripsi" class="form-control" placeholder="Input Description" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-1">
+              <label for="akunKas" class="form-label">Cash/Bank Account</label>
+              <select name="" id="akunKas" class="form-select"></select>
+            </div>
           </div>
         </div>
-        <div class="table-responsive nowrap">
-          <table class="table table-borderless table-stack" id="detailBaru">
-            <thead>
-              <tr class="border-top border-bottom">
-                <th style="width: 30%; min-width: 200px;">Account</th>
-                <th style="width: 30%; min-width: 200px;">Note</th>
-                <th class="text-end" style="width: 30%; min-width: 200px;">Amount</th>
-                <th style="width: 10%"></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr>
-                <th colspan="2">Total :</th>
-                <th class="px-1 pt-2">
-                  <input type="text" class="form-control text-end" id="totalBaru" readonly>
-                </th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
+
+        <div class="mf-section">
+          <div class="mf-section-title">
+            <i class="icon-base ti tabler-list-details"></i>Details
+            <div class="mf-tools">
+              <button class="btn btn-primary" type="button" id="tambahBaris">
+                <i class="icon-base ti tabler-plus icon-sm me-1"></i>Add New Row
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive nowrap">
+            <table class="table table-borderless table-stack mf-table" id="detailBaru">
+              <thead>
+                <tr>
+                  <th style="width: 30%; min-width: 200px;">Account</th>
+                  <th style="width: 30%; min-width: 200px;">Note</th>
+                  <th class="text-end" style="width: 30%; min-width: 200px;">Amount</th>
+                  <th style="width: 10%"></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="mf-total">
+            <span class="mf-total-label">Total</span>
+            <input type="text" class="form-control text-end" id="totalBaru" readonly>
+          </div>
         </div>
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmTambah" class="btn btn-primary">Save</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmTambah" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Save</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal edit -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalEdit" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div class="row w-100">
-          <div class="col-md-4 d-flex gap-2">
-            <h5 class="modal-title" id="backDropModalTitle">Edit Cash Transaction</h5>
-            <p class="h5"><span id="nomorEdit"></span></p>
-          </div>
-          <div class="col-md-8 d-flex justify-content-end">
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="checkbox" name="isDividenEdit" id="dividenEdit" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Dividen</span>
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTransEdit" id="inEdit" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Cash In</span>
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTransEdit" id="outEdit" class="switch-input" checked>
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Cash Out</span>
-              </label>
-            </div>
-          </div>
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <form class="modal-content mf-modal" id="formCashEdit" onsubmit="return false;">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-cash-banknote"></i></span>
+        <div>
+          <h4 class="mf-title">Edit Cash Transaction</h4>
+          <p class="mf-sub">Change a cash or bank transaction.</p>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <span class="mf-ref" id="nomorEdit"></span>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <form id="formCashEdit">
         <input type="hidden" id="idEdit">
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="kontakEdit" class="form-label">Contact</label>
-            <select name="" id="kontakEdit" class="form-select"></select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="tanggalEdit" class="form-label">Date</label>
-            <input type="date" id="tanggalEdit" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="cabangEdit" class="form-label">Branch</label>
-            <select id="cabangEdit" class="form-select"></select>
-          </div>
-          <div class="col-md mb-3">
-            <label for="deskripsiEdit" class="form-label">Description</label>
-            <input type="text" id="deskripsiEdit" class="form-control" placeholder="Input Description" />
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-arrows-exchange"></i>Transaction type
+            <div class="mf-tools">
+              <div class="form-check form-switch mf-switch">
+                <input type="checkbox" name="isDividenEdit" id="dividenEdit" class="form-check-input">
+                <label class="form-check-label" for="dividenEdit">Dividen</label>
+              </div>
+              <div class="btn-group mf-segment" role="group" aria-label="Cash direction">
+                <input type="radio" class="btn-check" name="tipeTransEdit" id="inEdit">
+                <label class="btn btn-outline-success" for="inEdit">Cash In</label>
+                <input type="radio" class="btn-check" name="tipeTransEdit" id="outEdit" checked>
+                <label class="btn btn-outline-danger" for="outEdit">Cash Out</label>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8 mb-3">
-            <label for="akunKasEdit" class="form-label">Cash/Bank Account</label>
-            <select name="" id="akunKasEdit" class="form-select"></select>
+
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-file-description"></i>General
           </div>
-          <div class="col-md-4 mb-3 align-items-end d-grid">
-            <button class="btn btn-outline-primary" type="button" id="tambahBarisEdit">Add New Row</button>
+          <div class="row">
+            <div class="col-md mb-3">
+              <label for="kontakEdit" class="form-label">Contact</label>
+              <select id="kontakEdit" class="form-select"></select>
+            </div>
+            <div class="col-md mb-3">
+              <label for="tanggalEdit" class="form-label">Date</label>
+              <input type="date" id="tanggalEdit" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md mb-3">
+              <label for="cabangEdit" class="form-label">Branch</label>
+              <select id="cabangEdit" class="form-select"></select>
+            </div>
+            <div class="col-md mb-3">
+              <label for="deskripsiEdit" class="form-label">Description</label>
+              <input type="text" id="deskripsiEdit" class="form-control" placeholder="Input Description" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <label for="akunKasEdit" class="form-label">Cash/Bank Account</label>
+              <select id="akunKasEdit" class="form-select"></select>
+            </div>
           </div>
         </div>
-        <div class="table-responsive nowrap">
-          <table class="table table-borderless table-stack" id="detailEdit">
-            <thead>
-              <tr class="border-top border-bottom">
-                <th style="width: 30%; min-width: 200px;">Account</th>
-                <th style="width: 30%; min-width: 200px;">Note</th>
-                <th class="text-end" style="width: 30%; min-width: 200px;">Amount</th>
-                <th style="width: 10%"></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-            <tfoot>
-              <tr>
-                <th colspan="2">Total :</th>
-                <th class="px-1 pt-2">
-                  <input type="text" class="form-control text-end" id="totalEdit" readonly>
-                </th>
-                <th></th>
-              </tr>
-            </tfoot>
-          </table>
+
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-list-details"></i>Details
+          <div class="mf-tools">
+            <button class="btn btn-primary" type="button" id="tambahBarisEdit"><i class="icon-base ti tabler-plus icon-sm me-1"></i>Add New Row</button>
+          </div>
+          </div>
+          <div class="table-responsive nowrap">
+            <table class="table table-borderless table-stack mf-table" id="detailEdit">
+              <thead>
+                <tr>
+                  <th style="width: 30%; min-width: 200px;">Account</th>
+                  <th style="width: 30%; min-width: 200px;">Note</th>
+                  <th class="text-end" style="width: 30%; min-width: 180px;">Amount</th>
+                  <th style="width: 10%"></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="mf-total">
+            <div class="mf-total-group">
+              <span class="mf-total-label">Total</span>
+              <input type="text" class="form-control text-end" id="totalEdit" readonly>
+            </div>
+          </div>
         </div>
+
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <button type="button" id="sbmEdit" class="btn btn-primary">Save</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="sbmEdit" class="btn btn-primary"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Save</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -455,27 +407,20 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Cash Transaction</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapus">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapus" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Cash Transaction</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete transaction <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete transaction <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

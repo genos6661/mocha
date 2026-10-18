@@ -58,14 +58,8 @@ function resetTrans() {
             $('#alamatCabang').text(response.alamat_cabang);
             $('#teleponCabang').text(response.telepon_cabang);
             $('#nomorTransaksi').text(response.nomor);
-            $('#namaPelanggan').text(response.nama_pelanggan);
-            $('#alamatPelanggan').text(response.alamat);
-            $('#teleponPelanggan').text(response.telepon);
-            $('#emailPelanggan').text(response.email);
-            $('#kodePelanggan').text(response.kode_pelanggan);
-            $('#idNumber').text(response.idNumber);
-            $('#negara').text(response.nationality);
-            $('#pekerjaan').text(response.pekerjaan);
+            // cabang & data pelanggan bisa diedit (js/pages/edit-party.js)
+            EditParty.fill(response, 'kontak');
 
            	let jenisTransaksi = "";
            	if(response.tipe == 3) {
@@ -467,36 +461,41 @@ $('#btnSubmit').click(function (e) {
     return;
   }
 
-  $.ajax({
-    url: url_api + '/transaction/' + idTrans,
-    type: 'PUT',
-    contentType: 'application/json',
-    headers: {
-      "Content-Type": "application/json",
-      "X-Client-Domain": myDomain,
-      "Authorization": `Bearer ${window.token}`
-    },
-    data: JSON.stringify({ 
-      tanggal: tanggal,
-      tanggal_laporan: tanggal_laporan,
-      cabang: $('#idCabang').val(),
-      tipe: $('#tipeTrans').val(),
-      details: details 
-    }),
-    success: function (response) {
-      notif.fire({
-        icon: 'success',
-        text: response.message
-      }).then(() => {
-        window.location.href = '/transaction';
-      });
-    },
-    error: function (xhr) {
-      $btn.prop('disabled', false);
-      notif.fire({
-        icon: 'error',
-        text: xhr.responseJSON?.message || 'Terjadi kesalahan'
-      });
-    }
+  EditParty.save().then(function () {
+    $.ajax({
+      url: url_api + '/transaction/' + idTrans,
+      type: 'PUT',
+      contentType: 'application/json',
+      headers: {
+        "Content-Type": "application/json",
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
+      },
+      data: JSON.stringify({ 
+        tanggal: tanggal,
+        tanggal_laporan: tanggal_laporan,
+        cabang: $('#idCabang').val(),
+        tipe: $('#tipeTrans').val(),
+        details: details 
+      }),
+      success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then(() => {
+          window.location.href = '/transaction';
+        });
+      },
+      error: function (xhr) {
+        $btn.prop('disabled', false);
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+        });
+      }
+    });
+  }, function (message) {
+    $btn.prop('disabled', false);
+    notif.fire({ icon: 'error', text: message });
   });
 });

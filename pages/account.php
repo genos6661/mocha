@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../assets/css/modal-form.css') ?>" />
 <div class="nav-align-top">
   <ul class="nav nav-pills flex-column flex-sm-row mb-6 gap-md-0 gap-2">
     <li class="nav-item">
@@ -498,77 +499,57 @@
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapusAkun" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Account Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusAkun">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusAkun" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Account Data</h4>
         <input type="hidden" id="idHapusAkun">
-        <h4>Continue to delete Account <span id="refHapusAkun"></span>?</h4>
+        <p class="mb-1">Continue to delete Account <span class="fw-semibold text-heading" id="refHapusAkun"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" id="sbmHapusAkun" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapusAkun" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetailAkun" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Account Detail</h5>
-        <div id="statusDetailAkun" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-book-2"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Account Detail</h4>
+          <p class="mf-sub">Chart of accounts entry and its classification.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetailAkun"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Code :</span>
-            <span class="dataDetailAkun" id="kodeDetailAkun"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Name :</span>
-            <span class="dataDetailAkun" id="namaDetailAkun"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Alias :</span>
-            <span class="dataDetailAkun" id="aliasDetailAkun"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Master Account :</span>
-            <span class="dataDetailAkun" id="masterDetailAkun"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Classification :</span>
-            <span class="dataDetailAkun" id="klasDetailAkun"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Sub Classification :</span>
-            <span class="dataDetailAkun" id="subklasDetailAkun"></span>
-          </li>
-        </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetailAkun" id="kodeDetailAkun"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetailAkun" id="namaDetailAkun"></span></div>
+            <div class="dl-item"><span class="dl-label">Alias</span><span class="dl-value dataDetailAkun" id="aliasDetailAkun"></span></div>
+            <div class="dl-item"><span class="dl-label">Master Account</span><span class="dl-value dataDetailAkun" id="masterDetailAkun"></span></div>
+            <div class="dl-item"><span class="dl-label">Classification</span><span class="dl-value dataDetailAkun" id="klasDetailAkun"></span></div>
+            <div class="dl-item"><span class="dl-label">Sub Classification</span><span class="dl-value dataDetailAkun" id="subklasDetailAkun"></span></div>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mx-1" id="activateBtnAkun">Activate</button>
-        <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtnAkun">Deactivate</button>
-        <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalEditAkun" id="editBtnAkun">Edit</button>
-        <button class="btn btn-danger mx-1" id="deleteBtnAkun" data-bs-toggle="modal" data-bs-target="#modalHapusAkun">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer ">
+        <button class="btn-outline-primary btn d-none" id="activateBtnAkun">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtnAkun">Deactivate</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEditAkun" id="editBtnAkun">Edit</button>
+        <button class="btn btn-danger" id="deleteBtnAkun" data-bs-toggle="modal" data-bs-target="#modalHapusAkun">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

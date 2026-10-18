@@ -3,57 +3,60 @@
     cursor: pointer;
   }
 </style>
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb breadcrumb-custom-icon">
-    <li class="breadcrumb-item">
-      <a href="/reports">Reports</a>
-      <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
-    </li>
-    <li class="breadcrumb-item active">Other Features</li>
-  </ol>
-</nav>
+<link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 
-<div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#modalUpload" data-nama="DTTOT Identification">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-report icon-xl"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">DTTOT Identification</h5>
-        <span class="text-body-secondary">Upload file excel untuk identifikasi DTTOT</span>
-      </div>
+<div class="settings-page rp-primary">
+  <a href="/reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Reports</a>
+
+  <div class="settings-head">
+    <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-device-desktop-star"></i></span>
+    <div>
+      <h4 class="mb-1">Other Features</h4>
+      <p class="text-body-secondary mb-0">DTTOT and PPATK tools. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
     </div>
   </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="DTTOT List" data-range="all" data-url="/dttot-list">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-list-details icon-xl"></i>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#modalUpload" data-nama="DTTOT Identification">
+        <span class="rl-icon"><i class="icon-base ti tabler-report"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">DTTOT Identification</h5>
+          <p class="rl-desc">Upload file excel untuk identifikasi DTTOT</p>
         </div>
-      </div>
-      <div>
-        <h5 class="mb-0">DTTOT List</h5>
-        <span>Daftar pelanggan terindikasi DTTOT</span>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Threshold Transaction Report" data-range="month" data-url="/threshold-report">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-alert-triangle icon-xl"></i>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="DTTOT List" data-range="all" data-url="/dttot-list">
+        <span class="rl-icon"><i class="icon-base ti tabler-list-details"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">DTTOT List</h5>
+          <p class="rl-desc">Daftar pelanggan terindikasi DTTOT</p>
         </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
-      <div>
-        <h5 class="mb-0">Threshold Transaction Report</h5>
-        <span>Laporan transaksi yang melewati batas threshold</span>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Threshold Transaction Report" data-range="month" data-url="/threshold-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-alert-triangle"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Threshold Transaction Report</h5>
+          <p class="rl-desc">Laporan transaksi yang melewati batas threshold</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // kartu laporan bisa dibuka dengan Enter / Spasi
+  document.querySelectorAll('.rl-card').forEach(card => card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+  }));
+</script>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="filter" data-bs-backdrop="static" tabindex="-1">

@@ -1,89 +1,87 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb breadcrumb-custom-icon">
-    <li class="breadcrumb-item">
-      <a href="/reports">Reports</a>
-      <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
-    </li>
-    <li class="breadcrumb-item active">BI Reports</li>
-  </ol>
-</nav>
+<link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 
-<div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas" data-range="month" data-url="/summary-valas">
-      <!-- <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-building-bank icon-xl"></i>
+<div class="settings-page rp-success">
+  <a href="/reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Reports</a>
+
+  <div class="settings-head">
+    <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-building-bank"></i></span>
+    <div>
+      <h4 class="mb-1">BI Reports</h4>
+      <p class="text-body-secondary mb-0">Reports required by Bank Indonesia. Pick a report to set its filter and open it. <span class="rl-count">6 reports</span></p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas" data-range="month" data-url="/summary-valas">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/sv.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Summary Forex</h5>
+          <p class="rl-desc">Ringkasan Mutasi Per Valas</p>
         </div>
-      </div> -->
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/sv.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">Summary Forex</h5>
-        <span class="text-body-secondary">Ringkasan Mutasi Per Valas</span>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/LKUB.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">LKUB</h5>
-        <span class="text-body-secondary">Laporan Kegiatan Usaha Bulanan</span>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/LKUB.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">LKUB</h5>
+          <p class="rl-desc">Laporan Kegiatan Usaha Bulanan</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/neraca.png" alt="Avatar" class="rounded">
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/neraca.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Balance Sheet</h5>
+          <p class="rl-desc">Laporan Neraca (BI)</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
-      <div>
-        <h5 class="mb-0 text-body">Balance Sheet</h5>
-        <span class="text-body-secondary">Laporan Neraca (BI)</span>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/LKPE.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">LKPE</h5>
+          <p class="rl-desc">Laporan Keuangan Perubahan Ekuitas</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/labarugi.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Profit & Loss</h5>
+          <p class="rl-desc">Laporan Keuangan Laba/Rugi</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas Advance" data-range="month" data-url="/summary-valas-advance">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/logs.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Summary Forex Advance</h5>
+          <p class="rl-desc">Ringkasan Mutasi Per Valas Advance</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/LKPE.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">LKPE</h5>
-        <span class="text-body-secondary">Laporan Keuangan Perubahan Ekuitas</span>
-      </div>
-    </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/labarugi.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">Profit & Loss</h5>
-        <span class="text-body-secondary">Laporan Keuangan Laba/Rugi</span>
-      </div>
-    </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Summary Valas Advance" data-range="month" data-url="/summary-valas-advance">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/logs.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">Summary Forex Advance</h5>
-        <span class="text-body-secondary">Ringkasan Mutasi Per Valas Advance</span>
-      </div>
-    </div>
-  </div>
-</div>
+<script>
+  // kartu laporan bisa dibuka dengan Enter / Spasi
+  document.querySelectorAll('.rl-card').forEach(card => card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+  }));
+</script>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="filter" data-bs-backdrop="static" tabindex="-1">

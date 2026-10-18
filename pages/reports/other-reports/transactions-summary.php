@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../../assets/css/modal-form.css') ?>" />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=National+Park:wght@200..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
@@ -287,27 +288,20 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Transaction</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusTransaksi">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusTransaksi" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Transaction</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete transaction <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete transaction <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

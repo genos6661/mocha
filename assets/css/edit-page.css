@@ -1,0 +1,163 @@
+/**
+ * HALAMAN EDIT TRANSAKSI / EDIT ORDER (/transaction/edit, /order/edit)
+ * Memakai komponen modal-form.css (.mf-*) untuk judul bagian, tabel detail, dan bar total.
+ * Prefix kelas: ep-.
+ */
+
+.ep-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---------- judul halaman ---------- */
+.ep-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.ep-head-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1.1rem;
+  font-size: 1.8rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #170a0d));
+  box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--bs-primary-rgb), 0.7);
+}
+.ep-head h4 {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+}
+.ep-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  color: var(--bs-secondary-color);
+}
+.ep-meta .badge:empty {
+  display: none;
+}
+
+/* ---------- kartu ---------- */
+.ep-card {
+  margin-bottom: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.75rem 2rem -1.25rem rgba(0, 0, 0, 0.3);
+}
+.ep-card .form-label {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+
+/* dua kartu sejajar (cabang | pelanggan): jarak lewat baris, bukan margin kartu */
+.ep-page > .row {
+  margin-bottom: 1.25rem;
+  row-gap: 1.25rem;
+}
+.ep-page > .row .ep-card {
+  margin-bottom: 0;
+}
+
+/* cabang: logo + nama nota, alamat, telepon */
+.ep-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+.ep-brand #boxLogo svg {
+  width: 2.5rem;
+  height: auto;
+}
+.ep-brand #boxLogo img {
+  max-height: 2.2rem;
+  width: auto;
+}
+.ep-brand-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.ep-lines p {
+  margin: 0 0 0.25rem;
+  color: var(--bs-body-color);
+}
+.ep-lines p:empty,
+.ep-lines p:has(> span:empty) {
+  display: none;
+}
+
+/* pelanggan / info: label kecil di atas nilai */
+.ep-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.25rem;
+  margin: 0;
+}
+.ep-info dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.ep-info dd {
+  margin: 0.15rem 0 0;
+  font-weight: 500;
+  color: var(--bs-heading-color);
+  overflow-wrap: anywhere;
+}
+.ep-info .ep-wide {
+  grid-column: 1 / -1;
+}
+
+/* ---------- bilah aksi ---------- */
+.ep-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.9rem 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 -0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.3);
+}
+.ep-actions .btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 767.98px) {
+  .ep-head-icon {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+  .ep-card {
+    padding: 1.1rem;
+  }
+  .ep-actions {
+    padding: 0.75rem 1rem;
+  }
+  .ep-actions .btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+@media (max-width: 479.98px) {
+  .ep-info {
+    grid-template-columns: 1fr;
+  }
+}

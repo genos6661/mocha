@@ -1,82 +1,57 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb breadcrumb-custom-icon">
-    <li class="breadcrumb-item">
-      <a href="/reports">Reports</a>
-      <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
-    </li>
-    <li class="breadcrumb-item active">Master Data Reports</li>
-  </ol>
-</nav>
+<link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 
-<div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-users icon-xl"></i>
-        </div>
-      </div>
-      <!-- <div class="avatar avatar-lg">
-        <img src="/assets/img/report/sv.png" alt="Avatar" class="rounded">
-      </div> -->
-      <div>
-        <h5 class="mb-0 text-body">Customer Data</h5>
-        <span class="text-body-secondary">Customer Data Report in details</span>
-      </div>
+<div class="settings-page rp-danger">
+  <a href="/reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Reports</a>
+
+  <div class="settings-head">
+    <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-layout-dashboard"></i></span>
+    <div>
+      <h4 class="mb-1">Data Master Reports</h4>
+      <p class="text-body-secondary mb-0">Customer, employee and partner data. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
     </div>
   </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-user icon-xl"></i>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Customer Data" data-url="/customer-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-users"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Customer Data</h5>
+          <p class="rl-desc">Customer Data Report in details</p>
         </div>
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">Employee Data</h5>
-        <span class="text-body-secondary">Employee report details</span>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
-      <div class="avatar">
-        <div class="avatar-initial bg-primary rounded">
-          <i class="icon-base ti tabler-user-plus icon-xl"></i>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Employee Data" data-url="/employee-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-user"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Employee Data</h5>
+          <p class="rl-desc">Employee report details</p>
         </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
-      <div>
-        <h5 class="mb-0 text-body">Partner Data</h5>
-        <span class="text-body-secondary">Guide or partner details</span>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Partner Data" data-url="/partner-report">
+        <span class="rl-icon"><i class="icon-base ti tabler-user-plus"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Partner Data</h5>
+          <p class="rl-desc">Guide or partner details</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
   </div>
 </div>
 
-<!-- <div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/lkpe.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">LKPE</h5>
-        <span class="text-body-secondary">Laporan Keuangan Perubahan Ekuitas</span>
-      </div>
-    </div>
-  </div>
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/labarugi.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0 text-body">Profit & Loss</h5>
-        <span class="text-body-secondary">Laporan Keuangan Laba/Rugi</span>
-      </div>
-    </div>
-  </div>
-</div> -->
+<script>
+  // kartu laporan bisa dibuka dengan Enter / Spasi
+  document.querySelectorAll('.rl-card').forEach(card => card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+  }));
+</script>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="filter" data-bs-backdrop="static" tabindex="-1">

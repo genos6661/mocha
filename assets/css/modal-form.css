@@ -1,0 +1,481 @@
+/**
+ * MODAL FORM (Update Rates, New Transaction, New Cash Transaction)
+ * Kerangka modal yang sama: kepala berikon, bagian berjudul, tabel detail, bar total, dan
+ * bilah aksi di bawah. Warna mengikuti warna utama tema. Prefix kelas: mf-.
+ */
+
+/* ---------- kerangka ---------- */
+.mf-modal {
+  padding: 0 !important;   /* tema memberi padding pada .modal-content tertentu */
+  border: 0;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+.mf-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.4rem 4rem 1.2rem 1.75rem;
+  background: linear-gradient(180deg, rgba(var(--bs-primary-rgb), 0.1), rgba(var(--bs-primary-rgb), 0));
+}
+.mf-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--bs-primary), color-mix(in srgb, var(--bs-primary) 55%, #170a0d));
+  box-shadow: 0 0.6rem 1.2rem -0.5rem rgba(var(--bs-primary-rgb), 0.7);
+}
+.mf-title {
+  margin: 0;
+  font-weight: 700;
+}
+.mf-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.mf-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.25rem;
+}
+.mf-modal .modal-body {
+  padding: 0.5rem 1.75rem 1.5rem;
+}
+.mf-modal .modal-footer {
+  padding: 1rem 1.75rem;
+  border-top: 1px solid var(--bs-border-color);
+  background: var(--bs-paper-bg, transparent);
+}
+.mf-modal .form-label {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+
+/* ---------- bagian berjudul ---------- */
+.mf-section + .mf-section {
+  margin-top: 1.5rem;
+}
+.mf-section-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bs-border-color);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.mf-section-title .icon-base {
+  font-size: 1.125rem;
+}
+.mf-section-title .mf-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ---------- pilihan dua arah (Buy / Sell, Cash In / Cash Out) ---------- */
+.mf-segment .btn {
+  min-width: 6.5rem;
+  font-weight: 600;
+}
+/* pilihan aktif terisi penuh supaya jelas mana yang terpilih */
+.mf-segment .btn-check:checked + .btn-outline-success {
+  color: #fff;
+  background: var(--bs-success);
+  border-color: var(--bs-success);
+}
+.mf-segment .btn-check:checked + .btn-outline-danger {
+  color: #fff;
+  background: var(--bs-danger);
+  border-color: var(--bs-danger);
+}
+.mf-switch {
+  margin: 0;
+}
+
+/* ---------- tabel detail ---------- */
+.mf-table {
+  margin-bottom: 0;
+}
+.mf-table thead th {
+  padding: 0.7rem 0.5rem;
+  border: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.07);
+}
+.mf-table thead th:first-child {
+  border-radius: 0.8rem 0 0 0.8rem;
+}
+.mf-table thead th:last-child {
+  border-radius: 0 0.8rem 0.8rem 0;
+}
+.mf-table tbody td {
+  padding: 0.4rem 0.3rem !important;
+  vertical-align: middle;
+}
+.mf-table .btnHapusBaris {
+  border: 0;
+}
+.mf-scroll {
+  max-height: 52vh;
+  overflow-y: auto;
+}
+.mf-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: color-mix(in srgb, var(--bs-primary) 7%, var(--bs-paper-bg, #fff));
+}
+
+/* ---------- bar total ---------- */
+.mf-total {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.07);
+}
+.mf-total-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.mf-total .form-control {
+  max-width: 15rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* total ganda (Debit / Credit, Amount / Subtotal) + catatan di sisi kiri bar */
+.mf-total {
+  flex-wrap: wrap;
+}
+.mf-total-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.mf-total-group .form-control {
+  max-width: 11rem;
+}
+.mf-note {
+  margin-right: auto;
+  font-weight: 600;
+  color: var(--bs-danger);
+}
+.mf-note:empty {
+  display: none;
+}
+.mf-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.mf-hint .icon-base {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+  color: var(--bs-primary);
+}
+/* nomor dokumen pada modal edit */
+.mf-ref {
+  margin-left: auto;
+  margin-right: 2rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.12);
+}
+.mf-ref:empty {
+  display: none;
+}
+/* jenis transaksi tidak bisa diganti pada modal edit */
+.mf-readonly {
+  pointer-events: none;
+  opacity: 0.85;
+}
+.mf-segment .btn-check:checked + .btn-outline-primary {
+  color: #fff;
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+/* ---------- modal detail: daftar label / nilai ---------- */
+.mf-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-left: auto;
+  margin-right: 2rem;
+}
+.mf-meta .mf-ref {
+  margin: 0;
+}
+.mf-meta > div:empty {
+  display: none;
+}
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.5rem;
+}
+.dl-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.dl-wide {
+  grid-column: 1 / -1;
+}
+.dl-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.dl-value {
+  font-weight: 500;
+  color: var(--bs-heading-color);
+  overflow-wrap: anywhere;
+}
+.dl-value:empty::before {
+  content: '-';
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+.mf-detail-table tbody tr + tr td {
+  border-top: 1px solid var(--bs-border-color);
+}
+.mf-detail-table tbody td {
+  padding: 0.65rem 0.5rem !important;
+}
+.mf-detail-table tbody tr.bg-light td {
+  background: rgba(var(--bs-primary-rgb), 0.07) !important;
+}
+.mf-modal .modal-footer {
+  gap: 0.5rem;
+}
+.mf-modal .modal-footer.flex-wrap > * {
+  margin: 0;
+}
+
+/* ---------- modal konfirmasi hapus ---------- */
+.mf-confirm .modal-body {
+  padding: 2rem 1.75rem 1.25rem;
+}
+.mf-confirm-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  margin: 0 auto 1rem;
+  border-radius: 1.2rem;
+  font-size: 1.9rem;
+  color: var(--bs-danger);
+  background: rgba(var(--bs-danger-rgb), 0.12);
+}
+.mf-confirm-note {
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.mf-confirm .modal-footer {
+  justify-content: center;
+  border-top: 0;
+  padding-top: 0.25rem;
+}
+.mf-confirm .modal-footer .btn {
+  min-width: 7.5rem;
+}
+.mf-logo-view {
+  padding: 1rem;
+  border: 1px dashed var(--bs-border-color);
+  border-radius: 1rem;
+  background: var(--bs-paper-bg, #fff);
+  text-align: center;
+}
+.mf-logo-view img {
+  max-width: 100%;
+  max-height: 16rem;
+  object-fit: contain;
+}
+
+/* ---------- Update Rates ---------- */
+.mf-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.mf-toolbar .mf-branch {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.mf-toolbar .mf-search {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.mf-rate td:first-child {
+  padding-left: 0.75rem !important;
+}
+.mf-rate .rate-code {
+  font-weight: 600;
+  color: var(--bs-heading-color);
+}
+.mf-rate .rate-name {
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.mf-rate .buyRate,
+.mf-rate .sellRate {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- HP ---------- */
+@media (max-width: 767.98px) {
+  .mf-head {
+    padding: 1.1rem 3.5rem 1rem 1.25rem;
+  }
+  .mf-modal .modal-body {
+    padding: 0.25rem 1.25rem 1.25rem;
+  }
+  .mf-modal .modal-footer {
+    padding: 0.85rem 1.25rem;
+  }
+  .mf-modal .modal-footer > * {
+    flex: 1 1 0;
+    margin: 0;
+  }
+  .mf-section-title .mf-tools {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .mf-segment {
+    width: 100%;
+  }
+  .mf-segment .btn {
+    min-width: 0;
+    flex: 1 1 0;
+    padding-inline: 0.4rem;
+    font-size: 0.8125rem;
+  }
+  .mf-total {
+    justify-content: space-between;
+  }
+  .mf-total-group {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+  .mf-total-group .form-control {
+    flex: 1 1 0;
+    max-width: none;
+  }
+  .mf-head {
+    flex-wrap: wrap;
+  }
+  .mf-head > div:not(.mf-meta) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .mf-ref {
+    margin: 0 0 0 4rem;
+  }
+  .mf-meta {
+    flex: 1 1 100%;
+    margin: 0 0 0 4rem;
+  }
+  .mf-ref {
+    max-width: 100%;
+  }
+  .mf-modal .modal-footer.flex-wrap > * {
+    flex: 1 1 auto;
+  }
+  .mf-total .form-control {
+    flex: 1 1 0;
+    max-width: none;
+  }
+
+  /* di HP cukup satu area scroll: badan modal */
+  .mf-scroll {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* tabel rate: nama forex satu baris, Buy dan Sell berdampingan di bawahnya */
+  .mf-scroll thead {
+    display: none;
+  }
+  .mf-rate,
+  .mf-rate tbody {
+    display: block;
+    width: 100% !important;
+  }
+  .mf-rate tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+  }
+  .mf-rate tbody td {
+    padding: 0.15rem 0 !important;
+    border: 0;
+  }
+  .mf-rate tbody td:first-child {
+    grid-column: 1 / -1;
+    padding-left: 0 !important;
+  }
+  .mf-rate td[data-label]:not(:first-child)::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+  }
+}
+
+@media (max-width: 479.98px) {
+  .dl-grid {
+    grid-template-columns: 1fr;
+  }
+}

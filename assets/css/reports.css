@@ -1,0 +1,211 @@
+/**
+ * HALAMAN REPORTS (/reports) — pages/reports/reports.php
+ * Kartu kategori laporan. Warna ikon per kategori lewat class rp-success / rp-info / rp-danger /
+ * rp-warning / rp-primary (variabel warna tema). Prefix kelas: rp-.
+ */
+
+.rp-card {
+  --rp-rgb: var(--bs-primary-rgb);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  height: 100%;
+  padding: 1.5rem;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  color: var(--bs-body-color);
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.75rem 2rem -1.25rem rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.rp-card::before {
+  content: '';
+  position: absolute;
+  top: -3.5rem;
+  right: -3.5rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  background: rgba(var(--rp-rgb), 0.1);
+  transition: transform 0.3s;
+}
+.rp-card:hover {
+  color: var(--bs-body-color);
+  transform: translateY(-4px);
+  box-shadow: 0 1.25rem 2.5rem -1.25rem rgba(var(--rp-rgb), 0.55);
+}
+.rp-card:hover::before {
+  transform: scale(1.25);
+}
+.rp-success { --rp-rgb: var(--bs-success-rgb); }
+.rp-info    { --rp-rgb: var(--bs-info-rgb); }
+.rp-danger  { --rp-rgb: var(--bs-danger-rgb); }
+.rp-warning { --rp-rgb: var(--bs-warning-rgb); }
+.rp-primary { --rp-rgb: var(--bs-primary-rgb); }
+
+.rp-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.rp-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1.1rem;
+  font-size: 1.8rem;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(var(--rp-rgb)), color-mix(in srgb, rgb(var(--rp-rgb)) 60%, #0d0d12));
+  box-shadow: 0 0.7rem 1.4rem -0.6rem rgba(var(--rp-rgb), 0.8);
+}
+.rp-count {
+  padding: 0.3rem 0.8rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgb(var(--rp-rgb));
+  background: rgba(var(--rp-rgb), 0.12);
+}
+.rp-title {
+  position: relative;
+  margin: 0;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.rp-chips {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: 1 1 auto;
+  align-content: flex-start;
+}
+.rp-chips span {
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 2rem;
+  font-size: 0.78rem;
+  color: var(--bs-secondary-color);
+}
+.rp-open {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: rgb(var(--rp-rgb));
+}
+.rp-open .icon-base {
+  transition: transform 0.2s;
+}
+.rp-card:hover .rp-open .icon-base {
+  transform: translateX(4px);
+}
+
+/* ---------- daftar laporan di dalam kategori (BI, Accounting, ...) ---------- */
+.rl-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+}
+.rl-back:hover {
+  color: var(--bs-primary);
+}
+.rl-head-icon {
+  background: linear-gradient(135deg, rgb(var(--rp-rgb, var(--bs-primary-rgb))), color-mix(in srgb, rgb(var(--rp-rgb, var(--bs-primary-rgb))) 55%, #170a0d));
+  box-shadow: 0 0.75rem 1.5rem -0.6rem rgba(var(--rp-rgb, var(--bs-primary-rgb)), 0.7);
+}
+.rl-count {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgb(var(--rp-rgb, var(--bs-primary-rgb)));
+  background: rgba(var(--rp-rgb, var(--bs-primary-rgb)), 0.12);
+}
+.rl-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 1.25rem;
+  background: var(--bs-paper-bg, #fff);
+  box-shadow: 0 0.6rem 1.6rem -1.2rem rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.rl-card:hover,
+.rl-card:focus-visible {
+  outline: 0;
+  transform: translateY(-3px);
+  border-color: rgba(var(--rp-rgb, var(--bs-primary-rgb)), 0.45);
+  box-shadow: 0 1rem 2rem -1.2rem rgba(var(--rp-rgb, var(--bs-primary-rgb)), 0.6);
+}
+.rl-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  font-size: 1.6rem;
+  color: rgb(var(--rp-rgb, var(--bs-primary-rgb)));
+  background: rgba(var(--rp-rgb, var(--bs-primary-rgb)), 0.12);
+}
+.rl-icon.rl-img {
+  background: transparent;
+  box-shadow: 0 0 0 1px var(--bs-border-color);
+}
+.rl-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rl-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.rl-title {
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+  color: var(--bs-heading-color);
+}
+.rl-desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+}
+.rl-arrow {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  color: var(--bs-secondary-color);
+  transition: transform 0.2s, color 0.2s;
+}
+.rl-card:hover .rl-arrow {
+  color: rgb(var(--rp-rgb, var(--bs-primary-rgb)));
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-card,
+  .rp-card::before,
+  .rl-card,
+  .rl-arrow,
+  .rp-open .icon-base {
+    transition: none;
+  }
+}

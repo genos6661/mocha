@@ -1,81 +1,37 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb breadcrumb-custom-icon">
-    <li class="breadcrumb-item">
-      <a href="/reports">Reports</a>
-      <i class="breadcrumb-icon icon-base ti tabler-chevron-right align-middle icon-xs"></i>
-    </li>
-    <li class="breadcrumb-item active">Accounting Reports</li>
-  </ol>
-</nav>
+<link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
+<link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 
-<div class="row row-cols-md-3 row-cols-1 justify-content-center">
-  <div class="col mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Ledger" data-range="month" data-url="/ledger">
-      <div class="avatar avatar-lg">
-        <img src="/assets/img/report/ledger.png" alt="Avatar" class="rounded">
-      </div>
-      <div>
-        <h5 class="mb-0">Ledger</h5>
-        <span>Buku Besar</span>
+<div class="settings-page rp-info">
+  <a href="/reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Reports</a>
+
+  <div class="settings-head">
+    <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>
+    <div>
+      <h4 class="mb-1">Accounting Reports</h4>
+      <p class="text-body-secondary mb-0">Ledger and financial statements. Pick a report to set its filter and open it. <span class="rl-count">1 report</span></p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Ledger" data-range="month" data-url="/ledger">
+        <span class="rl-icon rl-img"><img src="/assets/img/report/ledger.png" alt=""></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Ledger</h5>
+          <p class="rl-desc">Buku Besar</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>
     </div>
   </div>
-  <!-- <div class="col-md-4 mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKUB" data-range="month" data-url="/lkub">
-      <div class="avatar">
-        <div class="avatar-initial bg-label-primary rounded">
-          <i class="icon-base ti tabler-building-bank icon-xl"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="mb-0">LKUB</h5>
-        <span>Laporan Kegiatan Usaha Bulanan</span>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4 mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Neraca" data-range="today" data-url="/neraca">
-      <div class="avatar">
-        <div class="avatar-initial bg-label-primary rounded">
-          <i class="icon-base ti tabler-building-bank icon-xl"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="mb-0">Balance Sheet</h5>
-        <span>Laporan Neraca (BI)</span>
-      </div>
-    </div>
-  </div> -->
 </div>
 
-<!-- <div class="row justify-content-center">
-  <div class="col-md-4 mb-6">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="LKPE" data-range="year" data-url="/lkpe">
-      <div class="avatar">
-        <div class="avatar-initial bg-label-primary rounded">
-          <i class="icon-base ti tabler-building-bank icon-xl"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="mb-0">LKPE</h5>
-        <span>Laporan Keuangan Perubahan Ekuitas</span>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="shadow rounded d-flex align-items-center gap-4 p-4 cursor-pointer" style="background-color: var(--bs-card-bg);" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Laba Rugi" data-range="month" data-url="/laba-rugi">
-      <div class="avatar">
-        <div class="avatar-initial bg-label-primary rounded">
-          <i class="icon-base ti tabler-building-bank icon-xl"></i>
-        </div>
-      </div>
-      <div>
-        <h5 class="mb-0">Profit & Loss</h5>
-        <span>Laporan Keuangan Laba/Rugi</span>
-      </div>
-    </div>
-  </div>
-</div> -->
+<script>
+  // kartu laporan bisa dibuka dengan Enter / Spasi
+  document.querySelectorAll('.rl-card').forEach(card => card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+  }));
+</script>
 
 <!-- filter -->
 <div class="modal fade animate__animated animate__fadeInUp" id="filter" data-bs-backdrop="static" tabindex="-1">

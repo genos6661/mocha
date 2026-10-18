@@ -444,7 +444,7 @@ function loadTree(index = null, box = 'boxTree') {
             levelWrapper.append(connector);
           }
 
-          const levelContainer = $('<div class="role-level"></div>');
+          const levelContainer = $('<div class="role-level"></div>').attr('data-level', 'Level ' + level);
           grouped[level].forEach(role => {
             let badgeClass = 'badge rounded-pill px-4 py-2 ';
 

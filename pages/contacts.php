@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../assets/css/modal-form.css') ?>" />
 <h5 class="mb-3">Contacts Data</h5>
 <div class="card">
   <div class="row p-3">
@@ -441,183 +442,91 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Contact Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapus">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapus" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Contact Data</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete contact <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete contact <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-simple">
-    <div class="modal-content">
-      <div class="modal-body pb-2">
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-        <p class="h4 text-center mb-3" id="backDropModalTitle">Contact Detail</p>
-        <!-- <div id="statusDetail" class=""></div> -->
-        <div class="row">
-          <div class="col-md">
-            <ul class="list-unstyled mb-3">
-              <li class="mb-3">
-                <span class="h6 me-1">Code :</span>
-                <span class="dataDetail" id="kodeDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Entity :</span>
-                <span class="dataDetail" id="nttDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Name :</span>
-                <span class="dataDetail" id="namaDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">ID Type :</span>
-                <span class="dataDetail" id="IDTipeDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Place of Birth :</span>
-                <span class="dataDetail" id="tempat_lahirDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">ID Number :</span>
-                <span class="dataDetail" id="idDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Email :</span>
-                <span class="dataDetail" id="emailDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Phone :</span>
-                <span class="dataDetail" id="teleponDetail"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md">
-            <ul class="list-unstyled mb-3 text-md-end">
-              <li class="mb-3">
-                <span class="h6 me-1">Gender :</span>
-                <span class="dataDetail" id="jkDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Occupation/Position :</span>
-                <span class="dataDetail" id="pekerjaanDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Address :</span>
-                <span class="dataDetail" id="alamatDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Nationality :</span>
-                <span class="dataDetail" id="negaraDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Date of Birth :</span>
-                <span class="dataDetail" id="tanggal_lahirDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Contact Type :</span>
-                <span class="dataDetail" id="tipeDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Bank Account :</span>
-                <span class="dataDetail" id="rekeningDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">All Time Transaction :</span>
-                <span class="dataDetail" id="transaksiDetail"></span>
-              </li>
-            </ul>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-address-book"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Contact Detail</h4>
+          <p class="mf-sub">Identity, contact and document data of this contact.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-id"></i>Identity</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetail" id="kodeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Entity</span><span class="dl-value dataDetail" id="nttDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Contact Type</span><span class="dl-value dataDetail" id="tipeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Gender</span><span class="dl-value dataDetail" id="jkDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">ID Type</span><span class="dl-value dataDetail" id="IDTipeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">ID Number</span><span class="dl-value dataDetail" id="idDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Nationality</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Place of Birth</span><span class="dl-value dataDetail" id="tempat_lahirDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Date of Birth</span><span class="dl-value dataDetail" id="tanggal_lahirDetail"></span></div>
           </div>
         </div>
-        <hr class="my-3">
-        <div class="row" id="boxDokumen">
-          <p class="h5">Document</p>
-          <div class="col-md">
-             <ul class="list-unstyled mb-3">
-              <li class="mb-3">
-                <span class="h6 me-1">NPWP (TIN) :</span>
-                <span class="dataDetail" id="npwpDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Domicile :</span>
-                <span class="dataDetail" id="domisiliDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Income :</span>
-                <span class="dataDetail" id="penghasilanDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Job :</span>
-                <span class="dataDetail" id="pekerjaan2Detail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Company :</span>
-                <span class="dataDetail" id="perusahaanDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Company Form :</span>
-                <span class="dataDetail" id="bentukPTDetail"></span>
-              </li>
-            </ul>
-          </div>
-          <div class="col-md">
-             <ul class="list-unstyled mb-3 text-md-end">
-              <li class="mb-3">
-                <span class="h6 me-1">Position :</span>
-                  <span class="dataDetail" id="jabatanDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Business Sector :</span>
-                <span class="dataDetail" id="bidangDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Transaction Purpose :</span>
-                <span class="dataDetail" id="tujuanDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Relationship (if represented) :</span>
-                <span class="dataDetail" id="hubunganDetail"></span>
-              </li>
-              <li class="mb-3">
-                <span class="h6 me-1">Source of funds :</span>
-                <span class="dataDetail" id="sumberDetail"></span>
-              </li>
-            </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-address-book"></i>Contact</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Email</span><span class="dl-value dataDetail" id="emailDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Phone</span><span class="dl-value dataDetail" id="teleponDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Address</span><span class="dl-value dataDetail" id="alamatDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Occupation/Position</span><span class="dl-value dataDetail" id="pekerjaanDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Bank Account</span><span class="dl-value dataDetail" id="rekeningDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">All Time Transaction</span><span class="dl-value dataDetail" id="transaksiDetail"></span></div>
           </div>
         </div>
-        <div id="pasporDetail"
-             class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden d-none" style="height:40vh;">
+        <div class="mf-section" id="boxDokumen">
+          <div class="mf-section-title"><i class="icon-base ti tabler-file-certificate"></i>Document</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">NPWP (TIN)</span><span class="dl-value dataDetail" id="npwpDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Domicile</span><span class="dl-value dataDetail" id="domisiliDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Income</span><span class="dl-value dataDetail" id="penghasilanDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Job</span><span class="dl-value dataDetail" id="pekerjaan2Detail"></span></div>
+            <div class="dl-item"><span class="dl-label">Company</span><span class="dl-value dataDetail" id="perusahaanDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Company Form</span><span class="dl-value dataDetail" id="bentukPTDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Position</span><span class="dl-value dataDetail" id="jabatanDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Business Sector</span><span class="dl-value dataDetail" id="bidangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Transaction Purpose</span><span class="dl-value dataDetail" id="tujuanDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Relationship (if represented)</span><span class="dl-value dataDetail" id="hubunganDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Source of funds</span><span class="dl-value dataDetail" id="sumberDetail"></span></div>
+          </div>
+          <div id="pasporDetail"
+               class="w-100 rounded d-flex justify-content-center align-items-center overflow-hidden d-none mt-3" style="height:40vh;">
+          </div>
         </div>
       </div>
-      <div class="d-flex gap-2 justify-content-center">
-        <button class="btn-outline-primary btn d-none mx-1" id="activateBtn">Activate</button>
-        <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtn">Deactivate</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-outline-primary btn d-none" id="activateBtn">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtn">Deactivate</button>
         <a class="btn btn-outline-primary" id="goTrans">View Transactions</a>
-        <button class="btn btn-primary px-8" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
         <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
 <style>
   #tabelValas tbody tr {
@@ -317,23 +318,22 @@
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapusLogo" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Company Logo</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-photo"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Company Logo</h4>
+          <p class="mf-sub">Current logo used on invoices and receipts.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <img src="" alt="" id="viewLogo" class="w-100">
+        <div class="mf-logo-view"><img src="" alt="" id="viewLogo"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="removeLogo" class="btn btn-danger">Remove Logo</button>
         <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        </form>
+        <button type="button" id="removeLogo" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Remove Logo</button>
       </div>
     </div>
   </div>

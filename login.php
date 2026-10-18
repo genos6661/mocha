@@ -162,6 +162,10 @@ if (isset($_SESSION['token'])) {
       </div>
     </div>
 
+    <footer class="public-footer login-footer">
+      &copy; <?= date('Y') ?> BERES Mocha &middot; by <a href="https://thebrotherhoodlaw.com" target="_blank" rel="noopener">The Brotherhood</a>
+    </footer>
+
     <script>
       $(document).ready(function() {
         if (myDomain === "sample.beresmocha.id") {

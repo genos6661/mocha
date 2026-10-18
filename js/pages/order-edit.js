@@ -58,14 +58,8 @@ function resetOrder() {
             $('#alamatCabang').text(response.alamat_cabang);
             $('#teleponCabang').text(response.telepon_cabang);
             $('#nomorOrder').text(response.nomor);
-            $('#namaPelanggan').text(response.nama_pelanggan);
-            $('#alamatPelanggan').text(response.alamat);
-            $('#teleponPelanggan').text(response.telepon);
-            $('#emailPelanggan').text(response.email);
-            $('#kodePelanggan').text(response.kode_pelanggan);
-            $('#idNumber').text(response.idNumber);
-            $('#negara').text(response.nationality);
-            $('#pekerjaan').text(response.pekerjaan);
+            // cabang & data pelanggan bisa diedit (js/pages/edit-party.js)
+            EditParty.fill(response, 'id_pelanggan');
 
            	let jenisTransaksi = "";
            	if(response.tipe == "buy") {
@@ -438,31 +432,37 @@ $('#btnSubmit').click(function (e) {
     return;
   }
 
-  // --- AJAX ---
-  $.ajax({
-    url: url_api + '/order/' + idOrder,
-    type: 'PUT',
-    contentType: 'application/json',
-    headers: {
-      "Content-Type": "application/json",
-      "X-Client-Domain": myDomain,
-      "Authorization": `Bearer ${window.token}`
-    },
-    data: JSON.stringify({ details: details }),
-    success: function (response) {
-      notif.fire({
-        icon: 'success',
-        text: response.message
-      }).then(() => {
-        window.location.href = '/order';
-      });
-    },
-    error: function (xhr) {
-      $btn.prop('disabled', false);
-      notif.fire({
-        icon: 'error',
-        text: xhr.responseJSON?.message || 'Terjadi kesalahan'
-      });
-    }
+  // data pelanggan disimpan dulu lewat endpoint profil, lalu order (detail + cabang)
+  EditParty.save().then(function () {
+    // --- AJAX ---
+    $.ajax({
+      url: url_api + '/order/' + idOrder,
+      type: 'PUT',
+      contentType: 'application/json',
+      headers: {
+        "Content-Type": "application/json",
+        "X-Client-Domain": myDomain,
+        "Authorization": `Bearer ${window.token}`
+      },
+      data: JSON.stringify({ details: details, cabang: $('#idCabang').val() }),
+      success: function (response) {
+        notif.fire({
+          icon: 'success',
+          text: response.message
+        }).then(() => {
+          window.location.href = '/order';
+        });
+      },
+      error: function (xhr) {
+        $btn.prop('disabled', false);
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON?.message || 'Terjadi kesalahan'
+        });
+      }
+    });
+  }, function (message) {
+    $btn.prop('disabled', false);
+    notif.fire({ icon: 'error', text: message });
   });
 });

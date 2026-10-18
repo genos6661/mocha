@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../assets/css/modal-form.css') ?>" />
 <h5 class="mb-3">Branch Data</h5>
 <div class="card">
   <div class="row p-3">
@@ -274,92 +275,61 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Branch Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapus">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapus" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Branch Data</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete branch <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete branch <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Tutup</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Branch Detail</h5>
-        <div id="statusDetail" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-building-store"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Branch Detail</h4>
+          <p class="mf-sub">Branch profile, receipt text and customer display text.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Code :</span>
-            <span class="dataDetail" id="kodeDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Name :</span>
-            <span class="dataDetail" id="namaDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Phone :</span>
-            <span class="dataDetail" id="teleponDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Address :</span>
-            <span class="dataDetail" id="alamatDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Receipt's Title :</span>
-            <span class="dataDetail" id="judulDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Footer 1 :</span>
-            <span class="dataDetail" id="footer1Detail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Footer 2 :</span>
-            <span class="dataDetail" id="footer2Detail"></span>
-          </li><li class="mb-2">
-            <span class="h6 me-1">Footer 3 :</span>
-            <span class="dataDetail" id="footer3Detail"></span>
-          </li>
-          </li><li class="mb-2">
-            <span class="h6 me-1">Customer Display Header :</span>
-            <span class="dataDetail" id="cdHeadDetail"></span>
-          </li>
-          </li><li class="mb-2">
-            <span class="h6 me-1">Customer Display Footer :</span>
-            <span class="dataDetail" id="cdFootDetail"></span>
-          </li>
-        </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetail" id="kodeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Phone</span><span class="dl-value dataDetail" id="teleponDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Address</span><span class="dl-value dataDetail" id="alamatDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Receipt's Title</span><span class="dl-value dataDetail" id="judulDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Footer 1</span><span class="dl-value dataDetail" id="footer1Detail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Footer 2</span><span class="dl-value dataDetail" id="footer2Detail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Footer 3</span><span class="dl-value dataDetail" id="footer3Detail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Customer Display Header</span><span class="dl-value dataDetail" id="cdHeadDetail"></span></div>
+            <div class="dl-item dl-wide"><span class="dl-label">Customer Display Footer</span><span class="dl-value dataDetail" id="cdFootDetail"></span></div>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mb-2 mb-md-0" id="activateBtn">Activate</button>
-        <button class="btn-outline-danger btn d-none mb-2 mb-md-0" id="deactivateBtn">Deactivate</button>
-        <button class="btn btn-primary mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
-        <button class="btn btn-danger mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer ">
+        <button class="btn-outline-primary btn d-none" id="activateBtn">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtn">Deactivate</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

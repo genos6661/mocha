@@ -1104,7 +1104,11 @@ $('#sbmTambah').click(function (e) {
 	    data: JSON.stringify(formData), 
 	    success: function (response) {
 	    	const today = new Date().toISOString().split('T')[0];
-	        $('#modalTambah .modal-body').find('input, textarea').val('').prop('checked', false);
+	        // pilihan Cash In/Out & Dividen kembali ke bawaan HTML (Cash Out, Dividen mati), bukan dikosongkan
+	        $('#modalTambah .modal-body').find('input, textarea').each(function () {
+	            if (this.type === 'radio' || this.type === 'checkbox') this.checked = this.defaultChecked;
+	            else this.value = '';
+	        });
 	        $('#modalTambah .modal-body').find('select').val(null).trigger('change');
 	        $('#modalTambah .modal-body #tanggal').val(today);
 			$('#modalTambah #detailBaru tbody').empty();

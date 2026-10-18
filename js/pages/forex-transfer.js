@@ -1297,7 +1297,12 @@ $('#sbmTambah').click(function (e) {
     },
     data: JSON.stringify(data),
     success: function (response) {
-      $('#modalTambah .modal-body').find('input, textarea').val('').prop('checked', false);
+      // jenis transfer kembali ke bawaan HTML (radio tidak boleh dikosongkan nilainya)
+      $('#modalTambah .modal-body').find('input, textarea').each(function () {
+        if (this.type === 'radio' || this.type === 'checkbox') this.checked = this.defaultChecked;
+        else this.value = '';
+      });
+      $('#tipeBoth').trigger('change');
       $('#modalTambah .modal-body').find('select').val(null).trigger('change');
       const today = new Date().toISOString().split('T')[0];
       $('#modalTambah .modal-body #tanggal').val(today);

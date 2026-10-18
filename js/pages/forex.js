@@ -676,10 +676,9 @@ function loadRates() {
                 details.forEach(function (item) {
                     const row = `
                         <tr>
-                        <input type="hidden" class="idRate" value="${item.noindex}">
-                          <td class="p-1 ps-3">${item.kode} - ${item.nama}</td>
-                          <td class="p-1"><input type="text" class="form-control buyRate text-end" value="${formatter.format(item.beli)}"></td>
-                          <td class="p-1"><input type="text" class="form-control sellRate text-end" value="${formatter.format(item.jual)}"></td>
+                          <td class="p-1 ps-3"><input type="hidden" class="idRate" value="${item.noindex}"><div class="rate-code">${item.kode}</div><div class="rate-name">${item.nama}</div></td>
+                          <td class="p-1" data-label="Buy Rate"><input type="text" class="form-control buyRate text-end" value="${formatter.format(item.beli)}"></td>
+                          <td class="p-1" data-label="Sell Rate"><input type="text" class="form-control sellRate text-end" value="${formatter.format(item.jual)}"></td>
                         </tr>
                     `;
                   tbody.append(row);

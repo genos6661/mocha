@@ -456,11 +456,8 @@ $('#sbmHapusUser').click(function (e) {
   });
 });
 
-$('#deactivateBtn').click(function (e) {
-  e.preventDefault();
-
-  var id = $(this).data('id');
-
+// Activate / Deactivate pada modal detail user (POST /users/set-status)
+function setUserStatus(id, status) {
   $.ajax({
     url: url_api + '/users/set-status',
     type: 'POST',
@@ -470,32 +467,35 @@ $('#deactivateBtn').click(function (e) {
         "Authorization": `Bearer ${window.token}`,
         "X-Client-Domain": myDomain
     },
-    data: JSON.stringify({ id: id, status: 0 }),
+    data: JSON.stringify({ id: id, status: status }),
     success: function (response) {
+        $('#modalDetailUser').modal('hide');
         notif.fire({
           icon: 'success',
           text: response.message
-        }).then((result) => {
-            offset = 0;
+        }).then(() => {
+            offsetUser = 0;
             table.clear().draw();
-            loadMoreData();
+            loadMoreDataUser(true);
         });
-        $('#modalDetail').modal('hide'); 
     },
     error: function (xhr) {
-        if (xhr.status === 404) {
-            notif.fire({
-              icon: 'error',
-              text: xhr.responseJSON.message
-            });
-        } else {
-            notif.fire({
-              icon: 'error',
-              text: 'Terjadi Kesalahan pada server'
-            });
-        }
+        notif.fire({
+          icon: 'error',
+          text: xhr.responseJSON?.message || 'Terjadi Kesalahan pada server'
+        });
     },
   });
+}
+
+$('#activateBtn').click(function (e) {
+  e.preventDefault();
+  setUserStatus($(this).data('id'), 1);
+});
+
+$('#deactivateBtn').click(function (e) {
+  e.preventDefault();
+  setUserStatus($(this).data('id'), 0);
 });
 
 function disableIfNoRegister() {

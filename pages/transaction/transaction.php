@@ -6,6 +6,7 @@ if ($nowHour >= 15) {
     $reportDate = date('Y-m-d', strtotime('+1 day'));
 }
 ?>
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <h5 class="mb-3">Transactions</h5>
 <div class="card">
   <div class="row p-3">
@@ -121,45 +122,33 @@ if ($nowHour >= 15) {
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between flex-md-row flex-column">
-        <h5 class="modal-title" id="backDropModalTitle">Transaction Detail</h5>
-        <div class="d-flex gap-2">
-          <p class="h5 dataDetail" id="nomorDetail"></p>
-          <div id="tipeDetail" class=""></div>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-receipt"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Transaction Detail</h4>
+          <p class="mf-sub">Forex buying or selling transaction.</p>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <div class="mf-meta"><span class="mf-ref dataDetail" id="nomorDetail"></span><div id="tipeDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Order Number :</span>
-            <span class="dataDetail" id="orderDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Branch :</span>
-            <span class="dataDetail" id="cabangDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Date :</span>
-            <span class="dataDetail" id="tanggalDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Customer :</span>
-            <span class="dataDetail" id="pelangganDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Nationality :</span>
-            <span class="dataDetail" id="negaraDetail"></span>
-          </li>
-        </ul>
-        <div class="table-responsive" id="itemDetail">
-          <table class="table table-sm" id="tabelItemDetail">
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Order Number</span><span class="dl-value dataDetail" id="orderDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Branch</span><span class="dl-value dataDetail" id="cabangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Date</span><span class="dl-value dataDetail" id="tanggalDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Customer</span><span class="dl-value dataDetail" id="pelangganDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Nationality</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
+          </div>
+        </div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-list-details"></i>Items</div>
+<div class="table-responsive" id="itemDetail">
+          <table class="table table-borderless mf-table mf-detail-table" id="tabelItemDetail">
             <thead>
               <tr>
                 <th>Forex</th>
@@ -171,14 +160,16 @@ if ($nowHour >= 15) {
             <tbody></tbody>
           </table>
         </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-between justify-content-md-end">
-        <button class="btn-primary btn mx-1 mb-2 mb-md-0" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
-        <a class="btn-outline-primary btn mx-1 mb-2 mb-md-0" target="_blank" id="reprintDetail">Reprint</a>
-        <button class="btn-outline-success btn mx-1 mb-2 mb-md-0 btnSendWa" id="waDetail"><i class="icon-base ti tabler-brand-whatsapp me-1"></i>WhatsApp</button>
-        <a href="#" class="btn btn-outline-secondary mx-1" type="button" id="editBtn">Edit</a>
-        <button class="btn btn-danger mx-1 mb-2 mb-md-0" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1 mb-2 mb-md-0" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-primary btn" id="jurnalBtn" data-bs-toggle="modal" data-bs-target="#modalJurnal">Jurnal Voucher</button>
+        <a class="btn-outline-primary btn" target="_blank" id="reprintDetail">Reprint</a>
+        <button class="btn-outline-success btn btnSendWa" id="waDetail"><i class="icon-base ti tabler-brand-whatsapp me-1"></i>WhatsApp</button>
+        <a href="#" class="btn btn-outline-secondary" type="button" id="editBtn">Edit</a>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -186,27 +177,20 @@ if ($nowHour >= 15) {
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Transaction</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusTransaksi">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusTransaksi" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Transaction</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete transaction <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete transaction <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -413,101 +397,89 @@ if ($nowHour >= 15) {
 
 <!-- modal transaksi baru -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalTransaksiBaru" data-bs-keyboard="false" data-bs-backdrop="static">
-  <div class="modal-dialog modal-xl modal-simple modal-dialog-scrollable">
-    <div class="modal-content">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-receipt"></i></span>
+        <div>
+          <h4 class="mf-title">New Transaction</h4>
+          <p class="mf-sub">Record a forex buying or selling transaction for a contact.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
       <div class="modal-body">
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-        <p class="h4 text-center mb-4">New Transaction</p>
-        <div class="row">
-          <div class="col-md-8 mb-3">
-            <label for="kontak" class="form-label">Contact</label>
-            <select id="kontak" class="form-select"></select>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label for="btnKontakBaru" class="form-label text-center">Or Add New Contact</label>
-            <button id="btnKontakBaru" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalKontakBaru" data-bs-dismiss="modal">New Contact</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md mb-3">
-            <label for="tanggal" class="form-label">Date</label>
-            <input type="date" class="form-control" id="tanggal" value="<?php echo date('Y-m-d'); ?>">
-          </div>
-          <div class="col-md mb-3">
-            <label for="tanggal_laporan" class="form-label">Report Date</label>
-            <input type="date" class="form-control" id="tanggal_laporan" value="<?php echo $reportDate; ?>">
-          </div>
-          <div class="col-md mb-3">
-            <label for="cabangTrans" class="form-label">Branch</label>
-            <select id="cabangTrans" class="form-select"></select>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md">
-            <h5 class="mb-1">Transaction Details :</h5>
-          </div>
-          <div class="col-md d-flex justify-content-end g-2 mb-1">
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTrans" id="buyTrans" class="switch-input" checked>
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Buy</span>
-              </label>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-user"></i>Contact &amp; date</div>
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="kontak" class="form-label">Contact</label>
+              <select id="kontak" class="form-select"></select>
             </div>
-            <div class="form-check form-check-inline">
-              <label class="switch">
-                <input type="radio" name="tipeTrans" id="sellTrans" class="switch-input">
-                <span class="switch-toggle-slider">
-                  <span class="switch-on"></span>
-                  <span class="switch-off"></span>
-                </span>
-                <span class="switch-label">Sell</span>
-              </label>
+            <div class="col-md-4 mb-3 d-flex flex-column">
+              <label for="btnKontakBaru" class="form-label">Or Add New Contact</label>
+              <button id="btnKontakBaru" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalKontakBaru" data-bs-dismiss="modal">
+                <i class="icon-base ti tabler-user-plus icon-sm me-2"></i>New Contact
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md mb-3">
+              <label for="tanggal" class="form-label">Date</label>
+              <input type="date" class="form-control" id="tanggal" value="<?php echo date('Y-m-d'); ?>">
+            </div>
+            <div class="col-md mb-3">
+              <label for="tanggal_laporan" class="form-label">Report Date</label>
+              <input type="date" class="form-control" id="tanggal_laporan" value="<?php echo $reportDate; ?>">
+            </div>
+            <div class="col-md mb-3">
+              <label for="cabangTrans" class="form-label">Branch</label>
+              <select id="cabangTrans" class="form-select"></select>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col table-responsive">
-            <table class="table table-borderless table-stack" id="tabelDetail">
-              <thead class="border-bottom border-top">
+
+        <div class="mf-section">
+          <div class="mf-section-title">
+            <i class="icon-base ti tabler-list-details"></i>Transaction details
+            <div class="mf-tools">
+              <div class="btn-group mf-segment" role="group" aria-label="Transaction type">
+                <input type="radio" class="btn-check" name="tipeTrans" id="buyTrans" checked>
+                <label class="btn btn-outline-success" for="buyTrans">Buy</label>
+                <input type="radio" class="btn-check" name="tipeTrans" id="sellTrans">
+                <label class="btn btn-outline-danger" for="sellTrans">Sell</label>
+              </div>
+              <button class="btn btn-primary" id="tambahBaris" type="button" disabled="true">
+                <i class="icon-base ti tabler-plus icon-sm me-1"></i>Add Row
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-borderless table-stack mf-table" id="tabelDetail">
+              <thead>
                 <tr>
-                  <th class="py-3" style="width: 25%; min-width: 200px;">Currency</th>
-                  <th class="py-3 text-end" style="width: 20%; min-width: 150px;">Amount</th>
-                  <th class="py-3 text-end" style="width: 25%; min-width: 200px;">Rate</th>
-                  <th class="py-3 text-end" style="width: 25%; min-width: 200px;">Subtotal</th>
-                  <th class="py-3"></th>
+                  <th style="width: 25%; min-width: 180px;">Currency</th>
+                  <th class="text-end" style="width: 20%; min-width: 130px;">Amount</th>
+                  <th class="text-end" style="width: 25%; min-width: 160px;">Rate</th>
+                  <th class="text-end" style="width: 25%; min-width: 160px;">Subtotal</th>
+                  <th style="width: 5%;"></th>
                 </tr>
               </thead>
               <tbody class="tbody-scroll">
-                
+
               </tbody>
-              <tfoot>
-                <tr>
-                  <th colspan="3" class="text-end">Total :</th>
-                  <th class="px-1">
-                    <input type="text" class="total form-control text-end" readonly>
-                  </th>
-                  <th class="px-1">
-                    <button class="btn btn-primary w-100" id="tambahBaris" type="button" disabled="true">
-                      <i class="icon-base ti tabler-plus icon-md"></i>
-                    </button>
-                  </th>
-                </tr>
-              </tfoot>
             </table>
           </div>
+          <div class="mf-total">
+            <span class="mf-total-label">Total</span>
+            <input type="text" class="total form-control text-end" readonly>
+          </div>
         </div>
-        <div class="d-flex justify-content-between justify-content-md-end">
-          <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
-          <button class="btn-primary btn mx-1" id="btnSubmit">Submit</button>
-        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" id="btnSubmit"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Submit</button>
       </div>
     </div>
   </div>

@@ -139,3 +139,38 @@
     margin: 0 0 0.5rem;
   }
 }
+
+/* ---------- pohon level (modal Level Tree & Role Detail) ---------- */
+.role-level {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 1.6rem 1rem 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  background: rgba(var(--bs-primary-rgb), 0.04);
+}
+.role-level[data-level]::before {
+  content: attr(data-level);
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bs-primary);
+}
+.role-connector {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: rgba(var(--bs-primary-rgb), 0.35);
+}

@@ -322,6 +322,9 @@ session_start();
               </div>
 
             </div>
+            <footer class="public-footer">
+              &copy; <?= date('Y') ?> BERES Mocha &middot; by <a href="https://thebrotherhoodlaw.com" target="_blank" rel="noopener">The Brotherhood</a>
+            </footer>
           </div>
         </div>
       </div>

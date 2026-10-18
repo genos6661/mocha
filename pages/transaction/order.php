@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../../assets/css/modal-form.css') ?>" />
 <h5 class="mb-3">Transaction Orders</h5>
 <div class="card">
   <div class="row p-3">
@@ -52,45 +53,33 @@
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between flex-md-row flex-column">
-        <h5 class="modal-title" id="backDropModalTitle">Order Detail</h5>
-        <div class="d-flex gap-2">
-          <p class="h5 dataDetail" id="nomorDetail"></p>
-          <div id="statusDetail" class=""></div>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-shopping-cart"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Order Detail</h4>
+          <p class="mf-sub">Booking order from a customer.</p>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+        <div class="mf-meta"><span class="mf-ref dataDetail" id="nomorDetail"></span><div id="statusDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Transaction Type :</span>
-            <span class="dataDetail" id="tipeDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Branch :</span>
-            <span class="dataDetail" id="cabangDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Date :</span>
-            <span class="dataDetail" id="tanggalDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Customer :</span>
-            <span class="dataDetail" id="pelangganDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Nationality :</span>
-            <span class="dataDetail" id="negaraDetail"></span>
-          </li>
-        </ul>
-        <div class="table-responsive" id="itemDetail">
-          <table class="table table-sm" id="tabelItemDetail">
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Transaction Type</span><span class="dl-value dataDetail" id="tipeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Branch</span><span class="dl-value dataDetail" id="cabangDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Date</span><span class="dl-value dataDetail" id="tanggalDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Customer</span><span class="dl-value dataDetail" id="pelangganDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Nationality</span><span class="dl-value dataDetail" id="negaraDetail"></span></div>
+          </div>
+        </div>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-list-details"></i>Items</div>
+<div class="table-responsive" id="itemDetail">
+          <table class="table table-borderless mf-table mf-detail-table" id="tabelItemDetail">
             <thead>
               <tr>
                 <th>Forex</th>
@@ -102,13 +91,15 @@
             <tbody></tbody>
           </table>
         </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mx-1" id="processBtn" data-bs-toggle="modal" data-bs-target="#modalProses">Process</button>
-        <!-- <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtn">Deactivate</button> -->
-        <a class="btn btn-primary mx-1" id="editBtn">Edit</a>
-        <button class="btn btn-danger mx-1" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer flex-wrap">
+        <button class="btn-outline-primary btn d-none" id="processBtn" data-bs-toggle="modal" data-bs-target="#modalProses">Process</button>
+        <!-- <button class="btn-outline-danger btn d-none" id="deactivateBtn">Deactivate</button> -->
+        <a class="btn btn-primary" id="editBtn">Edit</a>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -116,27 +107,20 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Order</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusKelompok">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusKelompok" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Order</h4>
         <input type="hidden" id="idHapus">
-        <h4>Do you wish to delete order <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Do you wish to delete order <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 

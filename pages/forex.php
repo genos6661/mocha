@@ -1,15 +1,4 @@
-<style>
-  .table-scroll {
-    max-height: 60vh;
-    overflow-y: auto;
-  }
-
-  .table-scroll thead th {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-</style>
+<link rel="stylesheet" href="/assets/css/modal-form.css?v=<?= filemtime(__DIR__ . '/../assets/css/modal-form.css') ?>" />
 
 <h5 class="mb-3">Forex Data</h5>
 <div class="card">
@@ -197,124 +186,108 @@
 
 <!-- modal hapus -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalHapus" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="backDropModalTitle">Delete Forex Data</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="formHapusKelompok">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content mf-modal mf-confirm" id="formHapusKelompok" onsubmit="return false;">
+      <div class="modal-body text-center">
+        <span class="mf-confirm-icon"><i class="icon-base ti tabler-trash"></i></span>
+        <h4 class="mf-title mb-2" id="backDropModalTitle">Delete Forex Data</h4>
         <input type="hidden" id="idHapus">
-        <h4>Continue to delete forex <span id="refHapus"></span>?</h4>
+        <p class="mb-1">Continue to delete forex <span class="fw-semibold text-heading" id="refHapus"></span>?</p>
+        <p class="mf-confirm-note mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" id="sbmHapus" class="btn btn-danger">Delete</button>
-        </form>
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="sbmHapus" class="btn btn-danger"><i class="icon-base ti tabler-trash icon-sm me-2"></i>Delete</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>
 
 <!-- modal detail -->
 <div class="modal fade animate__animated animate__fadeInUp" id="modalDetail" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex justify-content-between">
-        <h5 class="modal-title" id="backDropModalTitle">Forex Detail</h5>
-        <div id="statusDetail" class=""></div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-currency-dollar"></i></span>
+        <div>
+          <h4 class="mf-title" id="backDropModalTitle">Forex Detail</h4>
+          <p class="mf-sub">Forex code and its current buy and sell rate.</p>
+        </div>
+        <div class="mf-meta"><div id="statusDetail"></div></div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
-        <ul class="list-unstyled mb-6">
-          <li class="mb-2">
-            <span class="h6 me-1">Code :</span>
-            <span class="dataDetail" id="kodeDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Name :</span>
-            <span class="dataDetail" id="namaDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Buy Rate :</span>
-            <span class="dataDetail" id="beliDetail"></span>
-          </li>
-          <li class="mb-2">
-            <span class="h6 me-1">Sell Rate :</span>
-            <span class="dataDetail" id="jualDetail"></span>
-          </li>
-        </ul>
+        <div class="mf-section">
+          <div class="mf-section-title"><i class="icon-base ti tabler-info-circle"></i>Information</div>
+          <div class="dl-grid">
+            <div class="dl-item"><span class="dl-label">Code</span><span class="dl-value dataDetail" id="kodeDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Name</span><span class="dl-value dataDetail" id="namaDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Buy Rate</span><span class="dl-value dataDetail" id="beliDetail"></span></div>
+            <div class="dl-item"><span class="dl-label">Sell Rate</span><span class="dl-value dataDetail" id="jualDetail"></span></div>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer d-flex justify-content-end">
-        <button class="btn-outline-primary btn d-none mx-1" id="activateBtn">Activate</button>
-        <button class="btn-outline-danger btn d-none mx-1" id="deactivateBtn">Deactivate</button>
-        <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
-        <button class="btn btn-danger mx-1" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
-        <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
+
+      <div class="modal-footer ">
+        <button class="btn-outline-primary btn d-none" id="activateBtn">Activate</button>
+        <button class="btn-outline-danger btn d-none" id="deactivateBtn">Deactivate</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEdit" id="editBtn">Edit</button>
+        <button class="btn btn-danger" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#modalHapus">Delete</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
 <div class="modal fade animate__animated animate__fadeInUp" id="modalRate" data-bs-backdrop="static" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-simple">
-    <div class="modal-content py-3">
-      <div class="modal-body table-responsive">
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"></button>
-        <p class="h4 text-center mb-4">Update Rates</p>
-        <div class="row w-100">
-          <div class="col-md mb-3">
-            <select  id="cabang" class="form-select"></select>
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content mf-modal">
+      <div class="mf-head">
+        <span class="mf-icon"><i class="icon-base ti tabler-currency-dollar"></i></span>
+        <div>
+          <h4 class="mf-title">Update Rates</h4>
+          <p class="mf-sub">Set the buy and sell rate of each forex, for all branches or a single branch.</p>
+        </div>
+        <button type="button" class="btn-close mf-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mf-toolbar">
+          <div class="mf-branch">
+            <select id="cabang" class="form-select"></select>
           </div>
-          <div class="col-md mb-3">
+          <div class="input-group input-group-merge mf-search">
+            <span class="input-group-text"><i class="icon-base ti tabler-search"></i></span>
             <input type="text" class="form-control" id="searchRate" placeholder="Search...">
           </div>
-        </div>
-        <div class="row w-100" id="boxResetRateCabang">
-          <div class="col-md-6 d-flex justify-content-center">
-            <div class="form-check form-switch">
+          <div id="boxResetRateCabang">
+            <div class="form-check form-switch mf-switch">
               <input class="form-check-input" type="checkbox" id="resetRateCabang" checked>
               <label class="form-check-label" for="resetRateCabang">Reset Branch's Rate</label>
             </div>
           </div>
         </div>
-        <div class="table-scroll">
-          <table class="table table-borderless" id="tabelRate">
-            <thead class="table-dark position-sticky top-0">
-              <tr class="border-bottom">
-                <th class="p-4">Forex</th>
-                <th class="p-4 text-end" style="width: 30%;">Buy Rate</th>
-                <th class="p-4 pe-4 text-end" style="width: 30%;">Sell Rate</th>
+
+        <div class="mf-scroll">
+          <table class="table table-borderless mf-table mf-rate" id="tabelRate">
+            <thead>
+              <tr>
+                <th class="ps-3">Forex</th>
+                <th class="text-end" style="width: 30%;">Buy Rate</th>
+                <th class="text-end" style="width: 30%;">Sell Rate</th>
               </tr>
             </thead>
             <tbody>
             </tbody>
           </table>
         </div>
-        <div class="w-100 row px-5 mt-3">
-          <div class="col-md d-grid">
-            <button class="btn btn-outline-primary mx-1" id="resetBtn">Reset</button>
-          </div>
-          <div class="col-md d-grid">
-            <button class="btn btn-secondary mx-1" data-bs-dismiss="modal">Close</button>
-          </div>
-          <div class="col-md d-grid">
-            <button class="btn btn-primary mx-1" id="sbmRate">Submit</button>
-          </div>
-        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-primary" id="resetBtn"><i class="icon-base ti tabler-refresh icon-sm me-2"></i>Reset</button>
+        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" id="sbmRate"><i class="icon-base ti tabler-device-floppy icon-sm me-2"></i>Submit</button>
       </div>
     </div>
   </div>
