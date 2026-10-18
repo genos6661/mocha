@@ -49,6 +49,14 @@ switch ($routeInfo[0]) {
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/img/favicon/logo.svg" />
+    <!-- PWA: aplikasi bisa di-install (manifest + service worker, lihat js/pwa.js) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#9c3030" />
+    <link rel="apple-touch-icon" href="/assets/img/pwa/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="BERES Mocha" />
+    <meta name="application-name" content="BERES Mocha" />
+    <script src="/js/pwa.js" defer></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -269,6 +277,11 @@ switch ($routeInfo[0]) {
                     <li>
                       <a class="dropdown-item" href="/clear">
                         <i class="icon-base ti tabler-refresh icon-md me-3"></i><span>Clear Cache</span>
+                      </a>
+                    </li>
+                    <li id="btnInstallApp" class="d-none">
+                      <a class="dropdown-item" href="javascript:;">
+                        <i class="icon-base ti tabler-download icon-md me-3"></i><span>Install App</span>
                       </a>
                     </li>
                     <li id="btnBackup">

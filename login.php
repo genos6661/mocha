@@ -36,6 +36,14 @@ if (isset($_SESSION['token'])) {
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/img/favicon/logo.svg" />
+    <!-- PWA: aplikasi bisa di-install (manifest + service worker, lihat js/pwa.js) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#9c3030" />
+    <link rel="apple-touch-icon" href="/assets/img/pwa/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="BERES Mocha" />
+    <meta name="application-name" content="BERES Mocha" />
+    <script src="/js/pwa.js" defer></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

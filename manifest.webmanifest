@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "BERES Mocha",
+  "short_name": "BERES Mocha",
+  "description": "BERES Mocha is an all-in-one system for money changer business",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en",
+  "background_color": "#fdf8f1",
+  "theme_color": "#9c3030",
+  "icons": [
+    { "src": "/assets/img/pwa/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/pwa/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/img/pwa/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/assets/img/favicon/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
