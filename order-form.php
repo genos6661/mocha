@@ -41,7 +41,7 @@ session_start();
     <link rel="stylesheet" href="assets/vendor/libs/pickr/pickr-themes.css" />
 
     <link rel="stylesheet" href="assets/vendor/css/core.css" />
-    <link rel="stylesheet" href="assets/css/demo.css" />
+    <link rel="stylesheet" href="assets/css/demo.css?v=<?= filemtime(__DIR__ . '/assets/css/demo.css') ?>" />
 
     <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
@@ -295,7 +295,7 @@ session_start();
                     <div id="tabelDetail"></div>
 
                     <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
-                      <button class="btn btn-outline-primary border-none order-secret" data-bs-toggle="modal" data-bs-target="#modalRequest" type="button">&nbsp;</button>
+                      <button class="btn btn-outline-primary border-none order-secret" data-bs-toggle="modal" data-bs-target="#modalRequest" type="button"><i class="icon-base ti tabler-lock me-1"></i>Request Rate</button>
                       <button class="btn btn-outline-primary" type="button" id="tambahBaris">
                         <i class="icon-base ti tabler-plus me-1"></i>Add New Row
                       </button>

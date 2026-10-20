@@ -21,14 +21,13 @@
     'currencyexchange.beresmocha.id': 'GTM-NG3MK2V8'
   };
 
-  const CONSENT_KEY = 'gtmConsent';   // 'granted' | 'denied'
+  const CONSENT_KEY = 'gtmConsent'; 
   const CONSENT_TYPES = ['ad_storage', 'analytics_storage', 'ad_user_data', 'ad_personalization'];
 
   const gtmId = GTM_BY_HOST[window.location.hostname];
   const sentOrders = new Set();
-  let consent = null;                 // null = pelanggan belum memilih
+  let consent = null;                 
 
-  // Selalu tersedia; kosong di host tanpa GTM.
   window.trackOrderSuccess = function () {};
   if (!gtmId) return;
 
