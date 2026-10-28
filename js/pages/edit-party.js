@@ -157,7 +157,9 @@ const EditParty = (function () {
   function validate(values) {
     if (!values.nama) return 'Customer name is required';
     if (!values.id) return 'Customer ID number is required';
-    if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) return 'Customer email is not valid';
+    // email lama yang tidak diubah (mis. "-" dari data lama) tidak divalidasi ulang
+    const emailChanged = !initial || values.email !== initial.email;
+    if (emailChanged && values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) return 'Customer email is not valid';
     return null;
   }
 
@@ -175,10 +177,12 @@ const EditParty = (function () {
   function save() {
     const deferred = $.Deferred();
     const values = current();
-    const problem = validate(values);
 
-    if (problem) return deferred.reject(problem).promise();
+    // data pelanggan tidak diubah: tidak ada yang divalidasi maupun disimpan
     if (!profileId || !dirty()) return deferred.resolve().promise();
+
+    const problem = validate(values);
+    if (problem) return deferred.reject(problem).promise();
 
     $.ajax({
       url: url_api + '/profile/id/' + profileId,
