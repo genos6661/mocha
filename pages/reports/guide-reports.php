@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/assets/css/settings.css?v=<?= filemtime(__DIR__ . '/../../assets/css/settings.css') ?>" />
 <link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 
-<div class="settings-page rp-danger">
+<div class="settings-page rp-navy">
   <a href="/reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Reports</a>
 
   <div class="settings-head">

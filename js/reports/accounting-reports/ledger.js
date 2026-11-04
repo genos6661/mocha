@@ -162,20 +162,20 @@ function loadHeader() {
 
     if (cabang && cabang !== '') {
         getCabang(cabang, function (namaCabang) {
-            if (namaCabang) {
-              $('#cabang').removeClass('d-none').text(namaCabang);
-            } else {
-              $('#cabang').addClass('d-none').text('');
-            }
+            $('#cabang').text(namaCabang || '');
+            $('#chipCabang').toggleClass('d-none', !namaCabang);
         });
     } else {
-      $('#cabang').addClass('d-none').text('');
+      $('#cabang').text('');
+      $('#chipCabang').addClass('d-none');
     }
 
     if (user && user !== '') {
-        $('#user').removeClass('d-none').text('Inputed By : ' + user);
+        $('#user').text('Inputed By : ' + user);
+        $('#chipUser').removeClass('d-none');
     } else {
-        $('#user').addClass('d-none').text('');
+        $('#user').text('');
+        $('#chipUser').addClass('d-none');
     }
 
     $.ajax({
@@ -256,97 +256,81 @@ function loadData() {
         // Kosongkan container dulu
         $('#card-body').empty();
         reportData = response;
+        const jumlahAkun = Object.keys(response).length;
+        $('#jmlAkun').text(`${jumlahAkun} account${jumlahAkun === 1 ? '' : 's'}`);
+        $('#chipAkun').toggleClass('d-none', !jumlahAkun);
 
         // Loop setiap akun
         Object.keys(response).forEach(kode => {
             const akun = response[kode];
-
-            // Tentukan saldo awal
             let saldo = akun.saldo_awal || 0;
+            const saldoAwal = saldo;
 
             // Tentukan aturan perhitungan berdasarkan kepala akun
             const kepala = parseInt(kode.toString().charAt(0), 10);
             const isDebitNormal = [1, 5, 6, 7, 9].includes(kepala);
 
-            // Template box akun
-            let boxHtml = `
-              <div class="boxAkun mb-4">
-                <div class="row">
-                  <div class="col-md-2 py-0 text-primary kode_akun">${kode}</div>
-                  <div class="col-md-4 py-0 text-primary nama_akun">${akun.nama_akun} - ${akun.alias_akun}</div>
-                  <div class="col-md-4 py-0 text-primary nama_master">${akun.nama_master}</div>
-                  <div class="col-md-2 py-0 text-primary text-end subklas">${akun.alias_subklas}</div>
+            let totalDebit = 0, totalKredit = 0;
+            const rows = akun.mutasi.map(m => {
+                saldo += isDebitNormal ? (m.debit - m.kredit) : (m.kredit - m.debit);
+                totalDebit += m.debit;
+                totalKredit += m.kredit;
+                return `
+                  <tr>
+                    <td class="lg-ref">${lgEsc(new Date(m.tanggal).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }))}</td>
+                    <td><div class="lg-ref">${lgEsc(m.nomor || '-')}</div>${m.prefix ? `<span class="lg-type">${lgEsc(m.prefix)}</span>` : ''}</td>
+                    <td><div>${lgEsc(m.kontak || '-')}</div>${m.deskripsi ? `<div class="lg-desc">${lgEsc(m.deskripsi)}</div>` : ''}</td>
+                    <td class="lg-num">${lgMoney(m.debit)}</td>
+                    <td class="lg-num">${lgMoney(m.kredit)}</td>
+                    <td class="lg-num fw-semibold ${saldo < 0 ? 'lg-neg' : ''}">${formatAngka(saldo)}</td>
+                  </tr>`;
+            }).join('');
+
+            $('#card-body').append(`
+              <section class="lg-account">
+                <div class="lg-head">
+                  <div class="lg-id">
+                    <span class="lg-code">${lgEsc(kode)}</span>
+                    <div class="min-w-0">
+                      <div class="lg-name">${lgEsc(akun.nama_akun)}${akun.alias_akun ? ` <span class="lg-muted fw-normal">- ${lgEsc(akun.alias_akun)}</span>` : ''}</div>
+                      <div class="lg-sub">${lgEsc(akun.nama_master)}${akun.alias_subklas ? `<span class="lg-badge">${lgEsc(akun.alias_subklas)}</span>` : ''}</div>
+                    </div>
+                  </div>
+                  <div class="lg-stats">
+                    <div class="lg-stat"><small>Opening</small><b>${formatAngka(saldoAwal)}</b></div>
+                    <div class="lg-stat"><small>Debit</small><b>${formatAngka(totalDebit)}</b></div>
+                    <div class="lg-stat"><small>Credit</small><b>${formatAngka(totalKredit)}</b></div>
+                    <div class="lg-stat lg-closing"><small>Closing</small><b class="${saldo < 0 ? 'lg-neg' : ''}">${formatAngka(saldo)}</b></div>
+                  </div>
                 </div>
-                <div class="boxTabel table-responsive">
-                  <table class="table table-bordered tabelAkun">
-                    <thead class="table-dark">
+                <div class="lg-scroll">
+                  <table class="lg-table">
+                    <thead>
                       <tr>
-                        <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Date</th>
-                        <th class="text-center align-middle p-2" style="width: 7%; border: 1px solid;">Type</th>
-                        <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Number</th>
-                        <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Contact</th>
-                        <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Description</th>
-                        <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Debit</th>
-                        <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Credit</th>
-                        <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Balance</th>
+                        <th style="width: 11%;">Date</th>
+                        <th style="width: 17%;">Reference</th>
+                        <th>Contact / Description</th>
+                        <th class="lg-num" style="width: 13%;">Debit</th>
+                        <th class="lg-num" style="width: 13%;">Credit</th>
+                        <th class="lg-num" style="width: 14%;">Balance</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td colspan="7" class="text-start fw-bold p-1">Saldo Awal</td>
-                        <td class="text-end fw-bold p-1">${saldo.toLocaleString()}</td>
-                      </tr>
+                      <tr class="lg-open"><td colspan="5">Opening Balance</td><td class="lg-num">${formatAngka(saldoAwal)}</td></tr>
+                      ${rows || '<tr class="lg-empty"><td colspan="6">No transactions in this period</td></tr>'}
                     </tbody>
-                    <tfoot class="table-dark">
-                      <tr>
-                        <th class="p-2 align-middle" colspan="5">Total :</th>
-                        <th class="p-2 align-middle text-end total-debit"></th>
-                        <th class="p-2 align-middle text-end total-kredit"></th>
-                        <th class="p-2 align-middle text-end total-balance"></th>
+                    <tfoot>
+                      <tr class="lg-total">
+                        <td colspan="3">Total</td>
+                        <td class="lg-num">${formatAngka(totalDebit)}</td>
+                        <td class="lg-num">${formatAngka(totalKredit)}</td>
+                        <td class="lg-num ${saldo < 0 ? 'lg-neg' : ''}">${formatAngka(saldo)}</td>
                       </tr>
                     </tfoot>
                   </table>
                 </div>
-              </div>
-            `;
-
-            // Append box akun ke container
-            $('#card-body').append(boxHtml);
-
-            // Cari tbody tabel yang baru dibuat
-            const $tbody = $('#card-body .boxAkun:last tbody');
-            let totalDebit = 0, totalKredit = 0;
-
-            akun.mutasi.forEach(m => {
-                // Hitung saldo sesuai aturan
-                if (isDebitNormal) {
-                    saldo += (m.debit - m.kredit);
-                } else {
-                    saldo += (m.kredit - m.debit);
-                }
-
-                totalDebit += m.debit;
-                totalKredit += m.kredit;
-
-                $tbody.append(`
-                  <tr>
-                    <td class="p-1">${new Date(m.tanggal).toLocaleDateString()}</td>
-                    <td class="text-center p-1">${m.prefix || '-'}</td>
-                    <td class="text-center p-1">${m.nomor || '-'}</td>
-                    <td class="p-1">${m.kontak || '-'}</td>
-                    <td class="p-1">${m.deskripsi || '-'}</td>
-                    <td class="text-end p-1">${m.debit.toLocaleString()}</td>
-                    <td class="text-end p-1">${m.kredit.toLocaleString()}</td>
-                    <td class="text-end p-1">${saldo.toLocaleString()}</td>
-                  </tr>
-                `);
-            });
-
-            // Isi total di footer
-            const $tfoot = $('#card-body .boxAkun:last tfoot tr');
-            $tfoot.find('.total-debit').text(totalDebit.toLocaleString());
-            $tfoot.find('.total-kredit').text(totalKredit.toLocaleString());
-            $tfoot.find('.total-balance').text(saldo.toLocaleString());
+              </section>
+            `);
         });
     },
       error: function (xhr) {
@@ -474,8 +458,18 @@ $('#sbmFilter').click(function (e) {
   $('#modalFilter').modal('hide');
 });
 
+function lgEsc(v) {
+  return $('<div>').text(v ?? '').html();
+}
+
+// nol ditampilkan "-" supaya kolom debit / kredit lebih mudah dibaca
+function lgMoney(v) {
+  return Number(v) ? formatAngka(v) : '<span class="lg-muted">-</span>';
+}
+
+// format angka Indonesia (1.234.567,89); dipakai di layar dan semua ekspor
 function formatAngka(value) {
-  return (Number(value) || 0).toLocaleString();
+  return (Number(value) || 0).toLocaleString('id-ID', { maximumFractionDigits: 2 });
 }
 
 function buildLedgerSections() {
@@ -551,15 +545,14 @@ $("#export-pdf").click(function () {
     return;
   }
 
-  exportToPDF({
-    sections: buildLedgerSections(),
-    headers: ["Date", "Type", "Number", "Contact", "Description", "Debit", "Credit", "Balance"],
+  exportLedgerPDF({
+    data: reportData,
     filename: `Ledger_${start}_${end}.pdf`,
-    title: "Ledger",
     nama_pt: namaPT,
     start,
     end,
     cabang: $('#cabang').text() || '',
+    fmt: formatAngka,
   });
 });
 

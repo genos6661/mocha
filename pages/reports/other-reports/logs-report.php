@@ -39,6 +39,8 @@
     color: #fff;
     z-index: 2;
   }
+  #tabelData td { vertical-align: middle; }
+  #tabelData .log-ref { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .8125rem; }
 </style>
 
 <div class="row mb-2">
@@ -73,16 +75,13 @@
     <p class="h6 text-center text-secondary national-park fst-italic d-none" id="email"></p>
   </div>
   <div class="card-body table-responsive" id="card-body">
-    <table class="table table-bordered table-hover" id="tabelData">
+    <table class="table table-hover" id="tabelData">
       <thead>
         <tr>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Date</th>
-          <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Time</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Name</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Email</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Type</th>
-          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Activity</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Reference</th>
+          <th style="width: 15%;">When</th>
+          <th style="width: 30%;">User</th>
+          <th style="width: 35%;">Activity</th>
+          <th style="width: 20%;">Reference</th>
         </tr>
       </thead>
       <tbody></tbody>

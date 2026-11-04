@@ -792,6 +792,7 @@ function initEvents() {
                 $('#editBtn').attr('data-id', id).removeClass('d-none');
               }
 
+              transferDebt.showDetail(data.utang);
               $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
               $('#deleteBtn').attr('data-id', id).attr('data-ref', data.nomor);
               $('#reprintDetail').attr('href', '/pages/transaction/transfer-receipt.php?number=' + data.nomor);
@@ -1085,6 +1086,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
               $('#akunToEdit').append(option).trigger('change');
             }
 
+            transferDebt.fill('Edit', response.utang);
+
             $('#modalEdit').modal('show');
           }
         },
@@ -1286,6 +1289,13 @@ $('#sbmTambah').click(function (e) {
     return;
   }
 
+  const utang = transferDebt.collect('');
+  if (utang === false) {
+    $btn.removeAttr('disabled');
+    return;
+  }
+  if (utang) data.utang = utang;
+
   $.ajax({
     url: url_api + '/transfer',
     type: 'POST',
@@ -1303,6 +1313,7 @@ $('#sbmTambah').click(function (e) {
         else this.value = '';
       });
       $('#tipeBoth').trigger('change');
+      transferDebt.reset('');
       $('#modalTambah .modal-body').find('select').val(null).trigger('change');
       const today = new Date().toISOString().split('T')[0];
       $('#modalTambah .modal-body #tanggal').val(today);
@@ -1408,6 +1419,13 @@ $('#sbmEdit').click(function (e) {
     return;
   }
 
+  const utang = transferDebt.collect('Edit');
+  if (utang === false) {
+    $btn.removeAttr('disabled');
+    return;
+  }
+  if (utang) data.utang = utang;
+
   $.ajax({
     url: url_api + '/transfer/' + id,
     type: 'PUT',
@@ -1423,6 +1441,7 @@ $('#sbmEdit').click(function (e) {
       $('#modalEdit').find('select').val(null).trigger('change');
 
       $('#detailEdit tbody').empty();
+      transferDebt.reset('Edit');
       $('#totalAmountEdit').val('');
       $('#totalSubEdit').val('');
       notif.fire({

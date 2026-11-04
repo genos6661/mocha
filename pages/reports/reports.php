@@ -28,11 +28,11 @@
       <a href="/accounting-reports" class="rp-card rp-info">
         <div class="rp-top">
           <span class="rp-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>
-          <span class="rp-count">3 reports</span>
+          <span class="rp-count">4 reports</span>
         </div>
         <h5 class="rp-title">Accounting Reports</h5>
         <div class="rp-chips">
-          <span>Ledger</span><span>Transactions Summary</span><span>Transactions Detail</span>
+          <span>Ledger</span><span>Transactions Summary</span><span>Transactions Detail</span><span>Payable &amp; Receivable</span>
         </div>
         <span class="rp-open">Open<i class="icon-base ti tabler-arrow-right"></i></span>
       </a>
@@ -51,7 +51,7 @@
       </a>
     </div>
     <div class="col-xl-4 col-md-6 col-12">
-      <a href="/guide-reports" class="rp-card rp-danger">
+      <a href="/guide-reports" class="rp-card rp-navy">
         <div class="rp-top">
           <span class="rp-icon"><i class="icon-base ti tabler-id-badge-2"></i></span>
           <span class="rp-count">2 reports</span>

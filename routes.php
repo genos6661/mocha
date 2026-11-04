@@ -23,6 +23,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/forex-transfer', 'pages/other-transaction/forex-transfer.php');
     $r->addRoute('GET', '/journal', 'pages/other-transaction/journal.php');
     $r->addRoute('GET', '/cash-transaction', 'pages/other-transaction/cash-transaction.php');
+    $r->addRoute('GET', '/debt', 'pages/other-transaction/debt.php');
 
     // report
     $r->addRoute('GET', '/reports', 'pages/reports/reports.php');
@@ -39,6 +40,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/laba-rugi', 'pages/reports/bi-reports/laba-rugi.php');
     $r->addRoute('GET', '/lkpe', 'pages/reports/bi-reports/lkpe.php');
     $r->addRoute('GET', '/ledger', 'pages/reports/accounting-reports/ledger.php');
+    $r->addRoute('GET', '/debt-aging', 'pages/reports/accounting-reports/debt-aging.php');
     $r->addRoute('GET', '/logs-report', 'pages/reports/other-reports/logs-report.php');
     $r->addRoute('GET', '/transactions-summary', 'pages/reports/other-reports/transactions-summary.php');
     $r->addRoute('GET', '/transactions-detail', 'pages/reports/other-reports/transactions-detail.php');

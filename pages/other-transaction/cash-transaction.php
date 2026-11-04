@@ -154,6 +154,10 @@
           </table>
         </div>
         </div>
+        <div class="mf-section d-none" id="utangDetailSection">
+          <div class="mf-section-title"><i class="icon-base ti tabler-receipt-2"></i>Payable / Receivable</div>
+          <div id="utangDetail"></div>
+        </div>
       </div>
 
       <div class="modal-footer flex-wrap">
@@ -202,27 +206,33 @@
         <div class="mf-section">
           <div class="mf-section-title"><i class="icon-base ti tabler-file-description"></i>General</div>
           <div class="row">
-            <div class="col-md mb-3">
+            <div class="col-md-8 mb-3">
               <label for="kontak" class="form-label">Contact</label>
               <select name="" id="kontak" class="form-select"></select>
             </div>
+            <div class="col-md-4 mb-3 d-flex flex-column">
+              <label for="btnKontakBaru" class="form-label">Or Add New Contact</label>
+              <button type="button" id="btnKontakBaru" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalKontakBaru" data-bs-dismiss="modal">
+                <i class="icon-base ti tabler-user-plus icon-sm me-2"></i>New Contact
+              </button>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-md mb-3">
               <label for="tanggal" class="form-label">Date</label>
               <input type="date" id="tanggal" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
             </div>
-          </div>
-          <div class="row">
             <div class="col-md mb-3">
               <label for="cabang" class="form-label">Branch</label>
               <select id="cabang" class="form-select"></select>
             </div>
+          </div>
+          <div class="row">
             <div class="col-md mb-3">
               <label for="deskripsi" class="form-label">Description</label>
               <input type="text" id="deskripsi" class="form-control" placeholder="Input Description" />
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 mb-1">
+            <div class="col-md mb-1">
               <label for="akunKas" class="form-label">Cash/Bank Account</label>
               <select name="" id="akunKas" class="form-select"></select>
             </div>
@@ -256,6 +266,7 @@
             <input type="text" class="form-control text-end" id="totalBaru" readonly>
           </div>
         </div>
+        <?php $sfx = ''; include __DIR__ . '/_debt-section.php'; ?>
       </div>
 
       <div class="modal-footer">
@@ -356,7 +367,7 @@
             </div>
           </div>
         </div>
-
+        <?php $sfx = 'Edit'; include __DIR__ . '/_debt-section.php'; ?>
       </div>
 
       <div class="modal-footer">
@@ -424,5 +435,11 @@
   </div>
 </div>
 
+<?php $kontakReturn = '#modalTambah'; $kontakSaveId = 'sbmKontakBaru'; include __DIR__ . '/../_modal-kontak-baru.php'; ?>
+
 <script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
+<script src="js/pages/contact-new.js" type="text/javascript"></script>
+<script src="js/pages/kontak-baru-init.js" type="text/javascript"></script>
+<script src="js/pages/debt-form.js?v=<?= filemtime(__DIR__ . '/../../js/pages/debt-form.js') ?>" type="text/javascript"></script>
+<script src="js/pages/cash-debt.js?v=<?= filemtime(__DIR__ . '/../../js/pages/cash-debt.js') ?>" type="text/javascript"></script>
 <script src="js/pages/cash-transaction.js" type="text/javascript"></script>

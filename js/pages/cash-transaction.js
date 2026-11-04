@@ -613,6 +613,7 @@ function initEvents() {
                   		</tr>
                   	`);
               }
+              cashDebt.showDetail(data.utang);
               $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
               $('#editBtn').attr('data-id', id);
               $('#deleteBtn').attr('data-id', id).attr('data-ref', data.nomor);
@@ -942,6 +943,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
 			  $('#inEdit').removeAttr('checked');
 			}
 
+            cashDebt.fill('Edit', response.utang);
+
             $('#modalEdit').modal('show');
         },
         error: function(xhr, status, error) {
@@ -1092,6 +1095,13 @@ $('#sbmTambah').click(function (e) {
 	    return;
 	  }
 
+	const utang = cashDebt.collect('');
+	if (utang === false) {
+	    $btn.removeAttr('disabled');
+	    return;
+	}
+	if (utang) formData.utang = utang;
+
 	$.ajax({
 	    url: url_api + '/kas', 
 	    type: 'POST',
@@ -1111,6 +1121,7 @@ $('#sbmTambah').click(function (e) {
 	        });
 	        $('#modalTambah .modal-body').find('select').val(null).trigger('change');
 	        $('#modalTambah .modal-body #tanggal').val(today);
+	        cashDebt.reset('');
 			$('#modalTambah #detailBaru tbody').empty();
 			$btn.removeAttr('disabled');
 	        notif.fire({
@@ -1184,6 +1195,13 @@ $('#sbmEdit').click(function (e) {
 	    return;
 	}
 
+	const utang = cashDebt.collect('Edit');
+	if (utang === false) {
+	    $btn.removeAttr('disabled');
+	    return;
+	}
+	if (utang) formData.utang = utang;
+
   	$.ajax({
 	    url: url_api + '/kas/' + id,
 	    type: 'PUT',
@@ -1198,6 +1216,7 @@ $('#sbmEdit').click(function (e) {
 	      $('#modalEdit .modal-body').find('input, textarea').val('').prop('checked', false);
 	      $('#modalEdit .modal-body').find('select').val(null).trigger('change');
 	      $('#modalEdit #detailEdit tbody').empty();
+	      cashDebt.reset('Edit');
 	      $btn.removeAttr('disabled');
 	      notif.fire({
 	        icon: 'success',

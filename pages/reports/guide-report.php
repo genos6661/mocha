@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/css/reports.css?v=<?= filemtime(__DIR__ . '/../../assets/css/reports.css') ?>" />
 <link rel="stylesheet" href="/assets/css/guide-report.css?v=<?= filemtime(__DIR__ . '/../../assets/css/guide-report.css') ?>" />
 
-<div class="settings-page rp-danger">
+<div class="settings-page rp-navy">
   <a href="/guide-reports" class="rl-back"><i class="icon-base ti tabler-arrow-left"></i>Guide Reports</a>
 
   <div class="settings-head">

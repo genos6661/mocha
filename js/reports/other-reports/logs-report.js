@@ -361,6 +361,48 @@ $('#sbmFilter').click(function (e) {
   $('#modalFilter').modal('hide');
 });
 
+const LOG_COLORS = ['primary', 'info', 'success', 'warning', 'secondary', 'danger'];
+const logColor = text => LOG_COLORS[[...String(text || '')].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % LOG_COLORS.length];
+const logEsc = s => $('<div>').text(s ?? '').html();
+
+// ikon dan warna menurut jenis aksi pada teks aktivitas
+function logAction(aktivitas) {
+  const a = String(aktivitas || '').toLowerCase();
+  if (a.includes('delete')) return { icon: 'tabler-trash', color: 'danger' };
+  if (a.includes('edit') || a.includes('update')) return { icon: 'tabler-pencil', color: 'info' };
+  if (a.includes('add') || a.includes('new') || a.includes('create')) return { icon: 'tabler-plus', color: 'success' };
+  if (a.includes('logout')) return { icon: 'tabler-logout', color: 'secondary' };
+  if (a.includes('login')) return { icon: 'tabler-login', color: 'secondary' };
+  return { icon: 'tabler-point', color: 'secondary' };
+}
+
+// satu baris log: kolom When (tanggal + jam), User (nama + email + role), Activity (tipe + aksi), Reference
+function logRow(item, datePart, timePart) {
+  const act = logAction(item.aktivitas);
+  const initial = logEsc((item.nama || item.email || '?').trim().charAt(0).toUpperCase());
+  return `
+    <tr>
+      <td>
+        <div class="fw-medium">${logEsc(datePart)}</div>
+        <small class="text-muted"><i class="icon-base ti tabler-clock icon-xs me-1"></i>${logEsc(timePart)}</small>
+      </td>
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <span class="avatar avatar-sm flex-shrink-0"><span class="avatar-initial rounded-circle bg-label-${logColor(item.email || item.nama)}">${initial}</span></span>
+          <div class="min-w-0">
+            <div class="fw-medium">${logEsc(item.nama)}${item.role ? ` <span class="badge bg-label-secondary ms-1">${logEsc(item.role)}</span>` : ''}</div>
+            <small class="text-muted">${logEsc(item.email)}</small>
+          </div>
+        </div>
+      </td>
+      <td>
+        <span class="badge bg-label-${logColor(item.tipe)} mb-1">${logEsc(item.tipe)}</span>
+        <div><i class="icon-base ti ${act.icon} icon-sm text-${act.color} me-1"></i>${logEsc(item.aktivitas)}</div>
+      </td>
+      <td>${item.nomor ? `<span class="log-ref">${logEsc(item.nomor)}</span>` : '<span class="text-muted">-</span>'}</td>
+    </tr>`;
+}
+
 function loadData(reset = false) {
   if (isLoading || !hasMoreData) return;
   isLoading = true;
@@ -411,7 +453,7 @@ function loadData(reset = false) {
 
       if (details.length === 0) {
         if (offset === 0) {
-          tbody.append('<tr><td colspan="7" class="text-center">Logs Data Not Found</td></tr>');
+          tbody.append('<tr><td colspan="4" class="text-center">Logs Data Not Found</td></tr>');
         }
         hasMoreData = false;
       } else {
@@ -424,18 +466,7 @@ function loadData(reset = false) {
             second: '2-digit' ,
             hour12: false
           });
-          const row = `
-              <tr>
-                <td class="text-center">${datePart || ''}</td>
-                <td class="text-center">${timePart || ''}</td>
-                <td class="text-center">${item.nama || ''}</td>
-                <td class="text-center">${item.email || ''}</td>
-                <td class="text-center">${item.tipe || ''}</td>
-                <td class="text-center">${item.aktivitas || ''}</td>
-                <td class="text-center">${item.nomor || ''}</td>
-              </tr>
-          `;
-          tbody.append(row);
+          tbody.append(logRow(item, datePart, timePart));
         });
         offset += limit; // naikkan offset
       }

@@ -395,7 +395,7 @@ switch ($routeInfo[0]) {
                       </li>
                     </ul>
                   </li>
-                  <li class="menu-item <?php if (in_array($current_path, ['/cash-transaction', '/journal', '/adjustment', '/forex-transfer'])) { echo 'active'; } ?>">
+                  <li class="menu-item <?php if (in_array($current_path, ['/cash-transaction', '/journal', '/adjustment', '/forex-transfer', '/debt'])) { echo 'active'; } ?>">
                     <a href="javascript:void(0)" class="menu-link menu-toggle">
                       <i class="menu-icon icon-base ti tabler-shopping-bag"></i>
                       <div data-i18n="other-transaction">Other Transaction</div>
@@ -423,6 +423,12 @@ switch ($routeInfo[0]) {
                         <a href="/forex-transfer" class="menu-link">
                           <i class="menu-icon icon-base ti tabler-transfer"></i>
                           <div data-i18n="other-transaction">Forex Transfer</div>
+                        </a>
+                      </li>
+                      <li class="menu-item <?php if($current_path == '/debt') { echo 'active'; } ?>">
+                        <a href="/debt" class="menu-link">
+                          <i class="menu-icon icon-base ti tabler-receipt-2"></i>
+                          <div data-i18n="other-transaction">Payable &amp; Receivable</div>
                         </a>
                       </li>
                     </ul>

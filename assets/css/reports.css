@@ -41,6 +41,8 @@
 .rp-success { --rp-rgb: var(--bs-success-rgb); }
 .rp-info    { --rp-rgb: var(--bs-info-rgb); }
 .rp-danger  { --rp-rgb: var(--bs-danger-rgb); }
+.rp-navy    { --rp-rgb: 27, 42, 107; } /* biru navy (#1b2a6b), kategori Guide Reports */
+[data-bs-theme="dark"] .rp-navy { --rp-rgb: 105, 127, 235; } /* navy hilang di latar gelap, jadi biru lebih terang */
 .rp-warning { --rp-rgb: var(--bs-warning-rgb); }
 .rp-primary { --rp-rgb: var(--bs-primary-rgb); }
 

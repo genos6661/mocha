@@ -8,14 +8,14 @@
     <span class="settings-head-icon rl-head-icon"><i class="icon-base ti tabler-receipt-dollar"></i></span>
     <div>
       <h4 class="mb-1">Accounting Reports</h4>
-      <p class="text-body-secondary mb-0">Ledger and transaction reports. Pick a report to set its filter and open it. <span class="rl-count">3 reports</span></p>
+      <p class="text-body-secondary mb-0">Ledger and transaction reports. Pick a report to set its filter and open it. <span class="rl-count">4 reports</span></p>
     </div>
   </div>
 
   <div class="row g-4">
     <div class="col-xl-4 col-md-6 col-12">
       <div class="rl-card" role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#filter" data-nama="Ledger" data-range="month" data-url="/ledger">
-        <span class="rl-icon rl-img"><img src="/assets/img/report/ledger.png" alt=""></span>
+        <span class="rl-icon"><i class="icon-base ti tabler-book-2"></i></span>
         <div class="rl-text">
           <h5 class="rl-title">Ledger</h5>
           <p class="rl-desc">Buku Besar</p>
@@ -39,6 +39,16 @@
         <div class="rl-text">
           <h5 class="rl-title">Transactions Detail</h5>
           <p class="rl-desc">Detail reports to transaction (per Valas)</p>
+        </div>
+        <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
+      </div>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12">
+      <div class="rl-card" role="button" tabindex="0" onclick="location.href='/debt-aging'">
+        <span class="rl-icon"><i class="icon-base ti tabler-receipt-2"></i></span>
+        <div class="rl-text">
+          <h5 class="rl-title">Payable &amp; Receivable Aging</h5>
+          <p class="rl-desc">Umur Piutang dan Hutang</p>
         </div>
         <i class="icon-base ti tabler-chevron-right rl-arrow"></i>
       </div>

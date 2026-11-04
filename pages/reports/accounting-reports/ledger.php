@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/assets/css/ledger.css?v=<?= filemtime(__DIR__ . '/../../../assets/css/ledger.css') ?>" />
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=National+Park:wght@200..800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
@@ -50,48 +51,24 @@
 </div>
 
 <div class="card pb-4" id="cardData">
-  <div class="card-header">
-    <p class="h4 text-center mb-0 spectral" id="namaPT"></p>
-    <p class="h2 text-center mb-0 dm-serif-text-regular text-primary">Ledger</p>
-    <p class="h5 text-center text-secondary spectral mb-1">Laporan Buku Besar</p>
-    <p class="h5 text-center mb-1 text-secondary national-park" id="range"></p>
-    <p class="h5 text-center mb-1 text-secondary national-park d-none" id="cabang"></p>
-    <p class="h6 text-center text-secondary national-park fst-italic d-none" id="user"></p>
-  </div>
-  <div class="card-body" id="card-body">
-    <div class="boxAkun">
-      <div class="row">
-        <div class="col-md-2 py-0 text-primary kode_akun">110110</div>
-        <div class="col-md-4 py-0 text-primary nama_akun">Kas Kecil - Petty Cash</div>
-        <div class="col-md-4 py-0 text-primary nama_master">Kas Kecil - Petty Cash</div>
-        <div class="col-md-2 py-0 text-primary text-end subklas">Kas</div>
-      </div>
-      <div class="boxTabel table-responsive">
-        <table class="table table-bordered tabelAkun">
-          <thead class="table-dark">
-            <tr>
-              <th class="text-center align-middle p-2" style="width: 8%; border: 1px solid;">Date</th>
-              <th class="text-center align-middle p-2" style="width: 7%; border: 1px solid;">Type</th>
-              <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Number</th>
-              <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Contact</th>
-              <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Description</th>
-              <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Debit</th>
-              <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Credit</th>
-              <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Balance</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-          <tfoot class="table-dark">
-            <tr>
-              <th class="p-2 align-middle" colspan="5">Total :</th>
-              <th class="p-2 align-middle"></th>
-              <th class="p-2 align-middle"></th>
-              <th class="p-2 align-middle"></th>
-            </tr>
-          </tfoot>
-        </table>
+  <div class="card-header lg-hero">
+    <div class="lg-hero-main">
+      <span class="lg-hero-icon"><i class="icon-base ti tabler-book-2"></i></span>
+      <div>
+        <p class="lg-hero-company" id="namaPT"></p>
+        <h2 class="lg-hero-title text-primary mb-0">Ledger</h2>
+        <p class="lg-hero-sub mb-0">Laporan Buku Besar</p>
       </div>
     </div>
+    <div class="lg-hero-meta">
+      <span class="lg-chip"><i class="icon-base ti tabler-calendar-event"></i><span id="range"></span></span>
+      <span class="lg-chip d-none" id="chipCabang"><i class="icon-base ti tabler-building-store"></i><span id="cabang"></span></span>
+      <span class="lg-chip d-none" id="chipUser"><i class="icon-base ti tabler-user"></i><span id="user"></span></span>
+      <span class="lg-chip d-none" id="chipAkun"><i class="icon-base ti tabler-list-details"></i><span id="jmlAkun"></span></span>
+    </div>
+  </div>
+  <div class="card-body" id="card-body">
+    <div class="lg-loading">Loading ledger...</div>
   </div>
 </div>
 
@@ -186,4 +163,5 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas-pro@2.3.3/dist/html2canvas-pro.min.js"></script>
+<script src="js/export/ledger-pdf.js?v=<?= filemtime(__DIR__ . '/../../../js/export/ledger-pdf.js') ?>" type="text/javascript"></script>
 <script src="js/reports/accounting-reports/ledger.js" type="text/javascript"></script>

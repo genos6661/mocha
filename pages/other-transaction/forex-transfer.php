@@ -89,6 +89,10 @@
           </table>
         </div>
         </div>
+        <div class="mf-section d-none" id="utangDetailSection">
+          <div class="mf-section-title"><i class="icon-base ti tabler-receipt-2"></i>Payable / Receivable</div>
+          <div id="utangDetail"></div>
+        </div>
       </div>
 
       <div class="modal-footer flex-wrap">
@@ -272,6 +276,7 @@
           </div>
           </div>
         </div>
+        <?php $sfx = ''; include __DIR__ . '/_debt-section.php'; ?>
 
       </div>
 
@@ -395,6 +400,7 @@
           </div>
           </div>
         </div>
+        <?php $sfx = 'Edit'; include __DIR__ . '/_debt-section.php'; ?>
 
       </div>
 
@@ -458,4 +464,6 @@
 </div>
 
 <script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
+<script src="js/pages/debt-form.js?v=<?= filemtime(__DIR__ . '/../../js/pages/debt-form.js') ?>" type="text/javascript"></script>
+<script src="js/pages/transfer-debt.js?v=<?= filemtime(__DIR__ . '/../../js/pages/transfer-debt.js') ?>" type="text/javascript"></script>
 <script src="js/pages/forex-transfer.js" type="text/javascript"></script>

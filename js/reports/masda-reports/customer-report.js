@@ -13,6 +13,7 @@ const headers = [
   "Name",
   "ID",
   "Country",
+  "Risk",
   "Occupation",
   "Phone",
   "Address",
@@ -24,11 +25,18 @@ const keys = [
   "nama",
   "id",
   "nama_int_negara",
+  "risk_label",
   "pekerjaan",
   "telepon",
   "alamat",
   "nilai_transaksi"
 ];
+
+// risk = 'blacklist' | 'greylist' dari API (negara berisiko tinggi); kosong untuk negara lain
+const RISK_LABEL = { blacklist: 'Black List', greylist: 'Grey List' };
+const riskBadges = risk => (risk
+  ? `<span class="badge bg-label-danger me-1">High Risk</span><span class="badge ${risk === 'blacklist' ? 'bg-danger' : 'bg-secondary'}">${RISK_LABEL[risk]}</span>`
+  : '');
 
 $(document).ready(function() {
     if(savedSetting) {
@@ -351,7 +359,7 @@ function loadData(reset = false) {
 
       if (details.length === 0) {
         if (offset === 0) {
-          tbody.append('<tr><td colspan="8" class="text-center">Customer Data Not Found</td></tr>');
+          tbody.append('<tr><td colspan="9" class="text-center">Customer Data Not Found</td></tr>');
         }
         hasMoreData = false;
         $('.table-responsive').off('scroll');
@@ -363,6 +371,7 @@ function loadData(reset = false) {
                 <td class="">${item.nama || ''}</td>
                 <td class="">${item.id || ''}</td>
                 <td class="text-center">${item.nama_int_negara || ''}</td>
+                <td class="text-center">${riskBadges(item.risk)}</td>
                 <td class="text-center">${item.pekerjaan || ''}</td>
                 <td class="text-center">${item.telepon || ''}</td>
                 <td class="">${item.alamat || ''}</td>
@@ -517,6 +526,7 @@ function buildExportRows(allData) {
     nama: item.nama || '-',
     id: item.id || '-',
     nama_int_negara: item.nama_int_negara || '-',
+    risk_label: item.risk ? `High Risk - ${RISK_LABEL[item.risk]}` : '-',
     pekerjaan: item.pekerjaan || '-',
     telepon: item.telepon || '-',
     alamat: item.alamat || '-',
@@ -547,7 +557,8 @@ $("#export-pdf").click(function () {
         columnStyles: {
           0: { halign: "center" },
           3: { halign: "center" },
-          7: { halign: "right" },
+          4: { halign: "center" },
+          8: { halign: "right" },
         },
       });
 

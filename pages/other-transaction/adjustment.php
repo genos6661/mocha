@@ -140,6 +140,10 @@
           </table>
         </div>
         </div>
+        <div class="mf-section d-none" id="utangDetailSection">
+          <div class="mf-section-title"><i class="icon-base ti tabler-receipt-2"></i>Payable / Receivable</div>
+          <div id="utangDetail"></div>
+        </div>
       </div>
 
       <div class="modal-footer flex-wrap">
@@ -214,6 +218,7 @@
           </div>
           <p class="mf-hint"><i class="icon-base ti tabler-info-circle"></i><span id="noteBaru">Adjust must be negative for the minus adjustment</span></p>
         </div>
+        <?php $sfx = ''; $kontak = true; include __DIR__ . '/_debt-section.php'; ?>
 
       </div>
 
@@ -288,6 +293,7 @@
           </div>
           <p class="mf-hint"><i class="icon-base ti tabler-info-circle"></i><span id="noteEdit">Adjust must be negative for the minus adjustment</span></p>
         </div>
+        <?php $sfx = 'Edit'; $kontak = true; include __DIR__ . '/_debt-section.php'; ?>
 
       </div>
 
@@ -351,4 +357,6 @@
 </div>
 
 <script src="js/table-render.js?v=<?= filemtime(__DIR__ . '/../../js/table-render.js') ?>" type="text/javascript"></script>
+<script src="js/pages/debt-form.js?v=<?= filemtime(__DIR__ . '/../../js/pages/debt-form.js') ?>" type="text/javascript"></script>
+<script src="js/pages/adjustment-debt.js?v=<?= filemtime(__DIR__ . '/../../js/pages/adjustment-debt.js') ?>" type="text/javascript"></script>
 <script src="js/pages/adjustment.js" type="text/javascript"></script>

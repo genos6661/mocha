@@ -77,13 +77,14 @@
       <thead>
         <tr>
           <th class="text-center align-middle p-2" style="width: 5%; border: 1px solid;">No</th>
-          <th class="text-center align-middle p-2" style="width: 15%; border: 1px solid;">Name</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">ID</th>
-          <th class="text-center align-middle p-2" style="width: 13%; border: 1px solid;">Country</th>
-          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Occupation</th>
-          <th class="text-center align-middle p-2" style="width: 10%; border: 1px solid;">Phone</th>
-          <th class="text-center align-middle p-2" style="width: 13%; border: 1px solid;">Address</th>
-          <th class="text-center align-middle p-2" style="width: 20%; border: 1px solid;">Total Transactions</th>
+          <th class="text-center align-middle p-2" style="width: 14%; border: 1px solid;">Name</th>
+          <th class="text-center align-middle p-2" style="width: 11%; border: 1px solid;">ID</th>
+          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Country</th>
+          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Risk</th>
+          <th class="text-center align-middle p-2" style="width: 11%; border: 1px solid;">Occupation</th>
+          <th class="text-center align-middle p-2" style="width: 9%; border: 1px solid;">Phone</th>
+          <th class="text-center align-middle p-2" style="width: 12%; border: 1px solid;">Address</th>
+          <th class="text-center align-middle p-2" style="width: 14%; border: 1px solid;">Total Transactions</th>
         </tr>
       </thead>
       <tbody></tbody>

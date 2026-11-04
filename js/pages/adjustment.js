@@ -608,6 +608,7 @@ function initEvents() {
                     </tr>
                   `);
               }
+              adjDebt.showDetail(data.utang);
               $('#jurnalBtn').attr('data-id', id).attr('data-ref', data.nomor);
               $('#editBtn').attr('data-id', id);
               $('#deleteBtn').attr('data-id', id).attr('data-ref', data.nomor);
@@ -830,6 +831,8 @@ modalEdit.addEventListener('shown.bs.modal', event => {
               $('#akunEdit').append(option).trigger('change');
             }
 
+            adjDebt.fill('Edit', response.utang, response.kontak ? { id: response.kontak, text: response.kode_kontak + ' - ' + response.nama_kontak } : null);
+
             $('#modalEdit').modal('show');
           }
         },
@@ -1027,6 +1030,16 @@ $('#sbmTambah').click(function (e) {
     return;
   }
 
+  const utang = adjDebt.collect('');
+  if (utang === false) {
+    $btn.removeAttr('disabled');
+    return;
+  }
+  if (utang) {
+    data.utang = utang;
+    data.kontak = adjDebt.kontak('');
+  }
+
   $.ajax({
     url: url_api + '/penyesuaian',
     type: 'POST',
@@ -1043,6 +1056,7 @@ $('#sbmTambah').click(function (e) {
       const today = new Date().toISOString().split('T')[0];
       $('#modalTambah .modal-body #tanggal').val(today);
       $('#modalTambah #detailBaru tbody').empty();
+      adjDebt.reset('');
       notif.fire({
         icon: 'success',
         text: response.message
@@ -1125,6 +1139,16 @@ $('#sbmEdit').click(function (e) {
     return;
   }
 
+  const utang = adjDebt.collect('Edit');
+  if (utang === false) {
+    $btn.removeAttr('disabled');
+    return;
+  }
+  if (utang) {
+    data.utang = utang;
+    data.kontak = adjDebt.kontak('Edit');
+  }
+
   $.ajax({
     url: url_api + '/penyesuaian/' + id,
     type: 'PUT',
@@ -1139,6 +1163,7 @@ $('#sbmEdit').click(function (e) {
       $('#modalEdit .modal-body').find('input, textarea').val('').prop('checked', false);
       $('#modalEdit .modal-body').find('select').val(null).trigger('change');
       $('#modalEdit #detailEdit tbody').empty();
+      adjDebt.reset('Edit');
       notif.fire({
         icon: 'success',
         text: response.message

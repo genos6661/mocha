@@ -1,4 +1,4 @@
-$('#sbmTambah').click(async function (e) {
+$('.js-simpan-kontak').click(async function (e) {
     e.preventDefault();
 
     Loading.standard({
@@ -29,6 +29,7 @@ $('#sbmTambah').click(async function (e) {
 
     const nama = $('#nama').val();
     const negara = $('#negara').val();
+    const negaraNama = $('#negara option:selected').text(); // form direset sebelum kontak dipilih, jadi namanya diambil sekarang
     const idNumber = $('#idNumber').val();
 
     const formData = {
@@ -90,7 +91,7 @@ $('#sbmTambah').click(async function (e) {
                 loadMoreData();
                 checkDTTOT(nama, response.noindex, idNumber);
             });
-            selectNewContact(response, nama, negara);
+            selectNewContact(response, nama, negaraNama);
         },
         error: function (xhr, status, error) {
             if (xhr.status === 409 && xhr.responseJSON?.duplicate) {
@@ -145,7 +146,8 @@ $('#sbmTambah').click(async function (e) {
 // Pelanggan stay selected for the next entry instead of the modal
 // reopening with nothing picked at all.
 function resetContactForm() {
-    $('#modalTambah .modal-body, #modalKontakBaru .modal-body')
+    // halaman Cash punya #modalTambah sendiri (form transaksi): yang direset hanya modal kontak bila ada
+    $($('#modalKontakBaru').length ? '#modalKontakBaru .modal-body' : '#modalTambah .modal-body')
         .find('input, textarea')
         .each(function () {
             if (this.type === 'radio' || this.type === 'checkbox') {
@@ -162,12 +164,14 @@ function resetContactForm() {
 // Transaction modal and swaps back to it. Shared by the normal save path
 // and submitForce() (the duplicate-confirm retry) so both behave the same.
 function selectNewContact(response, nama, negara) {
-    if (!($('#kontak').length && $('#modalTransaksiBaru').length && response.noindex)) {
+    // modal yang dibuka kembali: data-return pada #modalKontakBaru (Direct Transaction: #modalTransaksiBaru, Cash: #modalTambah)
+    const back = $('#modalKontakBaru').data('return') || '#modalTransaksiBaru';
+    if (!($('#kontak').length && $(back).length && response.noindex)) {
         return;
     }
 
     $('#modalKontakBaru').modal('hide');
-    $('#modalTransaksiBaru').modal('show');
+    $(back).modal('show');
 
     const data = {
         id: response.noindex,
@@ -231,6 +235,7 @@ function submitForce() {
 
     const nama = $('#nama').val();
     const negara = $('#negara').val();
+    const negaraNama = $('#negara option:selected').text(); // form direset sebelum kontak dipilih, jadi namanya diambil sekarang
     const idNumber = $('#idNumber').val();
 
     const formData = {
@@ -293,7 +298,7 @@ function submitForce() {
                 loadMoreData();
                 checkDTTOT(nama, response.noindex, idNumber);
             });
-            selectNewContact(response, nama, negara);
+            selectNewContact(response, nama, negaraNama);
             if (document.querySelector(`.notiflix-loading`)) {
                 Loading.remove();
             }

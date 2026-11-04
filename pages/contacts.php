@@ -265,7 +265,7 @@
           </button>
         </div>
         <div class="col-md-4 d-grid mb-3 mb-md-0">
-          <button type="button" id="sbmTambah" class="btn btn-primary">Save</button>
+          <button type="button" id="sbmTambah" class="btn btn-primary js-simpan-kontak">Save</button>
         </div>
         </form>
       </div>
